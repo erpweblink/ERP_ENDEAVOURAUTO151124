@@ -56,11 +56,11 @@ public partial class Admin_Sitevisitnew : System.Web.UI.Page
         ad.Fill(dt);
         if (dt.Rows.Count > 0)
         {
-            txtEngiName.DataSource = dt;
+            txtengineername.DataSource = dt;
             // ddlcompnay.DataValueField = "ID";
-            txtEngiName.DataTextField = "EngineerName";
-            txtEngiName.DataBind();
-            txtEngiName.Items.Insert(0, " --  Select Engineer Name -- ");
+            txtengineername.DataTextField = "EngineerName";
+            txtengineername.DataBind();
+            txtengineername.Items.Insert(0, " --  Select Engineer Name -- ");
         }
     }
 
@@ -124,12 +124,16 @@ public partial class Admin_Sitevisitnew : System.Web.UI.Page
             {
                 DateTime Date = DateTime.Now;
                 con.Open();
+                string selectedEngineers = hiddenSelectedEngineers.Value; // New add because dropdown
+
                 SqlCommand cmd = new SqlCommand("SP_SiteVisit", con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Custname", txtsitename.Text);
                 cmd.Parameters.AddWithValue("@location", txtlocation.Text);
                 cmd.Parameters.AddWithValue("@Servicetype", ddlservicetype.SelectedValue);
-                cmd.Parameters.AddWithValue("@Engineername", txtEngiName.SelectedItem.Text);
+                //cmd.Parameters.AddWithValue("@Engineername", txtengineername.SelectedItem.Text);
+                cmd.Parameters.AddWithValue("@EngineerName", selectedEngineers);
+
                 cmd.Parameters.AddWithValue("@Product", txtproduct.Text);
                 cmd.Parameters.AddWithValue("@Date", txtvisitdate.Text);
                 cmd.Parameters.AddWithValue("@CreateBy", createdby);
@@ -159,7 +163,9 @@ public partial class Admin_Sitevisitnew : System.Web.UI.Page
                 cmd.Parameters.AddWithValue("@Custname", txtsitename.Text);
                 cmd.Parameters.AddWithValue("@location", txtlocation.Text);
                 cmd.Parameters.AddWithValue("@Servicetype", ddlservicetype.SelectedValue);
-                cmd.Parameters.AddWithValue("@Engineername", txtEngiName.SelectedItem.Text);
+                //cmd.Parameters.AddWithValue("@Engineername", txtengineername.SelectedItem.Text);
+                cmd.Parameters.AddWithValue("@EngineerName", hiddenSelectedEngineers.Value);
+
                 cmd.Parameters.AddWithValue("@Product", txtproduct.Text);
                 cmd.Parameters.AddWithValue("@Date", txtvisitdate.Text);
                 cmd.Parameters.AddWithValue("@CreateBy", createdby);
@@ -250,7 +256,8 @@ public partial class Admin_Sitevisitnew : System.Web.UI.Page
                 txtsitename.Text = dt.Rows[0]["Custname"].ToString();
                 txtlocation.Text = dt.Rows[0]["location"].ToString();
                 ddlservicetype.SelectedValue = dt.Rows[0]["Servicetype"].ToString();
-                txtEngiName.SelectedItem.Text = dt.Rows[0]["Engineername"].ToString();
+                //txtengineername.SelectedItem.Text = dt.Rows[0]["Engineername"].ToString();
+                hiddenSelectedEngineers.Value = dt.Rows[0]["Engineername"].ToString();
                 txtproduct.Text = dt.Rows[0]["Product"].ToString();
                 DateTime ffff1 = Convert.ToDateTime(dt.Rows[0]["Date"].ToString());
                 txtvisitdate.Text = ffff1.ToString("yyyy-MM-dd");
