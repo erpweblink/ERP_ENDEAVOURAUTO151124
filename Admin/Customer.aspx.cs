@@ -34,6 +34,15 @@ public partial class Reception_Customer : System.Web.UI.Page
                 btnSubmit.Text = "Update";
                 hidden.Value = id;
             }
+            // Code by Nikhil to edit Invert Entry page customer
+            if (Request.QueryString["Edit"] != null)
+            {
+                string id = Decrypt(Request.QueryString["Edit"].ToString());
+                loadData(id);
+
+                btnSubmit.Text = "Edit";
+                hidden.Value = id;
+            }
         }
     }
 
@@ -157,7 +166,7 @@ public partial class Reception_Customer : System.Web.UI.Page
                 ///delete First
                 SqlCommand cmddelete = new SqlCommand("DELETE FROM tblCustomerContactPerson WHERE cust_id=@cust_id", con);
                 cmddelete.Parameters.AddWithValue("@cust_id", Convert.ToInt32(hidden.Value));
-                 con.Open();
+                con.Open();
                 cmddelete.ExecuteNonQuery();
                 con.Close();
                 ///Insert Then
@@ -177,11 +186,107 @@ public partial class Reception_Customer : System.Web.UI.Page
                 if (Request.QueryString["Name"] != null)
                 {
                     ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Updated Successfully','0');", true);
-                }            
+                }
                 else
                 {
                     ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Updated Successfully','1');", true);
                 }
+            }            
+            // Code Code by Nikhil to edit Invert Entry page customer to edit Invert Entry page customer
+            else if (btnSubmit.Text == "Edit")
+            {
+                string value = hidden.Value;
+                DateTime Date = DateTime.Now;
+                con.Open();
+                SqlCommand cmd = new SqlCommand("SP_CustomerMaster", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@CustomerName", txtCustName.Text);
+                cmd.Parameters.AddWithValue("@GSTNo", txtgstno.Text);
+                cmd.Parameters.AddWithValue("@StateCode", DropDownListcustomer.Text);
+                cmd.Parameters.AddWithValue("@PanNo", txtpanno.Text);
+                cmd.Parameters.AddWithValue("@AddresLine1", txtAddresline1.Text);
+                cmd.Parameters.AddWithValue("@AddresLine2", txtadreLine2.Text);
+                cmd.Parameters.AddWithValue("@AddresLine3", txtadreLine3.Text);
+                cmd.Parameters.AddWithValue("@Area", txtarea.Text);
+                cmd.Parameters.AddWithValue("@City", txtcity.Text);
+                cmd.Parameters.AddWithValue("@Email", txtEmail.Text);
+                cmd.Parameters.AddWithValue("@Country", txtcountry.Text);
+                cmd.Parameters.AddWithValue("@MobNo", txtMobileNo.Text);
+                cmd.Parameters.AddWithValue("@PostalCode", txtPostalCode.Text);
+                cmd.Parameters.AddWithValue("@createdBy", createdby);
+                cmd.Parameters.AddWithValue("@createddate", Date);
+                cmd.Parameters.AddWithValue("@UpdatedBy", createdby);
+                cmd.Parameters.AddWithValue("@UpdatedDate", Date);
+                cmd.Parameters.AddWithValue("@isdeleted", '0');
+                cmd.Parameters.AddWithValue("@Custid", Convert.ToInt32(hidden.Value));
+                cmd.Parameters.Add("@cust_id", SqlDbType.Int).Direction = ParameterDirection.Output;
+                id = Convert.ToInt32(cmd.Parameters["@cust_id"].Value);
+                bool isactive = true;
+                if (DropDownListisActive.Text == "Yes")
+                {
+                    isactive = true;
+                }
+                else
+                {
+                    isactive = false;
+                }
+                cmd.Parameters.AddWithValue("@IsStatus", isactive);
+                cmd.Parameters.AddWithValue("@Action", "update");
+                cmd.ExecuteNonQuery();
+                con.Close();
+                ///delete First
+                SqlCommand cmddelete = new SqlCommand("DELETE FROM tblCustomerContactPerson WHERE cust_id=@cust_id", con);
+                cmddelete.Parameters.AddWithValue("@cust_id", Convert.ToInt32(hidden.Value));
+                con.Open();
+                cmddelete.ExecuteNonQuery();
+                con.Close();
+                ///Insert Then
+                foreach (GridViewRow g1 in gv_Customercontact.Rows)
+                {
+                    string personname = (g1.FindControl("lblCustomername") as Label).Text;
+                    string personno = (g1.FindControl("lblCustomernameno") as Label).Text;
+                    string email = (g1.FindControl("lblemailperson") as Label).Text;
+                    string designation = (g1.FindControl("lbldesignation") as Label).Text;
+
+                    con.Open();
+                    SqlCommand cmdtable = new SqlCommand("insert into tblCustomerContactPerson(CustName,ContactPerName,ContactPerNo,cust_id,CreatedBy,Email,designation)values('" + txtCustName.Text + "','" + personname + "','" + personno + "','" + Convert.ToInt32(hidden.Value) + "','" + createdby + "','" + email + "','" + designation + "')", con);
+                    cmdtable.ExecuteNonQuery();
+                    con.Close();
+                }
+                ///redirect pages
+                //if (Request.QueryString["Name"] != null)
+                //{
+                //    ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Updated Successfully','0');", true);
+                //    Response.Redirect("InwardEntry.aspx?CODE=" + encrypts(Convert.ToString(id)));
+                //}
+                //else
+                //{
+                //    ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Updated Successfully','1');", true);
+                //    Response.Redirect("InwardEntry.aspx?CODE=" + encrypts(Convert.ToString(id)));
+                //}
+                string redirectUrl = "InwardEntry.aspx?CUID=" + encrypts(Convert.ToString(value));
+
+
+                if (Request.QueryString["Name"] != null)
+                {
+                    ClientScript.RegisterStartupScript(
+                        this.GetType(),
+                        "alertRedirect",
+                        $"HideLabel('Data Updated Successfully', '0', '{redirectUrl}');",
+                        true
+                    );
+                }
+                else
+                {
+                    ClientScript.RegisterStartupScript(
+                        this.GetType(),
+                        "alertRedirect",
+                        $"HideLabel('Data Updated Successfully', '0', '{redirectUrl}');",
+                        true
+                    );
+                }
+
+
             }
         }
         catch (Exception ex)
@@ -256,7 +361,7 @@ public partial class Reception_Customer : System.Web.UI.Page
         //txtCustName.Text = ""; txtgstno.Text = ""; DropDownListcustomer.Text = ""; txtpanno.Text = ""; txtAddresline1.Text = ""; txtadreLine2.Text = "";
         //txtadreLine3.Text = ""; txtarea.Text = ""; txtEmail.Text = ""; txtcity.Text = ""; txtcountry.Text = ""; txtMobileNo.Text = ""; txtPostalCode.Text = "";
         //txtContactPerson1.Text = ""; txtContactPerson2.Text = ""; txtContactPersonNo1.Text = ""; txtContactPersonNo2.Text = "";
-       Response.Redirect("CustomerList.aspx");
+        Response.Redirect("CustomerList.aspx");
     }
 
     protected void loadData(string id)
@@ -271,7 +376,7 @@ public partial class Reception_Customer : System.Web.UI.Page
                 txtCustName.Text = dt.Rows[0]["CustomerName"].ToString();
                 txtgstno.Text = dt.Rows[0]["GSTNo"].ToString();
                 DropDownListcustomer.Text = dt.Rows[0]["StateCode"].ToString();
-                txtpanno.Text = dt.Rows[0]["PanNo"].ToString();               
+                txtpanno.Text = dt.Rows[0]["PanNo"].ToString();
                 txtAddresline1.Text = dt.Rows[0]["AddresLine1"].ToString();
                 txtadreLine2.Text = dt.Rows[0]["AddresLine2"].ToString();
                 txtadreLine3.Text = dt.Rows[0]["AddresLine3"].ToString();
@@ -350,7 +455,7 @@ public partial class Reception_Customer : System.Web.UI.Page
         if (txtcustomername.Text == "" && txtcustomernameno.Text == "")
         {
             ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Please fill Contact Details  !!!');", true);
-                    }
+        }
         else
         {
             ShowRecord();
@@ -382,5 +487,30 @@ public partial class Reception_Customer : System.Web.UI.Page
         txtdesignation.Text = string.Empty;
         gv_Customercontact.DataSource = (DataTable)ViewState["TableContact"];
         gv_Customercontact.DataBind();
+    }
+
+
+    public string encrypts(string encryptString)
+    {
+        string EncryptionKey = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        byte[] clearBytes = Encoding.Unicode.GetBytes(encryptString);
+        using (Aes encryptor = Aes.Create())
+        {
+            Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(EncryptionKey, new byte[] {
+            0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76
+        });
+            encryptor.Key = pdb.GetBytes(32);
+            encryptor.IV = pdb.GetBytes(16);
+            using (MemoryStream ms = new MemoryStream())
+            {
+                using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
+                {
+                    cs.Write(clearBytes, 0, clearBytes.Length);
+                    cs.Close();
+                }
+                encryptString = Convert.ToBase64String(ms.ToArray());
+            }
+        }
+        return encryptString;
     }
 }

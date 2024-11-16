@@ -11,6 +11,7 @@ using System.Text;
 using System.Security.Cryptography;
 using System.IO;
 using System.Collections;
+using System.Reflection;
 
 public partial class Reception_InwardEntry : System.Web.UI.Page
 {
@@ -28,10 +29,10 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
             {
                 this.txtDateIn.Text = DateTime.Now.ToString("yyyy-MM-dd");
                 this.txtDateIn.TextMode = TextBoxMode.Date;
-               // this.txtrepeateddate.Text = DateTime.Now.ToString("yyyy-MM-dd");
+                // this.txtrepeateddate.Text = DateTime.Now.ToString("yyyy-MM-dd");
                 //this.txtrepeateddate.TextMode = TextBoxMode.Date;
                 //ddlCustomer();
-               // Product();
+                // Product();
 
                 if (Request.QueryString["Id"] != null)
                 {
@@ -47,14 +48,21 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                     //string jobcode = String.Concat("JOB", jobid);
                     //txtJobNo.Text = jobcode;
                 }
+                // Code by Nikhil Invert Entry page customer load by Enquiry Master
                 if (Request.QueryString["CODE"] != null)
                 {
                     string code = Decrypt(Request.QueryString["CODE"].ToString());
-                   
-                   Load_Company_Details(code);
+                    Load_Company_Details(code, true, "CODE");
 
                 }
-            }   
+                if (Request.QueryString["CUID"] != null)
+                {
+                    string code = Decrypt(Request.QueryString["CUID"].ToString());
+                    Load_Company_Details(code, true, "CUID");
+
+                }
+
+            }
         }
 
         //if (!IsPostBack)
@@ -84,19 +92,100 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
         //}
     }
 
-    protected void Load_Company_Details(string code)
+    // Code by Nikhil Invert Entry page customer load by Enquiry Master
+    protected void Load_Company_Details(string code, bool isReadOnly, string val)
     {
         int enqID = Convert.ToInt32(code);
-        DataTable dt = new DataTable();
-        con.Open();
-        SqlDataAdapter sad = new SqlDataAdapter("SELECT *FROM [tbl_EnquiryMaster] where [EnquiryId] ='" + enqID + "'", con);
-        sad.Fill(dt);
-        if (dt.Rows.Count > 0)
-        {
-            txtcustomername.Text = dt.Rows[0]["customername"].ToString();         
-        }
+        DataTable enquiryTable = new DataTable();
+        DataTable customerTable = new DataTable();
 
+        if (val == "CUID")
+        {
+            try
+            {
+                con.Open();
+                SqlDataAdapter customerAdapter = new SqlDataAdapter(
+                    "SELECT * FROM [tblCustomer] WHERE [Custid] = @Name", con);
+                customerAdapter.SelectCommand.Parameters.AddWithValue("@Name", code);                
+                customerAdapter.Fill(customerTable);
+
+                if (customerTable.Rows.Count > 0)
+                {
+                    lnkBtmUpdate.CommandArgument = customerTable.Rows[0]["Custid"].ToString();
+                    txtcustomername.Text = customerTable.Rows[0]["CustomerName"].ToString(); 
+                }
+                else
+                {
+                    txtcustomername.Text = "Customer not found.";
+                }
+                txtcustomername.ReadOnly = isReadOnly;
+                lnkBtmNew.Visible = !isReadOnly;
+                lnkBtmUpdate.Visible = isReadOnly;
+            }
+            catch (Exception ex)
+            {
+                txtcustomername.Text = "Error: " + ex.Message;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+        }
+        else if (val == "CODE")
+        {
+            try
+            {
+                con.Open();
+                SqlDataAdapter enquiryAdapter = new SqlDataAdapter("SELECT * FROM [tbl_EnquiryMaster] WHERE [EnquiryId] = @EnquiryId", con);
+                enquiryAdapter.SelectCommand.Parameters.AddWithValue("@EnquiryId", enqID);
+                enquiryAdapter.Fill(enquiryTable);
+
+                if (enquiryTable.Rows.Count > 0)
+                {
+
+                    string customerName = enquiryTable.Rows[0]["customername"].ToString();
+                    string email = enquiryTable.Rows[0]["email"].ToString();
+                    string mobile = enquiryTable.Rows[0]["MobNo"].ToString();
+
+
+                    SqlDataAdapter customerAdapter = new SqlDataAdapter(
+                        "SELECT * FROM [tblCustomer] WHERE [CustomerName] = @Name AND [Email] = @Email AND [MobNo] = @Mobile", con);
+                    customerAdapter.SelectCommand.Parameters.AddWithValue("@Name", customerName);
+                    customerAdapter.SelectCommand.Parameters.AddWithValue("@Email", email);
+                    customerAdapter.SelectCommand.Parameters.AddWithValue("@Mobile", mobile);
+                    customerAdapter.Fill(customerTable);
+
+                    if (customerTable.Rows.Count > 0)
+                    {
+                        lnkBtmUpdate.CommandArgument = customerTable.Rows[0]["Custid"].ToString();
+                        txtcustomername.Text = customerTable.Rows[0]["CustomerName"].ToString();
+                    }
+                    else
+                    {
+                        txtcustomername.Text = "Customer not found.";
+                    }
+                }
+                else
+                {
+                    txtcustomername.Text = "Enquiry not found.";
+                }
+
+                txtcustomername.ReadOnly = isReadOnly;
+                lnkBtmNew.Visible = !isReadOnly;
+                lnkBtmUpdate.Visible = isReadOnly;
+            }
+            catch (Exception ex)
+            {
+                txtcustomername.Text = "Error: " + ex.Message;
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
     }
+
     protected void lnkBtmNew_Click(object sender, EventArgs e)
     {
         Response.Redirect("Customer.aspx?Name=InwardEntry");
@@ -244,7 +333,7 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                         FileUpload.SaveAs(Path);
                         cmd.Parameters.AddWithValue("@Imagepath", "~/ProductImg/" + codenew + "_" + Filenamenew);
                     }
-                   // cmd.Parameters.AddWithValue("@Imagepath", "~/ProductImg/" + FileUpload.FileName);
+                    // cmd.Parameters.AddWithValue("@Imagepath", "~/ProductImg/" + FileUpload.FileName);
                     cmd.Parameters.AddWithValue("@Action", "Insert");
                     cmd.ExecuteNonQuery();
                     con.Close();
@@ -398,7 +487,7 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
 
             }
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             throw ex;
         }
@@ -483,5 +572,39 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
             txtModelNo.Text = dt.Rows[0]["ModelNo"].ToString();
             txtSrNo.Text = dt.Rows[0]["SerialNo"].ToString();
         }
+    }
+
+    protected void lnkBtmUpdate_Click(object sender, EventArgs e)
+    {
+        LinkButton btn = (LinkButton)sender;
+        string custID = btn.CommandArgument;
+        if (custID != null)
+        {
+            Response.Redirect("Customer.aspx?Edit=" + encryptss(custID) + "");
+        }
+    }
+
+    public string encryptss(string encryptString)
+    {
+        string EncryptionKey = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        byte[] clearBytes = Encoding.Unicode.GetBytes(encryptString);
+        using (Aes encryptor = Aes.Create())
+        {
+            Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(EncryptionKey, new byte[] {
+            0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76
+        });
+            encryptor.Key = pdb.GetBytes(32);
+            encryptor.IV = pdb.GetBytes(16);
+            using (MemoryStream ms = new MemoryStream())
+            {
+                using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
+                {
+                    cs.Write(clearBytes, 0, clearBytes.Length);
+                    cs.Close();
+                }
+                encryptString = Convert.ToBase64String(ms.ToArray());
+            }
+        }
+        return encryptString;
     }
 }
