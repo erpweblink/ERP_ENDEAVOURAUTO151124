@@ -37,6 +37,69 @@
             }
         }
     </script>
+
+<%--New Script Engineer dropdown--%>
+    <script>
+        let selectedEngineers = [];
+
+        // Function to initialize saved engineers on page load
+        window.onload = function () {
+            const hiddenField = document.getElementById('<%= hiddenSelectedEngineers.ClientID %>');
+            if (hiddenField.value) {
+                selectedEngineers = hiddenField.value.split(", ");
+                updateEngineerDisplay();  // Display saved engineers immediately on load
+            }
+        };
+
+        function addEngineerToList() {
+            const dropdown = document.getElementById('<%= txtengineername.ClientID %>');
+             const selectedEngineer = dropdown.options[dropdown.selectedIndex].text;
+
+             if (!selectedEngineers.includes(selectedEngineer) && selectedEngineer !== "Select Engineer") {
+                 selectedEngineers.push(selectedEngineer);
+                 updateEngineerDisplay();
+                 updateHiddenField();
+             }
+        }
+
+         function updateEngineerDisplay() {
+             const container = document.getElementById('<%= selectedEngineersContainer.ClientID %>');
+             if (!container) return;
+
+             container.innerHTML = ''; 
+
+             selectedEngineers.forEach((engineer, index) => {
+                 const engineerElement = document.createElement('span');
+                 engineerElement.innerText = engineer;
+                 engineerElement.classList.add('badge', 'badge-primary', 'm-1', 'p-2');
+                 engineerElement.style.cursor = 'pointer';
+                 engineerElement.onclick = () => removeEngineer(index);
+
+                 const closeIcon = document.createElement('span');
+                 closeIcon.innerHTML = '&times;';
+                 closeIcon.style.marginLeft = '8px';
+                 closeIcon.style.cursor = 'pointer';
+
+                 engineerElement.appendChild(closeIcon);
+                 container.appendChild(engineerElement);
+             });
+         }
+
+         function removeEngineer(index) {
+             selectedEngineers.splice(index, 1); 
+             updateEngineerDisplay();
+             updateHiddenField();
+         }
+
+         function updateHiddenField() {
+                    const hiddenField = document.getElementById('<%= hiddenSelectedEngineers.ClientID %>');
+                    hiddenField.value = selectedEngineers.join(", ");
+         }
+
+    </script>
+
+<%--New Script Engineer dropdown End --%>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
@@ -147,12 +210,39 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <%--<div class="col-md-6">
                             <asp:Label ID="lblEngiName" runat="server" class="control-label col-sm-6">Engineer Name :</asp:Label>
                             <asp:DropDownList ID="txtEngiName" runat="server" class="form-control" AppendDataBoundItems="true">
                                 <asp:ListItem Value="" Text="Select Engineer"></asp:ListItem>
                             </asp:DropDownList>
-                        </div>
+                        </div>--%>
+
+                         <%-- New Code  --%>
+                            <div class="col-md-6">
+                                <asp:Label ID="lblEngiName" runat="server" class="control-label col-sm-6">
+                                    Engineer Name :<span class="spncls">*</span>:
+                                </asp:Label>
+
+                                <!-- Container for Displaying Selected Engineers -->
+                                <div id="selectedEngineersContainer" runat="server" class="form-control"
+                                    style="height: auto; min-height: 38px; padding: 5px; border: 1px solid #ced4da; background-color: #e9ecef;">
+                                </div>
+
+                                <asp:HiddenField ID="hiddenSelectedEngineers" runat="server" />
+
+                                <!-- Dropdown for Selecting Engineers -->
+                                <asp:DropDownList ID="txtengineername" runat="server" class="form-control" AppendDataBoundItems="true" 
+                                    onchange="addEngineerToList()">
+                                    <asp:ListItem Value="" Text="Select Engineer"></asp:ListItem>                              
+                                </asp:DropDownList>
+
+                                <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" ErrorMessage="Please enter Engineer Name" 
+                                    ControlToValidate="txtengineername" ForeColor="Red">
+                                </asp:RequiredFieldValidator><br />
+                                <br />
+                            </div>
+                             <%-- New Code End --%>
+
 
                         <div class="col-md-6">
                             <asp:Label ID="lblproduct" runat="server" class="control-label col-sm-6" for="cust">Product :<span class="spncls"></span></asp:Label>
