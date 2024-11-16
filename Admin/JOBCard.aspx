@@ -124,11 +124,12 @@
         hiddenField.value = selectedEngineers.join(", ");
     }
 
-        <%-- Accept Uppercase,Lowercase & Numbers --%>
+
+         <%-- Accept Uppercase,Lowercase & Numbers --%>
         function character(event) {
             var charCode = event.which ? event.which : event.keyCode;
 
-    
+
             if ((charCode >= 48 && charCode <= 57) || // Numbers 0-9
                 (charCode >= 65 && charCode <= 90) || // Uppercase A-Z
                 (charCode >= 97 && charCode <= 122) || // Lowercase a-z
@@ -136,11 +137,19 @@
                 charCode === 46) { // Dot (.)
                 return true;
             }
-    
+
             return false;
         }
 
+        <%-- Automatic outward date show --%>
+        window.onload = function () {
+            const dateTextBox = document.getElementById('<%= txtoutwardate.ClientID %>');
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0]; // Format: DD-MM-YYYY
+            dateTextBox.value = formattedDate;
+        };
     </script>
+
 
     <style>
         .spncls {
