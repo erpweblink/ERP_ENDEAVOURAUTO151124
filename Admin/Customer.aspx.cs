@@ -69,6 +69,7 @@ public partial class Reception_Customer : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@AddresLine3", txtadreLine3.Text);
                     cmd.Parameters.AddWithValue("@Area", txtarea.Text);
                     cmd.Parameters.AddWithValue("@City", txtcity.Text);
+                    cmd.Parameters.AddWithValue("@Email", txtEmail.Text);
                     cmd.Parameters.AddWithValue("@Country", txtcountry.Text);
                     cmd.Parameters.AddWithValue("@MobNo", txtMobileNo.Text);
                     cmd.Parameters.AddWithValue("@PostalCode", txtPostalCode.Text);
@@ -128,6 +129,7 @@ public partial class Reception_Customer : System.Web.UI.Page
                 cmd.Parameters.AddWithValue("@AddresLine3", txtadreLine3.Text);
                 cmd.Parameters.AddWithValue("@Area", txtarea.Text);
                 cmd.Parameters.AddWithValue("@City", txtcity.Text);
+                cmd.Parameters.AddWithValue("@Email", txtEmail.Text);
                 cmd.Parameters.AddWithValue("@Country", txtcountry.Text);
                 cmd.Parameters.AddWithValue("@MobNo", txtMobileNo.Text);
                 cmd.Parameters.AddWithValue("@PostalCode", txtPostalCode.Text);
@@ -203,6 +205,7 @@ public partial class Reception_Customer : System.Web.UI.Page
                 txtgstno.Text = dt.Rows[0]["GSTNo"].ToString();
                 DropDownListcustomer.Text = dt.Rows[0]["StateCode"].ToString();
                 txtpanno.Text = dt.Rows[0]["PanNo"].ToString();
+                txtEmail.Text = dt.Rows[0]["Email"].ToString();
                 txtAddresline1.Text = dt.Rows[0]["AddresLine1"].ToString();
                 txtadreLine2.Text = dt.Rows[0]["AddresLine2"].ToString();
                 txtadreLine3.Text = dt.Rows[0]["AddresLine3"].ToString();
@@ -268,7 +271,7 @@ public partial class Reception_Customer : System.Web.UI.Page
                 txtCustName.Text = dt.Rows[0]["CustomerName"].ToString();
                 txtgstno.Text = dt.Rows[0]["GSTNo"].ToString();
                 DropDownListcustomer.Text = dt.Rows[0]["StateCode"].ToString();
-                txtpanno.Text = dt.Rows[0]["PanNo"].ToString();
+                txtpanno.Text = dt.Rows[0]["PanNo"].ToString();               
                 txtAddresline1.Text = dt.Rows[0]["AddresLine1"].ToString();
                 txtadreLine2.Text = dt.Rows[0]["AddresLine2"].ToString();
                 txtadreLine3.Text = dt.Rows[0]["AddresLine3"].ToString();
@@ -277,7 +280,7 @@ public partial class Reception_Customer : System.Web.UI.Page
                 txtcountry.Text = dt.Rows[0]["Country"].ToString();
                 txtPostalCode.Text = dt.Rows[0]["PostalCode"].ToString();
                 txtMobileNo.Text = dt.Rows[0]["MobNo"].ToString();
-                //txtEmail.Text = dt.Rows[0]["Email"].ToString();
+                txtEmail.Text = dt.Rows[0]["Email"].ToString();
                 string flgStatus = "";
                 if (dt.Rows[0]["IsStatus"].ToString() == "False")
                 {
