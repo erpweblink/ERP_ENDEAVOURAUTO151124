@@ -2,25 +2,49 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <script>
-        function HideLabel(msg, flg) {
+        // Old code 
+
+        //function HideLabel(msg, flg) {
+        //    Swal.fire({
+        //        icon: 'success',
+        //        text: msg,
+        //        timer: 3000,
+        //        showCancelButton: false,
+        //        showConfirmButton: false
+        //    }).then(function () {
+        //        if (flg == '1') {
+        //            window.location.href = "../Admin/CustomerList.aspx";
+        //        }
+        //        else if (flg == '0') {
+        //            window.location.href = "../Admin/InwardEntry.aspx";
+        //        }
+        //        else {
+        //            window.location.href = "../Admin/Quotation_Master.aspx";
+        //        }
+        //    })
+        //};
+
+        // Code by Nikhil for inward entry edit field 
+
+        function HideLabel(msg, flg, url) {   
             Swal.fire({
                 icon: 'success',
                 text: msg,
                 timer: 3000,
                 showCancelButton: false,
                 showConfirmButton: false
-            }).then(function () {
-                if (flg == '1') {
+            }).then(function () {          
+                if (url) {
+                    window.location.href = url; 
+                } else if (flg == '1') {
                     window.location.href = "../Admin/CustomerList.aspx";
-                }
-                else if (flg == '0') {
+                } else if (flg == '0') {
                     window.location.href = "../Admin/InwardEntry.aspx";
-                }
-                else {
+                } else {
                     window.location.href = "../Admin/Quotation_Master.aspx";
                 }
-            })
-        };
+            });
+        }
     </script>
     <!---char--->
     <script>
@@ -175,7 +199,7 @@
                         <div class="col-md-5">
                             <asp:Label ID="MailId" class="control-label " runat="server">Email :<span class="spncls">*</span></asp:Label>
                             <asp:TextBox runat="server" type="Email" class="form-control" ID="txtEmail" TextMode="Email" />
-                           <%-- <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" ErrorMessage="Please fill Email" ControlToValidate="emailId" ForeColor="Red"></asp:RequiredFieldValidator>--%>
+                            <%-- <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" ErrorMessage="Please fill Email" ControlToValidate="emailId" ForeColor="Red"></asp:RequiredFieldValidator>--%>
                         </div>
                         <div class="col-md-5">
                             <asp:Label ID="lblmob" class="control-label col-sm-6" runat="server">Mobile No :<span class="spncls">*</span></asp:Label>

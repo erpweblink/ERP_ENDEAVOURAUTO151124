@@ -94,7 +94,7 @@
                             <br />
                         </div>
                         <div class="col-md-6">
-
+                            
                             <asp:Label ID="lblCustName" runat="server" class="control-label col-sm-6 custlbl">Customer Name :<span class="spncls">*</span></asp:Label>
                             <asp:TextBox runat="server" class="form-control txtsear mt-top" ID="txtcustomername" name="Search" placeholder="Search Customer" onkeypress="return character(event)" />
                             <asp:AutoCompleteExtender ID="AutoCompleteExtender1" CompletionListCssClass="completionList"
@@ -110,6 +110,7 @@
                                 </asp:DropDownList>--%>
 
                                 &nbsp;&nbsp;<asp:LinkButton ID="lnkBtmNew" runat="server" CssClass="lnk " OnClick="lnkBtmNew_Click" CausesValidation="false">+ADD</asp:LinkButton>
+                               &nbsp;&nbsp;<asp:LinkButton ID="lnkBtmUpdate" runat="server" CssClass="lnk " OnClick="lnkBtmUpdate_Click" CausesValidation="false" Visible="false">+EDIT</asp:LinkButton>
 
                             <br />
                         </div>
