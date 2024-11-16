@@ -225,7 +225,7 @@
                                         <asp:Label ID="lblModelNo" runat="server" Text='<%# Eval("ModelNo") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Engineer Name 1">
+                                <asp:TemplateField HeaderText="Engineer Name ">
                                     <ItemTemplate>
                                         <asp:Label ID="lblenginerrname" runat="server" Text='<%# Eval("EngineerName") %>'></asp:Label>
                                     </ItemTemplate>

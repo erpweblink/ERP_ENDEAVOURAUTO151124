@@ -353,7 +353,19 @@ public partial class Admin_JOBCard : System.Web.UI.Page
                 txtmotortrial.Text = dt.Rows[0]["MotorTrial"].ToString();
                 txtmotorrating.Text = dt.Rows[0]["MotorRating"].ToString();
                 txtmotorcurrent.Text = dt.Rows[0]["MotorCurrent"].ToString();
-                DateTime ffff4 = Convert.ToDateTime(dt.Rows[0]["TrialTime"].ToString());
+
+                DateTime ffff4;
+                if (dt.Rows[0]["TrialTime"] == DBNull.Value || string.IsNullOrWhiteSpace(dt.Rows[0]["TrialTime"].ToString()))
+                {
+                    ffff4 = DateTime.MinValue;
+                }
+                else
+                {
+                    if (!DateTime.TryParse(dt.Rows[0]["TrialTime"].ToString(), out ffff4))
+                    {
+                        ffff4 = DateTime.MinValue;
+                    }
+                }
                 txttrialtimedate.Text = ffff4.ToString("yyyy-MM-dd");
             }
 
