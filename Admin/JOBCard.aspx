@@ -129,6 +129,7 @@
         function character(event) {
             var charCode = event.which ? event.which : event.keyCode;
 
+
             if ((charCode >= 48 && charCode <= 57) || // Numbers 0-9
                 (charCode >= 65 && charCode <= 90) || // Uppercase A-Z
                 (charCode >= 97 && charCode <= 122) || // Lowercase a-z
