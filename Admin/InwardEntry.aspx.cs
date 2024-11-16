@@ -10,6 +10,7 @@ using System.Configuration;
 using System.Text;
 using System.Security.Cryptography;
 using System.IO;
+using System.Collections;
 
 public partial class Reception_InwardEntry : System.Web.UI.Page
 {
@@ -46,7 +47,14 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                     //string jobcode = String.Concat("JOB", jobid);
                     //txtJobNo.Text = jobcode;
                 }
-            }
+                if (Request.QueryString["CODE"] != null)
+                {
+                    string code = Decrypt(Request.QueryString["CODE"].ToString());
+                   
+                   Load_Company_Details(code);
+
+                }
+            }   
         }
 
         //if (!IsPostBack)
@@ -74,6 +82,20 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
         //        //txtJobNo.Text = jobcode;
         //    }
         //}
+    }
+
+    protected void Load_Company_Details(string code)
+    {
+        int enqID = Convert.ToInt32(code);
+        DataTable dt = new DataTable();
+        con.Open();
+        SqlDataAdapter sad = new SqlDataAdapter("SELECT *FROM [tbl_EnquiryMaster] where [EnquiryId] ='" + enqID + "'", con);
+        sad.Fill(dt);
+        if (dt.Rows.Count > 0)
+        {
+            txtcustomername.Text = dt.Rows[0]["customername"].ToString();         
+        }
+
     }
     protected void lnkBtmNew_Click(object sender, EventArgs e)
     {

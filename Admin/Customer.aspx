@@ -80,13 +80,11 @@
                             <asp:Label ID="lblgstno" class="control-label col-sm-6" runat="server">GST No. :</asp:Label>
                             <asp:TextBox runat="server" type="Text" class="form-control" ID="txtgstno" name="GSTNo" MaxLength="15" />
                             <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="Please fill GST No." ControlToValidate="txtgstno" ForeColor="Red"></asp:RequiredFieldValidator>--%>
-
                         </div>
                         <div class="col-md-3">
                             <asp:Label ID="lblpan" class="control-label col-sm-6" runat="server">PAN No. :</asp:Label>
                             <asp:TextBox runat="server" type="Text" class="form-control" ID="txtpanno" name="PanNo" MaxLength="10" />
                             <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ErrorMessage="Please fill PAN No." ControlToValidate="txtpanno" ForeColor="Red"></asp:RequiredFieldValidator>--%>
-
                         </div>
                     </div>
                     <div class="row m-0">
@@ -174,12 +172,17 @@
                         </div>
                     </div>
                     <div class="row m-2">
-                        <div class="col-md-6">
-                            <asp:Label ID="lblmob" class="control-label col-sm-6" runat="server">Mobile No :<span class="spncls"></span></asp:Label>
+                        <div class="col-md-5">
+                            <asp:Label ID="MailId" class="control-label " runat="server">Email :<span class="spncls">*</span></asp:Label>
+                            <asp:TextBox runat="server" type="Email" class="form-control" ID="txtEmail" TextMode="Email" />
+                           <%-- <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" ErrorMessage="Please fill Email" ControlToValidate="emailId" ForeColor="Red"></asp:RequiredFieldValidator>--%>
+                        </div>
+                        <div class="col-md-5">
+                            <asp:Label ID="lblmob" class="control-label col-sm-6" runat="server">Mobile No :<span class="spncls">*</span></asp:Label>
                             <asp:TextBox runat="server" type="Text" class="form-control" ID="txtMobileNo" name="MobileNo" MaxLength="11" MinLength="10" onkeypress="return isNumberKey(event)" />
                             <%--                            <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="Please fill Mobile Number" ControlToValidate="txtMobileNo" ForeColor="Red"></asp:RequiredFieldValidator>--%>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-2">
                             <asp:Label ID="lblisstatus" class="control-label col-sm-6" runat="server">Is Active :</asp:Label>
                             <asp:DropDownList ID="DropDownListisActive" runat="server" class="form-control">
                                 <asp:ListItem>Yes</asp:ListItem>
@@ -194,7 +197,7 @@
                             <div class="col-md-3">
                                 <asp:Label ID="lblcontactperson" class="control-label " runat="server">Contact Person :<span class="spncls"></span></asp:Label>
                                 <asp:TextBox runat="server" class="form-control" ID="txtcustomername" />
-<%--                                <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" ErrorMessage="Please fill Contact Person" ControlToValidate="txtcustomername" ForeColor="Red"></asp:RequiredFieldValidator>--%>
+                                <%--                                <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" ErrorMessage="Please fill Contact Person" ControlToValidate="txtcustomername" ForeColor="Red"></asp:RequiredFieldValidator>--%>
                             </div>
                             <div class="col-md-3">
                                 <asp:Label ID="lblpersonno" class="control-label " runat="server">Contact Person No. :<span class="spncls"></span></asp:Label>
@@ -203,7 +206,7 @@
                             <div class="col-md-3">
                                 <asp:Label ID="lbltemail" class="control-label " runat="server">Email :<span class="spncls"></span></asp:Label>
                                 <asp:TextBox runat="server" type="Email" class="form-control" ID="txttemail" TextMode="Email" />
-<%--                                <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" ErrorMessage="Please fill Email" ControlToValidate="txttemail" ForeColor="Red"></asp:RequiredFieldValidator>--%>
+                                <%--                                <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" ErrorMessage="Please fill Email" ControlToValidate="txttemail" ForeColor="Red"></asp:RequiredFieldValidator>--%>
                             </div>
                             <div class="col-md-2">
                                 <asp:Label ID="lbldesignation" class="control-label " runat="server">Designation :<span class="spncls"></span></asp:Label>
@@ -266,11 +269,11 @@
                     </div>
                 </div>
                 <center>
-                <div class="col-md-6">
-              <asp:Button  ID="btnSubmit" runat="server" class="btn btn-primary " Text="Submit" OnClick="btnSubmit_Click"></asp:Button>
-                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-             <asp:Button  ID="btnCancel" runat="server" class="btn btn-primary cancelbutton" Text="Cancel" OnClick="btnCancel_Click" CausesValidation="False"></asp:Button>
-             </div>
+                    <div class="col-md-6">
+                        <asp:Button ID="btnSubmit" runat="server" class="btn btn-primary " Text="Submit" OnClick="btnSubmit_Click"></asp:Button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+             <asp:Button ID="btnCancel" runat="server" class="btn btn-primary cancelbutton" Text="Cancel" OnClick="btnCancel_Click" CausesValidation="False"></asp:Button>
+                    </div>
                 </center>
                 <asp:HiddenField runat="server" ID="hidden" />
             </div>
