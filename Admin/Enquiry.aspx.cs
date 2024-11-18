@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -24,7 +25,7 @@ public partial class Admin_Enquiry : System.Web.UI.Page
 
             if (Request.QueryString["EnquiryId"] != null)
             {
-                string id = Decrypt(Request.QueryString["EnquiryId"].ToString());               
+                string id = Decrypt(Request.QueryString["EnquiryId"].ToString());
                 loadData(id);
 
                 btnSubmit.Text = "Update";
@@ -38,12 +39,13 @@ public partial class Admin_Enquiry : System.Web.UI.Page
         //string createdby = "Admin";
         string createdby = Session["adminname"].ToString();
         int id;
-        string oldName = "", oldMobNo = "", oldEmail = "";
+        string oldName = "", oldMobNo = "", oldEmail = "", oldProductImage = "", oldProductName = "";
         try
         {
+            string Path = null;
             if (btnSubmit.Text == "Save")
             {
-                con.Open();                
+                con.Open();
                 SqlCommand cmd1 = new SqlCommand(
                     "SELECT [EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [Email], [IsStatus] " +
                     "FROM [tbl_EnquiryMaster] " +
@@ -63,11 +65,11 @@ public partial class Admin_Enquiry : System.Web.UI.Page
                     SqlCommand cmd = new SqlCommand("SP_EnquiryMaster", con);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@CustomerName", txtCustName.Text);
-                   
+
                     cmd.Parameters.AddWithValue("@StateCode", DropDownListcustomer.Text);
-                 
+
                     cmd.Parameters.AddWithValue("@AddresLine1", txtAddresline1.Text);
-                 
+
                     cmd.Parameters.AddWithValue("@Area", txtarea.Text);
                     cmd.Parameters.AddWithValue("@City", txtcity.Text);
                     cmd.Parameters.AddWithValue("@Country", txtcountry.Text);
@@ -77,6 +79,22 @@ public partial class Admin_Enquiry : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@createdBy", createdby);
                     cmd.Parameters.AddWithValue("@createddate", Date);
                     cmd.Parameters.AddWithValue("@isdeleted", '0');
+                    // Product Information
+                    cmd.Parameters.AddWithValue("@ProductName", txtproductname.Text);
+                    cmd1.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
+                    cmd1.Parameters.AddWithValue("@otherinfo", txtotherinfo.Text);
+                    if (FileUpload.HasFile)
+                    {
+                        var Filenamenew = FileUpload.FileName;
+                        string codenew = Guid.NewGuid().ToString();
+                        Path = Server.MapPath("~/ProductImg/") + codenew + "_" + Filenamenew;
+                        FileUpload.SaveAs(Path);
+                        cmd1.Parameters.AddWithValue("@Imagepath", "~/ProductImg/" + codenew + "_" + Filenamenew);
+                    }
+                    else
+                    {
+                        cmd1.Parameters.AddWithValue("@Imagepath", lblPath.Text);
+                    }
 
                     // Customer table search values
                     cmd.Parameters.AddWithValue("@OLDCustomerName", oldName);
@@ -98,7 +116,7 @@ public partial class Admin_Enquiry : System.Web.UI.Page
                     cmd.ExecuteNonQuery();
                     con.Close();
                     id = Convert.ToInt32(cmd.Parameters["@enquiry_id"].Value);
-                    
+
                     if (Request.QueryString["Name"] != null)
                     {
                         ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Saved Successfully','0');", true);
@@ -114,7 +132,7 @@ public partial class Admin_Enquiry : System.Web.UI.Page
                 int Eqid = Convert.ToInt32(hidden.Value);
                 con.Open();
                 SqlCommand cmd2 = new SqlCommand(
-                    "SELECT [CustomerName], [MobNo], [Email]" +
+                    "SELECT [CustomerName], [MobNo], [Email], [ProductImage], [ProdName]" +
                     "FROM [tbl_EnquiryMaster] " +
                     "WHERE [EnquiryId] ='" + Eqid + "'",
                     con);
@@ -122,20 +140,22 @@ public partial class Admin_Enquiry : System.Web.UI.Page
                 SqlDataReader reader = cmd2.ExecuteReader();
                 if (reader.Read())
                 {
-                     oldName = reader["CustomerName"].ToString();
-                     oldMobNo = reader["MobNo"].ToString();
-                     oldEmail = reader["Email"].ToString();                   
+                    oldName = reader["CustomerName"].ToString();
+                    oldMobNo = reader["MobNo"].ToString();
+                    oldEmail = reader["Email"].ToString();
+                    oldProductImage = reader["ProductImage"].ToString();
+                    oldProductName = reader["ProdName"].ToString();
                 }
                 reader.Close();
                 con.Close();
-                
+
                 DateTime Date = DateTime.Now;
                 con.Open();
                 SqlCommand cmd = new SqlCommand("SP_EnquiryMaster", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@CustomerName", txtCustName.Text);              
-                cmd.Parameters.AddWithValue("@StateCode", DropDownListcustomer.Text);             
-                cmd.Parameters.AddWithValue("@AddresLine1", txtAddresline1.Text);               
+                cmd.Parameters.AddWithValue("@CustomerName", txtCustName.Text);
+                cmd.Parameters.AddWithValue("@StateCode", DropDownListcustomer.Text);
+                cmd.Parameters.AddWithValue("@AddresLine1", txtAddresline1.Text);
                 cmd.Parameters.AddWithValue("@Area", txtarea.Text);
                 cmd.Parameters.AddWithValue("@City", txtcity.Text);
                 cmd.Parameters.AddWithValue("@Country", txtcountry.Text);
@@ -147,6 +167,29 @@ public partial class Admin_Enquiry : System.Web.UI.Page
                 cmd.Parameters.AddWithValue("@UpdatedBy", createdby);
                 cmd.Parameters.AddWithValue("@UpdatedDate", Date);
                 cmd.Parameters.AddWithValue("@isdeleted", '0');
+                // Product Information
+                cmd.Parameters.AddWithValue("@ProductName", txtproductname.Text);
+                cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
+                cmd.Parameters.AddWithValue("@otherinfo", txtotherinfo.Text);
+                if (FileUpload.HasFile)
+                {
+                    var Filenamenew = FileUpload.FileName;
+                    string codenew = Guid.NewGuid().ToString();
+                    Path = Server.MapPath("~/ProductImg/") + codenew + "_" + Filenamenew;
+                    FileUpload.SaveAs(Path);
+                    cmd.Parameters.AddWithValue("@Imagepath", "~/ProductImg/" + codenew + "_" + Filenamenew);
+                }
+                else
+                {
+                    if(oldProductName == txtproductname.Text)
+                    {
+                        cmd.Parameters.AddWithValue("@Imagepath", oldProductImage);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Imagepath", lblPath.Text);
+                    }                    
+                }
                 // Customer table search values
                 cmd.Parameters.AddWithValue("@OLDCustomerName", oldName);
                 cmd.Parameters.AddWithValue("@OLDCustomerMobile", oldMobNo);
@@ -196,11 +239,11 @@ public partial class Admin_Enquiry : System.Web.UI.Page
             if (dt.Rows.Count > 0)
             {
                 txtCustName.Text = dt.Rows[0]["CustomerName"].ToString();
-               
+
                 DropDownListcustomer.Text = dt.Rows[0]["StateCode"].ToString();
-               
+
                 txtAddresline1.Text = dt.Rows[0]["AddresLine1"].ToString();
-              
+
                 txtarea.Text = dt.Rows[0]["Area"].ToString();
                 txtcity.Text = dt.Rows[0]["City"].ToString();
                 txtcountry.Text = dt.Rows[0]["Country"].ToString();
@@ -215,7 +258,7 @@ public partial class Admin_Enquiry : System.Web.UI.Page
                 {
                     flgStatus = "Yes";
                 }
-                DropDownListisActive.Text = flgStatus;                      
+                DropDownListisActive.Text = flgStatus;
             }
         }
         catch (Exception ex)
@@ -234,29 +277,35 @@ public partial class Admin_Enquiry : System.Web.UI.Page
     {
         try
         {
-            int Eid = Convert.ToInt32(id);           
+            int Eid = Convert.ToInt32(id);
             SqlDataAdapter sad = new SqlDataAdapter(
     "SELECT [EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [IsStatus], " +
-    "[Email], [CreatedBy], [Createddate], [UpdatedBy], [UpdatedDate], [isdeleted] " +
+    "[Email], [CreatedBy], [Createddate], [UpdatedBy], [UpdatedDate], [isdeleted]," +
+    "[ProdName], [ServiceType], [ProductImage], [OtherInformation]" +
     "FROM [tbl_EnquiryMaster] " +
     "WHERE [EnquiryId] ='" + Eid + "'",
     con);
             DataTable dt = new DataTable();
             sad.Fill(dt);
             if (dt.Rows.Count > 0)
-            {                
+            {
                 txtCustName.Text = dt.Rows[0]["CustomerName"].ToString();
-              
+
                 DropDownListcustomer.Text = dt.Rows[0]["StateCode"].ToString();
-              
+
                 txtAddresline1.Text = dt.Rows[0]["AddresLine1"].ToString();
-           
+
                 txtarea.Text = dt.Rows[0]["Area"].ToString();
                 txtcity.Text = dt.Rows[0]["City"].ToString();
                 txtcountry.Text = dt.Rows[0]["Country"].ToString();
                 txtPostalCode.Text = dt.Rows[0]["PostalCode"].ToString();
                 txtMobileNo.Text = dt.Rows[0]["MobNo"].ToString();
                 txttemail.Text = dt.Rows[0]["Email"].ToString();
+                txtproductname.Text = dt.Rows[0]["ProdName"].ToString();
+                ddlservicetype.Text = dt.Rows[0]["ServiceType"].ToString();
+                txtotherinfo.Text = dt.Rows[0]["OtherInformation"].ToString();
+                // lblPath.Text = dt.Rows[0]["ProductImage"].ToString();
+
                 string flgStatus = "";
                 if (dt.Rows[0]["IsStatus"].ToString() == "False")
                 {
@@ -266,7 +315,7 @@ public partial class Admin_Enquiry : System.Web.UI.Page
                 {
                     flgStatus = "Yes";
                 }
-                DropDownListisActive.Text = flgStatus;             
+                DropDownListisActive.Text = flgStatus;
             }
         }
         catch (Exception ex)
@@ -300,5 +349,38 @@ public partial class Admin_Enquiry : System.Web.UI.Page
             }
         }
         return cipherText;
+    }
+    //Product Autocomplate 
+    [System.Web.Script.Services.ScriptMethod()]
+    [System.Web.Services.WebMethod]
+    public static List<string> GetProductList(string prefixText, int count)
+    {
+        return AutoFillGetProductList(prefixText);
+    }
+    public static List<string> AutoFillGetProductList(string prefixText)
+    {
+        using (SqlConnection con = new SqlConnection())
+        {
+            con.ConnectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+
+            using (SqlCommand com = new SqlCommand())
+            {
+                com.CommandText = "select DISTINCT ProdName from [tblProduct] where " + "ProdName like @Search + '%' AND isdeleted='0'";
+
+                com.Parameters.AddWithValue("@Search", prefixText);
+                com.Connection = con;
+                con.Open();
+                List<string> ProdName = new List<string>();
+                using (SqlDataReader sdr = com.ExecuteReader())
+                {
+                    while (sdr.Read())
+                    {
+                        ProdName.Add(sdr["ProdName"].ToString());
+                    }
+                }
+                con.Close();
+                return ProdName;
+            }
+        }
     }
 }

@@ -299,11 +299,9 @@
              <asp:Button ID="btnCancel" runat="server" class="btn btn-primary cancelbutton" Text="Cancel" OnClick="btnCancel_Click" CausesValidation="False"></asp:Button>
                     </div>
                 </center>
-                <asp:HiddenField runat="server" ID="hidden" />
+                <asp:HiddenField runat="server" ID="hidden" />                
             </div>
-        </div>
-        </div>
-      
+        </div>         
     </form>
 </asp:Content>
 

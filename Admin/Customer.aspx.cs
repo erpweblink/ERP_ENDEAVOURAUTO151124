@@ -40,7 +40,8 @@ public partial class Reception_Customer : System.Web.UI.Page
                 string id = Decrypt(Request.QueryString["Edit"].ToString());
                 loadData(id);
 
-                btnSubmit.Text = "Edit";
+                btnSubmit.Text = "Save & Go Back";
+                btnCancel.Visible = false;
                 hidden.Value = id;
             }
         }
@@ -193,9 +194,15 @@ public partial class Reception_Customer : System.Web.UI.Page
                 }
             }            
             // Code Code by Nikhil to edit Invert Entry page customer to edit Invert Entry page customer
-            else if (btnSubmit.Text == "Edit")
+            else if (btnSubmit.Text == "Save & Go Back")
             {
+
                 string value = hidden.Value;
+
+                string[] idParts = value.Split(',');
+                string primaryId = idParts[0].Trim();
+                string secondaryId = idParts.Length > 1 ? idParts[1].Trim() : string.Empty;
+
                 DateTime Date = DateTime.Now;
                 con.Open();
                 SqlCommand cmd = new SqlCommand("SP_CustomerMaster", con);
@@ -218,7 +225,7 @@ public partial class Reception_Customer : System.Web.UI.Page
                 cmd.Parameters.AddWithValue("@UpdatedBy", createdby);
                 cmd.Parameters.AddWithValue("@UpdatedDate", Date);
                 cmd.Parameters.AddWithValue("@isdeleted", '0');
-                cmd.Parameters.AddWithValue("@Custid", Convert.ToInt32(hidden.Value));
+                cmd.Parameters.AddWithValue("@Custid", Convert.ToInt32(primaryId));
                 cmd.Parameters.Add("@cust_id", SqlDbType.Int).Direction = ParameterDirection.Output;
                 id = Convert.ToInt32(cmd.Parameters["@cust_id"].Value);
                 bool isactive = true;
@@ -236,7 +243,7 @@ public partial class Reception_Customer : System.Web.UI.Page
                 con.Close();
                 ///delete First
                 SqlCommand cmddelete = new SqlCommand("DELETE FROM tblCustomerContactPerson WHERE cust_id=@cust_id", con);
-                cmddelete.Parameters.AddWithValue("@cust_id", Convert.ToInt32(hidden.Value));
+                cmddelete.Parameters.AddWithValue("@cust_id", Convert.ToInt32(primaryId));
                 con.Open();
                 cmddelete.ExecuteNonQuery();
                 con.Close();
@@ -253,18 +260,10 @@ public partial class Reception_Customer : System.Web.UI.Page
                     cmdtable.ExecuteNonQuery();
                     con.Close();
                 }
-                ///redirect pages
-                //if (Request.QueryString["Name"] != null)
-                //{
-                //    ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Updated Successfully','0');", true);
-                //    Response.Redirect("InwardEntry.aspx?CODE=" + encrypts(Convert.ToString(id)));
-                //}
-                //else
-                //{
-                //    ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Updated Successfully','1');", true);
-                //    Response.Redirect("InwardEntry.aspx?CODE=" + encrypts(Convert.ToString(id)));
-                //}
-                string redirectUrl = "InwardEntry.aspx?CUID=" + encrypts(Convert.ToString(value));
+
+                string formattedValue = $"{primaryId} , {secondaryId}";
+                string encryptedValue = encrypts(formattedValue);
+                string redirectUrl = "InwardEntry.aspx?CUID=" + encryptedValue;
 
 
                 if (Request.QueryString["Name"] != null)
@@ -368,7 +367,13 @@ public partial class Reception_Customer : System.Web.UI.Page
     {
         try
         {
-            SqlDataAdapter sad = new SqlDataAdapter("SELECT [Custid],[CustomerName],[GSTNo],[StateCode],[PanNo],[AddresLine1],[AddresLine2],[AddresLine3],[Area],[Email],[City],[Country],[MobNo],[PostalCode],[ContactPerName1],[ContactPerNo1],[ContactPerName2],[ContactPerNo2],[IsStatus],[CreatedBy],[Createddate],[UpdatedBy],[UpdatedDate] FROM [tblCustomer] where Custid='" + id + "'", con);
+          
+            string[] idParts = id.Split(',');
+            string primaryId = idParts[0].Trim();
+            string secondaryId = idParts.Length > 1 ? idParts[1].Trim() : string.Empty;
+
+
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT [Custid],[CustomerName],[GSTNo],[StateCode],[PanNo],[AddresLine1],[AddresLine2],[AddresLine3],[Area],[Email],[City],[Country],[MobNo],[PostalCode],[ContactPerName1],[ContactPerNo1],[ContactPerName2],[ContactPerNo2],[IsStatus],[CreatedBy],[Createddate],[UpdatedBy],[UpdatedDate] FROM [tblCustomer] where Custid='" + primaryId + "'", con);
             DataTable dt = new DataTable();
             sad.Fill(dt);
             if (dt.Rows.Count > 0)
@@ -385,7 +390,7 @@ public partial class Reception_Customer : System.Web.UI.Page
                 txtcountry.Text = dt.Rows[0]["Country"].ToString();
                 txtPostalCode.Text = dt.Rows[0]["PostalCode"].ToString();
                 txtMobileNo.Text = dt.Rows[0]["MobNo"].ToString();
-                txtEmail.Text = dt.Rows[0]["Email"].ToString();
+                txtEmail.Text = dt.Rows[0]["Email"].ToString();                
                 string flgStatus = "";
                 if (dt.Rows[0]["IsStatus"].ToString() == "False")
                 {
