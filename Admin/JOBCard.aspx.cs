@@ -348,8 +348,35 @@ public partial class Admin_JOBCard : System.Web.UI.Page
                 txtinwarddate.Text = ffff2.ToString("yyyy-MM-dd");
                 DateTime ffff1 = Convert.ToDateTime(dt.Rows[0]["outwardDate"].ToString());
                 txtoutwardate.Text = ffff1.ToString("yyyy-MM-dd");
-                DateTime ffff3 = Convert.ToDateTime(dt.Rows[0]["outwardDate"].ToString());
-                txtreparingdate.Text = ffff3.ToString("yyyy-MM-dd");
+                //DateTime ffff3 = Convert.ToDateTime(dt.Rows[0]["Reparingdate"].ToString());
+                //txtreparingdate.Text = ffff3.ToString("yyyy-MM-dd");
+
+                DateTime ffff3;
+                if (dt.Rows[0]["Reparingdate"] == DBNull.Value || string.IsNullOrEmpty(dt.Rows[0]["Reparingdate"].ToString()))
+                {
+                    ffff3 = new DateTime(1900, 1, 1);
+                }
+                else
+                {
+                    ffff3 = Convert.ToDateTime(dt.Rows[0]["Reparingdate"].ToString());
+                }
+                if (ffff3 == new DateTime(1900, 1, 1))
+                {
+                    txtreparingdate.Text = "";
+                }
+                else
+                {
+                    txtreparingdate.Text = ffff3.ToString("yyyy-MM-dd");
+                }
+
+                //DateTime ffff4 = Convert.ToDateTime(dt.Rows[0]["RepeatedDate"].ToString());
+                //DateTime defaultDate = new DateTime(1900, 1, 1);
+
+                //if (ffff4 != defaultDate)
+                //{
+                //    txtrepeateddate.Text = ffff4.ToString("yyyy-MM-dd");
+                //}
+
                 txtmotortrial.Text = dt.Rows[0]["MotorTrial"].ToString();
                 txtmotorrating.Text = dt.Rows[0]["MotorRating"].ToString();
                 txtmotorcurrent.Text = dt.Rows[0]["MotorCurrent"].ToString();

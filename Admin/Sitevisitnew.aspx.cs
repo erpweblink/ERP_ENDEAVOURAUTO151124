@@ -259,8 +259,16 @@ public partial class Admin_Sitevisitnew : System.Web.UI.Page
                 //txtengineername.SelectedItem.Text = dt.Rows[0]["Engineername"].ToString();
                 hiddenSelectedEngineers.Value = dt.Rows[0]["Engineername"].ToString();
                 txtproduct.Text = dt.Rows[0]["Product"].ToString();
+                //DateTime ffff1 = Convert.ToDateTime(dt.Rows[0]["Date"].ToString());
+                //txtvisitdate.Text = ffff1.ToString("yyyy-MM-dd");
+
                 DateTime ffff1 = Convert.ToDateTime(dt.Rows[0]["Date"].ToString());
-                txtvisitdate.Text = ffff1.ToString("yyyy-MM-dd");
+                DateTime defaultDate = new DateTime(1900, 1, 1);
+
+                if (ffff1 != defaultDate)
+                {
+                    txtvisitdate.Text = ffff1.ToString("yyyy-MM-dd");
+                }
             }
             else
             {
