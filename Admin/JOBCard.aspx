@@ -18,65 +18,25 @@
     </script>
 
     <%--New Script dropdown--%>
-    <script type="text/javascript">
-     
-        <%--let selectedEngineers = [];
-
-        function addEngineerToList() {
-            const dropdown = document.getElementById('<%= txtengineername.ClientID %>');
-            const selectedEngineer = dropdown.options[dropdown.selectedIndex].text;
-
-            if (!selectedEngineers.includes(selectedEngineer) && selectedEngineer !== "Select Engineer") {
-                selectedEngineers.push(selectedEngineer);
-                updateEngineerDisplay();
-                updateHiddenField();
-            }
-        }
-
-        function updateEngineerDisplay() {
-            const container = document.getElementById('<%= selectedEngineersContainer.ClientID %>');
-            if (!container) return;
-
-            container.innerHTML = ''; 
-
-            selectedEngineers.forEach((engineer, index) => {
-                const engineerElement = document.createElement('span');
-                engineerElement.innerText = engineer;
-                engineerElement.classList.add('badge', 'badge-primary', 'm-1', 'p-2');
-                engineerElement.style.cursor = 'pointer';
-                engineerElement.onclick = () => removeEngineer(index);
-
-                const closeIcon = document.createElement('span');
-                closeIcon.innerHTML = '&times;';
-                closeIcon.style.marginLeft = '8px';
-                closeIcon.style.cursor = 'pointer';
-
-                engineerElement.appendChild(closeIcon);
-                container.appendChild(engineerElement);
-            });
-        }
-
-        function removeEngineer(index) {
-            selectedEngineers.splice(index, 1); 
-            updateEngineerDisplay();
-            updateHiddenField();
-        }
-
-        function updateHiddenField() {
-            const hiddenField = document.getElementById('<%= hiddenSelectedEngineers.ClientID %>');
-            hiddenField.value = selectedEngineers.join(", ");
-        }--%>
-
+    <script>
        
     let selectedEngineers = [];
 
     // Function to initialize saved engineers on page load
-    window.onload = function() {
+        window.onload = function () {
         const hiddenField = document.getElementById('<%= hiddenSelectedEngineers.ClientID %>');
         if (hiddenField.value) {
             selectedEngineers = hiddenField.value.split(", ");
             updateEngineerDisplay();  // Display saved engineers immediately on load
         }
+
+            <%--Automatic outward date show --%> 
+            const dateTextBox = document.getElementById('<%= txtoutwardate.ClientID %>');
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0]; // Format: DD-MM-YYYY
+            dateTextBox.value = formattedDate;
+            <%--Automatic outward date show End --%> 
+
     };
 
     function addEngineerToList() {
@@ -141,13 +101,6 @@
             return false;
         }
 
-        <%-- Automatic outward date show --%>
-        window.onload = function () {
-            const dateTextBox = document.getElementById('<%= txtoutwardate.ClientID %>');
-            const today = new Date();
-            const formattedDate = today.toISOString().split('T')[0]; // Format: DD-MM-YYYY
-            dateTextBox.value = formattedDate;
-        };
     </script>
 
 
@@ -255,29 +208,6 @@
                        
 
                          <%-- New Code  --%>
-                        <%--<div class="col-md-6">
-                            <asp:Label ID="lblEngiName" runat="server" class="control-label col-sm-6">
-                                Engineer Name :<span class="spncls">*</span>:
-                            </asp:Label>
-
-                            <!-- Container for Displaying Selected Engineers -->
-                            <div id="selectedEngineersContainer" runat="server" class="form-control"
-                                style="height: auto; min-height: 38px; padding: 5px; border: 1px solid #ced4da; background-color: #e9ecef;">
-                            </div>
-
-                            <asp:HiddenField ID="hiddenSelectedEngineers" runat="server" />
-
-                            <!-- Dropdown for Selecting Engineers -->
-                            <asp:DropDownList ID="txtengineername" runat="server" class="form-control" AppendDataBoundItems="true" 
-                                onchange="addEngineerToList()">
-                                <asp:ListItem Value="" Text="Select Engineer"></asp:ListItem>                              
-                            </asp:DropDownList>
-
-                            <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" ErrorMessage="Please enter Engineer Name" ControlToValidate="txtengineername" ForeColor="Red">
-                            </asp:RequiredFieldValidator><br />
-                            <br />
-                        </div>--%>
-
                         <div class="col-md-6">
                             <asp:Label ID="lblEngiName" runat="server" class="control-label col-sm-6">
                                 Engineer Name :<span class="spncls">*</span>:
@@ -301,6 +231,7 @@
                             </asp:RequiredFieldValidator><br />
                             <br />
                         </div>
+                        <%-- New Code End --%>
 
 
 
