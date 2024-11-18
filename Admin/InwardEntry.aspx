@@ -215,9 +215,9 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">(Product Img) :</label><br />
+                            <%--<label class="form-label">(Product Img) :</label><br />--%>
+                            <asp:Label ID="lblPath" runat="server" Text="">Product Img </asp:Label>
                             <asp:FileUpload ID="FileUpload" CssClass="form-control" runat="server" />
-                            <asp:Label ID="lblPath" runat="server" Text=""></asp:Label>
                         </div>
 
                         <div class="col-md-6">

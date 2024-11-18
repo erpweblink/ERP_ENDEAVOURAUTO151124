@@ -4,6 +4,7 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <style type="text/css">
         .auto-style1 {
             margin-left: 11;
@@ -38,6 +39,24 @@
         .active1 {
             float: right;
             margin-right: 80px
+        }
+
+        .panelinward {
+            border: 1px solid darkgray;
+            width: 70%;
+            padding: 20px !important;
+        }
+
+        .floa {
+            float: right;
+        }
+
+        .lbl {
+            font-weight: bold;
+        }
+
+        .btnclose {
+            margin-top: -2%;
         }
     </style>
     <style type="text/css">
@@ -134,8 +153,8 @@
                     <div class="col-md-3 col-xs-7 col-7">
                         <asp:DropDownList ID="ddlStatus" runat="server" AutoPostBack="true" class="form-control active2 " Width="150px" OnSelectedIndexChanged="ddlStatus_SelectedIndexChanged">
                             <asp:ListItem Value="All" Text="All"></asp:ListItem>
-                            <asp:ListItem Value="1">Active</asp:ListItem>
-                            <asp:ListItem Value="0">DeActive</asp:ListItem>
+                            <asp:ListItem Value="1">Pending</asp:ListItem>
+                            <asp:ListItem Value="0">Completed</asp:ListItem>
                         </asp:DropDownList>
                     </div>
                     <div class="col-md-4 col-xs-5 col-5">
@@ -180,29 +199,18 @@
                                         <asp:Label ID="lblMobNo" runat="server" Text='<%# Eval("MobNo") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Status">
+                                <asp:TemplateField HeaderText="Product Info">
                                     <ItemTemplate>
-                                        <asp:Label ID="lblisstatus" runat="server" Text='<%# Eval("IsStatus") %>'></asp:Label>
+                                        <asp:LinkButton ID="lnkshow" runat="server" CommandArgument='<%#Eval("EnquiryId")%>' OnClick="lnkshow_Click"><i class="fa fa-info-circle" style="font-size:30px;color:#0755A1"></i></asp:LinkButton>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                                <%-- <asp:TemplateField HeaderText="Created By">
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblcreateduser" runat="server" Text='<%# Eval("CreatedBy") %>'></asp:Label>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Created Date">
-                                    <ItemTemplate>
-                                        <%# Convert.ToDateTime(Eval("Createddate")).ToString("dd/MM/yyyy") %>
-                                    </ItemTemplate>
-                                </asp:TemplateField>--%>
                                 <asp:TemplateField HeaderText="Action" HeaderStyle-CssClass="btnlnkgrid">
                                     <ItemTemplate>
                                         <asp:LinkButton runat="server" ID="lnkbtnEdit" ToolTip="Edit" CommandArgument='<%# Eval("EnquiryId") %>' CommandName="RowEdit"><i class="fa fa-edit" style="font-size:24px"></i></asp:LinkButton>
                                         &nbsp;&nbsp;  
-                                    <asp:LinkButton runat="server" ID="lnkbtnDelete" ToolTip="Delete" OnClientClick="Javascript:return confirm('Are you sure to Delete?')" CommandArgument='<%# Eval("EnquiryId") %>' CommandName="RowDelete"><i class="fa fa-trash-o" style="font-size:24px"></i></asp:LinkButton>
+                                        <asp:LinkButton runat="server" ID="lnkbtnDelete" ToolTip="Delete" OnClientClick="Javascript:return confirm('Are you sure to Delete?')" CommandArgument='<%# Eval("EnquiryId") %>' CommandName="RowDelete"><i class="fa fa-trash-o" style="font-size:24px"></i></asp:LinkButton>
                                         &nbsp;&nbsp;  
                                         <asp:LinkButton runat="server" ID="LinkButton1" Visible='<%# Eval("IsStatus").ToString() == "Open" ? false : true %>' CommandName="CreateJobCard" CommandArgument='<%# Eval("EnquiryId") %>' ToolTip="Create JobCard" OnClientClick="return confirm('Please check customer details before creating a job card.');"><i class="fa fa-arrow-circle-right" style="font-size:24px;color:green;"></i></asp:LinkButton>
-                                        <%--<asp:LinkButton runat="server" ID="LinkButton1" Visible='<%# Eval("IsStatus").ToString() == "Open" ? false:true %>' CommandName="CreateJobCard" CommandArgument='<%# Eval("EnquiryId") %>' ToolTip="Create JobCard"><i class="fa fa-arrow-circle-right" style="font-size:24px;color:green;"></i></asp:LinkButton>--%>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                             </Columns>
@@ -221,6 +229,51 @@
                     </div>
                 </div>
             </div>
+            <asp:Button ID="btnprof" runat="server" Style="display: none" />
+            <asp:ModalPopupExtender ID="modelprofile" runat="server" TargetControlID="btnprof"
+                PopupControlID="PopupAddDetail" OkControlID="Closepopdetail" />
+            <asp:Panel ID="PopupAddDetail" runat="server" class="w3-panel w3-white panelinward" GroupingText="Product Details" Direction="LeftToRight" Wrap="true">
+                <div class="row btnclose">
+                    <div class="col-md-11">
+                    </div>
+                    <div class="col-md-1">
+                        <asp:LinkButton ID="Closepopdetail" runat="server"><i class="fa fa-close" style="font-size:24px;color:red;"></i></asp:LinkButton>
+                    </div>
+                </div>
+
+                <div class="row">
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <asp:Label ID="lblproName" runat="server" class="control-label lbl">Product Name :</asp:Label>
+                    </div>
+                    <div class="col-md-3">
+                        <asp:Label ID="lblproductNa" runat="server" class="control-label "></asp:Label>
+                    </div>
+                    <div class="col-md-3">
+                        <asp:Label ID="lblServTy" runat="server" class="control-label lbl">Service Type :</asp:Label>
+                    </div>
+                    <div class="col-md-3">
+                        <asp:Label ID="lblServiceType" runat="server" class="control-label "></asp:Label>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 ">
+                        <asp:Label ID="lblOtInfo" runat="server" class="control-label  lbl ">Other Information :</asp:Label>
+                    </div>
+                    <div class="col-md-3">
+                        <asp:Label ID="lblOtherInfo" runat="server" class="control-label "></asp:Label>
+                    </div>
+
+                    <div class="col-md-3">
+                        <asp:Label ID="lblProdImg" runat="server" class="control-label lbl">Product Image : </asp:Label>
+                    </div>
+                    <div class="col-md-3">
+                        <asp:Image ID="lblProductImg" runat="server" ImageUrl='<%# Eval("ProductImage") %>' Width="190px" Height="110px" Style="border: 1px solid #acacac;" />
+                    </div>
+                </div>
+            </asp:Panel>
         </div>
     </form>
 </asp:Content>

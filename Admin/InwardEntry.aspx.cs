@@ -52,13 +52,13 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                 if (Request.QueryString["CODE"] != null)
                 {
                     string code = Decrypt(Request.QueryString["CODE"].ToString());
-                    Load_Company_Details(code, true, "CODE");
+                    Load_Company_Details(code, true, "CODE", null);
 
                 }
                 if (Request.QueryString["CUID"] != null)
                 {
-                    string code = Decrypt(Request.QueryString["CUID"].ToString());
-                    Load_Company_Details(code, true, "CUID");
+                    string bothValues = Decrypt(Request.QueryString["CUID"].ToString());
+                    Load_Company_Details(null, true, "CUID", bothValues);
 
                 }
 
@@ -93,11 +93,19 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
     }
 
     // Code by Nikhil Invert Entry page customer load by Enquiry Master
-    protected void Load_Company_Details(string code, bool isReadOnly, string val)
+    protected void Load_Company_Details(string code, bool isReadOnly, string val, string bothValues)
     {
-        int enqID = Convert.ToInt32(code);
+        string primaryId = "", secondaryId = "";
+        if (bothValues != null)
+        {
+            string[] idParts = bothValues.Split(',');
+            primaryId = idParts[0].Trim();
+            secondaryId = idParts.Length > 1 ? idParts[1].Trim() : string.Empty;
+        }
+
         DataTable enquiryTable = new DataTable();
         DataTable customerTable = new DataTable();
+        DataTable productTable = new DataTable();
 
         if (val == "CUID")
         {
@@ -105,22 +113,52 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
             {
                 con.Open();
                 SqlDataAdapter customerAdapter = new SqlDataAdapter(
-                    "SELECT * FROM [tblCustomer] WHERE [Custid] = @Name", con);
-                customerAdapter.SelectCommand.Parameters.AddWithValue("@Name", code);                
+                    "SELECT * FROM [tblCustomer] WHERE [Custid] = @Cust", con);
+                customerAdapter.SelectCommand.Parameters.AddWithValue("@Cust", primaryId);
                 customerAdapter.Fill(customerTable);
 
                 if (customerTable.Rows.Count > 0)
                 {
                     lnkBtmUpdate.CommandArgument = customerTable.Rows[0]["Custid"].ToString();
-                    txtcustomername.Text = customerTable.Rows[0]["CustomerName"].ToString(); 
+                    txtcustomername.Text = customerTable.Rows[0]["CustomerName"].ToString();
+
+                    SqlDataAdapter enquiryAdapter = new SqlDataAdapter("SELECT * FROM [tbl_EnquiryMaster] WHERE [EnquiryId] = @EnquiryId", con);
+                    enquiryAdapter.SelectCommand.Parameters.AddWithValue("@EnquiryId", Convert.ToInt32(secondaryId));
+                    enquiryAdapter.Fill(enquiryTable);
+                    if (enquiryTable.Rows.Count > 0)
+                    {
+                        // To fetch the Product 
+                        txtproductname.Text = enquiryTable.Rows[0]["ProdName"].ToString();
+                        SqlDataAdapter sad = new SqlDataAdapter("select * from tblProduct where isdeleted='0' AND IsStatus='1' AND ProdName='" + txtproductname.Text + "'", con);
+                        sad.Fill(productTable);
+                        if (productTable.Rows.Count > 0)
+                        {
+                            txtModelNo.Text = productTable.Rows[0]["ModelNo"].ToString();
+                            txtSrNo.Text = productTable.Rows[0]["SerialNo"].ToString();
+                        }
+                        txtotherinfo.Text = enquiryTable.Rows[0]["OtherInformation"].ToString();
+
+                        ddlservicetype.Text = enquiryTable.Rows[0]["SerViceType"].ToString();
+
+                    }
+                    else
+                    {
+                        txtcustomername.Text = "Customer not found.";
+                    }
+                    txtcustomername.ReadOnly = isReadOnly;
+                    txtproductname.ReadOnly = isReadOnly;
+                    txtSrNo.ReadOnly = isReadOnly;
+                    txtModelNo.ReadOnly = isReadOnly;
+                    txtotherinfo.ReadOnly = isReadOnly;
+                    ddlservicetype.Enabled = false;
+                    lnkproduct.Visible = !isReadOnly;
+
+                    txtcustomername.ReadOnly = isReadOnly;
+                    lnkBtmNew.Visible = !isReadOnly;
+                    lnkBtmUpdate.Visible = !isReadOnly;
+                    FileUpload.Visible = !isReadOnly;
+                    lblPath.Visible = !isReadOnly;
                 }
-                else
-                {
-                    txtcustomername.Text = "Customer not found.";
-                }
-                txtcustomername.ReadOnly = isReadOnly;
-                lnkBtmNew.Visible = !isReadOnly;
-                lnkBtmUpdate.Visible = isReadOnly;
             }
             catch (Exception ex)
             {
@@ -136,6 +174,7 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
         {
             try
             {
+                int enqID = Convert.ToInt32(code);
                 con.Open();
                 SqlDataAdapter enquiryAdapter = new SqlDataAdapter("SELECT * FROM [tbl_EnquiryMaster] WHERE [EnquiryId] = @EnquiryId", con);
                 enquiryAdapter.SelectCommand.Parameters.AddWithValue("@EnquiryId", enqID);
@@ -158,8 +197,22 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
 
                     if (customerTable.Rows.Count > 0)
                     {
-                        lnkBtmUpdate.CommandArgument = customerTable.Rows[0]["Custid"].ToString();
+                        lnkBtmUpdate.CommandArgument = customerTable.Rows[0]["Custid"].ToString() + " " + "," + " " + enquiryTable.Rows[0]["EnquiryId"].ToString(); ;
                         txtcustomername.Text = customerTable.Rows[0]["CustomerName"].ToString();
+
+                        // To fetch the Product 
+                        txtproductname.Text = enquiryTable.Rows[0]["ProdName"].ToString();
+                        SqlDataAdapter sad = new SqlDataAdapter("select * from tblProduct where isdeleted='0' AND IsStatus='1' AND ProdName='" + txtproductname.Text + "'", con);
+                        sad.Fill(productTable);
+                        if (productTable.Rows.Count > 0)
+                        {
+                            txtModelNo.Text = productTable.Rows[0]["ModelNo"].ToString();
+                            txtSrNo.Text = productTable.Rows[0]["SerialNo"].ToString();
+                        }
+                        txtotherinfo.Text = enquiryTable.Rows[0]["OtherInformation"].ToString();
+
+                        ddlservicetype.Text = enquiryTable.Rows[0]["SerViceType"].ToString();
+
                     }
                     else
                     {
@@ -170,10 +223,19 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                 {
                     txtcustomername.Text = "Enquiry not found.";
                 }
+                txtcustomername.ReadOnly = isReadOnly;
+                txtproductname.ReadOnly = isReadOnly;
+                txtSrNo.ReadOnly = isReadOnly;
+                txtModelNo.ReadOnly = isReadOnly;
+                txtotherinfo.ReadOnly = isReadOnly;
+                ddlservicetype.Enabled = false;
+                lnkproduct.Visible = !isReadOnly;
 
                 txtcustomername.ReadOnly = isReadOnly;
                 lnkBtmNew.Visible = !isReadOnly;
                 lnkBtmUpdate.Visible = isReadOnly;
+                FileUpload.Visible = !isReadOnly;
+                lblPath.Visible = !isReadOnly;                
             }
             catch (Exception ex)
             {
@@ -474,7 +536,12 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                 //txtdate.Text = ffff3.ToString("yyyy-MM-dd");
 
                 DateTime ffff4 = Convert.ToDateTime(dt.Rows[0]["RepeatedDate"].ToString());
-                txtrepeateddate.Text = ffff4.ToString("yyyy-MM-dd");
+                DateTime defaultDate = new DateTime(1900, 1, 1);
+
+                if (ffff4 != defaultDate)
+                {
+                    txtrepeateddate.Text = ffff4.ToString("yyyy-MM-dd");
+                }
                 txtbranch.Text = dt.Rows[0]["Branch"].ToString();
                 txtotherinfo.Text = dt.Rows[0]["otherinfo"].ToString();
                 ddlservicetype.Text = dt.Rows[0]["ServiceType"].ToString();

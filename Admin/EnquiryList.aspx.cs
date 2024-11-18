@@ -46,7 +46,8 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
                 DataTable dt = new DataTable();
                 con.Open();
                 SqlDataAdapter sad = new SqlDataAdapter(
-     "SELECT [EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [Email], [IsStatus] " +
+     "SELECT [EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [Email], [IsStatus], " + 
+     "[ProdName], [ServiceType], [OtherInformation] , [ProductImage]" +
      "FROM [tbl_EnquiryMaster] where  isdeleted='0' ORDER BY Createddate Desc ", con);
                 sad.Fill(dt);
                 gv_Customer.EmptyDataText = "Not Records Found";
@@ -263,4 +264,52 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
     {
         Response.Redirect("EnquiryList.aspx");
     }
+
+    protected void lnkshow_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            LinkButton linkButton = sender as LinkButton;
+            int rowIndex = Convert.ToInt32(linkButton.CommandArgument);
+
+            SqlDataAdapter sad = new SqlDataAdapter(
+                "SELECT [EnquiryId], [ProdName], [ProductImage], [OtherInformation], [ServiceType] " +
+                "FROM [tbl_EnquiryMaster] " +
+                "WHERE [EnquiryId] = @EnquiryId", 
+                con);
+
+        
+            sad.SelectCommand.Parameters.AddWithValue("@EnquiryId", rowIndex);
+
+            DataTable dt = new DataTable();
+            sad.Fill(dt);
+
+            if (dt.Rows.Count > 0)
+            {
+            
+                lblproductNa.Text = dt.Rows[0]["ProdName"].ToString();
+                lblServiceType.Text = dt.Rows[0]["ServiceType"].ToString();
+                lblOtherInfo.Text = dt.Rows[0]["OtherInformation"].ToString();
+
+                string imagePath = dt.Rows[0]["ProductImage"].ToString();
+                if (!string.IsNullOrEmpty(imagePath))
+                {
+                    lblProductImg.ImageUrl = imagePath;
+                }
+                else
+                {
+                    lblProductImg.ImageUrl = "~/Images/NoImageAvailable.png"; 
+                }
+            }
+
+            // Show the modal popup
+            modelprofile.Show();
+        }
+        catch (Exception ex)
+        {
+            // Log or handle exception appropriately
+            throw ex;
+        }
+    }
+
 }

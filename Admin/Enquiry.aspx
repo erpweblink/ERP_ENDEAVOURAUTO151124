@@ -1,6 +1,8 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/Admin/AdminMaster.master" AutoEventWireup="true" CodeFile="Enquiry.aspx.cs" Inherits="Admin_Enquiry" %>
 
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+
     <script>
         function HideLabel(msg, flg) {
             Swal.fire({
@@ -52,6 +54,18 @@
 
         .txtcustomer {
         }
+
+        .completionList {
+            border: solid 1px Gray;
+            border-radius: 5px;
+            margin: 0px;
+            padding: 3px;
+            height: 200px;
+            overflow: auto;
+            width: 500px;
+            background-color: #FFFFFF;
+            font-size: 16px;
+        }
     </style>
     <script type='text/javascript'>
 
@@ -61,9 +75,18 @@
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css" type="text/css" />
+    <!-- Boostrap DatePciker JS  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js" type="text/javascript"></script>
+
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+
+    <script src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js' type='text/javascript'></script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <form runat="server">
+        <asp:ScriptManager ID="scriptmanager" runat="server"></asp:ScriptManager>
         <div class="col-lg-12">
             <div class="card shadow-sm mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -157,11 +180,12 @@
                             <asp:Label ID="lblpostal" class="control-label col-sm-6" runat="server">Postal Code :<span class="spncls">*</span></asp:Label>
                             <asp:TextBox runat="server" type="Text" class="form-control" ID="txtPostalCode" name="PostalCode"
                                 onkeypress="return isNumberKey(event)" MaxLength="6" />
-                            <%--                            <asp:RequiredFieldValidator ID="RequiredFieldValidatorpostal" runat="server" ErrorMessage="Please fill Postal Code" ControlToValidate="txtPostalCode" ForeColor="Red"></asp:RequiredFieldValidator>--%>
+                            <asp:RequiredFieldValidator ID="RequiredFieldValidatorpostal" runat="server" ErrorMessage="Please fill Postal Code" ControlToValidate="txtPostalCode" ForeColor="Red"></asp:RequiredFieldValidator>
                         </div>
                         <div class="col-md-5">
                             <asp:Label ID="lblcity" class="control-label col-sm-6" runat="server">City :<span class="spncls">*</span></asp:Label>
                             <asp:TextBox runat="server" type="Text" class="form-control" ID="txtcity" name="City" onkeypress="return character(event)" />
+                            <asp:RequiredFieldValidator ID="RequiredFieldValidatorCity" runat="server" ErrorMessage="Please fill City" ControlToValidate="txtcity" ForeColor="Red"></asp:RequiredFieldValidator>
                         </div>
                         <div class="col-md-4">
                             <asp:Label ID="lblcountry" class="control-label col-sm-6" runat="server">Country :<span class="spncls">*</span> </asp:Label>
@@ -170,16 +194,50 @@
                         </div>
                     </div>
                 </div>
-                <center>
-                    <div class="col-md-6">
-                        <asp:Button ID="btnSubmit" runat="server" class="btn btn-primary " Text="Save" OnClick="btnSubmit_Click"></asp:Button>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-             <asp:Button ID="btnCancel" runat="server" class="btn btn-primary cancelbutton" Text="Cancel" OnClick="btnCancel_Click" CausesValidation="False"></asp:Button>
-                    </div>
-                </center>
-                <asp:HiddenField runat="server" ID="hidden" />
-            </div>
-        </div>
+                <hr />
+                <h5 class="m-0 font-weight-bold">Product Information</h5>
+                <div class="table-responsive">
+                    <div class="row m-2" id="divdtls">
+                        <div class="col-md-4">
+                            <asp:Label ID="lblproduct" runat="server" class="control-label col-sm-6 custlbl">Product Name :<span class="spncls">*</span></asp:Label>
+                            <asp:TextBox runat="server" class="form-control txtsear mt-top" ID="txtproductname" name="Search" placeholder="Search Product" AutoPostBack="true" onkeypress="return character(event)" />
+                            <asp:AutoCompleteExtender ID="AutoCompleteExtender2" CompletionListCssClass="completionList"
+                                CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
+                                CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetProductList" TargetControlID="txtproductname" runat="server">
+                            </asp:AutoCompleteExtender>
+                            <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ErrorMessage="Please fill Product Name" ControlToValidate="txtproductname" ForeColor="Red"></asp:RequiredFieldValidator>
 
+                        </div>
+                        <div class="col-md-3">
+                            <asp:Label ID="Label3" class="control-label " runat="server">Product Image :<span class="spncls">*</span></asp:Label>
+                            <asp:FileUpload ID="FileUpload" CssClass="form-control" runat="server" />
+                            <asp:Label ID="lblPath" runat="server" Text=""></asp:Label>
+                            <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" ErrorMessage="Please fill Email" ControlToValidate="txttemail" ForeColor="Red"></asp:RequiredFieldValidator>
+                        </div>
+                        <div class="col-md-2">
+                            <asp:Label ID="Label4" runat="server" class="control-label col-sm-4">Service Type :<span class="spncls">*</span></asp:Label>
+                            <asp:DropDownList runat="server" class="form-control" ID="ddlservicetype">
+                                <asp:ListItem Value="--Select--" Text="--Select--"></asp:ListItem>
+                                <asp:ListItem Value="Service" Text="Service"></asp:ListItem>
+                                <asp:ListItem Value="Sales" Text="Sales"></asp:ListItem>
+                                <asp:ListItem Value="Reparing" Text="Reparing"></asp:ListItem>
+                            </asp:DropDownList>                           
+                        </div>
+                        <div class="col-md-3">
+                            <asp:Label ID="Lable2" class="control-label " runat="server">Other information :<span class="spncls"></span></asp:Label>
+                            <asp:TextBox TextMode="MultiLine" runat="server" class="form-control" ID="txtotherinfo" name="Customer" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <center>
+                <div class="col-md-6">
+                    <asp:Button ID="btnSubmit" runat="server" class="btn btn-primary " Text="Save" OnClick="btnSubmit_Click"></asp:Button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+             <asp:Button ID="btnCancel" runat="server" class="btn btn-primary cancelbutton" Text="List" OnClick="btnCancel_Click" CausesValidation="False"></asp:Button>
+                </div>
+            </center>
+            <asp:HiddenField runat="server" ID="hidden" />
+        </div>
     </form>
 </asp:Content>
