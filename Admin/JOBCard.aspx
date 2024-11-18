@@ -18,17 +18,25 @@
     </script>
 
     <%--New Script dropdown--%>
-    <script type="text/javascript">
+    <script>
        
     let selectedEngineers = [];
 
     // Function to initialize saved engineers on page load
-    window.onload = function() {
+        window.onload = function () {
         const hiddenField = document.getElementById('<%= hiddenSelectedEngineers.ClientID %>');
         if (hiddenField.value) {
             selectedEngineers = hiddenField.value.split(", ");
             updateEngineerDisplay();  // Display saved engineers immediately on load
         }
+
+            <%--Automatic outward date show --%> 
+            const dateTextBox = document.getElementById('<%= txtoutwardate.ClientID %>');
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0]; // Format: DD-MM-YYYY
+            dateTextBox.value = formattedDate;
+            <%--Automatic outward date show End --%> 
+
     };
 
     function addEngineerToList() {
@@ -93,13 +101,6 @@
             return false;
         }
 
-        <%-- Automatic outward date show --%>
-        window.onload = function () {
-            const dateTextBox = document.getElementById('<%= txtoutwardate.ClientID %>');
-            const today = new Date();
-            const formattedDate = today.toISOString().split('T')[0]; // Format: DD-MM-YYYY
-            dateTextBox.value = formattedDate;
-        };
     </script>
 
 
