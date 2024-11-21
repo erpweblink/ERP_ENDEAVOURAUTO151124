@@ -1,10 +1,10 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/AdminMaster.master" AutoEventWireup="true" CodeFile="CustomerPO_List_Sales.aspx.cs" Inherits="Admin_CustomerPO_List_Sales" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/AdminMaster.master" AutoEventWireup="true" EnableEventValidation="false" CodeFile="Customer_PO_Both_List.aspx.cs" Inherits="Admin_Customer_PO_Both_List" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <script>
         function HideLabel(msg) {
@@ -16,8 +16,8 @@
                 showCancelButton: false,
                 showConfirmButton: false
             }).then(function () {
-                window.location.href = "../Admin/CustomerPO_list.aspx";
-                })
+                window.location.href = "../Admin/Customer_PO_Both_list.aspx";
+            })
         };
     </script>
 
@@ -119,14 +119,15 @@
             }
         }
     </script>
+
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-      <form runat="server">
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <form runat="server">
         <asp:ScriptManager ID="scriptmanager" runat="server"></asp:ScriptManager>
         <div class="col-lg-12 card">
             <%--<div class="card">--%>
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h5 class="m-0 font-weight-bold text-primary">Customer P.O. List (Sales)</h5>
+                <h5 class="m-0 font-weight-bold text-primary">Customer P.O. List </h5>
             </div>
             <hr />
             <div class="card-body">
@@ -195,7 +196,7 @@
                         <asp:GridView ID="GvCustomerpoList" runat="server" AutoGenerateColumns="false" CssClass="grid" DataKeyNames="Quotationno" AllowPaging="true" Width="100%" PagerStyle-CssClass="paging" PageSize="10" OnRowCommand="GvCustomerpoList_RowCommand" OnPageIndexChanging="GvCustomerpoList_PageIndexChanging"
                             OnRowDataBound="GvCustomerpoList_RowDataBound">
                             <Columns>
-                            <%--    <asp:TemplateField HeaderStyle-Width="20" HeaderText="View">
+                                <asp:TemplateField HeaderStyle-Width="20" HeaderText="View">
                                     <ItemTemplate>
                                         <img alt="" style="cursor: pointer" src="img/plus.png" />
                                         <asp:Panel ID="pnlOrders" runat="server" Style="display: none">
@@ -206,7 +207,7 @@
                                             </asp:GridView>
                                         </asp:Panel>
                                     </ItemTemplate>
-                                </asp:TemplateField>--%>
+                                </asp:TemplateField>
 
                                 <asp:TemplateField HeaderText="Sr. No.">
                                     <ItemTemplate>
@@ -275,18 +276,17 @@
                                     </ItemTemplate>
                                 </asp:TemplateField>
 
-                                 <asp:TemplateField HeaderText="Type">
-                                     <ItemTemplate>
-                                         <asp:Label ID="lbltype" runat="server" Text='<%# Eval("Type") %>'></asp:Label>
-                                     </ItemTemplate>
-                                 </asp:TemplateField>
-
-                                 <asp:TemplateField HeaderText="Total">
+                                <asp:TemplateField HeaderText="Type">
                                     <ItemTemplate>
-                                        <asp:Label ID="lbltotal" runat="server" Text='<%# Eval("GrandTotal") %>'></asp:Label>
+                                        <asp:Label ID="lbltype" runat="server" Text='<%# Eval("Type") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
 
+                                    <asp:TemplateField HeaderText="Total">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblgrandtotal" runat="server" Text='<%# Eval("GrandTotal") %>'></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
 
                                 <asp:TemplateField Visible="false" HeaderText="QuotationNO">
                                     <ItemTemplate>
@@ -407,9 +407,9 @@
                                     </ItemTemplate>
                                 </asp:TemplateField>
 
-                                  <asp:TemplateField HeaderText="Total">
+                                <asp:TemplateField HeaderText="Total">
                                     <ItemTemplate>
-                                        <asp:Label ID="lbltotal" runat="server" Text='<%# Eval("GrandTotal") %>'></asp:Label>
+                                        <asp:Label ID="lblgrandtotal" runat="server" Text='<%# Eval("GrandTotal") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
 
@@ -526,9 +526,9 @@
                                     </ItemTemplate>
                                 </asp:TemplateField>
 
-                                  <asp:TemplateField HeaderText="Total">
+                                <asp:TemplateField HeaderText="Total">
                                     <ItemTemplate>
-                                        <asp:Label ID="lbltotal" runat="server" Text='<%# Eval("GrandTotal") %>'></asp:Label>
+                                        <asp:Label ID="lblgrandtotal" runat="server" Text='<%# Eval("GrandTotal") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
 

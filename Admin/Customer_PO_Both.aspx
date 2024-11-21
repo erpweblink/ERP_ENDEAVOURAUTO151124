@@ -1,4 +1,5 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/AdminMaster.master" AutoEventWireup="true" CodeFile="Customer_PO.aspx.cs" Inherits="Admin_Customer_PO" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/AdminMaster.master" AutoEventWireup="true" CodeFile="Customer_PO_Both.aspx.cs" Inherits="Admin_Customer_PO_Both" %>
+
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
@@ -13,7 +14,7 @@
                 showCancelButton: false,
                 showConfirmButton: false
             }).then(function () {
-                window.location.href = "../Admin/Customer_PO_Both_List.aspx";
+                window.location.href = "../Admin/Customer_PO_Both_List.aspx;
             })
         };
     </script>
@@ -81,7 +82,7 @@
                 showCancelButton: false,
                 showConfirmButton: false
             }).then(function () {
-                window.location.href = "../Admin/CustomerPO_List.aspx";
+                window.location.href = "../Admin/Customer_PO_Both_List.aspx";
             })
         };
     </script>
@@ -99,7 +100,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header  py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h5 class="m-0 font-weight-bold text-primary" id="headerreport" runat="server">Customer PO</h5>
+                    <h5 class="m-0 font-weight-bold text-primary" id="headerreport" runat="server">Customer PO </h5>
                 </div>
                 <hr />
                 <div class="card-body">
@@ -125,6 +126,13 @@
                                         <asp:ListItem Value="Reparing" Text="Reparing"></asp:ListItem>
                                     </asp:DropDownList>
                                 </div>
+                                 <div class="col-md-4 d-none">
+                                     <asp:Label ID="Label5" runat="server" class="control-label col-sm-4">Type :<span class="spncls">*</span></asp:Label>
+                                     <asp:DropDownList runat="server" class="form-control" ID="ddltype">
+                                         <asp:ListItem Value="Regular" Text="Regular"></asp:ListItem>
+                                         <%--<asp:ListItem Value="Sales" Text="Sales"></asp:ListItem>--%>
+                                     </asp:DropDownList>
+                                 </div>
                             </div>
                             <br />
                             <div class="row">
