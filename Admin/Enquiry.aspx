@@ -234,12 +234,12 @@
                         <div class="col-md-6">
                             <asp:Label ID="Label4" runat="server" class="control-label col-sm-4">Service Type :<span class="spncls">*</span></asp:Label>
                             <asp:DropDownList runat="server" class="form-control" ID="ddlservicetype">
-                                <asp:ListItem Value="--Select--" Text="--Select--"></asp:ListItem>
+                                <asp:ListItem Value="" Text="--Select--"></asp:ListItem>
                                 <asp:ListItem Value="Service" Text="Service"></asp:ListItem>
                                 <asp:ListItem Value="Sales" Text="Sales"></asp:ListItem>
                                 <asp:ListItem Value="Reparing" Text="Reparing"></asp:ListItem>
                             </asp:DropDownList>
-                             <asp:RequiredFieldValidator ID="RequiredFieldServiceType" runat="server" ControlToValidate="DropDownListcustomer" InitialValue="" ErrorMessage="Please select product service type." ForeColor="Red" />
+                             <asp:RequiredFieldValidator ID="RequiredFieldServiceType" runat="server" ControlToValidate="ddlservicetype" InitialValue="" ErrorMessage="Please select product service type." ForeColor="Red" />
                         </div>
                         <div class="col-md-6">
                             <asp:Label ID="Lable2" class="control-label " runat="server">Other information :<span class="spncls"></span></asp:Label>
