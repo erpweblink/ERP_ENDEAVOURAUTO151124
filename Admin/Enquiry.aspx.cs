@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Org.BouncyCastle.Asn1.X9;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -29,8 +30,17 @@ public partial class Admin_Enquiry : System.Web.UI.Page
                 loadData(id);
 
                 btnSubmit.Text = "Update";
+                imgProduct.Visible = true;
                 hidden.Value = id;
             }
+            if (Request.QueryString["CUID"] != null)
+            {
+                string id = Decrypt(Request.QueryString["CUID"].ToString());
+                loadCustomer(id);
+
+                btnSubmit.Text = "Save";
+            }
+
         }
     }
 
@@ -62,7 +72,7 @@ public partial class Admin_Enquiry : System.Web.UI.Page
                     con.Close();
                     DateTime Date = DateTime.Now;
                     con.Open();
-                    SqlCommand cmd = new SqlCommand("SP_EnquiryMaster", con);
+                    SqlCommand cmd = new SqlCommand("SP_Enquiry", con);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@CustomerName", txtCustName.Text);
 
@@ -81,19 +91,20 @@ public partial class Admin_Enquiry : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@isdeleted", '0');
                     // Product Information
                     cmd.Parameters.AddWithValue("@ProductName", txtproductname.Text);
-                    cmd1.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
-                    cmd1.Parameters.AddWithValue("@otherinfo", txtotherinfo.Text);
+                    cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
+                    cmd.Parameters.AddWithValue("@otherinfo", txtotherinfo.Text);
+
                     if (FileUpload.HasFile)
                     {
                         var Filenamenew = FileUpload.FileName;
                         string codenew = Guid.NewGuid().ToString();
                         Path = Server.MapPath("~/ProductImg/") + codenew + "_" + Filenamenew;
                         FileUpload.SaveAs(Path);
-                        cmd1.Parameters.AddWithValue("@Imagepath", "~/ProductImg/" + codenew + "_" + Filenamenew);
+                        cmd.Parameters.AddWithValue("@Imagepath", "~/ProductImg/" + codenew + "_" + Filenamenew);
                     }
                     else
                     {
-                        cmd1.Parameters.AddWithValue("@Imagepath", lblPath.Text);
+                        cmd.Parameters.AddWithValue("@Imagepath", lblPath.Text);
                     }
 
                     // Customer table search values
@@ -112,6 +123,10 @@ public partial class Admin_Enquiry : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@IsStatus", isactive);
                     cmd.Parameters.Add("@enquiry_id", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.Parameters.AddWithValue("@Action", "Insert");
+                    if (txttemail.Text != "" && txtMobileNo.Text != "")
+                    {
+                        cmd.Parameters.AddWithValue("@Code", "NewCustomer");
+                    }
 
                     cmd.ExecuteNonQuery();
                     con.Close();
@@ -151,7 +166,7 @@ public partial class Admin_Enquiry : System.Web.UI.Page
 
                 DateTime Date = DateTime.Now;
                 con.Open();
-                SqlCommand cmd = new SqlCommand("SP_EnquiryMaster", con);
+                SqlCommand cmd = new SqlCommand("SP_Enquiry", con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@CustomerName", txtCustName.Text);
                 cmd.Parameters.AddWithValue("@StateCode", DropDownListcustomer.Text);
@@ -181,14 +196,14 @@ public partial class Admin_Enquiry : System.Web.UI.Page
                 }
                 else
                 {
-                    if(oldProductName == txtproductname.Text)
+                    if (oldProductName == txtproductname.Text)
                     {
                         cmd.Parameters.AddWithValue("@Imagepath", oldProductImage);
                     }
                     else
                     {
                         cmd.Parameters.AddWithValue("@Imagepath", lblPath.Text);
-                    }                    
+                    }
                 }
                 // Customer table search values
                 cmd.Parameters.AddWithValue("@OLDCustomerName", oldName);
@@ -209,6 +224,7 @@ public partial class Admin_Enquiry : System.Web.UI.Page
                 }
                 cmd.Parameters.AddWithValue("@IsStatus", isactive);
                 cmd.Parameters.AddWithValue("@Action", "update");
+                cmd.Parameters.AddWithValue("@Code", "NewCustomer");
                 cmd.ExecuteNonQuery();
                 con.Close();
                 if (Request.QueryString["Name"] != null)
@@ -273,6 +289,7 @@ public partial class Admin_Enquiry : System.Web.UI.Page
         Response.Redirect("EnquiryList.aspx");
     }
 
+    // Below two methods are created by Nikhil 
     protected void loadData(string id)
     {
         try
@@ -304,7 +321,10 @@ public partial class Admin_Enquiry : System.Web.UI.Page
                 txtproductname.Text = dt.Rows[0]["ProdName"].ToString();
                 ddlservicetype.Text = dt.Rows[0]["ServiceType"].ToString();
                 txtotherinfo.Text = dt.Rows[0]["OtherInformation"].ToString();
-                // lblPath.Text = dt.Rows[0]["ProductImage"].ToString();
+                //lblPath.Text = dt.Rows[0]["ProductImage"].ToString();                   
+
+                string productImage = dt.Rows[0]["ProductImage"].ToString();
+                imgProduct.ImageUrl = ResolveUrl(productImage);
 
                 string flgStatus = "";
                 if (dt.Rows[0]["IsStatus"].ToString() == "False")
@@ -316,6 +336,58 @@ public partial class Admin_Enquiry : System.Web.UI.Page
                     flgStatus = "Yes";
                 }
                 DropDownListisActive.Text = flgStatus;
+            }
+        }
+        catch (Exception ex)
+        {
+
+            throw ex;
+        }
+    }
+    protected void loadCustomer(string id)
+    {
+        try
+        {
+            SqlDataAdapter sad = new SqlDataAdapter(
+            "SELECT [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo]," +
+            "[Email] FROM [tblCustomer] " +
+            "WHERE [Custid] ='" + id + "'", con);
+            DataTable dt = new DataTable();
+            sad.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                string email = dt.Rows[0]["Email"].ToString();
+                string StateCod = dt.Rows[0]["StateCode"].ToString();
+                string MobileNO = dt.Rows[0]["MobNo"].ToString();
+                if (email != "")
+                {
+                    txttemail.Text = dt.Rows[0]["Email"].ToString();
+                    txttemail.ReadOnly = true;
+                }
+                else
+                {
+                    txttemail.ReadOnly = true;
+                    RequiredFieldValidator5.Enabled = false;
+                }
+
+                DropDownListcustomer.Text = dt.Rows[0]["StateCode"].ToString();
+
+                if (MobileNO != "")
+                {
+                    txtMobileNo.Text = dt.Rows[0]["MobNo"].ToString();
+                    txtMobileNo.ReadOnly = true;
+                }
+                else
+                {
+                    txtMobileNo.ReadOnly = true;
+                    RequiredFieldValidator1.Enabled = false;
+                }
+                txtCustName.Text = dt.Rows[0]["CustomerName"].ToString();
+                txtAddresline1.Text = dt.Rows[0]["AddresLine1"].ToString();
+                txtarea.Text = dt.Rows[0]["Area"].ToString();
+                txtcity.Text = dt.Rows[0]["City"].ToString();
+                txtcountry.Text = dt.Rows[0]["Country"].ToString();
+                txtPostalCode.Text = dt.Rows[0]["PostalCode"].ToString();
             }
         }
         catch (Exception ex)
@@ -350,7 +422,8 @@ public partial class Admin_Enquiry : System.Web.UI.Page
         }
         return cipherText;
     }
-    //Product Autocomplate 
+
+    //Product Autocomplate  Below all the function are made by Nikhil 
     [System.Web.Script.Services.ScriptMethod()]
     [System.Web.Services.WebMethod]
     public static List<string> GetProductList(string prefixText, int count)
@@ -382,5 +455,143 @@ public partial class Admin_Enquiry : System.Web.UI.Page
                 return ProdName;
             }
         }
+    }
+
+    protected void txtCustName_TextChanged(object sender, EventArgs e)
+    {
+        try
+        {
+            SqlDataAdapter Da = new SqlDataAdapter("select * from tblCustomer  WHERE CustomerName='" + txtCustName.Text + "'", con);
+            DataTable dt = new DataTable();
+            Da.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                string email = dt.Rows[0]["Email"].ToString();
+                string StateCod = dt.Rows[0]["StateCode"].ToString();
+                string MobileNO = dt.Rows[0]["MobNo"].ToString();
+                if (email != "")
+                {
+                    txttemail.Text = dt.Rows[0]["Email"].ToString();
+                    txttemail.ReadOnly = true;
+                }
+                else
+                {
+                    txttemail.ReadOnly = true;
+                    RequiredFieldValidator5.Enabled = false;
+                }
+
+                DropDownListcustomer.Text = dt.Rows[0]["StateCode"].ToString();
+
+                if (MobileNO != "")
+                {
+                    txtMobileNo.Text = dt.Rows[0]["MobNo"].ToString();
+                    txtMobileNo.ReadOnly = true;
+                }
+                else
+                {
+                    txtMobileNo.ReadOnly = true;
+                    RequiredFieldValidator1.Enabled = false;
+                }
+                hidden.Value = dt.Rows[0]["Custid"].ToString();
+                txtAddresline1.Text = dt.Rows[0]["AddresLine1"].ToString();
+                txtarea.Text = dt.Rows[0]["Area"].ToString();
+                txtcity.Text = dt.Rows[0]["City"].ToString();
+                txtcountry.Text = dt.Rows[0]["Country"].ToString();
+                txtPostalCode.Text = dt.Rows[0]["PostalCode"].ToString();
+                lnkBtmUpdate.Visible = true;
+            }
+            else
+            {
+                txttemail.Text = "";
+                DropDownListcustomer.Text = "";
+                txtMobileNo.Text = "";
+                txtAddresline1.Text = "";
+                txtarea.Text = "";
+                txtcity.Text = "";
+                txtcountry.Text = "";
+                txtPostalCode.Text = "";
+                lnkBtmUpdate.Visible = false;
+                txttemail.ReadOnly = false;
+                RequiredFieldValidator5.Enabled = true;
+                DropDownListcustomer.Enabled = true;
+                txtMobileNo.ReadOnly = false;
+                RequiredFieldValidator1.Enabled = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            string errorMsg = "An error occurred : " + ex.Message;
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('" + errorMsg + "') ", true);
+        }
+    }
+
+
+    [System.Web.Script.Services.ScriptMethod()]
+    [System.Web.Services.WebMethod]
+    public static List<string> GetCompanyList(string prefixText, int count)
+    {
+        return AutoFillCompanyName(prefixText);
+    }
+
+    public static List<string> AutoFillCompanyName(string prefixText)
+    {
+        using (SqlConnection con = new SqlConnection())
+        {
+            con.ConnectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+
+            using (SqlCommand com = new SqlCommand())
+            {
+                com.CommandText = "Select DISTINCT [CustomerName] from [tblCustomer] where " + "CustomerName like @Search + '%' and IsDeleted=0";
+
+                com.Parameters.AddWithValue("@Search", prefixText);
+                com.Connection = con;
+                con.Open();
+                List<string> countryNames = new List<string>();
+                using (SqlDataReader sdr = com.ExecuteReader())
+                {
+                    while (sdr.Read())
+                    {
+                        countryNames.Add(sdr["CustomerName"].ToString());
+                    }
+                }
+                con.Close();
+                return countryNames;
+            }
+        }
+    }
+
+    protected void btncreate1_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("EnquiryList.aspx");
+    }
+
+    protected void lnkBtmUpdate_Click(object sender, EventArgs e)
+    {
+        string id = hidden.Value;
+        Response.Redirect("Customer.aspx?EditCust=" + encrypted(id) + "");
+    }
+
+    public string encrypted(string encryptString)
+    {
+        string EncryptionKey = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        byte[] clearBytes = Encoding.Unicode.GetBytes(encryptString);
+        using (Aes encryptor = Aes.Create())
+        {
+            Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(EncryptionKey, new byte[] {
+            0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76
+        });
+            encryptor.Key = pdb.GetBytes(32);
+            encryptor.IV = pdb.GetBytes(16);
+            using (MemoryStream ms = new MemoryStream())
+            {
+                using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
+                {
+                    cs.Write(clearBytes, 0, clearBytes.Length);
+                    cs.Close();
+                }
+                encryptString = Convert.ToBase64String(ms.ToArray());
+            }
+        }
+        return encryptString;
     }
 }

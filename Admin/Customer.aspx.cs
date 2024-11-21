@@ -10,6 +10,8 @@ using System.Configuration;
 using System.Security.Cryptography;
 using System.IO;
 using System.Text;
+using iTextSharp.tool.xml.html.table;
+using System.Activities.Expressions;
 
 public partial class Reception_Customer : System.Web.UI.Page
 {
@@ -44,6 +46,16 @@ public partial class Reception_Customer : System.Web.UI.Page
                 btnCancel.Visible = false;
                 hidden.Value = id;
             }
+              if (Request.QueryString["EditCust"] != null)
+            {
+                string id = Decrypt(Request.QueryString["EditCust"].ToString());
+                loadData(id);
+
+                btnSubmit.Text = "Edit";
+                btnCancel.Visible = false;
+                hidden.Value = id;
+            }
+
         }
     }
 
@@ -86,6 +98,10 @@ public partial class Reception_Customer : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@createdBy", createdby);
                     cmd.Parameters.AddWithValue("@createddate", Date);
                     cmd.Parameters.AddWithValue("@isdeleted", '0');
+
+                    //19 - 11 - 2024 Added by Nikhil to update the Enquiry master table details for inward entry purpose here we are not updating enquiry table 
+                    cmd.Parameters.AddWithValue("@OldEnqId", null);
+
                     bool isactive = true;
                     if (DropDownListisActive.Text == "Yes")
                     {
@@ -148,6 +164,10 @@ public partial class Reception_Customer : System.Web.UI.Page
                 cmd.Parameters.AddWithValue("@UpdatedBy", createdby);
                 cmd.Parameters.AddWithValue("@UpdatedDate", Date);
                 cmd.Parameters.AddWithValue("@isdeleted", '0');
+
+                //19 - 11 - 2024 Added by Nikhil to update the Enquiry master table details for inward entry purpose here we are not updating enquiry table 
+                cmd.Parameters.AddWithValue("@OldEnqId", null);
+
                 cmd.Parameters.AddWithValue("@Custid", Convert.ToInt32(hidden.Value));
                 cmd.Parameters.Add("@cust_id", SqlDbType.Int).Direction = ParameterDirection.Output;
                 id = Convert.ToInt32(cmd.Parameters["@cust_id"].Value);
@@ -193,7 +213,7 @@ public partial class Reception_Customer : System.Web.UI.Page
                     ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Updated Successfully','1');", true);
                 }
             }            
-            // Code Code by Nikhil to edit Invert Entry page customer to edit Invert Entry page customer
+            // Code by Nikhil to edit Invert Entry page customer to edit Invert Entry page customer
             else if (btnSubmit.Text == "Save & Go Back")
             {
 
@@ -225,6 +245,10 @@ public partial class Reception_Customer : System.Web.UI.Page
                 cmd.Parameters.AddWithValue("@UpdatedBy", createdby);
                 cmd.Parameters.AddWithValue("@UpdatedDate", Date);
                 cmd.Parameters.AddWithValue("@isdeleted", '0');
+                
+                //19 - 11 - 2024 Added by Nikhil to update the Enquiry master table details for inward entry purpose
+                cmd.Parameters.AddWithValue("@OldEnqId", secondaryId);
+                
                 cmd.Parameters.AddWithValue("@Custid", Convert.ToInt32(primaryId));
                 cmd.Parameters.Add("@cust_id", SqlDbType.Int).Direction = ParameterDirection.Output;
                 id = Convert.ToInt32(cmd.Parameters["@cust_id"].Value);
@@ -286,6 +310,94 @@ public partial class Reception_Customer : System.Web.UI.Page
                 }
 
 
+            }
+            //Code by Nikhil to update the existing customer from enquiry page 
+            else if (btnSubmit.Text == "Edit")
+            {
+                DateTime Date = DateTime.Now;
+                con.Open();
+                SqlCommand cmd = new SqlCommand("SP_CustomerMaster", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@CustomerName", txtCustName.Text);
+                cmd.Parameters.AddWithValue("@GSTNo", txtgstno.Text);
+                cmd.Parameters.AddWithValue("@StateCode", DropDownListcustomer.Text);
+                cmd.Parameters.AddWithValue("@PanNo", txtpanno.Text);
+                cmd.Parameters.AddWithValue("@AddresLine1", txtAddresline1.Text);
+                cmd.Parameters.AddWithValue("@AddresLine2", txtadreLine2.Text);
+                cmd.Parameters.AddWithValue("@AddresLine3", txtadreLine3.Text);
+                cmd.Parameters.AddWithValue("@Area", txtarea.Text);
+                cmd.Parameters.AddWithValue("@City", txtcity.Text);
+                cmd.Parameters.AddWithValue("@Email", txtEmail.Text);
+                cmd.Parameters.AddWithValue("@Country", txtcountry.Text);
+                cmd.Parameters.AddWithValue("@MobNo", txtMobileNo.Text);
+                cmd.Parameters.AddWithValue("@PostalCode", txtPostalCode.Text);
+                cmd.Parameters.AddWithValue("@createdBy", createdby);
+                cmd.Parameters.AddWithValue("@createddate", Date);
+                cmd.Parameters.AddWithValue("@UpdatedBy", createdby);
+                cmd.Parameters.AddWithValue("@UpdatedDate", Date);
+                cmd.Parameters.AddWithValue("@isdeleted", '0');
+
+                //19 - 11 - 2024 Added by Nikhil to update the Enquiry master table details for inward entry purpose here we are not updating enquiry table 
+                cmd.Parameters.AddWithValue("@OldEnqId", null);
+
+                cmd.Parameters.AddWithValue("@Custid", Convert.ToInt32(hidden.Value));
+                cmd.Parameters.Add("@cust_id", SqlDbType.Int).Direction = ParameterDirection.Output;
+                id = Convert.ToInt32(cmd.Parameters["@cust_id"].Value);
+                bool isactive = true;
+                if (DropDownListisActive.Text == "Yes")
+                {
+                    isactive = true;
+                }
+                else
+                {
+                    isactive = false;
+                }
+                cmd.Parameters.AddWithValue("@IsStatus", isactive);
+                cmd.Parameters.AddWithValue("@Action", "update");
+                cmd.ExecuteNonQuery();
+                con.Close();
+                ///delete First
+                SqlCommand cmddelete = new SqlCommand("DELETE FROM tblCustomerContactPerson WHERE cust_id=@cust_id", con);
+                cmddelete.Parameters.AddWithValue("@cust_id", Convert.ToInt32(hidden.Value));
+                con.Open();
+                cmddelete.ExecuteNonQuery();
+                con.Close();
+                ///Insert Then
+                foreach (GridViewRow g1 in gv_Customercontact.Rows)
+                {
+                    string personname = (g1.FindControl("lblCustomername") as Label).Text;
+                    string personno = (g1.FindControl("lblCustomernameno") as Label).Text;
+                    string email = (g1.FindControl("lblemailperson") as Label).Text;
+                    string designation = (g1.FindControl("lbldesignation") as Label).Text;
+
+                    con.Open();
+                    SqlCommand cmdtable = new SqlCommand("insert into tblCustomerContactPerson(CustName,ContactPerName,ContactPerNo,cust_id,CreatedBy,Email,designation)values('" + txtCustName.Text + "','" + personname + "','" + personno + "','" + Convert.ToInt32(hidden.Value) + "','" + createdby + "','" + email + "','" + designation + "')", con);
+                    cmdtable.ExecuteNonQuery();
+                    con.Close();
+                }
+                string formattedValue = hidden.Value;
+                string encryptedValue = encrypts(formattedValue);
+                string redirectUrl = "Enquiry.aspx?CUID=" + encryptedValue;
+
+
+                if (Request.QueryString["Name"] != null)
+                {
+                    ClientScript.RegisterStartupScript(
+                        this.GetType(),
+                        "alertRedirect",
+                        $"HideLabel('Data Updated Successfully', '0', '{redirectUrl}');",
+                        true
+                    );
+                }
+                else
+                {
+                    ClientScript.RegisterStartupScript(
+                        this.GetType(),
+                        "alertRedirect",
+                        $"HideLabel('Data Updated Successfully', '0', '{redirectUrl}');",
+                        true
+                    );
+                }
             }
         }
         catch (Exception ex)

@@ -40,6 +40,7 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                     loadData(id);
                     btnSubmit.Text = "Update";
                     hidden.Value = id;
+                    imgProduct.Visible = true;
                 }
                 else
                 {
@@ -52,14 +53,16 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                 if (Request.QueryString["CODE"] != null)
                 {
                     string code = Decrypt(Request.QueryString["CODE"].ToString());
-                    Load_Company_Details(code, true, "CODE", null);
-
+                    btncreate1.Visible = true;
+                    imgProduct.Visible = true;
+                    Load_Company_Details(code, true, "CODE", null);                  
                 }
                 if (Request.QueryString["CUID"] != null)
                 {
                     string bothValues = Decrypt(Request.QueryString["CUID"].ToString());
-                    Load_Company_Details(null, true, "CUID", bothValues);
-
+                    btncreate1.Visible = true;
+                    imgProduct.Visible = true;
+                    Load_Company_Details(null, true, "CUID", bothValues);                   
                 }
 
             }
@@ -128,6 +131,8 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                     if (enquiryTable.Rows.Count > 0)
                     {
                         // To fetch the Product 
+                        string productImage = enquiryTable.Rows[0]["ProductImage"].ToString();
+                        imgProduct.ImageUrl = ResolveUrl(productImage);
                         txtproductname.Text = enquiryTable.Rows[0]["ProdName"].ToString();
                         SqlDataAdapter sad = new SqlDataAdapter("select * from tblProduct where isdeleted='0' AND IsStatus='1' AND ProdName='" + txtproductname.Text + "'", con);
                         sad.Fill(productTable);
@@ -139,6 +144,8 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                         txtotherinfo.Text = enquiryTable.Rows[0]["OtherInformation"].ToString();
 
                         ddlservicetype.Text = enquiryTable.Rows[0]["SerViceType"].ToString();
+                        // To change IsStatus from enquiry and customer
+                        hidden.Value = secondaryId;
 
                     }
                     else
@@ -150,14 +157,14 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                     txtSrNo.ReadOnly = isReadOnly;
                     txtModelNo.ReadOnly = isReadOnly;
                     txtotherinfo.ReadOnly = isReadOnly;
-                    ddlservicetype.Enabled = false;
+                    ddlservicetype.Enabled = !isReadOnly;
                     lnkproduct.Visible = !isReadOnly;
 
                     txtcustomername.ReadOnly = isReadOnly;
                     lnkBtmNew.Visible = !isReadOnly;
                     lnkBtmUpdate.Visible = !isReadOnly;
-                    FileUpload.Visible = !isReadOnly;
-                    lblPath.Visible = !isReadOnly;
+                    FileUpload.Enabled = !isReadOnly;
+                    //lblPath.Visible = !isReadOnly;
                 }
             }
             catch (Exception ex)
@@ -200,7 +207,10 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                         lnkBtmUpdate.CommandArgument = customerTable.Rows[0]["Custid"].ToString() + " " + "," + " " + enquiryTable.Rows[0]["EnquiryId"].ToString(); ;
                         txtcustomername.Text = customerTable.Rows[0]["CustomerName"].ToString();
 
+
                         // To fetch the Product 
+                        string productImage = enquiryTable.Rows[0]["ProductImage"].ToString();
+                        imgProduct.ImageUrl = ResolveUrl(productImage);
                         txtproductname.Text = enquiryTable.Rows[0]["ProdName"].ToString();
                         SqlDataAdapter sad = new SqlDataAdapter("select * from tblProduct where isdeleted='0' AND IsStatus='1' AND ProdName='" + txtproductname.Text + "'", con);
                         sad.Fill(productTable);
@@ -212,6 +222,8 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                         txtotherinfo.Text = enquiryTable.Rows[0]["OtherInformation"].ToString();
 
                         ddlservicetype.Text = enquiryTable.Rows[0]["SerViceType"].ToString();
+                        // To change IsStatus from enquiry and customer
+                        hidden.Value = code;
 
                     }
                     else
@@ -228,14 +240,14 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                 txtSrNo.ReadOnly = isReadOnly;
                 txtModelNo.ReadOnly = isReadOnly;
                 txtotherinfo.ReadOnly = isReadOnly;
-                ddlservicetype.Enabled = false;
+                ddlservicetype.Enabled = !isReadOnly;
                 lnkproduct.Visible = !isReadOnly;
 
                 txtcustomername.ReadOnly = isReadOnly;
                 lnkBtmNew.Visible = !isReadOnly;
                 lnkBtmUpdate.Visible = isReadOnly;
-                FileUpload.Visible = !isReadOnly;
-                lblPath.Visible = !isReadOnly;                
+                FileUpload.Enabled = !isReadOnly;
+                //lblPath.Visible = !isReadOnly;                
             }
             catch (Exception ex)
             {
@@ -329,6 +341,29 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
 
     protected void btnSubmit_Click(object sender, EventArgs e)
     {
+        string EnquID = hidden.Value, CustId = "", imgPath = "";
+        if (EnquID != "")
+        {
+            SqlDataAdapter ad = new SqlDataAdapter("SELECT [CustomerName], [Email], [MobNo], [ProductImage] FROM [tbl_EnquiryMaster] WHERE [EnquiryId] = '" + EnquID + "' ", con);
+            DataTable dt = new DataTable();
+            ad.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                string CustName = dt.Rows[0]["CustomerName"].ToString();
+                string CustEmail = dt.Rows[0]["Email"].ToString();
+                string CustMob = dt.Rows[0]["MobNo"].ToString();
+                imgPath = dt.Rows[0]["ProductImage"].ToString();
+
+                SqlDataAdapter ads = new SqlDataAdapter("SELECT [Custid] FROM [tblCustomer] WHERE [CustomerName] = '" + CustName + "'AND " +
+                    "[Email] = '" + CustEmail + "'AND [MobNo] = '" + CustMob + "'", con);
+                DataTable dts = new DataTable();
+                ads.Fill(dts);
+                if (dts.Rows.Count > 0)
+                {
+                    CustId = dts.Rows[0]["Custid"].ToString();
+                }
+            }
+        }
 
         // string createdby = "Admin";
         // CreatedBy = Session["adminname"].ToString();
@@ -387,6 +422,18 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
                     cmd.Parameters.AddWithValue("@Services", txtservices.Text);
                     cmd.Parameters.AddWithValue("@CustChallnno", txtcustomerno.Text);
+                    if (EnquID != "" && CustId != "")
+                    {
+                        cmd.Parameters.AddWithValue("@EnquID", EnquID);
+                        cmd.Parameters.AddWithValue("@CustID", CustId);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@EnquID", null);
+                        cmd.Parameters.AddWithValue("@CustID", null);
+                    }
+
+
                     if (FileUpload.HasFile)
                     {
                         var Filenamenew = FileUpload.FileName;
@@ -394,6 +441,10 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                         Path = Server.MapPath("~/ProductImg/") + codenew + "_" + Filenamenew;
                         FileUpload.SaveAs(Path);
                         cmd.Parameters.AddWithValue("@Imagepath", "~/ProductImg/" + codenew + "_" + Filenamenew);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Imagepath", imgPath);
                     }
                     // cmd.Parameters.AddWithValue("@Imagepath", "~/ProductImg/" + FileUpload.FileName);
                     cmd.Parameters.AddWithValue("@Action", "Insert");
@@ -409,6 +460,7 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
         }
         else if (btnSubmit.Text == "Update")
         {
+
             DateTime Date = DateTime.Now;
             DateTime dat = Convert.ToDateTime(txtDateIn.Text);
             con.Open();
@@ -458,29 +510,9 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
             con.Close();
             ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Updated Successfully');", true);
         }
+
     }
-    //protected void ddlCustomer()
-    //{
-    //    try
-    //    {
-    //        DataTable dt = new DataTable();
 
-    //        con.Open();
-    //        SqlDataAdapter sad = new SqlDataAdapter("select [Custid],[CustomerName],[GSTNo],[StateCode],[PanNo],[AddresLine1],[AddresLine2],[AddresLine3],[Area],[Email],[City],[Country],[MobNo],[PostalCode],[ContactPerName1],[ContactPerNo1],[ContactPerName2],[ContactPerNo2],[IsStatus],[CreatedBy],[Createddate],[UpdatedBy],[UpdatedDate] FROM [tblCustomer] where isdeleted='0' AND IsStatus='1'", con);
-    //        sad.Fill(dt);
-    //        //  DropDownCust.DataValueField = "Custid";
-    //        DropDownCust.DataTextField = "CustomerName";
-
-    //        DropDownCust.DataSource = dt;
-    //        DropDownCust.DataBind();
-
-    //        con.Close();
-    //    }
-    //    catch (Exception)
-    //    {
-    //        throw;
-    //    }
-    //}
     public string Decrypt(string cipherText)
     {
         string EncryptionKey = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -547,7 +579,8 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                 ddlservicetype.Text = dt.Rows[0]["ServiceType"].ToString();
                 txtservices.Text = dt.Rows[0]["Services"].ToString();
                 txtcustomerno.Text = dt.Rows[0]["CustChallnno"].ToString();
-                lblPath.Text = dt.Rows[0]["Imagepath"].ToString();
+                // lblPath.Text = dt.Rows[0]["Imagepath"].ToString();                
+                imgProduct.ImageUrl = ResolveUrl(dt.Rows[0]["Imagepath"].ToString());
             }
             else
             {
@@ -565,36 +598,62 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
     }
     protected void GenerateCode()
     {
-        SqlDataAdapter ad = new SqlDataAdapter("SELECT max([id]) as maxid FROM [tblInwardEntry] WHERE isdeleted ='0'", con);
+        // Ashish sir code 
+
+        //SqlDataAdapter ad = new SqlDataAdapter("SELECT max([id]) as maxid FROM [tblInwardEntry] WHERE isdeleted ='0'", con);
+        //DataTable dt = new DataTable();
+        //ad.Fill(dt);
+        //if (dt.Rows.Count > 0)
+        //{
+        //    int maxid = dt.Rows[0]["maxid"].ToString() == "" ? 6210 : Convert.ToInt32(dt.Rows[0]["maxid"].ToString());
+        //    if (maxid == 6210) //new change 
+        //    {
+        //        txtJobNo.Text = (maxid).ToString();
+        //    }
+        //    else
+        //    {
+        //        txtJobNo.Text = (maxid + 6211).ToString();
+        //    }
+
+        //    //int maxid = dt.Rows[0]["maxid"].ToString() == "" ? 5014 : Convert.ToInt32(dt.Rows[0]["maxid"].ToString());
+        //    //if (maxid == 5014)
+        //    //{
+        //    //    txtJobNo.Text = "JOBNO." + (maxid).ToString();
+        //    //}
+        //    //else
+        //    //{
+        //    //    txtJobNo.Text = "JOBNO." + (maxid + 5014).ToString();
+        //    //}
+        //    //          
+        //}
+        //else
+        //{
+        //    txtJobNo.Text = string.Empty;
+        //}
+
+
+        // Nikhil Code for job no
+
+        SqlDataAdapter ad = new SqlDataAdapter("SELECT max([JobNo]) as maxid FROM [tblInwardEntry] WHERE isdeleted ='0'", con);
         DataTable dt = new DataTable();
         ad.Fill(dt);
         if (dt.Rows.Count > 0)
         {
-            int maxid = dt.Rows[0]["maxid"].ToString() == "" ? 6211 : Convert.ToInt32(dt.Rows[0]["maxid"].ToString());
-            if (maxid == 6211) //new change 
+            int maxid = Convert.ToInt32(dt.Rows[0]["maxid"].ToString());
+            if (maxid == 0)  
             {
                 txtJobNo.Text = (maxid).ToString();
             }
             else
             {
-                txtJobNo.Text = (maxid + 6211).ToString();
-            }
-
-            //int maxid = dt.Rows[0]["maxid"].ToString() == "" ? 5014 : Convert.ToInt32(dt.Rows[0]["maxid"].ToString());
-            //if (maxid == 5014)
-            //{
-            //    txtJobNo.Text = "JOBNO." + (maxid).ToString();
-            //}
-            //else
-            //{
-            //    txtJobNo.Text = "JOBNO." + (maxid + 5014).ToString();
-            //}
-            //          
+                txtJobNo.Text = (maxid + 1).ToString();
+            }        
         }
         else
         {
             txtJobNo.Text = string.Empty;
         }
+
     }
 
     //protected void Product()
@@ -673,5 +732,10 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
             }
         }
         return encryptString;
+    }
+
+    protected void btncreate_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("EnquiryList.aspx");
     }
 }

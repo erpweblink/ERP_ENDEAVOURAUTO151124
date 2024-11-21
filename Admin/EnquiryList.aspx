@@ -103,17 +103,37 @@
         }
     </style>
     <script>
-        function HideLabel(msg) {
+        // Nikhil Taks of Enquiry Master
+        function HideLabel(msg, flg, url) {
             Swal.fire({
                 icon: 'success',
-                text: msg,
-                timer: 3000,
+                html: `<div style="display: flex; align-items: center; color: red;">
+                            <span style="font-size: 24px; margin-right: 10px; color: red;">&#9888;</span>
+                            <span style="color: red;">${msg}</span>
+                        </div>`,
+                timer: 5000,
                 showCancelButton: false,
-                showConfirmButton: false
+                showConfirmButton: true
             }).then(function () {
-                window.location.href = "../Admin/EnquiryList.aspx";
-            })
-        };
+                if (url) {
+                    window.location.href = url;
+                } else if (flg == '1') {
+                    window.location.href = "../ Admin / EnquiryList.aspx";
+                }
+            });
+        }
+
+        //function HideLabel(msg) {
+        //    Swal.fire({
+        //        icon: 'success',
+        //        text: msg,
+        //        timer: 3000,
+        //        showCancelButton: false,
+        //        showConfirmButton: false
+        //    }).then(function () {
+        //        window.location.href = "../Admin/EnquiryList.aspx";
+        //    })
+        //};
     </script>
     <!--char-->
     <script>
@@ -152,8 +172,8 @@
                     </div>
                     <div class="col-md-3 col-xs-7 col-7">
                         <asp:DropDownList ID="ddlStatus" runat="server" AutoPostBack="true" class="form-control active2 " Width="150px" OnSelectedIndexChanged="ddlStatus_SelectedIndexChanged">
-                            <asp:ListItem Value="All" Text="All"></asp:ListItem>
-                            <asp:ListItem Value="1">Pending</asp:ListItem>
+                            <%--<asp:ListItem Value="All" Text="All"></asp:ListItem>--%>
+                            <asp:ListItem Value="1" Text="Pending"></asp:ListItem>
                             <asp:ListItem Value="0">Completed</asp:ListItem>
                         </asp:DropDownList>
                     </div>
@@ -174,6 +194,16 @@
                                         <asp:Label ID="lblSrNo" runat="server" Text='<%#Container.DataItemIndex +1 %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Created By">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblCreatedBy" runat="server" Text='<%# Eval("CreatedBy") %>'></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Created Date">
+                                    <ItemTemplate>
+                                        <%# Convert.ToDateTime(Eval("Createddate")).ToString("dd/MM/yyyy") %>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Customer Name">
                                     <ItemTemplate>
                                         <asp:Label ID="lblCustName" runat="server" Text='<%# Eval("CustomerName") %>'></asp:Label>
@@ -189,11 +219,11 @@
                                         <asp:Label ID="lblCity" runat="server" Text='<%# Eval("City") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Email ID">
+                               <%-- <asp:TemplateField HeaderText="Email ID">
                                     <ItemTemplate>
                                         <asp:Label ID="txttemail" runat="server" Text='<%# Eval("Email") %>'></asp:Label>
                                     </ItemTemplate>
-                                </asp:TemplateField>
+                                </asp:TemplateField>--%>
                                 <asp:TemplateField HeaderText="Mobile No.">
                                     <ItemTemplate>
                                         <asp:Label ID="lblMobNo" runat="server" Text='<%# Eval("MobNo") %>'></asp:Label>
@@ -210,7 +240,7 @@
                                         &nbsp;&nbsp;  
                                         <asp:LinkButton runat="server" ID="lnkbtnDelete" ToolTip="Delete" OnClientClick="Javascript:return confirm('Are you sure to Delete?')" CommandArgument='<%# Eval("EnquiryId") %>' CommandName="RowDelete"><i class="fa fa-trash-o" style="font-size:24px"></i></asp:LinkButton>
                                         &nbsp;&nbsp;  
-                                        <asp:LinkButton runat="server" ID="LinkButton1" Visible='<%# Eval("IsStatus").ToString() == "Open" ? false : true %>' CommandName="CreateJobCard" CommandArgument='<%# Eval("EnquiryId") %>' ToolTip="Create JobCard" OnClientClick="return confirm('Please check customer details before creating a job card.');"><i class="fa fa-arrow-circle-right" style="font-size:24px;color:green;"></i></asp:LinkButton>
+                                        <asp:LinkButton runat="server" ID="LinkButton1" Visible='<%# Eval("IsStatus").ToString() == "Open" ? false : true %>' CommandName="CreateJobCard" CommandArgument='<%# Eval("EnquiryId") %>' ToolTip="Create JobCard"><i class="fa fa-arrow-circle-right" style="font-size:24px;color:green;"></i></asp:LinkButton>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                             </Columns>
@@ -226,54 +256,57 @@
                             <SortedDescendingHeaderStyle BackColor="#00547E" />
 
                         </asp:GridView>
+
+                        <asp:Button ID="btnprof" runat="server" Style="display: none" />
+                        <asp:ModalPopupExtender ID="modelprofile" runat="server" TargetControlID="btnprof"
+                            PopupControlID="PopupAddDetail" OkControlID="Closepopdetail" />
+                        <asp:Panel ID="PopupAddDetail" runat="server" class="w3-panel w3-white panelinward" GroupingText="Product Details" Direction="LeftToRight" Wrap="true">
+                            <div class="row btnclose">
+                                <div class="col-md-11">
+                                </div>
+                                <div class="col-md-1">
+                                    <asp:LinkButton ID="Closepopdetail" runat="server"><i class="fa fa-close" style="font-size:24px;color:red;"></i></asp:LinkButton>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <asp:Label ID="lblproName" runat="server" class="control-label lbl">Product Name :</asp:Label>
+                                </div>
+                                <div class="col-md-3">
+                                    <asp:Label ID="lblproductNa" runat="server" class="control-label "></asp:Label>
+                                </div>
+                                <div class="col-md-3">
+                                    <asp:Label ID="lblServTy" runat="server" class="control-label lbl">Service Type :</asp:Label>
+                                </div>
+                                <div class="col-md-3">
+                                    <asp:Label ID="lblServiceType" runat="server" class="control-label "></asp:Label>
+
+                                </div>
+                            </div>
+                            <br />
+                            <br />
+                            <div class="row">
+                                <div class="col-md-3 ">
+                                    <asp:Label ID="lblOtInfo" runat="server" class="control-label  lbl ">Other Information :</asp:Label>
+                                </div>
+                                <div class="col-md-3">
+                                    <asp:Label ID="lblOtherInfo" runat="server" class="control-label "></asp:Label>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <asp:Label ID="lblProdImg" runat="server" class="control-label lbl">Product Image : </asp:Label>
+                                </div>
+                                <div class="col-md-3">
+                                    <asp:Image ID="lblProductImg" runat="server" ImageUrl='<%# Eval("ProductImage") %>' Width="190px" Height="110px" Style="border: 1px solid #acacac;" />
+                                </div>
+                            </div>
+                        </asp:Panel>
                     </div>
                 </div>
             </div>
-            <asp:Button ID="btnprof" runat="server" Style="display: none" />
-            <asp:ModalPopupExtender ID="modelprofile" runat="server" TargetControlID="btnprof"
-                PopupControlID="PopupAddDetail" OkControlID="Closepopdetail" />
-            <asp:Panel ID="PopupAddDetail" runat="server" class="w3-panel w3-white panelinward" GroupingText="Product Details" Direction="LeftToRight" Wrap="true">
-                <div class="row btnclose">
-                    <div class="col-md-11">
-                    </div>
-                    <div class="col-md-1">
-                        <asp:LinkButton ID="Closepopdetail" runat="server"><i class="fa fa-close" style="font-size:24px;color:red;"></i></asp:LinkButton>
-                    </div>
-                </div>
-
-                <div class="row">
-                </div>
-                <div class="row">
-                    <div class="col-md-3">
-                        <asp:Label ID="lblproName" runat="server" class="control-label lbl">Product Name :</asp:Label>
-                    </div>
-                    <div class="col-md-3">
-                        <asp:Label ID="lblproductNa" runat="server" class="control-label "></asp:Label>
-                    </div>
-                    <div class="col-md-3">
-                        <asp:Label ID="lblServTy" runat="server" class="control-label lbl">Service Type :</asp:Label>
-                    </div>
-                    <div class="col-md-3">
-                        <asp:Label ID="lblServiceType" runat="server" class="control-label "></asp:Label>
-
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3 ">
-                        <asp:Label ID="lblOtInfo" runat="server" class="control-label  lbl ">Other Information :</asp:Label>
-                    </div>
-                    <div class="col-md-3">
-                        <asp:Label ID="lblOtherInfo" runat="server" class="control-label "></asp:Label>
-                    </div>
-
-                    <div class="col-md-3">
-                        <asp:Label ID="lblProdImg" runat="server" class="control-label lbl">Product Image : </asp:Label>
-                    </div>
-                    <div class="col-md-3">
-                        <asp:Image ID="lblProductImg" runat="server" ImageUrl='<%# Eval("ProductImage") %>' Width="190px" Height="110px" Style="border: 1px solid #acacac;" />
-                    </div>
-                </div>
-            </asp:Panel>
         </div>
     </form>
 </asp:Content>

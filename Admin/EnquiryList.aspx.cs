@@ -33,8 +33,10 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
                 DataTable dt = new DataTable();
                 con.Open();
                 SqlDataAdapter sad = new SqlDataAdapter(
-     "SELECT [EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo],[Email],[IsStatus] " +
-     "FROM [tbl_EnquiryMaster] where  isdeleted='0' ORDER BY Createddate Desc ", con);
+                "SELECT [EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [Email], [IsStatus], " +
+                "[CreatedBy], [Createddate]," +
+                "[ProdName], [ServiceType], [OtherInformation] , [ProductImage]" +
+                "FROM [tbl_EnquiryMaster] where IsStatus = '1' AND  isdeleted='0' ORDER BY Createddate Desc ", con);
                 sad.Fill(dt);
                 gv_Customer.EmptyDataText = "Not Records Found";
                 gv_Customer.DataSource = dt;
@@ -46,9 +48,10 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
                 DataTable dt = new DataTable();
                 con.Open();
                 SqlDataAdapter sad = new SqlDataAdapter(
-     "SELECT [EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [Email], [IsStatus], " + 
-     "[ProdName], [ServiceType], [OtherInformation] , [ProductImage]" +
-     "FROM [tbl_EnquiryMaster] where  isdeleted='0' ORDER BY Createddate Desc ", con);
+                 "SELECT [EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [Email], [IsStatus], " +
+                 "[CreatedBy], [Createddate]," +
+                 "[ProdName], [ServiceType], [OtherInformation] , [ProductImage]" +
+                 "FROM [tbl_EnquiryMaster] where IsStatus = '1' AND  isdeleted='0' ORDER BY Createddate Desc ", con);
                 sad.Fill(dt);
                 gv_Customer.EmptyDataText = "Not Records Found";
                 gv_Customer.DataSource = dt;
@@ -81,12 +84,10 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
             ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Delete Sucessfully');", true);
             GridView();
         }
-        if(e.CommandName == "CreateJobCard")
+        if (e.CommandName == "CreateJobCard")
         {
-            int index = Convert.ToInt32(e.CommandArgument);   
-            ViewState["EnquiryId"] = e.CommandArgument.ToString();
-           Response.Redirect("InwardEntry.aspx?CODE=" + encrypt(e.CommandArgument.ToString()));
-
+            string var = ("InwardEntry.aspx?CODE=" + encrypt(e.CommandArgument.ToString()));
+            ClientScript.RegisterStartupScript(this.GetType(), "alertRedirect", $"HideLabel('Please Check Customer Details Before Creating Job ', '0', '{var}');", true);
         }
     }
     protected void gv_Customer_PageIndexChanging(object sender, GridViewPageEventArgs e)
@@ -139,11 +140,11 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
             else
             {
 
-                DataTable dt = new DataTable();                
+                DataTable dt = new DataTable();
                 SqlDataAdapter sad = new SqlDataAdapter(
     "SELECT [EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo],[Email],[IsStatus] " +
                 "FROM [tbl_EnquiryMaster] " +
-    "WHERE [CustomerName]='" + txtSearch.Text + "'AND isdeleted = '0'", con); 
+    "WHERE [CustomerName]='" + txtSearch.Text + "'AND isdeleted = '0'", con);
                 sad.Fill(dt);
                 gv_Customer.EmptyDataText = "Not Records Found";
                 gv_Customer.DataSource = dt;
@@ -173,7 +174,7 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
             con.ConnectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
 
             using (SqlCommand com = new SqlCommand())
-            {                
+            {
                 com.CommandText = "select DISTINCT CustomerName from tbl_EnquiryMaster where " + "CustomerName like @Search + '%'AND isdeleted='0'";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
@@ -230,28 +231,53 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
         {
             DataTable dt = new DataTable();
 
-            if (ddlStatus.Text == "All")
+            if (ddlStatus.Text == "1")
             {
                 sad = new SqlDataAdapter(
     "SELECT [EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [IsStatus], " +
     "[Email], [CreatedBy], [Createddate], [UpdatedBy], [UpdatedDate] " +
     "FROM [tbl_EnquiryMaster] " +
-    "WHERE [isdeleted] = 0",
+    "WHERE [IsStatus]='" + ddlStatus.Text + "' AND [isdeleted] = '0'",
     con);
             }
             else
             {
+
                 sad = new SqlDataAdapter(
     "SELECT [EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [IsStatus], " +
     "[Email], [CreatedBy], [Createddate], [UpdatedBy], [UpdatedDate] " +
     "FROM [tbl_EnquiryMaster] " +
-    " where [IsStatus]='" + ddlStatus.Text + "' AND isdeleted='0'", 
+    " where [IsStatus]='" + ddlStatus.Text + "' AND isdeleted='0'",
     con);
             }
             sad.Fill(dt);
             gv_Customer.EmptyDataText = "Not Records Found";
             gv_Customer.DataSource = dt;
             gv_Customer.DataBind();
+            if (ddlStatus.Text == "0")
+            {
+                foreach (GridViewRow row in gv_Customer.Rows)
+                {
+                    LinkButton linkButton = (LinkButton)row.FindControl("LinkButton1");
+                    LinkButton linkButton1 = (LinkButton)row.FindControl("lnkbtnDelete");
+                    LinkButton linkButton2 = (LinkButton)row.FindControl("lnkbtnEdit");
+                    LinkButton linkButton3 = (LinkButton)row.FindControl("ActInfo");
+
+                    if (linkButton != null)
+                    {
+                        linkButton.Visible = false;
+                        linkButton1.Visible = false;
+                        linkButton2.Visible = false;
+                    }
+                    int actionColumnIndex = gv_Customer.Columns.Count - 1;
+                    row.Cells[actionColumnIndex].Visible = false;
+                }
+                if (gv_Customer.HeaderRow != null)
+                {
+                    TableCell headerCell = gv_Customer.HeaderRow.Cells[gv_Customer.Columns.Count - 1];
+                    headerCell.Visible = false;
+                }
+            }
         }
         catch (Exception)
         {
@@ -275,10 +301,10 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
             SqlDataAdapter sad = new SqlDataAdapter(
                 "SELECT [EnquiryId], [ProdName], [ProductImage], [OtherInformation], [ServiceType] " +
                 "FROM [tbl_EnquiryMaster] " +
-                "WHERE [EnquiryId] = @EnquiryId", 
+                "WHERE [EnquiryId] = @EnquiryId",
                 con);
 
-        
+
             sad.SelectCommand.Parameters.AddWithValue("@EnquiryId", rowIndex);
 
             DataTable dt = new DataTable();
@@ -286,7 +312,7 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
 
             if (dt.Rows.Count > 0)
             {
-            
+
                 lblproductNa.Text = dt.Rows[0]["ProdName"].ToString();
                 lblServiceType.Text = dt.Rows[0]["ServiceType"].ToString();
                 lblOtherInfo.Text = dt.Rows[0]["OtherInformation"].ToString();
@@ -298,7 +324,7 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
                 }
                 else
                 {
-                    lblProductImg.ImageUrl = "~/Images/NoImageAvailable.png"; 
+                    lblProductImg.ImageUrl = "~/Images/NoImageAvailable.png";
                 }
             }
 
