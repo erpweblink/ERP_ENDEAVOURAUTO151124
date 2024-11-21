@@ -300,7 +300,8 @@
                                     <a class="collapse-item" href="CustomerPO_List_Sales.aspx" id="CustomerPOidSales" runat="server">Customer PO (Sales)</a>
                                     <a class="collapse-item" href="TaxInvoiceList_Sales.aspx" id="IaxinvoicelistidSales" runat="server">Invoice (Sales)</a>
                                     <a class="collapse-item" href="Quotation_List.aspx" id="QuatationListid" runat="server">Quotation</a>
-                                    <a class="collapse-item" href="CustomerPO_List.aspx" id="CustomerPOid" runat="server">Customer PO</a>
+                                    <%--<a class="collapse-item" href="CustomerPO_List.aspx" id="CustomerPOid" runat="server">Customer PO</a>--%>
+                                    <a class="collapse-item" href="Customer_PO_Both_List.aspx" id="CustomerPOBoth" runat="server">Customer PO</a>
                                     <a class="collapse-item" href="TaxInvoiceList.aspx" id="Iaxinvoicelistid" runat="server">Invoice</a>
                                     <a class="collapse-item" href="PurchaseOrderList.aspx" id="purchaseorderlistid" runat="server">Vendor PO</a>
                                     <a class="collapse-item" href="DeliveryChallanList.aspx" id="deliverychallanid" runat="server">Delivery Challan</a>

@@ -99,7 +99,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header  py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h5 class="m-0 font-weight-bold text-primary" id="headerreport" runat="server">Customer PO</h5>
+                    <h5 class="m-0 font-weight-bold text-primary" id="headerreport" runat="server">Customer PO(Sales)</h5>
                 </div>
                 <hr />
                 <div class="card-body">
@@ -123,6 +123,13 @@
                                         <asp:ListItem Value="Service" Text="Service"></asp:ListItem>
                                         <asp:ListItem Value="Sales" Text="Sales"></asp:ListItem>
                                         <asp:ListItem Value="Reparing" Text="Reparing"></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                                <div class="col-md-4 d-none">
+                                    <asp:Label ID="Label5" runat="server" class="control-label col-sm-4">Type :<span class="spncls">*</span></asp:Label>
+                                    <asp:DropDownList runat="server" class="form-control" ID="ddltype">
+                                        <%--<asp:ListItem Value="Regular" Text="Regular"></asp:ListItem>--%>
+                                        <asp:ListItem Value="Sales" Text="Sales"></asp:ListItem>
                                     </asp:DropDownList>
                                 </div>
                             </div>

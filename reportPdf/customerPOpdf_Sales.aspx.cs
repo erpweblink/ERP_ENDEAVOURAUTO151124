@@ -57,7 +57,7 @@ public partial class customerPOpdf : System.Web.UI.Page
     {
         DataTable Dt = new DataTable();
         // SqlDataAdapter da = new SqlDataAdapter("SELECT CustomerPO_Hdr.Id,Quotationno,CustomerName,Description,Pono,PoDate,RefNo,Mobileno,KindAtt,DeliveryAddress,EmailId,GstNo,VehicelNo,PayTerm,Cgst,Sgst,Igst,AllTotalPrice,TotalInWord, RoundOff, GrandTotal, Term_Condition_1, Term_Condition_2, Term_Condition_3, Term_Condition_4, Description, Hsn_Sac,CreatedOn, TaxPercenteage, Quantity, Unit, Rate, DiscountPercentage, Total from CustomerPO_Hdr INNER JOIN CustomerPO_Dtls ON CustomerPO_Hdr.Id = CustomerPO_Dtls.PurchaseId CustomerPO_Dtls.JobNo WHERE CustomerPO_Hdr.Id='" + id + "'", con);
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM  CustomerPO_Hdr_Sales WHERE Id='" + id + "'", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM  CustomerPO_Hdr_Both WHERE Id='" + id + "'", con);
         da.Fill(Dt);
        // GvCustomerpoList.DataSource = Dt;
         //GvCustomerpoList.DataBind();
@@ -217,7 +217,7 @@ public partial class customerPOpdf : System.Web.UI.Page
             //new code 
             DataTable Dtt = new DataTable();
            // SqlDataAdapter daa = new SqlDataAdapter("SELECT * FROM  [CustomerPO_Dtls] WHERE Id='" + id + "'", con);
-            SqlDataAdapter daa = new SqlDataAdapter("SELECT * FROM  [CustomerPO_Dtls_Sales] WHERE PurchaseId ='" + id + "'", con);
+            SqlDataAdapter daa = new SqlDataAdapter("SELECT * FROM  [CustomerPO_Dtls_Both] WHERE PurchaseId ='" + id + "'", con);
             daa.Fill(Dtt);
             double Ttotal_price = 0;
             if (Dtt.Rows.Count > 0)
@@ -253,7 +253,8 @@ public partial class customerPOpdf : System.Web.UI.Page
                     table.AddCell(new Phrase("      " + _ftotal, FontFactory.GetFont("Arial", 9)));
                     rowid++;
 
-                    Ttotal_price += Convert.ToDouble(dr["Total"].ToString());
+                    //Ttotal_price += Convert.ToDouble(dr["Total"].ToString());
+                    Ttotal_price += Convert.ToDouble(GrandTotal);
                 }
             }
             paragraphTable2.Add(table);
