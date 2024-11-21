@@ -97,7 +97,7 @@
         });
     </script>
 
-</asp:Content>
+</asp:Content> 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <form runat="server">
         <asp:ScriptManager ID="scriptmanager" runat="server"></asp:ScriptManager>
@@ -165,9 +165,8 @@
                         </asp:DropDownList>
                     </div>
 
-
-
                 </div>
+
                 </br>
                 <div style="width: 100%;">
                     <div class="table-responsive">
@@ -253,6 +252,12 @@
                                 <asp:TemplateField HeaderText="Count Days">
                                     <ItemTemplate>
                                         <asp:Label ID="lbldaycount" runat="server" Text='<%# Eval("days") %>'></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                   <asp:TemplateField HeaderText="Againstby">
+                                    <ItemTemplate>
+                                        <asp:Label ID="Againstby" runat="server" Text='<%# Eval("Againstby") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
 

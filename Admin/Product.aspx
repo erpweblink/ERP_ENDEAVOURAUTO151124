@@ -50,8 +50,6 @@
             margin-right: 18px;
         }
 
-     
-
         .completionList {
             border: solid 1px Gray;
             border-radius: 5px;
@@ -130,59 +128,91 @@
                 <h5 class="m-0 font-weight-bold text-primary">Product</h5>
             </div>
             <div class="card-body">
-                 <div runat="server" id="divform">
-                <div class="row">
-                    <div class="col-md-6">
-                        <asp:Label ID="lblProdName" runat="server" class="control-label col-sm-6" for="cust">Product Name :<span class="spncls">*</span></asp:Label>
-                        <asp:TextBox runat="server" class="form-control" ID="txtProdName" name="Customer" />
-                        <asp:RequiredFieldValidator ID="RequiredFieldValidatorcustname" runat="server" ErrorMessage="Please fill Product Name" ControlToValidate="txtProdName" ForeColor="Red"></asp:RequiredFieldValidator>
-                        <br />
-                    </div>
-                    <div class="col-md-6">
-                        <asp:Label ID="lblisstatus" class="control-label col-sm-6" runat="server">Is Active :</asp:Label>
-                        <asp:DropDownList ID="DropDownListisActive" runat="server" class="form-control" AutoPostBack="true">
-                            <asp:ListItem>Yes</asp:ListItem>
-                            <asp:ListItem>No</asp:ListItem>
-                        </asp:DropDownList><br />
-                    </div>
-                    <div class="col-md-6">
-                        <asp:Label ID="lblModel" runat="server" class="control-label col-sm-6" for="cust">Model No. :<span class="spncls"></span></asp:Label>
-                        <asp:TextBox runat="server" class="form-control" ID="txtmodel" name="Customer" />
-                   
-                        <br />
-                    </div>
-                    <div class="col-md-6">
-                        <asp:Label ID="lblserialno" runat="server" class="control-label col-sm-6" for="cust">Serial No. :<span class="spncls"></span></asp:Label>
-                        <asp:TextBox runat="server" class="form-control" ID="txtserialno" name="Customer" />
+                <div runat="server" id="divform">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <asp:Label ID="lblProdName" runat="server" class="control-label col-sm-6" for="cust">Product Name :<span class="spncls">*</span></asp:Label>
+                            <asp:TextBox runat="server" AutoPostBack="true" OnTextChanged="txtProdName_TextChanged" class="form-control" ID="txtProdName" name="Customer" />
+                            <asp:RequiredFieldValidator ID="RequiredFieldValidatorcustname" runat="server" ErrorMessage="Please fill Product Name" ControlToValidate="txtProdName" ForeColor="Red"></asp:RequiredFieldValidator>
+                            <br />
+                        </div>
                         
-                        <br />
+                        <div class="col-md-6">
+                            <asp:Label ID="lblcategory" runat="server" class="control-label col-sm-6" for="cust">Category :<span class="spncls"></span></asp:Label>
+                            <asp:TextBox runat="server" AutoPostBack="true" OnTextChanged="txtcategory_TextChanged" class="form-control" ID="txtcategory" name="Category" />
+                            <asp:AutoCompleteExtender ID="AutoCompleteExtender1" CompletionListCssClass="completionList"
+                                CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
+                                CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetCategoryList" TargetControlID="txtcategory" runat="server">
+                            </asp:AutoCompleteExtender>
+
+                            <br />
+                        </div>
+
+                        <div class="col-md-6">
+                            <asp:Label ID="lblrating" runat="server" class="control-label col-sm-6" for="cust">Rating :<span class="spncls"></span></asp:Label>
+                            <asp:TextBox runat="server" AutoPostBack="true" OnTextChanged="txtrating_TextChanged" class="form-control" ID="txtrating" name="Rating" />
+                            <asp:AutoCompleteExtender ID="AutoCompleteExtender2" CompletionListCssClass="completionList"
+                                CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
+                                CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetRatingList" TargetControlID="txtrating" runat="server">
+                            </asp:AutoCompleteExtender>
+
+                            <br />
+                        </div>
+
+                         <div class="col-md-6">
+                            <asp:Label ID="Label1" runat="server" class="control-label col-sm-6" for="cust">Full Product Name :<span class="spncls"></span></asp:Label>
+                            <asp:TextBox runat="server"  AutoPostBack="true" ReadOnly="true" class="form-control" ID="txtfullproductname" name="Full Product Name" />
+                        
+                            <br />
+                        </div>
+
+
+                      
+                        <div class="col-md-6">
+                            <asp:Label ID="lblModel" runat="server" class="control-label col-sm-6" for="cust">Model No. :<span class="spncls"></span></asp:Label>
+                            <asp:TextBox runat="server" class="form-control" ID="txtmodel" name="Customer" />
+
+                            <br />
+                        </div>
+                        <div class="col-md-6">
+                            <asp:Label ID="lblserialno" runat="server" class="control-label col-sm-6" for="cust">Serial No. :<span class="spncls"></span></asp:Label>
+                            <asp:TextBox runat="server" class="form-control" ID="txtserialno" name="Customer" />
+
+                            <br />
+                        </div>
+                          <div class="col-md-6">
+                            <asp:Label ID="lblisstatus" class="control-label col-sm-6" runat="server">Is Active :</asp:Label>
+                            <asp:DropDownList ID="DropDownListisActive" runat="server" class="form-control" AutoPostBack="true">
+                                <asp:ListItem>Yes</asp:ListItem>
+                                <asp:ListItem>No</asp:ListItem>
+                            </asp:DropDownList><br />
+                        </div>
+                        <div class="col-md-6">
+                            <asp:Label ID="lblTechSpeci" runat="server" class="control-label col-sm-6" for="cust">Technical Specification :<span class="spncls"></span></asp:Label>
+                            <asp:TextBox runat="server" class="form-control" ID="txtTechSpeci" name="Customer" TextMode="MultiLine" />
+                            <%-- <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="Please fill Technical Specification" ControlToValidate="txtTechSpeci" ForeColor="Red"></asp:RequiredFieldValidator>--%>
+                            <br />
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <asp:Label ID="lblTechSpeci" runat="server" class="control-label col-sm-6" for="cust">Technical Specification :<span class="spncls"></span></asp:Label>
-                        <asp:TextBox runat="server" class="form-control" ID="txtTechSpeci" name="Customer" TextMode="MultiLine" />
-                        <%-- <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="Please fill Technical Specification" ControlToValidate="txtTechSpeci" ForeColor="Red"></asp:RequiredFieldValidator>--%>
-                        <br />
-                    </div>
-                </div>
-                <center>  
+                    <center>  
                         <div class="col-md-6">  
               <asp:Button  ID="btnSubmit" runat="server" class="btn btn-primary " Text="Submit"   OnClick="btnSubmit_Click"></asp:Button>
                 &nbsp;&nbsp;        &nbsp;&nbsp;     &nbsp;&nbsp;     &nbsp;&nbsp; 
              <asp:Button  ID="btnCancel" runat="server" class="btn btn-primary btncancel " Text="Cancel "  CausesValidation="False" OnClick="btnCancel_Click" ></asp:Button>
             </div></center>
-                     </div>
+                </div>
 
-              <%--  new--%>
+                <%--  new--%>
 
 
                 <div id="divText" runat="server" class="div-to-hide">
-               <%--     <br />
+                    <%--     <br />
                     <hr style="background-color: #000066;" />
                     <div class="col-lg-12 header">
                         <center>
                         <h5>Product List</h5></center>
                     </div>--%>
-                <%--    <div class="row">
+                    <%--    <div class="row">
                         <div class="col-md-4">
                             <asp:TextBox runat="server" class="form-control txtsear" ID="txtSearch" name="Search" placeholder="Search Product Name..." />
                             <asp:AutoCompleteExtender ID="AutoCompleteExtender1" CompletionListCssClass="completionList"
@@ -257,8 +287,7 @@
                     </div>
                 </div>
 
-               <%-- new end--%>
-
+                <%-- new end--%>
             </div>
             <asp:HiddenField runat="server" ID="hidden" />
 

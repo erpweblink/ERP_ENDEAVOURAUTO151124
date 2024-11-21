@@ -42,7 +42,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
         {
             //string UserCompany = Session["name"].ToString();
             DataTable dt = new DataTable();
-            SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,JobNo,Customer_Name,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_Hdr WHERE  IsDeleted='0' AND isCompleted='1'", con);
+            SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,JobNo,Customer_Name,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE  IsDeleted='0' AND isCompleted='1'", con);
             Da.Fill(dt);
             gv_Quot_List.EmptyDataText = "Not Records Found";
             gv_Quot_List.DataSource = dt;
@@ -63,23 +63,22 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
             {
                 DataTable Dt = new DataTable();
                 //original
-                //SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_Hdr WHERE IsDeleted='0' AND isCompleted='1' ORDER BY Quotation_Date DESC ", con);
-                SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_Hdr WHERE Customer_Name='Schneider Electric India Pvt.Ltd.' AND IsDeleted='0'  ORDER BY Quotation_Date DESC ", con);
+                //SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE IsDeleted='0' AND isCompleted='1' ORDER BY Quotation_Date DESC ", con);
+                SqlDataAdapter Da = new SqlDataAdapter(" SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,Againstby,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE Againstby='JobNo' AND Customer_Name='Schneider Electric India Pvt.Ltd.' AND IsDeleted='0'  ORDER BY Quotation_Date DESC ", con);
                 // SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Quotationjobno", con);
 
                 Da.Fill(Dt);
                 gv_Quot_List.DataSource = Dt;
                 gv_Quot_List.DataBind();
-
             }
             else
             {
                 DataTable Dt = new DataTable();
                 //original
 
-            //    SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_Hdr WHERE IsDeleted='0'  ORDER BY Quotation_Date DESC ", con);
+                //SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE IsDeleted='0'  ORDER BY Quotation_Date DESC ", con);
 
-                SqlDataAdapter Da = new SqlDataAdapter("SELECT ID, Quotation_no, Quotation_Date, ExpiryDate, Q.CreatedOn AS QuotationCreatedOn, Customer_Name, SubCustomer, Address, Mobile_No, Phone_No, GST_No, State_Code, kind_Att, CGST, SGST, AllTotal_price, Total_in_word, IsDeleted, Q.CreatedBy, Q.CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_Hdr Q WHERE IsDeleted = '0' ORDER BY Q.CreatedOn DESC;", con);
+                SqlDataAdapter Da = new SqlDataAdapter(" SELECT ID, Quotation_no, Quotation_Date, ExpiryDate, Q.CreatedOn AS QuotationCreatedOn, Customer_Name, SubCustomer, Address, Mobile_No, Phone_No, GST_No, State_Code, kind_Att, CGST, SGST, AllTotal_price, Total_in_word, IsDeleted, Q.CreatedBy, Q.CreatedOn,Againstby, DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr Q WHERE Againstby='JobNo' AND IsDeleted = '0' ORDER BY Q.CreatedOn DESC;", con);
 
                 // SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Quotationjobno", con);
 
@@ -103,10 +102,10 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
             {
                 DataTable Dt = new DataTable();
                 //original
-                //SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_Hdr WHERE IsDeleted='0' AND isCompleted='1' ORDER BY Quotation_Date DESC ", con);
-                SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_Hdr WHERE Customer_Name='Schneider Electric India Pvt.Ltd.' AND IsDeleted='0'  ORDER BY Quotation_Date DESC ", con);
+                //SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE IsDeleted='0' AND isCompleted='1' ORDER BY Quotation_Date DESC ", con);
+                SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE Customer_Name='Schneider Electric India Pvt.Ltd.' AND IsDeleted='0'  ORDER BY Quotation_Date DESC ", con);
                 // SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Quotationjobno", con);
-                // SqlDataAdapter Da = new SqlDataAdapter("SELECT ID, Quotation_no, Quotation_Date, ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,GST_No,State_Code,kind_Att, CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_Hdr WHERE Customer_Name = "Schneder Electric India Pvt.Ltd.' AND IsDeleted='0' ORDER BY Quotation_Date DESC",con);
+                // SqlDataAdapter Da = new SqlDataAdapter("SELECT ID, Quotation_no, Quotation_Date, ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,GST_No,State_Code,kind_Att, CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE Customer_Name = "Schneder Electric India Pvt.Ltd.' AND IsDeleted='0' ORDER BY Quotation_Date DESC",con);
 
                 Da.Fill(Dt);
                 ExportGrid.DataSource = Dt;
@@ -116,8 +115,8 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
             {
                 DataTable Dt = new DataTable();
                 //original
-                //SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_Hdr WHERE IsDeleted='0' AND isCompleted='1' ORDER BY Quotation_Date DESC ", con);
-                SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_Hdr WHERE IsDeleted='0'  ORDER BY Quotation_Date DESC ", con);
+                //SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE IsDeleted='0' AND isCompleted='1' ORDER BY Quotation_Date DESC ", con);
+                SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE IsDeleted='0'  ORDER BY Quotation_Date DESC ", con);
                 // SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Quotationjobno", con);
 
                 Da.Fill(Dt);
@@ -147,7 +146,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT Customer_Name from tbl_Quotation_Hdr where " + "Customer_Name like @Search + '%'AND IsDeleted='0'";
+                com.CommandText = "select DISTINCT Customer_Name from tbl_Quotation_two_Hdr where " + "Customer_Name like @Search + '%'AND IsDeleted='0'";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -180,7 +179,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT Quotation_no from tbl_Quotation_Hdr where " + "Quotation_no like @Search + '%'AND IsDeleted='0'";
+                com.CommandText = "select DISTINCT Quotation_no from tbl_Quotation_two_Hdr where " + "Quotation_no like @Search + '%'AND IsDeleted='0'";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -217,7 +216,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
                 ViewState["Excell"] = "GetsortedDatewise";
                 GetsortedDatewise();
                 //DataTable dtt = new DataTable();
-                //SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where IsDeleted='0' and Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
+                //SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where IsDeleted='0' and Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
                 //sad.Fill(dtt);
                 //gv_Quot_List.EmptyDataText = "Records Not Found";
                 //gv_Quot_List.DataSource = dtt;
@@ -230,7 +229,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
                 ViewState["Excell"] = "GetsortedQuation";
                 GetsortedQuation();
                 //DataTable dtt = new DataTable();
-                //SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where Quotation_no='" + txtquotation.Text + "'", con);
+                //SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where Quotation_no='" + txtquotation.Text + "'", con);
                 //sad.Fill(dtt);
                 //gv_Quot_List.EmptyDataText = "Records Not Found";
                 //gv_Quot_List.DataSource = dtt;
@@ -243,7 +242,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
                 ViewState["Excell"] = "GetsortedCsutomer";
                 GetsortedCsutomer();
                 //DataTable dtt = new DataTable();
-                //SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where  Customer_Name='" + txtSearch.Text + "'", con);
+                //SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where  Customer_Name='" + txtSearch.Text + "'", con);
                 //sad.Fill(dtt);
                 //gv_Quot_List.EmptyDataText = "Records Not Found";
                 //gv_Quot_List.DataSource = dtt;
@@ -255,7 +254,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
             {
                 ViewState["Excell"] = "DateSearch";
                 DataTable dtt = new DataTable();
-                SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where Quotation_Date='" + txtDateSearch.Text + "' AND isdeleted = '0'", con);
+                SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where Quotation_Date='" + txtDateSearch.Text + "' AND isdeleted = '0'", con);
                 sad.Fill(dtt);
                 gv_Quot_List.EmptyDataText = "Records Not Found";
                 gv_Quot_List.DataSource = dtt;
@@ -278,7 +277,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
             //            Label jobnono = (Label)g1.FindControl("lblJobNo");
             //            string jobno = jobnono.Text;
             //            con.Open();
-            //            SqlCommand cmdquatationpo = new SqlCommand("select  c.CreatedOn from tbl_Quotation_Hdr q inner join CustomerPO_Hdr c on q.JobNo=c.JobNo where c.JobNo='" + jobno + "'", con);
+            //            SqlCommand cmdquatationpo = new SqlCommand("select  c.CreatedOn from tbl_Quotation_two_Hdr q inner join CustomerPO_Hdr c on q.JobNo=c.JobNo where c.JobNo='" + jobno + "'", con);
             //            SqlDataReader reader = cmdquatationpo.ExecuteReader();
             //            if (reader.Read())
             //            {
@@ -286,13 +285,13 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
             //                string update = ffff1.ToString("yyyy-MM-dd");
 
             //                con.Close();
-            //                Da = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, '" + update + "') AS days from tbl_Quotation_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1' AND Customer_Name='" + txtSearch.Text + "' ", con);
+            //                Da = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, '" + update + "') AS days from tbl_Quotation_two_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1' AND Customer_Name='" + txtSearch.Text + "' ", con);
             //                Da.Fill(dt);
             //            }
             //            else
             //            {
             //                con.Close();
-            //                Da = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1' AND Customer_Name='" + txtSearch.Text + "'", con);
+            //                Da = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1' AND Customer_Name='" + txtSearch.Text + "'", con);
             //                Da.Fill(dt);
             //                lbldaycount.ForeColor = System.Drawing.Color.Red;
             //            }
@@ -306,7 +305,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
             //            Label jobnono = (Label)g1.FindControl("lblJobNo");
             //            string jobno = jobnono.Text;
             //            con.Open();
-            //            SqlCommand cmdquatationpo = new SqlCommand("select  c.CreatedOn from tbl_Quotation_Hdr q inner join CustomerPO_Hdr c on q.JobNo=c.JobNo where c.JobNo='" + jobno + "'", con);
+            //            SqlCommand cmdquatationpo = new SqlCommand("select  c.CreatedOn from tbl_Quotation_two_Hdr q inner join CustomerPO_Hdr c on q.JobNo=c.JobNo where c.JobNo='" + jobno + "'", con);
             //            SqlDataReader reader = cmdquatationpo.ExecuteReader();
             //            if (reader.Read())
             //            {
@@ -314,13 +313,13 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
             //                string update = ffff1.ToString("yyyy-MM-dd");
 
             //                con.Close();
-            //                Da = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, '" + update + "') AS days from tbl_Quotation_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1'  AND Quotation_Date='" + txtDateSearch.Text + "' ", con);
+            //                Da = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, '" + update + "') AS days from tbl_Quotation_two_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1'  AND Quotation_Date='" + txtDateSearch.Text + "' ", con);
             //                Da.Fill(dt);
             //            }
             //            else
             //            {
             //                con.Close();
-            //                Da = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1' AND Quotation_Date='" + txtDateSearch.Text + "'", con);
+            //                Da = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1' AND Quotation_Date='" + txtDateSearch.Text + "'", con);
             //                Da.Fill(dt);
             //                lbldaycount.ForeColor = System.Drawing.Color.Red;
             //            }
@@ -335,7 +334,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
             //            Label jobnono = (Label)g1.FindControl("lblJobNo");
             //            string jobno = jobnono.Text;
             //            con.Open();
-            //            SqlCommand cmdquatationpo = new SqlCommand("select  c.CreatedOn from tbl_Quotation_Hdr q inner join CustomerPO_Hdr c on q.JobNo=c.JobNo where c.JobNo='" + jobno + "'", con);
+            //            SqlCommand cmdquatationpo = new SqlCommand("select  c.CreatedOn from tbl_Quotation_two_Hdr q inner join CustomerPO_Hdr c on q.JobNo=c.JobNo where c.JobNo='" + jobno + "'", con);
             //            SqlDataReader reader = cmdquatationpo.ExecuteReader();
             //            if (reader.Read())
             //            {
@@ -343,13 +342,13 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
             //                string update = ffff1.ToString("yyyy-MM-dd");
 
             //                con.Close();
-            //                Da = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, '" + update + "') AS days from tbl_Quotation_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1' AND  Quotation_Date='" + txtDateSearch.Text + "' AND Customer_Name='" + txtSearch.Text + "' ", con);
+            //                Da = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, '" + update + "') AS days from tbl_Quotation_two_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1' AND  Quotation_Date='" + txtDateSearch.Text + "' AND Customer_Name='" + txtSearch.Text + "' ", con);
             //                Da.Fill(dt);
             //            }
             //            else
             //            {
             //                con.Close();
-            //                Da = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDateJobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1' AND Quotation_Date='" + txtDateSearch.Text + "' AND Customer_Name='" + txtSearch.Text + "'", con);
+            //                Da = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDateJobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1' AND Quotation_Date='" + txtDateSearch.Text + "' AND Customer_Name='" + txtSearch.Text + "'", con);
             //                Da.Fill(dt);
             //                lbldaycount.ForeColor = System.Drawing.Color.Red;
             //            }
@@ -367,7 +366,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
             //    //        Label jobnono = (Label)g1.FindControl("lblJobNo");
             //    //        string jobno = jobnono.Text;
             //    //        con.Open();
-            //    //        SqlCommand cmdquatationpo = new SqlCommand("select  c.CreatedOn from tbl_Quotation_Hdr q inner join CustomerPO_Hdr c on q.JobNo=c.JobNo where c.JobNo='" + jobno + "'", con);
+            //    //        SqlCommand cmdquatationpo = new SqlCommand("select  c.CreatedOn from tbl_Quotation_two_Hdr q inner join CustomerPO_Hdr c on q.JobNo=c.JobNo where c.JobNo='" + jobno + "'", con);
             //    //        SqlDataReader reader = cmdquatationpo.ExecuteReader();
             //    //        if (reader.Read())
             //    //        {
@@ -375,13 +374,13 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
             //    //            string update = ffff1.ToString("yyyy-MM-dd");
 
             //    //            con.Close();
-            //    //            Da = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, '" + update + "') AS days from tbl_Quotation_Hdr where Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
+            //    //            Da = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, '" + update + "') AS days from tbl_Quotation_two_Hdr where Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
             //    //        }
             //    //        else
             //    //        {
             //    //            con.Close();
-            //    //            Da = new SqlDataAdapter("SELECT * FROM [tbl_Quotation_Hdr] WHERE Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
-            //    //            // Da = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
+            //    //            Da = new SqlDataAdapter("SELECT * FROM [tbl_Quotation_two_Hdr] WHERE Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
+            //    //            // Da = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
             //    //            Da.Fill(dt);
             //    //            //lbldaycount.ForeColor = System.Drawing.Color.Red;
             //    //        }
@@ -396,7 +395,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
             //    //    //DataTable dtt = new DataTable();
 
 
-            //    //    SqlDataAdapter sad = new SqlDataAdapter("SELECT *  AS days FROM [tbl_Quotation_Hdr]  Quotation_Date ='" + txtDateSearchfrom.Text + "' ", con);
+            //    //    SqlDataAdapter sad = new SqlDataAdapter("SELECT *  AS days FROM [tbl_Quotation_two_Hdr]  Quotation_Date ='" + txtDateSearchfrom.Text + "' ", con);
             //    //    sad.Fill(dt);
 
             //    //    gv_Quot_List.EmptyDataText = "Not Records Found";
@@ -413,7 +412,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
             //    //    //DataTable dtt = new DataTable();
 
 
-            //    //    SqlDataAdapter sad = new SqlDataAdapter("SELECT *  FROM [tbl_Quotation_Hdr]  Quotation_Date ='" + txtDateSearchto.Text + "' ", con);
+            //    //    SqlDataAdapter sad = new SqlDataAdapter("SELECT *  FROM [tbl_Quotation_two_Hdr]  Quotation_Date ='" + txtDateSearchto.Text + "' ", con);
             //    //    sad.Fill(dt);
 
             //    //    gv_Quot_List.EmptyDataText = "Not Records Found";
@@ -429,7 +428,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
             //    //{
             //    //    //DataTable dtt = new DataTable();
 
-            //    //    SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM [tbl_Quotation_Hdr] WHERE  Quotation_Date  between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
+            //    //    SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM [tbl_Quotation_two_Hdr] WHERE  Quotation_Date  between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
             //    //    sad.Fill(dt);
 
             //    //    gv_Quot_List.EmptyDataText = "Not Records Found";
@@ -448,7 +447,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
             //    //        Label jobnono = (Label)g1.FindControl("lblJobNo");
             //    //        string Quotationno = txtquotation.Text;
             //    //        con.Open();
-            //    //        SqlCommand cmdquatationpo = new SqlCommand("select  c.CreatedOn from tbl_Quotation_Hdr q inner join CustomerPO_Hdr c on q.JobNo=c.JobNo where c.Quotation_no='" + Quotationno + "'", con);
+            //    //        SqlCommand cmdquatationpo = new SqlCommand("select  c.CreatedOn from tbl_Quotation_two_Hdr q inner join CustomerPO_Hdr c on q.JobNo=c.JobNo where c.Quotation_no='" + Quotationno + "'", con);
             //    //        SqlDataReader reader = cmdquatationpo.ExecuteReader();
             //    //        if (reader.Read())
             //    //        {
@@ -456,13 +455,13 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
             //    //            string update = ffff1.ToString("yyyy-MM-dd");
 
             //    //            con.Close();
-            //    //            Da = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, '" + update + "') AS days from tbl_Quotation_Hdr where Quotation_no='" + Quotationno + "' AND IsDeleted='0' AND isCompleted='1' AND  Quotation_no='" + txtquotation.Text + "' ", con);
+            //    //            Da = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, '" + update + "') AS days from tbl_Quotation_two_Hdr where Quotation_no='" + Quotationno + "' AND IsDeleted='0' AND isCompleted='1' AND  Quotation_no='" + txtquotation.Text + "' ", con);
             //    //            Da.Fill(dt);
             //    //        }
             //    //        else
             //    //        {
             //    //            con.Close();
-            //    //            Da = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where Quotation_no='" + Quotationno + "' AND IsDeleted='0' AND isCompleted='1' AND Quotation_no='" + txtquotation.Text + "'", con);
+            //    //            Da = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where Quotation_no='" + Quotationno + "' AND IsDeleted='0' AND isCompleted='1' AND Quotation_no='" + txtquotation.Text + "'", con);
             //    //            Da.Fill(dt);
             //    //            lbldaycount.ForeColor = System.Drawing.Color.Red;
             //    //        }
@@ -518,7 +517,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
             if (e.CommandName == "RowDelete")
             {
                 con.Open();
-                SqlCommand cmd = new SqlCommand("UPDATE tbl_Quotation_Hdr SET IsDeleted='1' WHERE ID=@ID", con);
+                SqlCommand cmd = new SqlCommand("UPDATE tbl_Quotation_two_Hdr SET IsDeleted='1' WHERE ID=@ID", con);
                 cmd.Parameters.AddWithValue("@ID", Convert.ToInt32(e.CommandArgument.ToString()));
                 cmd.Parameters.AddWithValue("@IsDeleted", '1');
                 cmd.ExecuteNonQuery();
@@ -553,7 +552,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
             Label lblcompanyname = (Label)e.Row.FindControl("lblCompName");
             Label lblsubcustomer = (Label)e.Row.FindControl("lblsubcustomer");
 
-            SqlDataAdapter Da = new SqlDataAdapter("SELECT Quotation_no From tbl_Quotation_Hdr WHERE Quotation_no='" + lbl_Quo_no + "'", con);
+            SqlDataAdapter Da = new SqlDataAdapter("SELECT Quotation_no From tbl_Quotation_two_Hdr WHERE Quotation_no='" + lbl_Quo_no + "'", con);
             DataTable Dt = new DataTable();
             Da.Fill(Dt);
             if (!string.IsNullOrWhiteSpace(lblcompanyname.Text))
@@ -585,21 +584,21 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
         //    Label jobnono = (Label)e.Row.FindControl("lblJobNo");
         //    string jobno = jobnono.Text;
         //    con.Open();
-        //    SqlCommand cmdquatationpo = new SqlCommand("select  c.CreatedOn from tbl_Quotation_Hdr q inner join CustomerPO_Hdr c on q.JobNo=c.JobNo where c.JobNo='" + jobno + "'", con);
+        //    SqlCommand cmdquatationpo = new SqlCommand("select  c.CreatedOn from tbl_Quotation_two_Hdr q inner join CustomerPO_Hdr c on q.JobNo=c.JobNo where c.JobNo='" + jobno + "'", con);
         //    SqlDataReader reader = cmdquatationpo.ExecuteReader();
         //    if (reader.Read())
         //    {
         //        DateTime ffff1 = Convert.ToDateTime(reader["CreatedOn"].ToString());
         //        string update = ffff1.ToString("yyyy-MM-dd");
         //        con.Close();
-        //        sadquatation = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, '" + update + "') AS days from tbl_Quotation_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1' ", con);
+        //        sadquatation = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, '" + update + "') AS days from tbl_Quotation_two_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1' ", con);
         //        sadquatation.Fill(dt11);
 
         //    }
         //    else
         //    {
         //        con.Close();
-        //        sadquatation = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1'", con);
+        //        sadquatation = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1'", con);
         //        sadquatation.Fill(dt11);
         //        e.Row.Cells[9].ForeColor = System.Drawing.Color.Red;
         //    }
@@ -662,6 +661,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
     //    //Give some space after the image
 
     //    png.SpacingAfter = 1f;
+
 
     //    png.Alignment = Element.ALIGN_LEFT;
 
@@ -1163,7 +1163,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
     //        if (ddlpendingquatation.SelectedItem.Text == "All")
     //        {
     //            ViewData();
-    //            // sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,JobNo,Customer_Name,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, CreatedOn, getdate()) AS days from tbl_Quotation_Hdr where IsDeleted='0'", con);
+    //            // sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,JobNo,Customer_Name,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, CreatedOn, getdate()) AS days from tbl_Quotation_two_Hdr where IsDeleted='0'", con);
     //        }
     //        else if (ddlpendingquatation.SelectedItem.Text == "Created Quatation")
     //        {
@@ -1173,7 +1173,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
     //                Label lbldaycount = (Label)g1.FindControl("lbldaycount");
     //                string jobno = jobnono.Text;
     //                con.Open();
-    //                SqlCommand cmdquatationpo = new SqlCommand("select  c.CreatedOn from tbl_Quotation_Hdr q inner join CustomerPO_Hdr c on q.JobNo=c.JobNo where c.JobNo='" + jobno + "'", con);
+    //                SqlCommand cmdquatationpo = new SqlCommand("select  c.CreatedOn from tbl_Quotation_two_Hdr q inner join CustomerPO_Hdr c on q.JobNo=c.JobNo where c.JobNo='" + jobno + "'", con);
     //                SqlDataReader reader = cmdquatationpo.ExecuteReader();
     //                if (reader.Read())
     //                {
@@ -1181,13 +1181,13 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
     //                    string update = ffff1.ToString("yyyy-MM-dd");
 
     //                    con.Close();
-    //                    sad111 = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, CreatedOn, '" + update + "') AS days from tbl_Quotation_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1' AND (isCreateQuata='1' OR mnQuatation='1') ", con);
+    //                    sad111 = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, CreatedOn, '" + update + "') AS days from tbl_Quotation_two_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1' AND (isCreateQuata='1' OR mnQuatation='1') ", con);
     //                    sad111.Fill(dt11);
     //                }
     //                else
     //                {
     //                    con.Close();
-    //                    sad111 = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, CreatedOn, getdate()) AS days from tbl_Quotation_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1' AND  (isCreateQuata='1' OR mnQuatation='1')", con);
+    //                    sad111 = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, CreatedOn, getdate()) AS days from tbl_Quotation_two_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1' AND  (isCreateQuata='1' OR mnQuatation='1')", con);
     //                    sad111.Fill(dt11);
     //                    lbldaycount.ForeColor = System.Drawing.Color.Red;
     //                }
@@ -1201,7 +1201,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
     //                Label lbldaycount = (Label)g1.FindControl("lbldaycount");
     //                string jobno = jobnono.Text;
     //                con.Open();
-    //                SqlCommand cmdquatationpo = new SqlCommand("select  c.CreatedOn from tbl_Quotation_Hdr q inner join CustomerPO_Hdr c on q.JobNo=c.JobNo where c.JobNo='" + jobno + "'", con);
+    //                SqlCommand cmdquatationpo = new SqlCommand("select  c.CreatedOn from tbl_Quotation_two_Hdr q inner join CustomerPO_Hdr c on q.JobNo=c.JobNo where c.JobNo='" + jobno + "'", con);
     //                SqlDataReader reader = cmdquatationpo.ExecuteReader();
     //                if (reader.Read())
     //                {
@@ -1209,15 +1209,15 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
     //                    string update = ffff1.ToString("yyyy-MM-dd");
 
     //                    con.Close();
-    //                    sad111 = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, CreatedOn, '" + update + "') AS days from tbl_Quotation_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1' AND (isCreateQuata is Null AND mnQuatation is null )", con);
+    //                    sad111 = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, CreatedOn, '" + update + "') AS days from tbl_Quotation_two_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1' AND (isCreateQuata is Null AND mnQuatation is null )", con);
     //                    sad111.Fill(dt11);
     //                }
     //                else
     //                {
     //                    con.Close();
     //                    //pending quotation
-    //                    // sad111 = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, CreatedOn, getdate()) AS days from tbl_Quotation_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1' AND (isCreateQuata is Null)", con);
-    //                    sad111 = new SqlDataAdapter("SELECT * FROM [tbl_Quotation_Hdr] WHERE isCreateQuata is NULL AND IsDeleted='0'", con);
+    //                    // sad111 = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, CreatedOn, getdate()) AS days from tbl_Quotation_two_Hdr where JobNo='" + jobno + "' AND IsDeleted='0' AND isCompleted='1' AND (isCreateQuata is Null)", con);
+    //                    sad111 = new SqlDataAdapter("SELECT * FROM [tbl_Quotation_two_Hdr] WHERE isCreateQuata is NULL AND IsDeleted='0'", con);
     //                    sad111.Fill(dt11);
     //                    lbldaycount.ForeColor = System.Drawing.Color.Red;
     //                }
@@ -1281,7 +1281,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
         gv_Quot_List.Visible = false;
         ViewState["Record"] = "Date";
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where IsDeleted='0' and Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where IsDeleted='0' and Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
         sad.Fill(dtt);
         sortedgv.EmptyDataText = "Records Not Found";
         sortedgv.DataSource = dtt;
@@ -1292,7 +1292,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
     {
         gv_Quot_List.Visible = false;
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where IsDeleted='0' and Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where IsDeleted='0' and Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
         sad.Fill(dtt);
         sortedgv.EmptyDataText = "Records Not Found";
         sortedgv.DataSource = dtt;
@@ -1304,7 +1304,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
         gv_Quot_List.Visible = false;
         ViewState["Record"] = "Quation";
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where Quotation_no='" + txtquotation.Text + "'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where Quotation_no='" + txtquotation.Text + "'", con);
         sad.Fill(dtt);
         sortedgv.EmptyDataText = "Records Not Found";
         sortedgv.DataSource = dtt;
@@ -1315,7 +1315,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
     {
         gv_Quot_List.Visible = false;
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where Quotation_no='" + txtquotation.Text + "'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where Quotation_no='" + txtquotation.Text + "'", con);
         sad.Fill(dtt);
         sortedgv.EmptyDataText = "Records Not Found";
         sortedgv.DataSource = dtt;
@@ -1327,7 +1327,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
         gv_Quot_List.Visible = false;
         ViewState["Record"] = "Customer";
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where  Customer_Name='" + txtSearch.Text + "'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where  Customer_Name='" + txtSearch.Text + "'", con);
         sad.Fill(dtt);
         sortedgv.EmptyDataText = "Records Not Found";
         sortedgv.DataSource = dtt;
@@ -1339,7 +1339,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
     {
         gv_Quot_List.Visible = false;
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where  Customer_Name='" + txtSearch.Text + "'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where  Customer_Name='" + txtSearch.Text + "'", con);
         sad.Fill(dtt);
         sortedgv.EmptyDataText = "Records Not Found";
         sortedgv.DataSource = dtt;
@@ -1351,7 +1351,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
         gv_Quot_List.Visible = false;
         ViewState["Record"] = "DateWise";
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where Quotation_Date='" + txtDateSearch.Text + "' AND isdeleted = '0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where Quotation_Date='" + txtDateSearch.Text + "' AND isdeleted = '0'", con);
         sad.Fill(dtt);
         sortedgv.EmptyDataText = "Records Not Found";
         sortedgv.DataSource = dtt;
@@ -1361,7 +1361,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
     public void GetsortedDatewisesearchGrid()
     {
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where Quotation_Date='" + txtDateSearch.Text + "' AND isdeleted = '0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where Quotation_Date='" + txtDateSearch.Text + "' AND isdeleted = '0'", con);
         sad.Fill(dtt);
         sortedgv.EmptyDataText = "Records Not Found";
         sortedgv.DataSource = dtt;
@@ -1373,7 +1373,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
         gv_Quot_List.Visible = false;
         ViewState["Record"] = "DatwiseCustomer";
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("SELECT ID, Quotation_no, Quotation_Date, ExpiryDate, JobNo, Customer_Name, SubCustomer, Address, Mobile_No, Phone_No, GST_No, State_Code, kind_Att, CGST, SGST, AllTotal_price, Total_in_word, IsDeleted, CreatedBy, CreatedOn, DATEDIFF(DAY, Quotation_Date, GETDATE()) AS days FROM tbl_Quotation_Hdr WHERE Quotation_Date BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND Customer_Name = '" + txtSearch.Text + "'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("SELECT ID, Quotation_no, Quotation_Date, ExpiryDate, JobNo, Customer_Name, SubCustomer, Address, Mobile_No, Phone_No, GST_No, State_Code, kind_Att, CGST, SGST, AllTotal_price, Total_in_word, IsDeleted, CreatedBy, CreatedOn, DATEDIFF(DAY, Quotation_Date, GETDATE()) AS days FROM tbl_Quotation_two_Hdr WHERE Quotation_Date BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND Customer_Name = '" + txtSearch.Text + "'", con);
 
         sad.Fill(dtt);
         sortedgv.EmptyDataText = "Records Not Found";
@@ -1385,7 +1385,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
     {
         gv_Quot_List.Visible = false;
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("SELECT ID, Quotation_no, Quotation_Date, ExpiryDate, JobNo, Customer_Name, SubCustomer, Address, Mobile_No, Phone_No, GST_No, State_Code, kind_Att, CGST, SGST, AllTotal_price, Total_in_word, IsDeleted, CreatedBy, CreatedOn, DATEDIFF(DAY, Quotation_Date, GETDATE()) AS days FROM tbl_Quotation_Hdr WHERE Quotation_Date BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND Customer_Name = '" + txtSearch.Text + "'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("SELECT ID, Quotation_no, Quotation_Date, ExpiryDate, JobNo, Customer_Name, SubCustomer, Address, Mobile_No, Phone_No, GST_No, State_Code, kind_Att, CGST, SGST, AllTotal_price, Total_in_word, IsDeleted, CreatedBy, CreatedOn, DATEDIFF(DAY, Quotation_Date, GETDATE()) AS days FROM tbl_Quotation_two_Hdr WHERE Quotation_Date BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND Customer_Name = '" + txtSearch.Text + "'", con);
 
         sad.Fill(dtt);
         sortedgv.EmptyDataText = "Records Not Found";
@@ -1455,7 +1455,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
         gv_Quot_List.Visible = false;
         ViewState["Record"] = "Date";
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where IsDeleted='0' and Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where IsDeleted='0' and Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
         sad.Fill(dtt);
         ExportGrid.EmptyDataText = "Records Not Found";
         ExportGrid.DataSource = dtt;
@@ -1466,7 +1466,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
         gv_Quot_List.Visible = false;
         ViewState["Record"] = "Quation";
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where Quotation_no='" + txtquotation.Text + "'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where Quotation_no='" + txtquotation.Text + "'", con);
         sad.Fill(dtt);
         ExportGrid.EmptyDataText = "Records Not Found";
         ExportGrid.DataSource = dtt;
@@ -1477,7 +1477,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
         gv_Quot_List.Visible = false;
         ViewState["Record"] = "Customer";
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where  Customer_Name='" + txtSearch.Text + "'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where  Customer_Name='" + txtSearch.Text + "'", con);
         sad.Fill(dtt);
         ExportGrid.EmptyDataText = "Records Not Found";
         ExportGrid.DataSource = dtt;
@@ -1486,7 +1486,7 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
     public void GetDateForexcell()
     {
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where Quotation_Date='" + txtDateSearch.Text + "' AND isdeleted = '0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where Quotation_Date='" + txtDateSearch.Text + "' AND isdeleted = '0'", con);
         sad.Fill(dtt);
         ExportGrid.EmptyDataText = "Records Not Found";
         ExportGrid.DataSource = dtt;
@@ -1497,8 +1497,8 @@ public partial class Admin_Quotation_List : System.Web.UI.Page
     protected void ddlservicetype_TextChanged(object sender, EventArgs e)
     {
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where ServiceType ='" + ddlservicetype.Text + "' AND isdeleted = '0'", con);
-        //  SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM [tbl_Quotation_Hdr] WHERE ServiceType ='" + ddlservicetype.Text + "' AND isdeleted = '0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where ServiceType ='" + ddlservicetype.Text + "' AND isdeleted = '0'", con);
+        //  SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM [tbl_Quotation_two_Hdr] WHERE ServiceType ='" + ddlservicetype.Text + "' AND isdeleted = '0'", con);
         sad.Fill(dtt);
         gv_Quot_List.EmptyDataText = "Records Not Found";
         gv_Quot_List.DataSource = dtt;

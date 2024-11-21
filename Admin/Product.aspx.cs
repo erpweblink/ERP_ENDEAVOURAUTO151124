@@ -23,7 +23,6 @@ public partial class Reception_Product : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-
             //if (Session["UserCompany"] == null)
             //{
             //    Response.Redirect("../LoginPage.aspx");
@@ -59,7 +58,7 @@ public partial class Reception_Product : System.Web.UI.Page
                 loadData(id);
                 btnSubmit.Text = "Update";
                 hidden.Value = id;
-            }      
+            }
         }
     }
 
@@ -72,16 +71,83 @@ public partial class Reception_Product : System.Web.UI.Page
             DataTable dt = new DataTable();
             SqlDataAdapter sad = new SqlDataAdapter("SELECT [Prodid],[ProdName],[TechSpeci],[ModelNo],SerialNo,[IsStatus],[CreateBy],[CreateDate],[updateBy],[updateDate]FROM [tblProduct] where isdeleted='0'", con);
             sad.Fill(dt);
-            //gv_Prod.EmptyDataText = "Not Records Found";
-            //gv_Prod.DataSource = dt;
-            //gv_Prod.DataBind();
+        
         }
         catch (Exception ex)
         {
             throw ex;
         }
     }
-    
+
+    //Category Autocomplated
+    [System.Web.Script.Services.ScriptMethod()]
+    [System.Web.Services.WebMethod]
+    public static List<string> GetCategoryList(string prefixText, int count)
+    {
+        return AutoFillGetCategoryList(prefixText);
+    }
+    public static List<string> AutoFillGetCategoryList(string prefixText)
+    {
+        using (SqlConnection con = new SqlConnection())
+        {
+            con.ConnectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+
+            using (SqlCommand com = new SqlCommand())
+            {
+                com.CommandText = "  select DISTINCT CategoryName from [tbl_Category] where " + "CategoryName like @Search + '%'";
+
+                com.Parameters.AddWithValue("@Search", prefixText);
+                com.Connection = con;
+                con.Open();
+                List<string> CategoryName = new List<string>();
+                using (SqlDataReader sdr = com.ExecuteReader())
+                {
+                    while (sdr.Read())
+                    {
+                        CategoryName.Add(sdr["CategoryName"].ToString());
+                    }
+                }
+                con.Close();
+                return CategoryName;
+            }
+        }
+    }
+
+
+
+    //Rating Autocomplated
+    [System.Web.Script.Services.ScriptMethod()]
+    [System.Web.Services.WebMethod]
+    public static List<string> GetRatingList(string prefixText, int count)
+    {
+        return AutoGetRatingListList(prefixText);
+    }
+    public static List<string> AutoGetRatingListList(string prefixText)
+    {
+        using (SqlConnection con = new SqlConnection())
+        {
+            con.ConnectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+
+            using (SqlCommand com = new SqlCommand())
+            {
+                com.CommandText = "  select DISTINCT RatingName from [tbl_Rating] where " + "RatingName like @Search + '%'";
+
+                com.Parameters.AddWithValue("@Search", prefixText);
+                com.Connection = con;
+                con.Open();
+                List<string> RatingName = new List<string>();
+                using (SqlDataReader sdr = com.ExecuteReader())
+                {
+                    while (sdr.Read())
+                    {
+                        RatingName.Add(sdr["RatingName"].ToString());
+                    }
+                }
+                con.Close();
+                return RatingName;
+            }
+        }
+    }
 
     //protected void UserAuthorization()
     //{
@@ -180,15 +246,13 @@ public partial class Reception_Product : System.Web.UI.Page
         try
         {
             if (btnSubmit.Text == "Submit")
-
             {
                 con.Open();
-                SqlCommand cmd1 = new SqlCommand("SELECT [Prodid],[ProdName],[TechSpeci],[ModelNo],SerialNo,[IsStatus],[CreateBy],[CreateDate],[updateBy],[updateDate] FROM [tblProduct] where ProdName='" + txtProdName.Text + "' AND ModelNo='" + txtmodel.Text + "' AND isdeleted='0'", con);
+                SqlCommand cmd1 = new SqlCommand("SELECT [Prodid],[ProdName],[TechSpeci],[ModelNo],SerialNo,[IsStatus],[CreateBy],[CreateDate],[updateBy],[updateDate] FROM [tblProduct] where Fullproductname='" + txtfullproductname.Text + "' AND ModelNo='" + txtmodel.Text + "' AND isdeleted='0'", con);
                 SqlDataReader reader = cmd1.ExecuteReader();
 
                 if (reader.Read())
                 {
-
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Data Already Available.');window.location ='Product.aspx';", true);
                 }
                 else
@@ -199,10 +263,12 @@ public partial class Reception_Product : System.Web.UI.Page
                     SqlCommand cmd = new SqlCommand("SP_Product", con);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@ProdName", txtProdName.Text);
+                    cmd.Parameters.AddWithValue("@Category", txtcategory.Text);
+                    cmd.Parameters.AddWithValue("@Rating", txtrating.Text);
+                    cmd.Parameters.AddWithValue("@Fullproductname", txtfullproductname.Text);
                     cmd.Parameters.AddWithValue("@TechSpeci", txtTechSpeci.Text);
                     cmd.Parameters.AddWithValue("@ModelNo", txtmodel.Text);
                     cmd.Parameters.AddWithValue("@SerialNo", txtserialno.Text);
-
                     cmd.Parameters.AddWithValue("@CreateBy", createdby);
                     cmd.Parameters.AddWithValue("@CreateDate", Date);
                     cmd.Parameters.AddWithValue("@updateBy", null);
@@ -230,7 +296,6 @@ public partial class Reception_Product : System.Web.UI.Page
                     {
                         ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Saved Successfully','1');", true);
                     }
-
                 }
             }
             else if (btnSubmit.Text == "Update")
@@ -241,10 +306,12 @@ public partial class Reception_Product : System.Web.UI.Page
                 SqlCommand cmd = new SqlCommand("SP_Product", con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@ProdName", txtProdName.Text);
+                cmd.Parameters.AddWithValue("@Category", txtcategory.Text);
+                cmd.Parameters.AddWithValue("@Rating", txtrating.Text);
+                cmd.Parameters.AddWithValue("@Fullproductname", txtfullproductname.Text);
                 cmd.Parameters.AddWithValue("@TechSpeci", txtTechSpeci.Text);
                 cmd.Parameters.AddWithValue("@ModelNo", txtmodel.Text);
                 cmd.Parameters.AddWithValue("@SerialNo", txtserialno.Text);
-
                 cmd.Parameters.AddWithValue("@CreateBy", createdby);
                 cmd.Parameters.AddWithValue("@CreateDate", Date);
                 cmd.Parameters.AddWithValue("@updateBy", null);
@@ -281,7 +348,6 @@ public partial class Reception_Product : System.Web.UI.Page
             throw ex;
         }
     }
-
 
 
     public string encrypt(string encryptString)
@@ -337,7 +403,7 @@ public partial class Reception_Product : System.Web.UI.Page
     {
         try
         {
-            SqlDataAdapter sad = new SqlDataAdapter("SELECT [Prodid],[ProdName],[TechSpeci],[ModelNo],SerialNo,[IsStatus],[CreateBy],[CreateDate],[updateBy],[updateDate]FROM [tblProduct] where Prodid='" + id + "' ", con);
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT [Prodid],[ProdName],Category,Rating,Fullproductname,[TechSpeci],[ModelNo],SerialNo,[IsStatus],[CreateBy],[CreateDate],[updateBy],[updateDate]FROM [tblProduct] where Prodid='" + id + "' ", con);
 
             DataTable dt = new DataTable();
             sad.Fill(dt);
@@ -346,7 +412,9 @@ public partial class Reception_Product : System.Web.UI.Page
             {
 
                 txtProdName.Text = dt.Rows[0]["ProdName"].ToString();
-
+                txtcategory.Text = dt.Rows[0]["Category"].ToString();
+                txtrating.Text = dt.Rows[0]["Rating"].ToString();
+                txtfullproductname.Text = dt.Rows[0]["Fullproductname"].ToString();
                 txtTechSpeci.Text = dt.Rows[0]["TechSpeci"].ToString();
                 txtmodel.Text = dt.Rows[0]["ModelNo"].ToString();
                 txtserialno.Text = dt.Rows[0]["SerialNo"].ToString();
@@ -368,7 +436,7 @@ public partial class Reception_Product : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            throw;
+            throw ex;
         }
     }
 
@@ -402,7 +470,6 @@ public partial class Reception_Product : System.Web.UI.Page
             Label lblisstatus = (Label)e.Row.FindControl("lblIsStatus") as Label;
 
             if (lblisstatus.Text == "True")
-
             {
                 lblisstatus.Text = "Active";
             }
@@ -443,7 +510,6 @@ public partial class Reception_Product : System.Web.UI.Page
     //            //UserAuthorization();
     //        }
 
-
     //        //GridView();
     //    }
     //    catch (Exception ex)
@@ -483,7 +549,6 @@ public partial class Reception_Product : System.Web.UI.Page
                 con.Close();
                 return ProdName;
             }
-
         }
     }
 
@@ -534,4 +599,35 @@ public partial class Reception_Product : System.Web.UI.Page
     //    gv_Prod.PageIndex = e.NewPageIndex;
     //    GridView();
     //}
+
+ 
+    protected void txtProdName_TextChanged(object sender, EventArgs e)
+    {
+        string productName = txtProdName.Text;
+        string category = txtcategory.Text;
+        string rating = txtrating.Text;
+
+        // Concatenate with desired format
+        txtfullproductname.Text = $"{productName}  {category} {rating}";
+    }
+
+    protected void txtcategory_TextChanged(object sender, EventArgs e)
+    {
+        string productName = txtProdName.Text;
+        string category = txtcategory.Text;
+        string rating = txtrating.Text;
+
+        // Concatenate with desired format
+        txtfullproductname.Text = $"{productName}  {category}  {rating}";
+    }
+
+    protected void txtrating_TextChanged(object sender, EventArgs e)
+    {
+        string productName = txtProdName.Text;
+        string category = txtcategory.Text;
+        string rating = txtrating.Text;
+
+        // Concatenate with desired format
+        txtfullproductname.Text = $"{productName} {category} {rating}";
+    }
 }

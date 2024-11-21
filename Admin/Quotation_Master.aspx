@@ -139,6 +139,15 @@
                                     <br />
                                 </div>
 
+                                  <div class="col-md-3">
+                                    <asp:Label ID="Label15" runat="server" class="control-label col-sm-6">Against By :<span class="spncls">*</span></asp:Label>
+                                   <asp:DropDownList runat="server" class="form-control"  AutoPostBack="true"  ID="ddlagainstby">	
+                                        <%--<asp:ListItem Value="Sales" Text="Sales"></asp:ListItem>--%>   
+                                        <asp:ListItem Value="JobNo" Text="JobNo"></asp:ListItem>                                                              
+                                    </asp:DropDownList>
+                                    <br />
+                                </div>
+
                                 <div class="col-md-6">
                                     <asp:Label ID="Label14" runat="server" class="control-label col-sm-4">Service Type :<span class="spncls">*</span></asp:Label>
                                     <asp:DropDownList runat="server" class="form-control" ID="ddlservicetype">
@@ -333,6 +342,7 @@
                             <hr />
                             <h5 class="m-0 font-weight-bold">Component Details</h5>
                             <br />
+
                             <div class="row" id="componantdetails" runat="server">
                                 <div class="col-md-12">
                                     <table class="table-responsive">
@@ -422,6 +432,9 @@
                                     </table>
                                 </div>
                             </div>
+
+                         
+
                             <hr />
                             <div class="row" id="Quatationgrid">
                                 <div class="col-md-12">
@@ -756,19 +769,7 @@
             </div>
         </div>
 
-        <%--  <script type="text/javascript">
-            function Validate(sender, args) {
-                var gridView = document.getElementById("<%=grdjobno.ClientID %>");
-                var checkBoxes = gridView.getElementsByTagName("input");
-                for (var i = 0; i < checkBoxes.length; i++) {
-                    if (checkBoxes[i].type == "checkbox" && checkBoxes[i].checked) {
-                        args.IsValid = true;
-                        return;
-                    }
-                }
-                args.IsValid = false;
-            }
-        </script>--%>
+      
     </form>
 
 </asp:Content>

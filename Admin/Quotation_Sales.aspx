@@ -107,13 +107,20 @@
                     <asp:UpdatePanel ID="update" runat="server">
                         <ContentTemplate>
                             <div class="row">
-
-
                                 <div class="col-md-3">
                                     <asp:Label ID="lblQuo_No" runat="server" class="control-label col-sm-6">Quotation No. :<span class="spncls">*</span></asp:Label>
                                     <asp:TextBox runat="server" class="form-control" ID="txt_Quo_No" ReadOnly="true"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" ErrorMessage="Please Select Quotation No." ControlToValidate="txt_Quo_No" ForeColor="Red"></asp:RequiredFieldValidator>
                                     <asp:HiddenField ID="hdnID" runat="server" />
+                                    <br />
+                                </div>
+
+                                <div class="col-md-3">
+                                    <asp:Label ID="Label15" runat="server" class="control-label col-sm-6">Against By :<span class="spncls">*</span></asp:Label>
+                                    <asp:DropDownList runat="server" class="form-control" AutoPostBack="true" ID="ddlagainstby">
+                                        <asp:ListItem Value="Sales" Text="Sales"></asp:ListItem>
+                                        <%--<asp:ListItem Value="JobNo" Text="JobNo"></asp:ListItem>--%>
+                                    </asp:DropDownList>
                                     <br />
                                 </div>
 
@@ -266,17 +273,18 @@
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
 
-
                                                 <asp:TemplateField HeaderText="Job No.">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lbljobno" Text='<%# Eval("Jobno") %>' runat="server"></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
+
                                                 <asp:TemplateField HeaderText="Product">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblproduct" Text='<%# Eval("MateName") %>' runat="server"></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
+
                                             </Columns>
                                             <FooterStyle BackColor="White" ForeColor="#000066" />
                                             <HeaderStyle BackColor="#0755a1" Font-Bold="True" ForeColor="White" />
@@ -289,8 +297,6 @@
                                             <SortedDescendingCellStyle BackColor="#CAC9C9" />
                                             <SortedDescendingHeaderStyle BackColor="#00547E" />
                                         </asp:GridView>
-
-
                                         <br />
                                     </div>
                                 </div>

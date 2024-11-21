@@ -189,7 +189,7 @@
 
                 <%--Sorted grid start--%>
 
-                        <div style="width: 100%; padding: 20px; overflow: scroll;" class="table-responsive">
+                     <%--   <div style="width: 100%; padding: 20px; overflow: scroll;" class="table-responsive">
                         <asp:GridView ID="Sortedcomponetgrid" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
                             PagerStyle-CssClass="paging">
                             <Columns>
@@ -234,7 +234,7 @@
                             <SortedDescendingCellStyle BackColor="#CAC9C9" />
                             <SortedDescendingHeaderStyle BackColor="#00547E" />
                         </asp:GridView>
-                    </div>
+                    </div>--%>
 
                 <%--sorted grid end--%>
 

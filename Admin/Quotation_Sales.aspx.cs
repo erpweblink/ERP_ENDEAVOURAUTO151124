@@ -101,7 +101,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
     {
         try
         {
-            SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNo,Quotation_no,IGST,Customer_Name,SubCustomer,Quotation_Date,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4] FROM tbl_Quotation_Hdr_Sales WHERE ID='" + Idd + "'", con);
+            SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNo,Quotation_no,IGST,Customer_Name,SubCustomer,Quotation_Date,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4] FROM tbl_Quotation_two_Hdr WHERE ID='" + Idd + "'", con);
             DataTable Dt = new DataTable();
             Da.Fill(Dt);
             if (Dt.Rows.Count > 0)
@@ -295,7 +295,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
     {
         try
         {
-            SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_Hdr_Sales WHERE Quotation_no='" + ID + "'", con);
+            SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ID + "'", con);
             DataTable Dt = new DataTable();
             Da.Fill(Dt);
             if (Dt.Rows.Count > 0)
@@ -389,8 +389,8 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
     {
         try
         {
-           // ddljobnobind();
-            SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM tbl_Quotation_Dtl_Sales WHERE Quotation_no='" + txt_Quo_No.Text + "'", con);
+            // ddljobnobind();
+            SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM tbl_Quotation_two_Dtls WHERE Quotation_no='" + txt_Quo_No.Text + "'", con);
             DataTable DTCOMP = new DataTable();
             Da.Fill(DTCOMP);
 
@@ -413,7 +413,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
             dgvProductDtl.DataSource = Dt_Component;
             dgvProductDtl.DataBind();
 
-            SqlDataAdapter Sda = new SqlDataAdapter("SELECT * FROM tbl_Quotation_Hdr_Sales WHERE Quotation_no='" + txt_Quo_No.Text + "'", con);
+            SqlDataAdapter Sda = new SqlDataAdapter("SELECT * FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + txt_Quo_No.Text + "'", con);
             DataTable Sdt = new DataTable();
             Sda.Fill(Sdt);
             if (Sdt.Rows.Count > 0)
@@ -836,7 +836,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
 
     protected void GenerateCode()
     {
-        SqlDataAdapter ad = new SqlDataAdapter("SELECT max([ID]) as maxid FROM [tbl_Quotation_Hdr_Sales]", con);
+        SqlDataAdapter ad = new SqlDataAdapter("SELECT max([ID]) as maxid FROM [tbl_Quotation_two_Hdr]", con);
         DataTable dt = new DataTable();
         ad.Fill(dt);
         if (dt.Rows.Count > 0)
@@ -864,7 +864,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
         string str;
         SqlCommand com;
         int count;
-        str = "select count(mnQuatation) from tbl_Quotation_Hdr_Sales";
+        str = "select count(mnQuatation) from tbl_Quotation_two_Hdr";
         com = new SqlCommand(str, con);
         con.Open();
 
@@ -874,7 +874,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
         string str1;
         SqlCommand com1;
         int count1;
-        str1 = "select count(mnQuatation) from tbl_Quotation_Hdr_Sales";
+        str1 = "select count(mnQuatation) from tbl_Quotation_two_Hdr";
         com1 = new SqlCommand(str1, con);
         con.Open();
         count1 = Convert.ToInt16(com.ExecuteScalar()) + 1;
@@ -930,7 +930,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
         string createdby = Session["adminname"].ToString();
         try
         {
-            DataTable Dt = new DataTable("SELECT * FROM [tbl_Quotation_Hdr_Sales] WHERE Quotation_no = '" + txt_Quo_No.Text + "'");
+            DataTable Dt = new DataTable("SELECT * FROM [tbl_Quotation_two_Hdr] WHERE Quotation_no = '" + txt_Quo_No.Text + "'");
             if (btnSubmit.Text == "Submit")
             {
                 if (Dt.Rows.Count > 0)
@@ -941,7 +941,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
                 {
                     string[] subs = txt_Quo_No.Text.Split('_');
                     DateTime Date = DateTime.Now;
-                    SqlCommand cmd = new SqlCommand("SP_Quotation_Hdr_Sales", con);
+                    SqlCommand cmd = new SqlCommand("SP_Quotation_Hdr_two", con);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@Quotation_no", txt_Quo_No.Text);
                     cmd.Parameters.AddWithValue("@Quotation_Date", Txt_Quo_Date.Text);
@@ -958,6 +958,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@SGST", txt_sgst9.Text);
                     cmd.Parameters.AddWithValue("@IGST", txtigst.Text);
                     cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
+                    cmd.Parameters.AddWithValue("@Againstby", ddlagainstby.SelectedItem.Text);
                     cmd.Parameters.AddWithValue("@AllTotal_price", txt_grandTotal.Text);
                     cmd.Parameters.AddWithValue("@Total_in_word", lbl_total_amt_Value.Text);
                     cmd.Parameters.AddWithValue("@IsDeleted", '0');
@@ -988,7 +989,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
                         string DiscPer_grd = (grd1.FindControl("lbl_Discount") as Label).Text;
                         string Total_grd = (grd1.FindControl("lblTotalPrice") as Label).Text;
 
-                        SqlCommand cmdd = new SqlCommand("INSERT INTO tbl_Quotation_Dtl_Sales (Quotation_no,HSN,Tax,Qty,Units,total,Rate,Disc_per,FTotal,CreatedBy,CreatedOn,UpdatedBy,UpdatedOn,Description,product) VALUES(@Quotation_no,@HSN,@Tax,@Qty,@Units,@total,@Rate,@Disc_per,@FTotal,@CreatedBy,@CreatedOn,@UpdatedBy,@UpdatedOn,@Description,@product)", con);
+                        SqlCommand cmdd = new SqlCommand("INSERT INTO tbl_Quotation_two_Dtls (Quotation_no,HSN,Tax,Qty,Units,total,Rate,Disc_per,FTotal,CreatedBy,CreatedOn,UpdatedBy,UpdatedOn,Description,product) VALUES(@Quotation_no,@HSN,@Tax,@Qty,@Units,@total,@Rate,@Disc_per,@FTotal,@CreatedBy,@CreatedOn,@UpdatedBy,@UpdatedOn,@Description,@product)", con);
                         cmdd.Parameters.AddWithValue("@Quotation_no", txt_Quo_No.Text);
                         cmdd.Parameters.AddWithValue("@HSN", HSN_grd);
                         cmdd.Parameters.AddWithValue("@Tax", TaxPer_grd);
@@ -1033,7 +1034,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
                 DateTime Date = DateTime.Now;
                 con.Open();
 
-                SqlCommand cmd = new SqlCommand("SP_Quotation_Hdr_Sales", con);
+                SqlCommand cmd = new SqlCommand("SP_Quotation_Hdr_two", con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Quotation_no", txt_Quo_No.Text);
                 cmd.Parameters.AddWithValue("@Quotation_Date", Txt_Quo_Date.Text);
@@ -1050,6 +1051,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
                 cmd.Parameters.AddWithValue("@SGST", txt_sgst9.Text);
                 cmd.Parameters.AddWithValue("@IGST", txtigst.Text);
                 cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
+                cmd.Parameters.AddWithValue("@Againstby", ddlagainstby.SelectedItem.Text);
                 cmd.Parameters.AddWithValue("@AllTotal_price", txt_grandTotal.Text);
                 cmd.Parameters.AddWithValue("@Total_in_word", lbl_total_amt_Value.Text);
                 cmd.Parameters.AddWithValue("@IsDeleted", '0');
@@ -1068,7 +1070,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
                 cmd.ExecuteNonQuery();
                 con.Close();
 
-                SqlCommand cmddelete = new SqlCommand("DELETE FROM tbl_Quotation_Dtl_Sales WHERE Quotation_no=@Quotation_no", con);
+                SqlCommand cmddelete = new SqlCommand("DELETE FROM tbl_Quotation_two_Dtls WHERE Quotation_no=@Quotation_no", con);
                 cmddelete.Parameters.AddWithValue("@Quotation_no", txt_Quo_No.Text);
                 con.Open();
                 cmddelete.ExecuteNonQuery();
@@ -1089,7 +1091,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
                     string DiscPer_grd = (grd1.FindControl("lbl_Discount") as Label).Text;
                     string Total_grd = (grd1.FindControl("lblTotalPrice") as Label).Text;
 
-                    SqlCommand cmdd = new SqlCommand("INSERT INTO tbl_Quotation_Dtl_Sales (Quotation_no,HSN,Tax,Qty,Units,total,Rate,Disc_per,FTotal,CreatedBy,CreatedOn,UpdatedBy,UpdatedOn,Description,product) VALUES(@Quotation_no,@HSN,@Tax,@Qty,@Units,@total,@Rate,@Disc_per,@FTotal,@CreatedBy,@CreatedOn,@UpdatedBy,@UpdatedOn,@Description,@product)", con);
+                    SqlCommand cmdd = new SqlCommand("INSERT INTO tbl_Quotation_two_Dtls (Quotation_no,HSN,Tax,Qty,Units,total,Rate,Disc_per,FTotal,CreatedBy,CreatedOn,UpdatedBy,UpdatedOn,Description,product) VALUES(@Quotation_no,@HSN,@Tax,@Qty,@Units,@total,@Rate,@Disc_per,@FTotal,@CreatedBy,@CreatedOn,@UpdatedBy,@UpdatedOn,@Description,@product)", con);
                     cmdd.Parameters.AddWithValue("@Quotation_no", txt_Quo_No.Text);
                     cmdd.Parameters.AddWithValue("@HSN", HSN_grd);
                     cmdd.Parameters.AddWithValue("@Tax", TaxPer_grd);
@@ -1142,7 +1144,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
         try
         {
             DataTable dt = new DataTable();
-            SqlDataAdapter sad = new SqlDataAdapter("Select * from tbl_Quotation_Hdr_Sales where Quotation_no='" + txt_Quo_No.Text + "'", con);
+            SqlDataAdapter sad = new SqlDataAdapter("Select * from tbl_Quotation_two_Hdr where Quotation_no='" + txt_Quo_No.Text + "'", con);
             sad.Fill(dt);
 
             string strMessage =
@@ -1155,13 +1157,14 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
 
                          "We hope that we will receive a Purchase Order Soon." + " <br/><br/>" +
 
-                         "Please do not hesitate to contact us for any query or clarification." + " <br/><br/>" +
+                         "Please do not hesitate to contact us for any query or clarification." + " <br/><br/>";
 
-                        "Thanks & Regards." + "<br/>" +
-                        "<strong>ENDEAVOUR AUTOMATION<strong>";
+
             MemoryStream file = new MemoryStream(PDF("This is pdf file text", Server.MapPath("~/Files/")).ToArray());
             string pdfname = "Quotation - " + txt_Quo_No.Text.Trim() + "/" + Txt_Quo_Date.Text.Trim() + ".pdf";
             MailMessage message = new MailMessage();
+
+            string BCC = "sales.endeavourautomations@gmail.com";
 
             foreach (GridViewRow g1 in Grd_MAIL.Rows)
             {
@@ -1172,6 +1175,8 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
                     message.To.Add(MAIL);// Email-ID of Receiver  
                 }
             }
+
+            message.CC.Add(BCC);
             file.Seek(0, SeekOrigin.Begin);
             Attachment data = new Attachment(file, pdfname, "application/pdf");
             ContentDisposition disposition = data.ContentDisposition;
@@ -1179,12 +1184,17 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
             disposition.ModificationDate = System.DateTime.Now;
             disposition.DispositionType = DispositionTypeNames.Attachment;
             message.Attachments.Add(data);//Attach the file
-            message.Body = strMessage.ToString();
+
+            // message.Body = strMessage.ToString();
+
+            string body = strMessage + GetEmailSignature();
+            message.Body = body;
+
             message.Subject = "Quotation PDF";// Subject of Email  
-            message.From = new MailAddress("enquiry@weblinkservices.net", "info@endeavours.in");
+            message.From = new MailAddress("enquiry@weblinkservices.net", "sales.endeavourautomations@gmail.com");
             message.IsBodyHtml = true;
             // Set the "Reply-To" header to indicate the desired display address
-            message.ReplyToList.Add(new MailAddress("info@endeavours.in"));
+            message.ReplyToList.Add(new MailAddress("sales.endeavourautomations@gmail.com"));
             SmtpClient SmtpMail = new SmtpClient();
             SmtpMail.Host = "smtpout.secureserver.net"; // Name or IP-Address of Host used for SMTP transactions  
             SmtpMail.Port = 587; // Port for sending the mail  
@@ -1205,6 +1215,28 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
             ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('" + errorMsg + "') ", true);
         }
     }
+
+    private string GetEmailSignature()
+    {
+        return @"
+                  <br>
+                  <strong>Thanks & Regards.</strong><br>
+                  <img src='https://www.endeavours.in/images/logo.png' alt='Company Logo' width='100' height='100'><br>
+                  <strong>Divya Sutar</strong><br>
+                  Tellecaller <br>
+                  Contact No: 8767236105<br>
+                  <a href='mailto:sales.endeavourautomations@gmail.com'>sales.endeavourautomations@gmail.com</a><br>
+                  <a href='https://www.endeavours.in/'>www.endeavours.in</a><br><br>
+                  <strong>Office Address:</strong><br>
+                  S.N. 9/2/A1, Sapkal Wasti,<br>
+                  Ravet Road, Nr. HP Petrol Pump,<br>
+                  Behind Genesis Furniture,<br>
+                  Tathawade, PUNE- 411033,<br>
+                  Maharashtra, INDIA
+                  ";
+    }
+
+
 
     public MemoryStream PDF(string Quo_NO, string message)
     {
@@ -2055,7 +2087,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
     {
         ViewState["RowNo"] = (int)ViewState["RowNo"] + 1;
         DataTable Dt = (DataTable)ViewState["QuotationComp"];
-        Dt.Rows.Add(ViewState["RowNo"],txtpoduct.Text, txtadddescription.Text.Trim(), txt_hsn_Tbl.Text, txt_rate_Tbl.Text, txt_unit_Tbl.Text, txt_quntity_Tbl.Text, txt_tax_Tbl.Text,
+        Dt.Rows.Add(ViewState["RowNo"], txtpoduct.Text, txtadddescription.Text.Trim(), txt_hsn_Tbl.Text, txt_rate_Tbl.Text, txt_unit_Tbl.Text, txt_quntity_Tbl.Text, txt_tax_Tbl.Text,
         txt_discount_Tbl.Text, txt_Total_Tbl.Text, txt_total_amount_Tbl.Text);
         ViewState["QuotationComp"] = Dt;
         txt_hsn_Tbl.Text = string.Empty;

@@ -248,9 +248,15 @@
                                     </ItemTemplate>
                                 </asp:TemplateField>
 
-                                <asp:TemplateField HeaderText="Count Days">
+                                 <asp:TemplateField HeaderText="Count Days">
                                     <ItemTemplate>
                                         <asp:Label ID="lbldaycount" runat="server" Text='<%# Eval("days") %>'></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="Againstby">
+                                    <ItemTemplate>
+                                        <asp:Label ID="Againstby" runat="server" Text='<%# Eval("Againstby") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
 
