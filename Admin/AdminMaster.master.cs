@@ -304,11 +304,11 @@ public partial class Admin_MasterPage : System.Web.UI.MasterPage
                     string pageView = row["PagesView"].ToString();
                     if (page1 == "False" && pageView == "False")
                     {
-                        CustomerPOid.Visible = false;
+                        CustomerPOBoth.Visible = false;
                     }
                     else
                     {
-                        CustomerPOid.Visible = true;
+                        CustomerPOBoth.Visible = true;
                     }
                 }
                 if (MenuName == "TaxInvoiceList.aspx")

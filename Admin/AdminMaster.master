@@ -230,6 +230,8 @@
                                     <a class="collapse-item" href="RoleList.aspx" id="Roleid" runat="server">Role</a>
                                     <a class="collapse-item" href="JOBcardList.aspx" id="jobcardid" runat="server">JOB Card</a>
                                     <a class="collapse-item" href="StaffList.aspx" id="staffid" runat="server">Staff</a>
+                                    <a class="collapse-item" href="CategoryList.aspx" id="Categoryid" runat="server">Category</a>
+                                    <a class="collapse-item" href="RatingList.aspx" id="Ratingid" runat="server">Rating</a>
                                     <%--<a class="collapse-item" href="GSTTaxList.aspx" id="gstmasterid" runat="server">Gst Tax</a>--%>
                                     <%--<a class="collapse-item" href="BankList.aspx" id="bankmasterid" runat="server">Bank</a>--%>
                                 </div>
@@ -240,7 +242,7 @@
                         <hr class="sidebar-divider my-0">
                         <li class="nav-item active bg">
                             <a class="nav-link" href="Enquiry.aspx">
-                                <i class="fa  fa-solid fa-door-open" aria-hidden="true"></i>
+                                <i class="fas fa-question" aria-hidden="true"></i>
                                 <span>Enquiry</span></a>
                         </li>
 
@@ -300,8 +302,7 @@
                                     <a class="collapse-item" href="CustomerPO_List_Sales.aspx" id="CustomerPOidSales" runat="server">Customer PO (Sales)</a>
                                     <a class="collapse-item" href="TaxInvoiceList_Sales.aspx" id="IaxinvoicelistidSales" runat="server">Invoice (Sales)</a>
                                     <a class="collapse-item" href="SalesProformaList.aspx" id="proformaiddd" runat="server">Proforma</a>
-
-
+                                    <a class="collapse-item" href="Customer_PO_Both_List.aspx" id="CustomerPOBoth" runat="server">Customer PO</a>
                                     <a class="collapse-item" href="PurchaseOrderList.aspx" id="purchaseorderlistid" runat="server">Vendor PO</a>
                                     <a class="collapse-item" href="DeliveryChallanList.aspx" id="deliverychallanid" runat="server">Delivery Challan</a>
 
