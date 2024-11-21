@@ -230,20 +230,20 @@
                                     <a class="collapse-item" href="RoleList.aspx" id="Roleid" runat="server">Role</a>
                                     <a class="collapse-item" href="JOBcardList.aspx" id="jobcardid" runat="server">JOB Card</a>
                                     <a class="collapse-item" href="StaffList.aspx" id="staffid" runat="server">Staff</a>
-                                    <a class="collapse-item" href="CategoryList.aspx" id="Categoryid" runat="server">Category</a>
-                                    <a class="collapse-item" href="RatingList.aspx" id="Ratingid" runat="server">Rating</a>
                                     <%--<a class="collapse-item" href="GSTTaxList.aspx" id="gstmasterid" runat="server">Gst Tax</a>--%>
                                     <%--<a class="collapse-item" href="BankList.aspx" id="bankmasterid" runat="server">Bank</a>--%>
                                 </div>
                             </div>
                         </li>
+
                         <br>
                         <hr class="sidebar-divider my-0">
                         <li class="nav-item active bg">
                             <a class="nav-link" href="Enquiry.aspx">
-                             <i class="fas fa-question" aria-hidden="true"></i>   
+                                <i class="fa  fa-solid fa-door-open" aria-hidden="true"></i>
                                 <span>Enquiry</span></a>
                         </li>
+
                         <hr class="sidebar-divider" id="entryhr" runat="server" />
                         <li class="nav-item bg" id="entry" runat="server">
                             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTable" aria-expanded="true"
@@ -299,16 +299,49 @@
                                     <a class="collapse-item" href="Quotation_ListSales.aspx" id="QuatationListSalesid" runat="server">Quotation (Sales)</a>
                                     <a class="collapse-item" href="CustomerPO_List_Sales.aspx" id="CustomerPOidSales" runat="server">Customer PO (Sales)</a>
                                     <a class="collapse-item" href="TaxInvoiceList_Sales.aspx" id="IaxinvoicelistidSales" runat="server">Invoice (Sales)</a>
-                                    <a class="collapse-item" href="Quotation_List.aspx" id="QuatationListid" runat="server">Quotation</a>
-                                    <%--<a class="collapse-item" href="CustomerPO_List.aspx" id="CustomerPOid" runat="server">Customer PO</a>--%>
-                                    <a class="collapse-item" href="Customer_PO_Both_List.aspx" id="CustomerPOBoth" runat="server">Customer PO</a>
-                                    <a class="collapse-item" href="TaxInvoiceList.aspx" id="Iaxinvoicelistid" runat="server">Invoice</a>
+                                    <a class="collapse-item" href="SalesProformaList.aspx" id="proformaiddd" runat="server">Proforma</a>
+
+
                                     <a class="collapse-item" href="PurchaseOrderList.aspx" id="purchaseorderlistid" runat="server">Vendor PO</a>
                                     <a class="collapse-item" href="DeliveryChallanList.aspx" id="deliverychallanid" runat="server">Delivery Challan</a>
+
+                                </div>
+                            </div>
+                        </li>
+
+                        <hr class="sidebar-divider" id="Hr1" runat="server" />
+                        <li class="nav-item bg" id="Li1" runat="server">
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFormcust" aria-expanded="true"
+                                aria-controls="collapseFormcust">
+                                <i class="fas fa-fw fa-tachometer-alt"></i>
+                                <span><b>Cust-Support</b></span>
+                            </a>
+                            <div id="collapseFormcust" class="collapse" aria-labelledby="headingForm" data-parent="#accordionSidebar">
+                                <div class="bg-white py-2 collapse-inner rounded">
+                                    <a class="collapse-item" href="Quotation_List.aspx" id="QuatationListid" runat="server">Quotation</a>
+                                    <a class="collapse-item" href="CustomerPO_List.aspx" id="CustomerPOid" runat="server">Customer PO</a>
                                     <a class="collapse-item" href="SalesProformaList.aspx" id="proformaid" runat="server">Proforma</a>
                                 </div>
                             </div>
                         </li>
+
+                        <hr class="sidebar-divider" id="Hr4" runat="server" />
+                        <li class="nav-item bg" id="Li3" runat="server">
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFormac" aria-expanded="true"
+                                aria-controls="collapseFormac">
+                                <i class="fas fa-fw fa-tachometer-alt"></i>
+                                <span><b>Account</b></span>
+                            </a>
+                            <div id="collapseFormac" class="collapse" aria-labelledby="headingForm" data-parent="#accordionSidebar">
+                                <div class="bg-white py-2 collapse-inner rounded">
+                                    <a class="collapse-item" href="TaxInvoiceList.aspx" id="Iaxinvoicelistid" runat="server">Invoice</a>
+                                    <a class="collapse-item" href="SalesProformaList.aspx" id="proformaidd" runat="server">Proforma</a>
+                                    <a class="collapse-item" href="DeliveryChallanList.aspx" id="deliverychallanidd" runat="server">Delivery Challan</a>
+                                    <a class="collapse-item" href="PurchaseOrderList.aspx" id="purchaseorderlistidd" runat="server">Vendor PO</a>
+                                </div>
+                            </div>
+                        </li>
+
                         <hr class="sidebar-divider" id="Hr2" runat="server" />
                         <li class="nav-item bg" id="IssuedComp" runat="server">
                             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFormm" aria-expanded="true"
@@ -335,24 +368,7 @@
                                 </div>
                             </div>
                         </li>
-                        <%--  <hr class="sidebar-divider" id="Hr1" runat="server" />--%>
-                        <%--     <li class="nav-item bg" id="Li1" runat="server">
-                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFormaccount" aria-expanded="true"
-                                aria-controls="collapseForm">
-                                <i class='fab fa-adn'></i>
-                                <span><b>Account</b></span>
-                            </a>
-                            <div id="collapseFormaccount" class="collapse" aria-labelledby="headingForm" data-parent="#accordionSidebar">
-                                <div class="bg-white py-2 collapse-inner rounded">
-                                 
-                                    <a class="collapse-item" href="PurchaseInvoiceList.aspx" id="invoicepoid" runat="server">Purchase Invoice </a>
-                                    <a class="collapse-item" href="CreditNotesSalesList.aspx" id="creditnotesid" runat="server">Credit Note</a>
-                                    <a class="collapse-item" href="DebitNoteList.aspx" id="debitnotesid" runat="server">Debit Note</a>
-                                    <a class="collapse-item" href="PaymentVoucherDetails.aspx" id="Payvoucherid" runat="server">Payment Voucher</a>
-                                    <a class="collapse-item" href="ReceiptVoucherDetails.aspx" id="Receiptvoucherid" runat="server">Receipt Voucher</a>
-                                </div>
-                            </div>
-                        </li>--%>
+
                         <hr class="sidebar-divider" id="reporthr" runat="server" />
                         <li class="nav-item bg" id="report" runat="server">
                             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseComp" aria-expanded="true"

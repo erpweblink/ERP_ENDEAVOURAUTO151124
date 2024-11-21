@@ -304,11 +304,11 @@ public partial class Admin_MasterPage : System.Web.UI.MasterPage
                     string pageView = row["PagesView"].ToString();
                     if (page1 == "False" && pageView == "False")
                     {
-                        CustomerPOBoth.Visible = false;
+                        CustomerPOid.Visible = false;
                     }
                     else
                     {
-                        CustomerPOBoth.Visible = true;
+                        CustomerPOid.Visible = true;
                     }
                 }
                 if (MenuName == "TaxInvoiceList.aspx")
@@ -545,14 +545,91 @@ public partial class Admin_MasterPage : System.Web.UI.MasterPage
                         masterlistgrid.Visible = true;
                     }
                 }
-				
-				
+
+                if (MenuName == "EngineerList.aspx")
+                {
+                    string page1 = row["Pages"].ToString();
+                    string pageView = row["PagesView"].ToString();
+                    if (page1 == "False" && pageView == "False")
+                    {
+                        Engineerid.Visible = false;
+                    }
+                    else
+                    {
+                        Engineerid.Visible = true;
+                    }
+                }
+
+                if (MenuName == "SiteVisitList.aspx")
+                {
+                    string page1 = row["Pages"].ToString();
+                    string pageView = row["PagesView"].ToString();
+                    if (page1 == "False" && pageView == "False")
+                    {
+                        sitevisitid.Visible = false;
+                    }
+                    else
+                    {
+                        sitevisitid.Visible = true;
+                    }
+                }
+
+                if (MenuName == "Quotation_ListSales.aspx")
+                {
+                    string page1 = row["Pages"].ToString();
+                    string pageView = row["PagesView"].ToString();
+                    if (page1 == "False" && pageView == "False")
+                    {
+                        QuatationListSalesid.Visible = false;
+                    }
+                    else
+                    {
+                        QuatationListSalesid.Visible = true;
+                    }
+                }
+
+                if (MenuName == "CustomerPO_List_Sales.aspx")
+                {
+                    string page1 = row["Pages"].ToString();
+                    string pageView = row["PagesView"].ToString();
+                    if (page1 == "False" && pageView == "False")
+                    {
+                        CustomerPOidSales.Visible = false;
+                    }
+                    else
+                    {
+                        CustomerPOidSales.Visible = true;
+                    }
+                }
+
+                if (MenuName == "TaxInvoiceList_Sales.aspx")
+                {
+                    string page1 = row["Pages"].ToString();
+                    string pageView = row["PagesView"].ToString();
+                    if (page1 == "False" && pageView == "False")
+                    {
+                        IaxinvoicelistidSales.Visible = false;
+                    }
+                    else
+                    {
+                        IaxinvoicelistidSales.Visible = true;
+                    }
+                }
+
+                if (MenuName == "IssuedComponentList.aspx")
+                {
+                    string page1 = row["Pages"].ToString();
+                    string pageView = row["PagesView"].ToString();
+                    if (page1 == "False" && pageView == "False")
+                    {
+                        A1.Visible = false;
+                    }
+                    else
+                    {
+                        A1.Visible = true;
+                    }
+                }
             }
         }
-
     }
-
-
-
-
 }
