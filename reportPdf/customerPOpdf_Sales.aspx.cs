@@ -463,7 +463,7 @@ public partial class customerPOpdf : System.Web.UI.Page
                 //IGST 9% Row End
             }
 
-            var grandtotal = Convert.ToDecimal(Ttotal_price) + Convert.ToDecimal(CGST) + Convert.ToDecimal(SGST);
+            //var grandtotal = Convert.ToDecimal(Ttotal_price) + Convert.ToDecimal(CGST) + Convert.ToDecimal(SGST);
 
             //Grand total Row STart
             Paragraph paragraphTable17 = new Paragraph();
@@ -495,7 +495,7 @@ public partial class customerPOpdf : System.Web.UI.Page
             PdfPCell cell44 = new PdfPCell(new Phrase("Grand Total", FontFactory.GetFont("Arial", 10, Font.BOLD)));
             cell44.HorizontalAlignment = Element.ALIGN_RIGHT;
             table.AddCell(cell44);
-            PdfPCell cell55 = new PdfPCell(new Phrase(grandtotal.ToString(), FontFactory.GetFont("Arial", 10, Font.BOLD)));
+            PdfPCell cell55 = new PdfPCell(new Phrase(Ttotal_price.ToString(), FontFactory.GetFont("Arial", 10, Font.BOLD)));
             cell55.HorizontalAlignment = Element.ALIGN_RIGHT;
             table.AddCell(cell55);
 

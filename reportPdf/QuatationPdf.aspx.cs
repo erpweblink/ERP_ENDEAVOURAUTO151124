@@ -51,7 +51,7 @@ public partial class QuatationPdf : System.Web.UI.Page
     public void PDF(string Quo_NO)
     {
 
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Quot_pdf WHERE Quotation_no='" + Quo_NO + "'  ", con);
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Two_Quot_pdf_sales WHERE Quotation_no='" + Quo_NO + "'  ", con);
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
 
@@ -740,7 +740,7 @@ public partial class QuatationPdf : System.Web.UI.Page
     //public void PDF(string Quo_NO)
     //{
 
-    //    SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Quot_pdf WHERE Quotation_no='" + Quo_NO + "'  ", con);
+    //    SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Two_Quot_pdf_sales WHERE Quotation_no='" + Quo_NO + "'  ", con);
     //    DataTable Dt = new DataTable();
     //    Da.Fill(Dt);
 

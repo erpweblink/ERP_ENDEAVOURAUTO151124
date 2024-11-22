@@ -74,7 +74,7 @@ public partial class Admin_Customer_PO_Sales : System.Web.UI.Page
     //NEW METHODS FOR QUOTATION DATA FETCH START
     protected void ShowHeaderEdit()
     {
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_Hdr_Sales WHERE Quotation_no='" + ID + "'", con);
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ID + "'", con);
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
         if (Dt.Rows.Count > 0)
@@ -155,7 +155,7 @@ public partial class Admin_Customer_PO_Sales : System.Web.UI.Page
         DataTable dt3 = new DataTable();
         //SqlDataAdapter sad3 = new SqlDataAdapter("select * from vw_Quot_pdf where JobNo='" + txt_job_no.Text + "'", con);
         //SqlDataAdapter sad3 = new SqlDataAdapter("select * from [tbl_Quotation_Dtl_Sales] where Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
-        SqlDataAdapter sad3 = new SqlDataAdapter("select  product as MateName ,  Description As PrintDescription, * from [tbl_Quotation_Dtl_Sales] where Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
+        SqlDataAdapter sad3 = new SqlDataAdapter("select  product as MateName ,  Description As PrintDescription, * from [tbl_Quotation_two_Dtls] where Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
         sad3.Fill(dt3);
         int count = 1;
         if (dt3.Rows.Count > 0)
@@ -210,7 +210,7 @@ public partial class Admin_Customer_PO_Sales : System.Web.UI.Page
         //}
 
 
-        SqlDataAdapter Sda = new SqlDataAdapter("SELECT * FROM tbl_Quotation_Hdr_Sales WHERE Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
+        SqlDataAdapter Sda = new SqlDataAdapter("SELECT * FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
         DataTable Sdt = new DataTable();
         Sda.Fill(Sdt);
         if (Sdt.Rows.Count > 0)
@@ -226,7 +226,7 @@ public partial class Admin_Customer_PO_Sales : System.Web.UI.Page
 
     private void ddlQuotationno()
     {
-        SqlDataAdapter ad = new SqlDataAdapter("SELECT Id,Quotation_no FROM [tbl_Quotation_Hdr_Sales] WHERE Customer_Name = '" + txt_Customer_name.Text + "' AND IsDeleted ='0'", con);
+        SqlDataAdapter ad = new SqlDataAdapter("SELECT Id,Quotation_no FROM [tbl_Quotation_two_Hdr] WHERE Customer_Name = '" + txt_Customer_name.Text + "' AND IsDeleted ='0'", con);
         DataTable dt = new DataTable();
         ad.Fill(dt);
         if (dt.Rows.Count > 0)
@@ -661,7 +661,7 @@ public partial class Admin_Customer_PO_Sales : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT JobNo from tbl_Quotation_Hdr_Sales where " + "JobNo like @Search + '%' AND isCompleted='1' AND (isCreateQuata='1' OR mnQuatation='1') AND IsDeleted='0'  ";
+                com.CommandText = "select DISTINCT JobNo from tbl_Quotation_two_Hdr where " + "JobNo like @Search + '%' AND isCompleted='1' AND (isCreateQuata='1' OR mnQuatation='1') AND IsDeleted='0'  ";
                 //  com.CommandText = "select DISTINCT JobNo from tbl_Quotation_Dtl_Sales where " + "JobNo like @Search + '%' ";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
@@ -2082,7 +2082,7 @@ public partial class Admin_Customer_PO_Sales : System.Web.UI.Page
 
         ddlQuotationno();
 
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT Customer_Name FROM tbl_Quotation_Hdr_Sales WHERE Customer_Name='" + txt_Customer_name.Text + "' AND isCompleted='1'  AND IsDeleted='0'", con);
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT Customer_Name FROM tbl_Quotation_two_Hdr WHERE Customer_Name='" + txt_Customer_name.Text + "' AND isCompleted='1'  AND IsDeleted='0'", con);
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
         if (Dt.Rows.Count > 0)
@@ -2216,7 +2216,7 @@ public partial class Admin_Customer_PO_Sales : System.Web.UI.Page
 
     protected void ddlquotationno_TextChanged(object sender, EventArgs e)
     {
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM tbl_Quotation_Hdr_Sales WHERE Customer_Name ='" + txt_Customer_name.Text + "' AND isCompleted='1'  AND IsDeleted='0'", con);
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM tbl_Quotation_two_Hdr WHERE Customer_Name ='" + txt_Customer_name.Text + "' AND isCompleted='1'  AND IsDeleted='0'", con);
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
         if (Dt.Rows.Count > 0)
@@ -2260,7 +2260,7 @@ public partial class Admin_Customer_PO_Sales : System.Web.UI.Page
         DataTable dt3 = new DataTable();
         //SqlDataAdapter sad3 = new SqlDataAdapter("select * from vw_Quot_pdf where JobNo='" + txt_job_no.Text + "'", con);
         //SqlDataAdapter sad3 = new SqlDataAdapter("select * from [tbl_Quotation_Dtl_Sales] where Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
-        SqlDataAdapter sad3 = new SqlDataAdapter("select  product as MateName ,  Description As PrintDescription, * from [tbl_Quotation_Dtl_Sales] where Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
+        SqlDataAdapter sad3 = new SqlDataAdapter("select  product as MateName ,  Description As PrintDescription, * from [tbl_Quotation_two_Dtls] where Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
         sad3.Fill(dt3);
         int count = 1;
         if (dt3.Rows.Count > 0)
