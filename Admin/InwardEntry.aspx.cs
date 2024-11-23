@@ -422,16 +422,16 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
                     cmd.Parameters.AddWithValue("@Services", txtservices.Text);
                     cmd.Parameters.AddWithValue("@CustChallnno", txtcustomerno.Text);
-                    if (EnquID != "" && CustId != "")
-                    {
-                        cmd.Parameters.AddWithValue("@EnquID", EnquID);
-                        cmd.Parameters.AddWithValue("@CustID", CustId);
-                    }
-                    else
-                    {
-                        cmd.Parameters.AddWithValue("@EnquID", null);
-                        cmd.Parameters.AddWithValue("@CustID", null);
-                    }
+                    //if (EnquID != "" && CustId != "")
+                    //{
+                    //    cmd.Parameters.AddWithValue("@EnquID", EnquID);
+                    //    cmd.Parameters.AddWithValue("@CustID", CustId);
+                    //}
+                    //else
+                    //{
+                    //    cmd.Parameters.AddWithValue("@EnquID", null);
+                    //    cmd.Parameters.AddWithValue("@CustID", null);
+                    //}
 
 
                     if (FileUpload.HasFile)
