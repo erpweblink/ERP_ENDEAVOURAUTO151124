@@ -319,7 +319,7 @@
                             </a>
                             <div id="collapseFormcust" class="collapse" aria-labelledby="headingForm" data-parent="#accordionSidebar">
                                 <div class="bg-white py-2 collapse-inner rounded">
-                                    <a class="collapse-item" href="Quotation_List.aspx" id="QuatationListid" runat="server">Quotation</a>
+                                    <a class="collapse-item" href="QuotationList.aspx" id="QuatationListid" runat="server">Quotation</a>
                                     <a class="collapse-item" href="CustomerPO_List.aspx" id="CustomerPOid" runat="server">Customer PO</a>
                                     <a class="collapse-item" href="SalesProformaList.aspx" id="proformaid" runat="server">Proforma</a>
                                 </div>
