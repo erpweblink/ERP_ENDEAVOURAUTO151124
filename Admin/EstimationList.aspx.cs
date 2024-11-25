@@ -25,8 +25,22 @@ public partial class Admin_EstimationList : System.Web.UI.Page
     {
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("SELECT Id,JobNo,CustName,FinalStatus,FinalCost,SiteVisitCharges,OtherCharges,EstimatedQuotation,Componetstatus,CreatedBy,CompRecDate,Convert(varchar,A.CreatedDate,103) " +
-            "as CreatedDate from tblEstimationHdr as A where isdeleted='0'order by A.CreatedDate DESC", con);
+            "as CreatedDate from tblEstimationHdr as A where isdeleted='0' order by A.CreatedDate DESC", con);
         sad.Fill(dt);
+        
+        foreach (DataRow row in dt.Rows)
+        {          
+            DateTime compRecDate = (DateTime)row["CompRecDate"];
+            DateTime defaultDate = new DateTime(1900, 1, 1);
+            if (compRecDate != defaultDate)
+            {
+                row["CompRecDate"] = compRecDate.ToString("yyyy-MM-dd");
+            }
+            else
+            {
+                row["CompRecDate"] = DBNull.Value;
+            }
+        }
         gv_EstimationList.DataSource = dt;
         gv_EstimationList.EmptyDataText = "Record Not Found";
         gv_EstimationList.DataBind();

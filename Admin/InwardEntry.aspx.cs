@@ -422,18 +422,7 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
                     cmd.Parameters.AddWithValue("@Services", txtservices.Text);
                     cmd.Parameters.AddWithValue("@CustChallnno", txtcustomerno.Text);
-                    //if (EnquID != "" && CustId != "")
-                    //{
-                    //    cmd.Parameters.AddWithValue("@EnquID", EnquID);
-                    //    cmd.Parameters.AddWithValue("@CustID", CustId);
-                    //}
-                    //else
-                    //{
-                    //    cmd.Parameters.AddWithValue("@EnquID", null);
-                    //    cmd.Parameters.AddWithValue("@CustID", null);
-                    //}
-
-
+                   
                     if (FileUpload.HasFile)
                     {
                         var Filenamenew = FileUpload.FileName;
@@ -449,6 +438,9 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                     // cmd.Parameters.AddWithValue("@Imagepath", "~/ProductImg/" + FileUpload.FileName);
                     cmd.Parameters.AddWithValue("@Action", "Insert");
                     cmd.ExecuteNonQuery();
+                    SqlCommand cmdss = new SqlCommand("UPDATE tbl_EnquiryMaster SET IsStatus = '0' WHERE EnquiryId = '" + EnquID + "'", con);
+                    //con.Open();
+                    cmdss.ExecuteScalar();
                     con.Close();
                     ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Saved Successfully');", true);
                 }

@@ -55,21 +55,21 @@ public partial class Admin_Enquiry : System.Web.UI.Page
             string Path = null;
             if (btnSubmit.Text == "Save")
             {
-                con.Open();
-                SqlCommand cmd1 = new SqlCommand(
-                    "SELECT [EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [Email], [IsStatus] " +
-                    "FROM [tbl_EnquiryMaster] " +
-                    "WHERE [CustomerName] ='" + txtCustName.Text + "'  AND [MobNo]='" + txtMobileNo.Text + "'",
-                    con);
+                //con.Open();
+                //SqlCommand cmd1 = new SqlCommand(
+                //    "SELECT [EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [Email], [IsStatus] " +
+                //    "FROM [tbl_EnquiryMaster] " +
+                //    "WHERE [CustomerName] ='" + txtCustName.Text + "'  AND [MobNo]='" + txtMobileNo.Text + "'",
+                //    con);
 
-                SqlDataReader reader = cmd1.ExecuteReader();
-                if (reader.Read())
-                {
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Data Already Exist.');", true);
-                }
-                else
-                {
-                    con.Close();
+                //SqlDataReader reader = cmd1.ExecuteReader();
+                //if (reader.Read())
+                //{
+                //    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Data Already Exist.');", true);
+                //}
+                //else
+                //{
+                    //con.Close();
                     DateTime Date = DateTime.Now;
                     con.Open();
                     SqlCommand cmd = new SqlCommand("SP_Enquiry", con);
@@ -139,8 +139,7 @@ public partial class Admin_Enquiry : System.Web.UI.Page
                     else
                     {
                         ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Saved Successfully','1');", true);
-                    }
-                }
+                    }                
             }
             else if (btnSubmit.Text == "Update")
             {

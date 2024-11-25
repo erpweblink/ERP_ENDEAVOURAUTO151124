@@ -19,8 +19,21 @@ public partial class Admin_EstimationMaster : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-            this.txtcomprecdate.Text = DateTime.Now.ToString("yyyy-MM-dd");
-            this.txtcomprecdate.TextMode = TextBoxMode.Date;
+            if (Session["adminname"] == null)
+            {
+                Response.Redirect("../LoginPage.aspx");
+            }
+            string role = Session["adminname"].ToString();
+
+            if (role == "Purchase")
+            {
+                divCustName.Visible = false;
+                divtxtestimatedquo.Visible = false;
+                // This hides the div containing Customer Name
+            }
+
+            //this.txtcomprecdate.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            //this.txtcomprecdate.TextMode = TextBoxMode.Date;
 
             if (Request.QueryString["JobNo"] != null)
             {
@@ -146,6 +159,8 @@ public partial class Admin_EstimationMaster : System.Web.UI.Page
 
             txtJobNo.Text = dt.Rows[0]["JobNo"].ToString();
             txtcustname.Text = dt.Rows[0]["CustName"].ToString();
+            txtproduct.Text = dt.Rows[0]["productname"].ToString();
+            txtmodelno.Text = dt.Rows[0]["modelno"].ToString();
             txtFinalStatus.Text = dt.Rows[0]["FinalStatus"].ToString();
             txtfinalcost.Text = dt.Rows[0]["FinalCost"].ToString();
 
@@ -155,9 +170,14 @@ public partial class Admin_EstimationMaster : System.Web.UI.Page
             txtfinalcost.Text = dt.Rows[0]["FinalCost"].ToString();
             txtestimatedquo.Text = dt.Rows[0]["EstimatedQuotation"].ToString();
             txtcompstatus.Text = dt.Rows[0]["Componetstatus"].ToString();
-            DateTime ffff4 = Convert.ToDateTime(dt.Rows[0]["CompRecDate"].ToString());
-            txtcomprecdate.Text = ffff4.ToString("yyyy-MM-dd");
 
+            DateTime ffff4 = Convert.ToDateTime(dt.Rows[0]["CompRecDate"].ToString());
+            DateTime defaultDate = new DateTime(1900, 1, 1);
+
+            if (ffff4 != defaultDate)
+            {
+                txtcomprecdate.Text = ffff4.ToString("yyyy-MM-dd");
+            }
 
             lblTotal.Text = "Total Cost of Component : " + txtcomponentcost.Text;
 
@@ -221,23 +241,83 @@ public partial class Admin_EstimationMaster : System.Web.UI.Page
     {
         try
         {
+            // Check if JobNo exists in tblEstimationHdr table
+            SqlCommand cmd = new SqlCommand("SELECT COUNT(1) FROM tblEstimationHdr WHERE JobNo = @JobNo", con);
+            cmd.Parameters.AddWithValue("@JobNo", txtJobNo.Text);
+            con.Open();
+            int count = (int)cmd.ExecuteScalar();
+            con.Close();
+
+            if (count > 0)
+            {
+                // Display message if JobNo already exists
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('This Job No already exists in Estimation.');", true);
+                return; // Exit the method early if job number already exists
+            }
+
             DataTable dt = new DataTable();
-            SqlDataAdapter sad = new SqlDataAdapter(" select * from vw_Estimation where JobNo='" + txtJobNo.Text + "'", con);
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM vw_Estimation WHERE JobNo = @JobNo", con);
+            sad.SelectCommand.Parameters.AddWithValue("@JobNo", txtJobNo.Text);
             sad.Fill(dt);
             if (dt.Rows.Count > 0)
             {
                 txtcustname.Text = dt.Rows[0]["CustomerName"].ToString();
-
                 gv_estimation.DataSource = dt;
                 gv_estimation.EmptyDataText = "Record Not Found";
                 gv_estimation.DataBind();
+            }
 
+            DataTable dtt = new DataTable();
+            SqlDataAdapter sadd = new SqlDataAdapter("SELECT * FROM [tblInwardEntry] WHERE JobNo = @JobNo", con);
+            sadd.SelectCommand.Parameters.AddWithValue("@JobNo", txtJobNo.Text);
+            sadd.Fill(dtt);
+            if (dtt.Rows.Count > 0)
+            {
+                txtmodelno.Text = dtt.Rows[0]["ModelNo"].ToString();
+                txtproduct.Text = dtt.Rows[0]["MateName"].ToString();
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            // Handle exception and display error message
+            ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error: " + ex.Message + "');", true);
         }
+        finally
+        {
+            if (con.State == ConnectionState.Open)
+            {
+                con.Close();
+            }
+        }
+
+
+
+        //try
+        //{
+        //    DataTable dt = new DataTable();
+        //    SqlDataAdapter sad = new SqlDataAdapter(" select * from vw_Estimation where JobNo='" + txtJobNo.Text + "'", con);
+        //    sad.Fill(dt);
+        //    if (dt.Rows.Count > 0)
+        //    {
+        //        txtcustname.Text = dt.Rows[0]["CustomerName"].ToString();
+        //        gv_estimation.DataSource = dt;
+        //        gv_estimation.EmptyDataText = "Record Not Found";
+        //        gv_estimation.DataBind();
+        //    }
+
+        //    DataTable dtt = new DataTable();
+        //    SqlDataAdapter sadd = new SqlDataAdapter("select * from [tblInwardEntry] where JobNo='" + txtJobNo.Text + "'", con);
+        //    sadd.Fill(dtt);
+        //    if (dt.Rows.Count > 0)
+        //    {             
+        //        txtmodelno.Text = dtt.Rows[0]["ModelNo"].ToString();
+        //        txtproduct.Text = dtt.Rows[0]["MateName"].ToString();
+        //    }
+        //}
+        //catch (Exception)
+        //{
+        //    throw;
+        //}
     }
 
     [System.Web.Script.Services.ScriptMethod()]
@@ -307,6 +387,8 @@ public partial class Admin_EstimationMaster : System.Web.UI.Page
                     cmd1.CommandType = CommandType.StoredProcedure;
                     cmd1.Parameters.AddWithValue("@JobNo", txtJobNo.Text);
                     cmd1.Parameters.AddWithValue("@CustName", txtcustname.Text);
+                    cmd1.Parameters.AddWithValue("@productname", txtproduct.Text);
+                    cmd1.Parameters.AddWithValue("@modelno", txtmodelno.Text);
                     cmd1.Parameters.AddWithValue("@FinalStatus", txtFinalStatus.Text);
 
 
@@ -331,7 +413,7 @@ public partial class Admin_EstimationMaster : System.Web.UI.Page
 
                     cmd1.Parameters.AddWithValue("@Action", "Insert");
                     con.Open();
-                    cmd1.ExecuteNonQuery();
+                   cmd1.ExecuteNonQuery();
                     con.Close();
 
                     foreach (GridViewRow g1 in gv_estimation.Rows)
@@ -371,6 +453,8 @@ public partial class Admin_EstimationMaster : System.Web.UI.Page
             cmd1.CommandType = CommandType.StoredProcedure;
             cmd1.Parameters.AddWithValue("@JobNo", txtJobNo.Text);
             cmd1.Parameters.AddWithValue("@CustName", txtcustname.Text);
+            cmd1.Parameters.AddWithValue("@productname", txtproduct.Text);
+            cmd1.Parameters.AddWithValue("@modelno", txtmodelno.Text);
             cmd1.Parameters.AddWithValue("@FinalStatus", txtFinalStatus.Text);
             cmd1.Parameters.AddWithValue("@componetcost", txtcomponentcost.Text);   //Component cost
             cmd1.Parameters.AddWithValue("@SiteVisitCharges", txtsitevisitcharges.Text);   //Site visit charges 
