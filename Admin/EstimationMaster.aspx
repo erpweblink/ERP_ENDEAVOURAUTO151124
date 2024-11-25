@@ -173,12 +173,24 @@
                             </asp:AutoCompleteExtender>
                             <br />
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6" runat="server" id="divCustName">            
                             <asp:Label ID="lblCustName" runat="server" class="control-label col-sm-6">Customer Name:<span class="spncls">*</span></asp:Label>
                             <asp:TextBox runat="server" class="form-control" ID="txtcustname" ReadOnly="true" onkeypress="return character(event)" />
                             <asp:RequiredFieldValidator runat="server" ErrorMessage="Please fill Customer Name" ControlToValidate="txtcustname" ForeColor="Red"></asp:RequiredFieldValidator>
                             <br />
                         </div>
+
+                              <div class="col-md-6">
+                            <asp:Label ID="Label1" runat="server" class="control-label col-sm-6">Product Name :<span class="spncls"></span></asp:Label>
+                            <asp:TextBox runat="server" class="form-control" ID="txtproduct"/>
+                            <br />
+                        </div>
+                        <div class="col-md-6">
+                            <asp:Label ID="Label2" runat="server" class="control-label col-sm-6">Model No. :<span class="spncls"></span></asp:Label>
+                            <asp:TextBox runat="server" class="form-control" ID="txtmodelno"/>
+                            <br />
+                        </div>
+
                         <div class="col-md-6">
                             <asp:Label ID="lblFinalstatus" runat="server" class="control-label col-sm-6">Final Status :<span class="spncls">*</span></asp:Label>
                             <asp:TextBox runat="server" class="form-control" ID="txtFinalStatus" onkeypress="return character(event)" />
@@ -210,7 +222,7 @@
                             <br />
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-6" runat="server" id="divtxtestimatedquo">
                             <asp:Label ID="lblestimatedquo" runat="server" class="control-label col-sm-6">Quotation Amount :<span class="spncls"></span></asp:Label>
                             <asp:TextBox runat="server" class="form-control" ID="txtestimatedquo" />
                             <br />
@@ -225,7 +237,7 @@
                     </div>
                     <div style="width: 100%;">
                         <asp:GridView ID="gv_estimation" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
-                            PageSize="5" AllowPaging="true" PagerStyle-CssClass="paging" OnRowDataBound="gv_estimation_RowDataBound" ShowFooter="true">
+                            PageSize="30" AllowPaging="true" PagerStyle-CssClass="paging" OnRowDataBound="gv_estimation_RowDataBound" ShowFooter="true">
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr.No">
                                     <ItemTemplate>
@@ -337,7 +349,7 @@
                     </div>
                     <div style="width: 100%;">
                         <asp:GridView ID="gv_Updateestimat" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
-                            PageSize="5" AllowPaging="true" PagerStyle-CssClass="paging" OnRowDataBound="gv_Updateestimat_RowDataBound1" ShowFooter="true" UseAccessibleHeader="true">
+                            PageSize="30" AllowPaging="true" PagerStyle-CssClass="paging" OnRowDataBound="gv_Updateestimat_RowDataBound1" ShowFooter="true" UseAccessibleHeader="true">
                             <Columns>
                                 <asp:TemplateField HeaderText="SrNo">
                                     <ItemTemplate>

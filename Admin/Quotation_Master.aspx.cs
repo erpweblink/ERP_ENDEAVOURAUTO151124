@@ -36,9 +36,6 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
         {
             if (!IsPostBack)
             {
-
-
-
                 GenerateCode();
                 jobnogrid();
                 FillTerms();
@@ -95,6 +92,12 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                     ReportLoadData();
                     reportresdonly();
                 }
+                if (Request.QueryString["CustName"] != null)
+                {
+                    string CustomerName = Decrypt(Request.QueryString["CustName"].ToString());
+                    LoadquotationByCustomer(CustomerName);
+                }
+
             }
         }
         catch (Exception ex)
@@ -103,7 +106,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
             ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('" + errorMsg + "') ", true);
         }
     }
-
+   
     protected void ReportLoadData()
     {
         try
@@ -1078,6 +1081,9 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
 
                         con.Open();
                         cmdd.ExecuteNonQuery();
+                        SqlCommand cmdds = new SqlCommand("UPDATE tblEstimationHdr SET QuotationStatus = 'Completed' WHERE JobNo = '" + lbljobno + "'", con);
+                        con.Open();
+                        cmdds.ExecuteNonQuery();
                         con.Close();
                     }
 
@@ -1265,7 +1271,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
             disposition.DispositionType = DispositionTypeNames.Attachment;
             message.Attachments.Add(data);//Attach the file
 
-           // message.Body = strMessage.ToString();
+            // message.Body = strMessage.ToString();
 
 
             string body = strMessage + GetEmailSignature();
@@ -1283,14 +1289,14 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
 
             // Set the "Reply-To" header to indicate the desired display address
             message.ReplyToList.Add(new MailAddress("info@endeavours.in"));
-    
+
             SmtpClient SmtpMail = new SmtpClient();
             SmtpMail.Host = "smtpout.secureserver.net"; // Name or IP-Address of Host used for SMTP transactions  
             SmtpMail.Port = 587; // Port for sending the mail  
             SmtpMail.Credentials = new System.Net.NetworkCredential("enquiry@weblinkservices.net", "wlspl@123"); // Username/password of network, if apply  
             SmtpMail.DeliveryMethod = SmtpDeliveryMethod.Network;
             SmtpMail.EnableSsl = false;
-            
+
             SmtpMail.ServicePoint.MaxIdleTime = 0;
             SmtpMail.ServicePoint.SetTcpKeepAlive(true, 2000, 2000);
             message.BodyEncoding = Encoding.Default;
@@ -2602,8 +2608,108 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
 
 
 
+    // New Code by Nikhil for Pending Quotations 
+
+    private void LoadquotationByCustomer(string CustName)
+    {
+        try
+        {
+            FillTerms();
+            SqlDataAdapter ad = new SqlDataAdapter("SELECT max([ID]) as maxid FROM [tbl_Quotation_two_Hdr]", con);
+            DataTable dt = new DataTable();
+            ad.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                int maxid = dt.Rows[0]["maxid"].ToString() == "" ? 0 : Convert.ToInt32(dt.Rows[0]["maxid"].ToString());
+                txt_Quo_No.Text = "QN" + (maxid + 1).ToString();
+            }
+            else
+            {
+                txt_Quo_No.Text = string.Empty;
+            }
+
+            // To load customer and job nos
+            SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNo,CustName FROM tblEstimationHdr WHERE QuotationStatus = 'Pending' AND CustName='" + CustName + "'", con);
+            DataTable Dt = new DataTable();
+            Da.Fill(Dt);
+            if (Dt.Rows.Count > 0)
+            {
+                txt_Comp_name.Text = Dt.Rows[0]["CustName"].ToString();
+                txt_Comp_name.ReadOnly = true;
+                jobnogrids();
+                ddljobnobinds();
+                SqlDataAdapter Das = new SqlDataAdapter("SELECT * FROM tblCustomer WHERE CustomerName ='" + txt_Comp_name.Text + "'", con);
+                DataTable Dts = new DataTable();
+                Das.Fill(Dts);
+                if (Dts.Rows.Count > 0)
+                {
+                    string custId = Dts.Rows[0]["CustId"].ToString();
+                    txt_GST.Text = Dts.Rows[0]["GSTNo"].ToString();
+                    txt_state.Text = Dts.Rows[0]["StateCode"].ToString();
+                    txt_Address.Text = Dts.Rows[0]["AddresLine1"].ToString();
+                    txt_Mobile.Text = Dts.Rows[0]["MobNo"].ToString();
+                    //txtEmail.Text = Dts.Rows[0]["Email"].ToString();
+                    SqlDataAdapter Sda = new SqlDataAdapter("SELECT * FROM tblCustomerContactPerson WHERE CustName='" + txt_Comp_name.Text + "'", con);
+                    DataTable Sdt = new DataTable();
+                    Sda.Fill(Sdt);
+                    Grd_MAIL.DataSource = Sdt;
+                    Grd_MAIL.DataBind();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            string errorMsg = "An error occurred : " + ex.Message;
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('" + errorMsg + "') ", true);
+        }
+    }
+
+    protected void ddljobnobinds()
+    {
+        try
+        {
+            DataTable dt = new DataTable();
+            con.Open();
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT Id,JobNo FROM tblEstimationHdr WHERE QuotationStatus = 'Pending' AND CustName = '" + txt_Comp_name.Text + "' ", con);
+            sad.Fill(dt);
+            ddljobno.DataSource = dt;
+            ddljobno.DataTextField = "JobNo";
+            ddljobno.DataValueField = "Id";
+            ddljobno.DataBind();
+            con.Close();
+        }
+        catch (Exception ex)
+        {
+            string errorMsg = "An error occurred : " + ex.Message;
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('" + errorMsg + "') ", true);
+        }
 
 
-  
+    }
+
+    protected void jobnogrids()
+    {
+        try
+        {
+            SqlDataAdapter Sda = new SqlDataAdapter("SELECT JobNo, productname FROM tblEstimationHdr WHERE QuotationStatus = 'Pending' AND CustName = '" + txt_Comp_name.Text + "' ", con);
+            DataTable Sdt = new DataTable();
+            Sda.Fill(Sdt);
+            if (Sdt.Columns.Contains("productname"))
+            {
+                Sdt.Columns["productname"].ColumnName = "MateName";
+            }
+            grdjobno.DataSource = Sdt;
+            grdjobno.DataBind();
+        }
+        catch (Exception ex)
+        {
+            string errorMsg = "An error occurred : " + ex.Message;
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('" + errorMsg + "') ", true);
+        }
+
+    }
+
+
+
 }
 

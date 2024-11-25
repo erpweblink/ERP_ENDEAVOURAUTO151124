@@ -22,8 +22,16 @@ public partial class Admin_QuotationList : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-            int jobCount = GetJobCount();  // Call your backend method
-            lblcount.Text = jobCount.ToString();  // Set the job count on the label
+            int jobCount = GetJobCount();  
+            lblcount.Text = jobCount.ToString();
+            if (Convert.ToInt32(lblcount.Text) > 0)
+            {
+                lnkshow.Attributes.Add("class", "bell-bounce");
+            }
+            else
+            {
+                lnkshow.Attributes.Remove("class");
+            }
 
             if (Session["adminname"] == null)
             {
@@ -1544,26 +1552,26 @@ public partial class Admin_QuotationList : System.Web.UI.Page
 
             //Gridrecord();
         }
-        if (e.CommandName == "Expand")
-        {
-            string customerName = e.CommandArgument.ToString();
+        //if (e.CommandName == "Expand")
+        //{
+        //    string customerName = e.CommandArgument.ToString();
 
-            DataTable dt = new DataTable();
-            SqlDataAdapter sad = new SqlDataAdapter(
-                "SELECT JobNo FROM tblEstimationHdr " +
-                "WHERE isdeleted = '0' AND CustName = @CustName", con);
+        //    DataTable dt = new DataTable();
+        //    SqlDataAdapter sad = new SqlDataAdapter(
+        //        "SELECT JobNo FROM tblEstimationHdr " +
+        //        "WHERE isdeleted = '0' AND CustName = @CustName", con);
 
-            sad.SelectCommand.Parameters.AddWithValue("@CustName", customerName);
-            sad.Fill(dt);
+        //    sad.SelectCommand.Parameters.AddWithValue("@CustName", customerName);
+        //    sad.Fill(dt);
 
-            GridViewRow row = ((LinkButton)e.CommandSource).NamingContainer as GridViewRow;
-            GridView penJobDetails = row.FindControl("penJobDetails") as GridView;
-            Panel PenJobs = row.FindControl("PenJobs") as Panel;
+        //    GridViewRow row = ((LinkButton)e.CommandSource).NamingContainer as GridViewRow;
+        //    GridView penJobDetails = row.FindControl("penJobDetails") as GridView;
+        //    Panel PenJobs = row.FindControl("PenJobs") as Panel;
 
-            penJobDetails.DataSource = dt;
-            penJobDetails.DataBind();
-            PenJobs.Style["display"] = "block";
-        }
+        //    penJobDetails.DataSource = dt;
+        //    penJobDetails.DataBind();
+        //    //PenJobs.Style["display"] = "block";
+        //}
     }
     protected void gv_EstimationList_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
@@ -1584,7 +1592,7 @@ public partial class Admin_QuotationList : System.Web.UI.Page
             DataTable dt = new DataTable();
             string query = "SELECT CustName, COUNT(JobNo) AS JobCount " +
                            "FROM tblEstimationHdr " +
-                           "WHERE isdeleted = '0' " +
+                           "WHERE isdeleted = '0' AND QuotationStatus = 'Pending' " +
                            "AND CreatedDate >= @StartDate AND CreatedDate <= @EndDate " +
                            "GROUP BY CustName " +
                            "ORDER BY MIN(CreatedDate) DESC";
@@ -1607,7 +1615,7 @@ public partial class Admin_QuotationList : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            // Log or handle the error
+            
             throw ex;
         }
     }
@@ -1631,7 +1639,7 @@ public partial class Admin_QuotationList : System.Web.UI.Page
                 string formattedStartDate = startDate.ToString("yyyy-MM-dd");
                 string formattedEndDate = endDate.ToString("yyyy-MM-dd");
 
-                // Fetch job details along with CreatedDate
+              
                 DataTable dt = new DataTable();
                 using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString))
                 {
@@ -1640,10 +1648,10 @@ public partial class Admin_QuotationList : System.Web.UI.Page
                     using (SqlCommand cmd = new SqlCommand(
                         "SELECT JobNo, CreatedDate " +
                         "FROM tblEstimationHdr " +
-                        "WHERE isdeleted = '0' " +
+                        "WHERE isdeleted = '0' AND QuotationStatus = 'Pending'" +
                         "AND CustName = @CustName " +
                         "AND CreatedDate >= @StartDate AND CreatedDate <= @EndDate " +
-                        "ORDER BY CreatedDate DESC", conn)) // Order by CreatedDate
+                        "ORDER BY CreatedDate DESC", conn))
                     {
                         cmd.Parameters.AddWithValue("@CustName", customerName);
                         cmd.Parameters.AddWithValue("@StartDate", formattedStartDate);
@@ -1653,8 +1661,7 @@ public partial class Admin_QuotationList : System.Web.UI.Page
                         sad.Fill(dt);
                     }
                 }
-                // Example: Find the dropdown in the penJobDetails GridView
-                //GridView penJobDetails = e.Row.FindControl("penJobDetails") as GridView;
+              
                 if (penJobDetails != null)
                 {
                     foreach (GridViewRow row in penJobDetails.Rows)
@@ -1662,32 +1669,32 @@ public partial class Admin_QuotationList : System.Web.UI.Page
                         DropDownList ddlJobSelect = row.FindControl("JobSelect") as DropDownList;
                         if (ddlJobSelect != null)
                         {
-                            // You can add more items here if needed
+                           
                             ddlJobSelect.Items.Clear();
                             ddlJobSelect.Items.Add(new ListItem("Select Job", ""));
                             ddlJobSelect.Items.Add(new ListItem("Job A", "JobA"));
                             ddlJobSelect.Items.Add(new ListItem("Job B", "JobB"));
-                            // Add additional job options as necessary
+                           
                         }
                     }
                 }
-                // If job details exist, bind the data to the nested GridViews
+               
                 if (dt.Rows.Count > 0)
                 {
-                    // Format the CreatedDate before binding it
+                    
                     foreach (DataRow row in dt.Rows)
                     {
-                        row["CreatedDate"] = Convert.ToDateTime(row["CreatedDate"]).ToString("yyyy-MM-dd"); // Format as date
+                        row["CreatedDate"] = Convert.ToDateTime(row["CreatedDate"]).ToString("yyyy-MM-dd");
                     }
 
                     penJobDetails.DataSource = dt;
                     penJobDetails.DataBind();
                     PenJobs.Visible = true;
 
-                    // Assuming you also want to display CreatedDate separately in another GridView
+                    
                     createdDateDetails.DataSource = dt;
                     createdDateDetails.DataBind();
-                    createdDateDetails.Visible = true; // Make the panel visible if there are job details
+                    createdDateDetails.Visible = true; 
                 }
                 else
                 {
@@ -1703,9 +1710,6 @@ public partial class Admin_QuotationList : System.Web.UI.Page
         }
     }
 
-
-
-    // [WebMethod]
     public static int GetJobCount()
     {
         int jobCount = 0;
@@ -1713,14 +1717,13 @@ public partial class Admin_QuotationList : System.Web.UI.Page
         DateTime endDate = DateTime.Now.Date;
 
         string formattedStartDate = startDate.ToString("yyyy-MM-dd");
-        string formattedEndDate = endDate.ToString("yyyy-MM-dd");
-        // Replace with your connection string
+        string formattedEndDate = endDate.ToString("yyyy-MM-dd");        
         string connString = System.Configuration.ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
 
         using (SqlConnection con = new SqlConnection(connString))
         {
 
-            SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM tblEstimationHdr WHERE isdeleted = '0'  AND CreatedDate >= '" + formattedStartDate + "' AND CreatedDate <= '" + formattedEndDate + "'", con);
+            SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM tblEstimationHdr WHERE isdeleted = '0' AND QuotationStatus = 'Pending' AND CreatedDate >= '" + formattedStartDate + "' AND CreatedDate <= '" + formattedEndDate + "'", con);
             con.Open();
             jobCount = (int)cmd.ExecuteScalar();
         }
@@ -1728,19 +1731,38 @@ public partial class Admin_QuotationList : System.Web.UI.Page
         return jobCount;
     }
 
-    protected void chkSelectAll_CheckedChanged(object sender, EventArgs e)
+    protected void lnkbtnCorrect_Click(object sender, EventArgs e)
     {
-        CheckBox headerCheckbox = (CheckBox)sender;
-        GridView gridView = (GridView)((CheckBox)sender).NamingContainer.NamingContainer;
+        LinkButton clickedButton = (LinkButton)sender;
+        string customerName = clickedButton.CommandArgument;
 
-        foreach (GridViewRow row in gridView.Rows)
-        {
-            CheckBox chkSelect = (CheckBox)row.FindControl("chkSelect");
-            if (chkSelect != null)
+        Response.Redirect("Quotation_Master.aspx?CustName=" + encrypt(customerName) + "");
+    }
+
+    // Delete functionality 
+
+    [System.Web.Services.WebMethod]
+    public static bool ProcessJobNos(List<string> jobNos)
+    {
+        try
+        {           
+            foreach (var jobNo in jobNos)
             {
-                chkSelect.Checked = headerCheckbox.Checked;
-            }
+                string connString = System.Configuration.ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+                using (SqlConnection con = new SqlConnection(connString))
+                {
+                    SqlCommand cmd = new SqlCommand("UPDATE tblEstimationHdr SET QuotationStatus = 'Closed' WHERE JobNo = '"+ jobNo +"'", con);
+                    con.Open();
+                    cmd.ExecuteScalar();
+                }
+            }            
+            return true; 
+        }
+        catch (Exception)
+        {           
+            return false; 
         }
     }
+
 
 }

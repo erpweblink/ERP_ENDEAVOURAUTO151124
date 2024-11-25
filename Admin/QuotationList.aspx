@@ -91,6 +91,33 @@
         .btnclose {
             margin-top: -2%;
         }
+
+        /*Bell Icon Css*/
+        @keyframes bellBounce {
+            0% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            50% {
+                transform: translateX(5px);
+            }
+
+            75% {
+                transform: translateX(-5px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .bell-bounce {
+            animation: bellBounce 1s ease-in-out infinite;
+        }
     </style>
     <script>
         function HideLabel(msg) {
@@ -118,6 +145,62 @@
         });
     </script>
 
+    <%-- New script Nikhil --%>
+    <script type="text/javascript">
+
+        var selectedJobNos = [];
+
+        function toggleJobSelection(checkbox) {
+            var jobNo = checkbox.closest('tr').querySelector('[data-jobno]').innerText;
+
+            if (checkbox.checked) {
+                if (!selectedJobNos.includes(jobNo)) {
+                    selectedJobNos.push(jobNo);
+                }
+            } else {
+                var index = selectedJobNos.indexOf(jobNo);
+                if (index !== -1) {
+                    selectedJobNos.splice(index, 1);
+                }
+            }
+        }
+
+        function validateJobSelection() {
+            if (selectedJobNos.length === 0) {
+                alert('Please select at least one Job ');
+                return false;
+            } else {
+                if (confirm('Are you sure you want to close selected Jobs?')) {
+                    sendJobNosToServer(selectedJobNos);
+                }
+            }
+            return false;
+        }
+        function sendJobNosToServer(jobNos) {
+            fetch('QuotationList.aspx/ProcessJobNos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ jobNos: jobNos }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.d) {
+                        alert('Job closed successfully.');
+                    } else {
+                        alert('Failed to process job numbers.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while processing job numbers.');
+                });
+        }
+
+    </script>
+
+
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
@@ -128,7 +211,7 @@
                 <h5 class="m-0 font-weight-bold text-primary">Quotation List</h5>
 
                 <asp:LinkButton ID="lnkshow" runat="server" CommandArgument='20' OnClick="lnkshow_Click">
-                    <%--Pending Job No.--%><i class="fas fa-bell" style="font-size: 30px; color: #0755A1"><span class="badge bg-danger" id="notificationCount" runat="server">
+                    <i class="fas fa-bell" style="font-size: 30px; color: #0755A1"><span class="badge bg-danger" id="notificationCount" runat="server">
                         <asp:Label ID="lblcount" runat="server" Text="0"></asp:Label>
                     </span></i>
                 </asp:LinkButton>
@@ -549,6 +632,7 @@
                                         HeaderStyle-HorizontalAlign="Center" OnRowCommand="gv_EstimationList_RowCommand" RowStyle-HorizontalAlign="Center">
 
                                         <Columns>
+                                            <%--New Code--%>
                                             <asp:TemplateField HeaderText="View" HeaderStyle-Width="20">
                                                 <ItemTemplate>
                                                     <img alt="" style="cursor: pointer" src="img/plus.png" />
@@ -557,26 +641,36 @@
                                                             <Columns>
                                                                 <asp:TemplateField>
                                                                     <ItemTemplate>
-                                                                        <asp:CheckBox ID="chkSelect" runat="server" />
+                                                                        <asp:CheckBox ID="chkSelect" runat="server" OnClick="toggleJobSelection(this);" />
                                                                     </ItemTemplate>
                                                                 </asp:TemplateField>
-                                                                <asp:BoundField ItemStyle-Width="150px" DataField="JobNo" HeaderText="Job No." />
-                                                                <asp:BoundField ItemStyle-Width="150px" DataField="CreatedDate" HeaderText="Created Date" SortExpression="CreatedDate" DataFormatString="{0:dd-MM-yyyy}" />
+
+                                                                <asp:TemplateField HeaderText="Job No.">
+                                                                    <ItemTemplate>
+                                                                        <asp:Label ID="lblJobNo" HeaderText="Job No." runat="server" Text='<%# Eval("JobNo") %>'
+                                                                            data-jobno='<%# Eval("JobNo") %>'></asp:Label>
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateField>
+                                                                <asp:BoundField ItemStyle-Width="150px" DataField="CreatedDate" HeaderText="Created Date"
+                                                                    SortExpression="CreatedDate" DataFormatString="{0:dd-MM-yyyy}" />
                                                             </Columns>
                                                         </asp:GridView>
-
                                                     </asp:Panel>
                                                     <asp:Panel ID="CreatedDate" runat="server" Style="display: none">
                                                         <asp:GridView ID="CreatedDateDetails" runat="server" AutoGenerateColumns="false" CssClass="ChildGrid">
                                                             <Columns>
                                                                 <asp:BoundField ItemStyle-Width="150px" DataField="JobNo" HeaderText="Job No." />
-                                                                <asp:BoundField ItemStyle-Width="150px" DataField="CreatedDate" HeaderText="Created Date" SortExpression="CreatedDate"
-                                                                    DataFormatString="{0:dd-MM-yyyy}" />
+                                                                <asp:BoundField ItemStyle-Width="150px" DataField="CreatedDate" HeaderText="Created Date"
+                                                                    SortExpression="CreatedDate" DataFormatString="{0:dd-MM-yyyy}" />
                                                             </Columns>
                                                         </asp:GridView>
                                                     </asp:Panel>
                                                 </ItemTemplate>
                                             </asp:TemplateField>
+
+
+
+
                                             <asp:TemplateField HeaderText="Sr. No.">
                                                 <ItemTemplate>
                                                     <asp:Label ID="Label28" runat="server" Text='<%# Container.DataItemIndex + 1 %>'></asp:Label>
@@ -597,15 +691,14 @@
                                             <asp:TemplateField HeaderText="Action">
                                                 <ItemTemplate>
                                                     <asp:LinkButton runat="server" ID="lnkbtnCorrect" ToolTip="Correct"
-                                                        CommandArgument='0' CommandName="RowCorrect"
-                                                        CausesValidation="False">
-                                                          <i class="fa fa-check" style="font-size:24px; color:green"></i>
+                                                        CommandArgument='<%# Eval("CustName") %>' CommandName="RowCorrect"
+                                                        CausesValidation="False" OnClick="lnkbtnCorrect_Click">
+                                                        <i class="fa fa-check" style="font-size:24px; color:green"></i>
                                                     </asp:LinkButton>
                                                     &nbsp;&nbsp;
-                                                        <asp:LinkButton runat="server" ID="lnkbtnClose" ToolTip="Close"
-                                                            OnClientClick="Javascript:return confirm('Are you sure to Close?')"
-                                                            CommandArgument='0' CommandName="RowClose"
-                                                            CausesValidation="False">
+                                                       <asp:LinkButton runat="server" ID="lnkbtnClose"
+                                                           ToolTip="Close" OnClientClick="return validateJobSelection();" CommandArgument='0'
+                                                           CommandName="RowClose" CausesValidation="False">
                                                             <i class="fa fa-times" style="font-size:24px; color:red"></i>
                                                         </asp:LinkButton>
                                                 </ItemTemplate>

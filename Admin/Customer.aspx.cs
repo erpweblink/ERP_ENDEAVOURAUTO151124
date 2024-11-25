@@ -514,7 +514,7 @@ public partial class Reception_Customer : System.Web.UI.Page
                 }
                 DropDownListisActive.Text = flgStatus;
                 DataTable Dtproduct = new DataTable();
-                SqlDataAdapter daa = new SqlDataAdapter("SELECT  [Id],[CustName],[ContactPerName],[ContactPerNo],[CreatedBy],[Createddate],[UpdatedBy],[UpdatedDate],[isdeleted],[cust_id],Email,designation FROM tblCustomerContactPerson WHERE cust_id='" + id + "'  ", con);
+                SqlDataAdapter daa = new SqlDataAdapter("SELECT  [Id],[CustName],[ContactPerName],[ContactPerNo],[CreatedBy],[Createddate],[UpdatedBy],[UpdatedDate],[isdeleted],[cust_id],Email,designation FROM tblCustomerContactPerson WHERE cust_id='" + primaryId + "'  ", con);
                 daa.Fill(Dtproduct);
                 int count = 1;
                 if (Dtproduct.Rows.Count > 0)
