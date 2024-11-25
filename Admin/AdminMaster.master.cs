@@ -272,7 +272,7 @@ public partial class Admin_MasterPage : System.Web.UI.MasterPage
                         estimationid.Visible = true;
                     }
                 }
-                if (MenuName == "Quotation_List.aspx")
+                if (MenuName == "QuotationList.aspx")
                 {
                     string page1 = row["Pages"].ToString();
                     string pageView = row["PagesView"].ToString();
