@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style type="text/css">
         .auto-style1 {
-            margin-left: 11;
+            margin-left: 11px;
         }
 
         .completionList {
@@ -146,6 +146,7 @@
     </script>
 
     <%-- New script Nikhil --%>
+
     <script type="text/javascript">
 
         var selectedJobNos = [];
@@ -197,7 +198,9 @@
                     alert('An error occurred while processing job numbers.');
                 });
         }
-
+        function ReloadPage() {
+            window.location.href = "../Admin/QuotationList.aspx";
+        }
     </script>
 
 
@@ -620,7 +623,7 @@
                                 <h5 class="m-0 font-weight-bold text-primary">Pending Job Numbers</h5>
 
 
-                                <asp:LinkButton ID="Closepopdetail" runat="server" class="btn-close">
+                                <asp:LinkButton ID="Closepopdetail" runat="server" class="btn-close" onClientClick="ReloadPage()">
                                     <i class="fa fa-close" style="font-size:24px;color:red;"></i>
                                 </asp:LinkButton>
                             </div>
@@ -700,7 +703,7 @@
                                                            ToolTip="Close" OnClientClick="return validateJobSelection();" CommandArgument='0'
                                                            CommandName="RowClose" CausesValidation="False">
                                                             <i class="fa fa-times" style="font-size:24px; color:red"></i>
-                                                        </asp:LinkButton>
+                                                       </asp:LinkButton>
                                                 </ItemTemplate>
 
                                             </asp:TemplateField>

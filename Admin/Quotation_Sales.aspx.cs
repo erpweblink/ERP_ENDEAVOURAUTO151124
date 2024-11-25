@@ -892,7 +892,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
         }
         else
         {
-            Response.Redirect("Quotation_List.aspx");
+            Response.Redirect("QuotationList.aspx");
         }
     }
 

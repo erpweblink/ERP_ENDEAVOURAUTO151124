@@ -867,7 +867,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
         }
         else
         {
-            Response.Redirect("Quotation_List.aspx");
+            Response.Redirect("QuotationList.aspx");
         }
 
     }

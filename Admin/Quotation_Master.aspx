@@ -87,7 +87,7 @@
                 showCancelButton: false,
                 showConfirmButton: false
             }).then(function () {
-                window.location.href = "../Admin/Quotation_List.aspx";
+                window.location.href = "../Admin/QuotationList.aspx";
             })
         };
     </script>

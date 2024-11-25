@@ -602,7 +602,7 @@ public partial class Admin_Quotation_ListSales : System.Web.UI.Page
 
     protected void lnkBtn_rfresh_Click(object sender, EventArgs e)
     {
-        Response.Redirect("Quotation_List.aspx");
+        Response.Redirect("QuotationList.aspx");
     }
 
     public DataTable Read_Table(string Query)

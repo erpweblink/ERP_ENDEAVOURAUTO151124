@@ -618,7 +618,7 @@ public partial class Admin_QuotationList : System.Web.UI.Page
 
     protected void lnkBtn_rfresh_Click(object sender, EventArgs e)
     {
-        Response.Redirect("Quotation_List.aspx");
+        Response.Redirect("QuotationList.aspx");
     }
 
     public DataTable Read_Table(string Query)
@@ -1609,8 +1609,7 @@ public partial class Admin_QuotationList : System.Web.UI.Page
 
             gv_EstimationList.DataSource = dt;
             gv_EstimationList.EmptyDataText = "Record Not Found";
-            gv_EstimationList.DataBind();
-
+            gv_EstimationList.DataBind();            
             modelprofile.Show();
         }
         catch (Exception ex)
