@@ -193,8 +193,9 @@
 
                     </div>
                     <div class="table-responsive text-center" style="width: 100%; padding: 20px;">
-                        <asp:GridView ID="GvCustomerpoList" runat="server" AutoGenerateColumns="false" CssClass="grid" DataKeyNames="Quotationno" AllowPaging="true" Width="100%" PagerStyle-CssClass="paging" PageSize="10" OnRowCommand="GvCustomerpoList_RowCommand" OnPageIndexChanging="GvCustomerpoList_PageIndexChanging"
-                            OnRowDataBound="GvCustomerpoList_RowDataBound">
+                        <asp:GridView ID="GvCustomerpoList" runat="server" AutoGenerateColumns="false" CssClass="grid" DataKeyNames="Quotationno" Width="100%" OnRowCommand="GvCustomerpoList_RowCommand"
+                            OnRowDataBound="GvCustomerpoList_RowDataBound" ShowFooter="True">
+                            <%--AllowPaging="true" PageSize="10" PagerStyle-CssClass="paging" OnPageIndexChanging="GvCustomerpoList_PageIndexChanging"--%>
                             <Columns>
                                 <asp:TemplateField HeaderStyle-Width="20" HeaderText="View">
                                     <ItemTemplate>
@@ -299,6 +300,9 @@
                                         </asp:LinkButton>
                                         <%--<asp:LinkButton runat="server" ID="lnkbtnsendpo" ToolTip="Send PO" CommandName="SendINV"><i class="fa fa-paper-plane"  style="font-size: 26px; color:black; "></i></i></asp:LinkButton>--%>
                                     </ItemTemplate>
+                                     <FooterTemplate>
+                                        <asp:Label ID="lblFooterTotalAmt" runat="server" Text="Total Amt:" Font-Bold="True"></asp:Label>
+                                    </FooterTemplate>
                                 </asp:TemplateField>
                             </Columns>
                             <FooterStyle BackColor="White" ForeColor="#000066" />
@@ -316,7 +320,8 @@
 
                     <%--   SortedGrid start--%>
                     <div class="table-responsive text-center" style="width: 100%; padding: 20px;">
-                        <asp:GridView ID="GvSorted" runat="server" AutoGenerateColumns="false" CssClass="grid" DataKeyNames="Quotationno" AllowPaging="true" Width="100%" PagerStyle-CssClass="paging" PageSize="10" OnRowCommand="GvCustomerpoList_RowCommand" OnPageIndexChanging="GvSorted_PageIndexChanging">
+                        <asp:GridView ID="GvSorted" runat="server" AutoGenerateColumns="false" CssClass="grid" DataKeyNames="Quotationno"  Width="100%" OnRowCommand="GvCustomerpoList_RowCommand" OnRowDataBound="GvCustomerpoList_RowDataBound" ShowFooter="True">
+                            <%--AllowPaging="true" PagerStyle-CssClass="paging" PageSize="10" OnPageIndexChanging="GvSorted_PageIndexChanging"--%>
                             <Columns>
                                 <asp:TemplateField HeaderStyle-Width="20" HeaderText="View">
                                     <ItemTemplate>
@@ -416,6 +421,9 @@
 
 
                                     </ItemTemplate>
+                                     <FooterTemplate>
+                                        <asp:Label ID="lblFooterTotalAmt" runat="server" Text="Total Amt:" Font-Bold="True"></asp:Label>
+                                    </FooterTemplate>
                                 </asp:TemplateField>
                             </Columns>
                             <FooterStyle BackColor="White" ForeColor="#000066" />

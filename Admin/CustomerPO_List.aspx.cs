@@ -885,6 +885,49 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
     SqlDataAdapter sadquatation;
     protected void GvCustomerpoList_RowDataBound(object sender, GridViewRowEventArgs e)
     {
+        //Added New for Count by Shubham Patil
+        if (e.Row.RowType == DataControlRowType.Footer)
+        {
+            decimal totalAmount = 0;
+
+            if (GvSorted.Rows.Count > 0)
+            {
+                foreach (GridViewRow row in GvSorted.Rows)
+                {
+
+                    Label lblgrandtotal = row.FindControl("lblgrandtotal") as Label;
+                    if (lblgrandtotal != null)
+                    {
+                        if (decimal.TryParse(lblgrandtotal.Text, out decimal rowAmount)) 
+                        {
+                            totalAmount += rowAmount;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (GridViewRow row in GvCustomerpoList.Rows)
+                {
+                    Label lblgrandtotal = row.FindControl("lblgrandtotal") as Label;
+                    if (lblgrandtotal != null)
+                    {
+                        if (decimal.TryParse(lblgrandtotal.Text, out decimal rowAmount))
+                        {
+                            totalAmount += rowAmount;
+                        }
+                    }
+                }
+            }
+
+            Label lblFooterTotalAmt = (Label)e.Row.FindControl("lblFooterTotalAmt");
+            if (lblFooterTotalAmt != null)
+            {
+                lblFooterTotalAmt.Text = "Total Amt: ₹" + totalAmount.ToString("N2");
+            }
+        }
+        //End
+
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
             string Id = GvCustomerpoList.DataKeys[e.Row.RowIndex].Value.ToString();

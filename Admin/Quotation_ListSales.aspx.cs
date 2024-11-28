@@ -539,6 +539,49 @@ public partial class Admin_Quotation_ListSales : System.Web.UI.Page
     SqlDataAdapter sadquatation;
     protected void gv_Quot_List_RowDataBound(object sender, GridViewRowEventArgs e)
     {
+        //Added New for Count by Shubham Patil
+        if (e.Row.RowType == DataControlRowType.Footer)
+        {
+            decimal totalAmount = 0;
+
+            if(sortedgv.Rows.Count>0)
+            {
+                foreach (GridViewRow row in sortedgv.Rows)
+                {
+
+                    Label lblTotalAmt = row.FindControl("lbltotalAmt") as Label;
+                    if (lblTotalAmt != null)
+                    {
+                        if (decimal.TryParse(lblTotalAmt.Text, out decimal rowAmount))
+                        {
+                            totalAmount += rowAmount;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (GridViewRow row in gv_Quot_List.Rows)
+                {
+                    Label lblTotalAmt = row.FindControl("lbltotalAmt") as Label;
+                    if (lblTotalAmt != null)
+                    {
+                        if (decimal.TryParse(lblTotalAmt.Text, out decimal rowAmount))
+                        {
+                            totalAmount += rowAmount;
+                        }
+                    }
+                }
+            }
+          
+            Label lblFooterTotalAmt = (Label)e.Row.FindControl("lblFooterTotalAmt");
+            if (lblFooterTotalAmt != null)
+            {
+                lblFooterTotalAmt.Text = "Total Amt: ₹" + totalAmount.ToString("N2"); 
+            }
+        }
+        //End
+
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
             LinkButton Lnk_Edit = (LinkButton)e.Row.FindControl("lnkbtnEdit");
@@ -602,7 +645,8 @@ public partial class Admin_Quotation_ListSales : System.Web.UI.Page
 
     protected void lnkBtn_rfresh_Click(object sender, EventArgs e)
     {
-        Response.Redirect("QuotationList.aspx");
+        //Response.Redirect("QuotationList.aspx");
+        Response.Redirect("Quotation_ListSales.aspx");
     }
 
     public DataTable Read_Table(string Query)

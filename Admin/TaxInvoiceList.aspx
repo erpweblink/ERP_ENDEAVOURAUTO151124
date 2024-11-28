@@ -141,7 +141,8 @@
                 </div>
                 </br>
                 <div class="table-responsive text-center">
-                    <asp:GridView ID="GvPurchaseOrderList" runat="server" AutoGenerateColumns="false" CssClass="grid" Width="100%" OnRowCommand="GvPurchaseOrderList_RowCommand" AllowPaging="true" PageSize="10" PagerStyle-CssClass="paging" OnPageIndexChanging="GvPurchaseOrderList_PageIndexChanging">
+                    <asp:GridView ID="GvPurchaseOrderList" runat="server" AutoGenerateColumns="false" CssClass="grid" Width="100%" OnRowCommand="GvPurchaseOrderList_RowCommand" OnRowDataBound="gv_Tax_List_RowDataBound" ShowFooter="True">
+                        <%--AllowPaging="true" PageSize="10" PagerStyle-CssClass="paging" OnPageIndexChanging="GvPurchaseOrderList_PageIndexChanging"--%>
                         <Columns>
                             <asp:TemplateField HeaderText="Sr. No.">
                                 <ItemTemplate>
@@ -183,7 +184,7 @@
 
                             <asp:TemplateField HeaderText="Invoice Amount">
                                 <ItemTemplate>
-                                    <asp:Label Text='<%# Eval("GrandTotal") %>' runat="server" ID="lblIGST" />
+                                    <asp:Label ID="lblIGST" runat="server" Text='<%# Eval("GrandTotal") %>' />
                                 </ItemTemplate>
                             </asp:TemplateField>
 
@@ -249,6 +250,9 @@
                                     
                                 <%--<asp:LinkButton ID="btnsendchallan" runat="server" CommandName="SendChallan" CommandArgument='<%# Eval("Id") %>' ToolTip="Send to challan"><i class="fa fa-paper-plane"  style="font-size:26px;color:black"></i></asp:LinkButton>--%>
                                 </ItemTemplate>
+                                 <FooterTemplate>
+                                    <asp:Label ID="lblFooterTotalAmt" runat="server" Text="Total Amt:" Font-Bold="True"></asp:Label>
+                                 </FooterTemplate>
                             </asp:TemplateField>
                         </Columns>
                         <FooterStyle BackColor="White" ForeColor="#000066" />
@@ -266,7 +270,8 @@
             </div>
             <%--    sorted Grid start--%>
             <div class="table-responsive text-center">
-                <asp:GridView ID="Gvsorted" runat="server" AutoGenerateColumns="false" CssClass="grid" Width="100%" OnRowCommand="GvPurchaseOrderList_RowCommand" AllowPaging="true" PageSize="10" PagerStyle-CssClass="paging" OnPageIndexChanging="Gvsorted_PageIndexChanging">
+                <asp:GridView ID="Gvsorted" runat="server" AutoGenerateColumns="false" CssClass="grid" Width="100%" OnRowCommand="GvPurchaseOrderList_RowCommand" OnRowDataBound="gv_Tax_List_RowDataBound" ShowFooter="True">
+                    <%--AllowPaging="true" PageSize="10" PagerStyle-CssClass="paging" OnPageIndexChanging="Gvsorted_PageIndexChanging"--%>
                     <Columns>
                         <asp:TemplateField HeaderText="Sr. No.">
                             <ItemTemplate>
@@ -307,7 +312,7 @@
 
                           <asp:TemplateField HeaderText="Invoice Amount">
                             <ItemTemplate>
-                                <asp:Label Text='<%# Eval("GrandTotal") %>' runat="server" ID="lblIGST" />
+                                <asp:Label  ID="lblIGST" runat="server" Text='<%# Eval("GrandTotal") %>' />
                             </ItemTemplate>
                         </asp:TemplateField>
 
@@ -371,6 +376,9 @@
                                       
                                     <asp:LinkButton ID="btn_delete" runat="server" Text="" ToolTip="Delete" CommandArgument='<%# Eval("Id") %>' CommandName="RowDelete" OnClientClick="Javascript:return confirm('Are you sure to Delete?')"><i class="fa fa-trash" aria-hidden="true" style="font-size:26px"></i></asp:LinkButton>
                             </ItemTemplate>
+                             <FooterTemplate>
+                                <asp:Label ID="lblFooterTotalAmt" runat="server" Text="Total Amt:" Font-Bold="True"></asp:Label>
+                             </FooterTemplate>
                         </asp:TemplateField>
                     </Columns>
                     <FooterStyle BackColor="White" ForeColor="#000066" />
@@ -431,7 +439,7 @@
 
                            <asp:TemplateField HeaderText="Invoice Amount">
                             <ItemTemplate>
-                                <asp:Label Text='<%# Eval("GrandTotal") %>' runat="server" ID="lblIGST" />
+                                <asp:Label ID="lblIGST" runat="server" Text='<%# Eval("GrandTotal") %>' />
                             </ItemTemplate>
                         </asp:TemplateField>
 

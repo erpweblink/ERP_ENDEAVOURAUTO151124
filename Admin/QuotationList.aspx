@@ -283,7 +283,8 @@
                 </br>
                 <div style="width: 100%;">
                     <div class="table-responsive">
-                        <asp:GridView ID="gv_Quot_List" runat="server" OnRowDataBound="gv_Quot_List_RowDataBound" AutoGenerateColumns="False" DataKeyNames="Quotation_no" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Quot_List_RowCommand" PagerStyle-CssClass="paging" AllowPaging="true" PageSize="15" OnPageIndexChanging="gv_Quot_List_PageIndexChanging">
+                        <asp:GridView ID="gv_Quot_List" runat="server" OnRowDataBound="gv_Quot_List_RowDataBound" AutoGenerateColumns="False" DataKeyNames="Quotation_no" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Quot_List_RowCommand" ShowFooter="True">
+                            <%--PagerStyle-CssClass="paging" AllowPaging="true" PageSize="15" OnPageIndexChanging="gv_Quot_List_PageIndexChanging"--%>
                             <Columns>
                                 <asp:TemplateField HeaderStyle-Width="20" HeaderText="View">
                                     <ItemTemplate>
@@ -387,6 +388,9 @@
                                         <asp:LinkButton runat="server" ID="lnkbtnsendpo" ToolTip="Send PO" CommandName="SendPO" CommandArgument='<%# Eval("Quotation_no") %>'><i class="fa fa-paper-plane"  style="font-size: 26px; color:black; "></i></i></asp:LinkButton>
 
                                     </ItemTemplate>
+                                     <FooterTemplate>
+                                        <asp:Label ID="lblFooterTotalAmt" runat="server" Text="Total Amt:" Font-Bold="True"></asp:Label>
+                                    </FooterTemplate>
                                 </asp:TemplateField>
                             </Columns>
                             <FooterStyle BackColor="White" ForeColor="#000066" />
@@ -402,7 +406,8 @@
 
                         <%--   Sorted Grid start--%>
 
-                        <asp:GridView ID="sortedgv" runat="server" OnRowDataBound="gv_Quot_List_RowDataBound" AutoGenerateColumns="False" DataKeyNames="Quotation_no" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Quot_List_RowCommand" PagerStyle-CssClass="paging" AllowPaging="true" PageSize="15" OnPageIndexChanging="sortedgv_PageIndexChanging">
+                        <asp:GridView ID="sortedgv" runat="server" OnRowDataBound="gv_Quot_List_RowDataBound" AutoGenerateColumns="False" DataKeyNames="Quotation_no" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Quot_List_RowCommand" ShowFooter="True">
+                            <%--PagerStyle-CssClass="paging" AllowPaging="true" PageSize="15" OnPageIndexChanging="sortedgv_PageIndexChanging"--%>
                             <Columns>
                                 <asp:TemplateField HeaderStyle-Width="20" HeaderText="View">
                                     <ItemTemplate>
@@ -421,12 +426,12 @@
                                 <%--///////--%>
                                 <asp:TemplateField HeaderText="Sr. No.">
                                     <ItemTemplate>
-                                        <asp:Label ID="Label3" runat="server" Text='<%#Container.DataItemIndex +1 %>'></asp:Label>
+                                        <asp:Label ID="lblSrNo" runat="server" Text='<%#Container.DataItemIndex +1 %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="ID" Visible="false">
                                     <ItemTemplate>
-                                        <asp:Label ID="Label4" runat="server" Text='<%# Eval("ID") %>'></asp:Label>
+                                        <asp:Label ID="lblID" runat="server" Text='<%# Eval("ID") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <%-- <asp:TemplateField HeaderText="JOB No.">
@@ -436,66 +441,69 @@
                                 </asp:TemplateField>--%>
                                 <asp:TemplateField HeaderText="Quo.No.">
                                     <ItemTemplate>
-                                        <asp:Label ID="Label5" runat="server" Text='<%# Eval("Quotation_no") %>'></asp:Label>
+                                        <asp:Label ID="lblQuNo" runat="server" Text='<%# Eval("Quotation_no") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Company Name">
                                     <ItemTemplate>
-                                        <asp:Label ID="Label6" runat="server" Text='<%# Eval("Customer_Name") %>'></asp:Label>
+                                        <asp:Label ID="lblCompName" runat="server" Text='<%# Eval("Customer_Name") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Sub Customer">
                                     <ItemTemplate>
-                                        <asp:Label ID="Label7" runat="server" Text='<%# Eval("SubCustomer") %>'></asp:Label>
+                                        <asp:Label ID="lblsubcustomer" runat="server" Text='<%# Eval("SubCustomer") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="kind Att.">
                                     <ItemTemplate>
-                                        <asp:Label ID="Label8" runat="server" Text='<%# Eval("kind_Att") %>'></asp:Label>
+                                        <asp:Label ID="lblkindAtt" runat="server" Text='<%# Eval("kind_Att") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Total Amt.">
                                     <ItemTemplate>
-                                        <asp:Label ID="Label9" runat="server" Text='<%# Eval("AllTotal_price") %>'></asp:Label>
+                                        <asp:Label ID="lbltotalAmt" runat="server" Text='<%# Eval("AllTotal_price") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Quatation Date">
                                     <ItemTemplate>
-                                        <asp:Label Text='<%# Eval("Quotation_Date", "{0:dd-MM-yyyy}") %>' runat="server" ID="Label10" />
+                                        <asp:Label Text='<%# Eval("Quotation_Date", "{0:dd-MM-yyyy}") %>' runat="server" ID="lblQuDate" />
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Expiry Date">
                                     <ItemTemplate>
-                                        <asp:Label Text='<%# Eval("ExpiryDate", "{0:dd-MM-yyyy}") %>' runat="server" ID="Label11" />
+                                        <asp:Label Text='<%# Eval("ExpiryDate", "{0:dd-MM-yyyy}") %>' runat="server" ID="lblExpDate" />
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Created Date">
                                     <ItemTemplate>
-                                        <asp:Label Text='<%# Eval("CreatedOn", "{0:dd-MM-yyyy}") %>' runat="server" ID="Label12" />
+                                        <asp:Label Text='<%# Eval("CreatedOn", "{0:dd-MM-yyyy}") %>' runat="server" ID="lblCreDate" />
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Created By">
                                     <ItemTemplate>
-                                        <asp:Label ID="Label13" runat="server" Text='<%# Eval("CreatedBy") %>'></asp:Label>
+                                        <asp:Label ID="lblCreateuser" runat="server" Text='<%# Eval("CreatedBy") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
 
                                 <asp:TemplateField HeaderText="Count Days">
                                     <ItemTemplate>
-                                        <asp:Label ID="Label15" runat="server" Text='<%# Eval("days") %>'></asp:Label>
+                                        <asp:Label ID="lbldaycount" runat="server" Text='<%# Eval("days") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
 
                                 <asp:TemplateField HeaderText="Action" ItemStyle-Width="150px">
                                     <ItemTemplate>
-                                        <%--                                        <asp:LinkButton runat="server" ID="lnkCreateQua" ToolTip="Create Quotation" CommandArgument='<%# Eval("JobNo") %>' CommandName="RowQuotation"><i class="fa fa-clipboard" style="font-size:24px"></i></i></asp:LinkButton>--%>
+                                        <%--<asp:LinkButton runat="server" ID="lnkCreateQua" ToolTip="Create Quotation" CommandArgument='<%# Eval("JobNo") %>' CommandName="RowQuotation"><i class="fa fa-clipboard" style="font-size:24px"></i></i></asp:LinkButton>--%>
                                         &nbsp;&nbsp;  
-                                        <asp:LinkButton runat="server" ID="LinkButton1" ToolTip="Edit Quotation" CommandName="RowEdit" CommandArgument='<%# Eval("Quotation_no") %>'><i class="fa fa-edit" style="font-size:24px"></i></asp:LinkButton>
+                                        <asp:LinkButton runat="server" ID="lnkbtnEdit" ToolTip="Edit Quotation" CommandName="RowEdit" CommandArgument='<%# Eval("Quotation_no") %>'><i class="fa fa-edit" style="font-size:24px"></i></asp:LinkButton>
                                         &nbsp;&nbsp;  
-                                        <asp:LinkButton runat="server" ID="LinkButton2" ToolTip="Delete Quotation" CommandArgument='<%# Eval("ID") %>' CommandName="RowDelete" OnClientClick="Javascript:return confirm('Are you sure to Delete?')"><i class="fa fa-trash-o" style="font-size:24px"></i></asp:LinkButton>
+                                        <asp:LinkButton runat="server" ID="lnkbtnDelete" ToolTip="Delete Quotation" CommandArgument='<%# Eval("ID") %>' CommandName="RowDelete" OnClientClick="Javascript:return confirm('Are you sure to Delete?')"><i class="fa fa-trash-o" style="font-size:24px"></i></asp:LinkButton>
                                         &nbsp;&nbsp; 
-                                        <asp:LinkButton runat="server" ID="LinkButton3" ToolTip="View Quotation PDF" CommandName="RowView" CommandArgument='<%# Eval("Quotation_no") %>'><i class="fas fa-file-pdf"  style="font-size: 26px; color:red; "></i></i></asp:LinkButton>
+                                        <asp:LinkButton runat="server" ID="lnkBtn_View" ToolTip="View Quotation PDF" CommandName="RowView" CommandArgument='<%# Eval("Quotation_no") %>'><i class="fas fa-file-pdf"  style="font-size: 26px; color:red; "></i></i></asp:LinkButton>
                                     </ItemTemplate>
+                                     <FooterTemplate>
+                                        <asp:Label ID="lblFooterTotalAmt" runat="server" Text="Total Amt:" Font-Bold="True"></asp:Label>
+                                    </FooterTemplate>
                                 </asp:TemplateField>
                             </Columns>
                             <FooterStyle BackColor="White" ForeColor="#000066" />

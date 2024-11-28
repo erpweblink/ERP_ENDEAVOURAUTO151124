@@ -83,7 +83,8 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             if (Request.QueryString["QuatationNo"] != null)
             {
                 Server.UrlDecode(Request.QueryString["QuatationNo"]);
-                string ID = Server.UrlDecode(Request.QueryString["QuatationNo"]);
+                //Added Decrypt 
+                string ID = Decrypt(Server.UrlDecode(Request.QueryString["QuatationNo"]));
 
                 //ID = Decrypt(Request.QueryString["QuatationNo"].ToString());
                 ShowHeaderEdit(ID);
@@ -127,7 +128,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
 
 
     {
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM [CustomerPO_Hdr_Sales] WHERE Quotationno='" + ID + "'", con);
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM [CustomerPO_Hdr_Both] WHERE Quotationno='" + ID + "'", con);
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
         if (Dt.Rows.Count > 0)
@@ -215,7 +216,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
     {
         ////Automatic description bind in job number from quaation details table
         DataTable dt3 = new DataTable();
-        SqlDataAdapter sad3 = new SqlDataAdapter("select * from [CustomerPO_Dtls_Sales] where Quotationno='" + ID + "'", con);
+        SqlDataAdapter sad3 = new SqlDataAdapter("select * from [CustomerPO_Dtls_Both] where Quotationno='" + ID + "'", con);
         sad3.Fill(dt3);
         int count = 1;
         if (dt3.Rows.Count > 0)
@@ -697,7 +698,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
 
     private void SaveRecord()
     {
-        con.Open();
+        //con.Open();
         int Id;
         string CretedBy = Session["adminname"].ToString();
         DateTime Date = DateTime.Now;
@@ -709,7 +710,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 "CompanyStateCode=@CompanyStateCode,CustomerShippingAddress=@CustomerShippingAddress,CustomerGstNo=@CustomerGstNo," +
                 "CustomerPanNo=@CustomerPanNo,CustomerRegType=@CustomerRegType,CustomerStateCode=@CustomerStateCode,CGST=@CGST,SGST=@SGST," +
                 "AllTotalAmount=@AllTotalAmount,GrandTotal=@GrandTotal,TotalInWord=@TotalInWord,Term_Condition_1=@Term_Condition_1," +
-                "Term_Condition_2=@Term_Condition_2,Term_Condition_3=@Term_Condition_3,Term_Condition_4=@Term_Condition_4,Term_Condition_5=@Term_Condition_5,Term_Condition_6=@Term_Condition_6,ServiceType=@ServiceType,IGST=@IGST,Is_Deleted=@Is_Deleted,UpdatedOn=@UpdatedOn,UpdatedBy=@UpdatedBy " +
+                "Term_Condition_2=@Term_Condition_2,Term_Condition_3=@Term_Condition_3,Term_Condition_4=@Term_Condition_4,Term_Condition_5=@Term_Condition_5,Term_Condition_6=@Term_Condition_6,ServiceType=@ServiceType,Type=@Type,IGST=@IGST,Is_Deleted=@Is_Deleted,UpdatedOn=@UpdatedOn,UpdatedBy=@UpdatedBy " +
                 "WHERE Id='" + hdnID.Value + "' ", con);  //Remove Delivery Col....
 
             Cmd.Parameters.AddWithValue("@InvoiceNo", txt_InvoiceNo.Text);
@@ -747,12 +748,14 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             Cmd.Parameters.AddWithValue("@Term_Condition_5", txt_term_5.Text + "-" + txt_condition_5.Text);
             Cmd.Parameters.AddWithValue("@Term_Condition_6", txt_term_6.Text + "-" + txt_condition_6.Text);
             Cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
+            Cmd.Parameters.AddWithValue("@Type", ddltype.SelectedItem.Text);
             Cmd.Parameters.AddWithValue("@Is_Deleted", '0');
             //Cmd.Parameters.AddWithValue("@status", txtstatus.Text);
             Cmd.Parameters.AddWithValue("@UpdatedBy", CretedBy);
             Cmd.Parameters.AddWithValue("@UpdatedOn", DateTime.Now);
-
+            con.Open();
             Cmd.ExecuteNonQuery();
+            con.Close();
 
             DataTable Dt = new DataTable();
             SqlDataAdapter daa = new SqlDataAdapter("SELECT JobNo,Description,Hsn,TaxPercentage,Quntity,Unit,Rate," +
@@ -790,7 +793,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
 
             foreach (GridViewRow g1 in Grd_MAIL.Rows)
             {
-                con.Close();
+                //con.Close();
                 string MAIL = (g1.FindControl("lblmultMail") as Label).Text;
                 string lbldesignation = (g1.FindControl("lbldesignation") as Label).Text;
                 bool chkmail = (g1.FindControl("chkmail") as CheckBox).Checked;
@@ -807,15 +810,16 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 cmdtable.ExecuteNonQuery();
                 con.Close();   
             }
-            ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data saved Sucessfully');window.location ='/Admin/TaxInvoiceList_Sales.aspx';", true);
-          //  ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Updated Sucessfully')", true);
+            ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Updated Sucessfully');window.location ='/Admin/TaxInvoiceList_Sales.aspx';", true);
+            // ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data saved Sucessfully');window.location ='/Admin/TaxInvoiceList_Sales.aspx';", true);
+            //  ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Updated Sucessfully')", true);
         }
         else
         {
             //string CretedBy = "adminname";
             try
             {
-                con.Close();
+                //con.Open();
 
 
                 SqlCommand Cmd = new SqlCommand("SPTaxInvoice_Sales", con);
@@ -863,6 +867,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 Cmd.Parameters.AddWithValue("@Term_Condition_5", txt_term_4.Text + "-" + txt_condition_5.Text);
                 Cmd.Parameters.AddWithValue("@Term_Condition_6", txt_term_4.Text + "-" + txt_condition_6.Text);
                 Cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
+                Cmd.Parameters.AddWithValue("@Type", ddltype.SelectedItem.Text);
                 Cmd.Parameters.AddWithValue("@Is_Deleted", '0');
                 Cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
                 Cmd.Parameters.AddWithValue("@CreatedBy", CretedBy);
@@ -872,6 +877,13 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 con.Open();
                 Cmd.ExecuteNonQuery();
                 con.Close();
+
+                // New Code Shubham Patil
+                con.Open();
+                SqlCommand Cmds = new SqlCommand("UPDATE CustomerPO_Hdr_Both SET Status='Completed' WHERE CustomerName='" + txtCustName.Text + "'", con);
+                Cmds.ExecuteNonQuery();
+                con.Close();
+                // New Code End
 
                 Id = Convert.ToInt32(Cmd.Parameters["@InvoiceId"].Value);
 
@@ -937,7 +949,9 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                     con.Close();
                 }
 
-                ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data saved Sucessfully');window.location ='/Admin/TaxInvoiceList_Sales.aspx';", true);
+                //ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data saved Sucessfully');window.location ='/Admin/TaxInvoiceList_Sales.aspx';", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "Message", "alert('Data saved Sucessfully');window.location ='/Admin/TaxInvoiceList_Sales.aspx';", true);
+
             }
             catch (Exception ex)
             {
@@ -1462,7 +1476,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
 
-            // cast the current row to a datarowview
+            // cast the current state row to a datarowview
             DataRowView row = e.Row.DataItem as DataRowView;
             Total += Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "TotalAmount"));
             if (hdnPoProductTot.Value != "")
@@ -2544,7 +2558,8 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             }
             else
             {
-                Response.Redirect("TaxInvoiceList.aspx");
+            //Response.Redirect("TaxInvoiceList.aspx");
+            Response.Redirect("TaxInvoiceList_Sales.aspx");
             }
 
         }
@@ -2563,7 +2578,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT Pono from CustomerPO_Hdr_Sales where " + "Pono like @Search + '%' AND Is_Deleted='0' ";
+                com.CommandText = "select DISTINCT Pono from CustomerPO_Hdr_Both where " + "Pono like @Search + '%' AND Is_Deleted='0' ";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -2630,7 +2645,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT JobNo from CustomerPO_Hdr_Sales where " + "JobNo like @Search + '%' AND Is_Deleted='0'  ";
+                com.CommandText = "select DISTINCT JobNo from CustomerPO_Hdr_Both where " + "JobNo like @Search + '%' AND Is_Deleted='0'  ";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -3082,7 +3097,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             txt_CompanyStateCode.Text = Dtt.Rows[0]["StateCode"].ToString();
         }
 
-        SqlDataAdapter Daaa = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Sales WHERE CustomerName='" + txtCompName.Text + "'  ", con);
+        SqlDataAdapter Daaa = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE CustomerName='" + txtCompName.Text + "'  ", con);
         DataTable Dttt = new DataTable();
         Daaa.Fill(Dttt);
         if (Dttt.Rows.Count > 0)
@@ -3133,7 +3148,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
 
                     ddlagainstno.Enabled = true;
                     // SqlDataAdapter ad = new SqlDataAdapter("SELECT [Quotationno] FROM [tbl_QuotationHdr] WHERE Companyname = '" + txtCompName.Text + "'", con);
-                    SqlDataAdapter ad = new SqlDataAdapter("SELECT [Pono] FROM [CustomerPO_Hdr_Sales] WHERE CustomerName = '" + txtCompName.Text + "' AND  Is_Deleted = 0 ", con);
+                    SqlDataAdapter ad = new SqlDataAdapter("SELECT [Pono] FROM [CustomerPO_Hdr_Both] WHERE CustomerName = '" + txtCompName.Text + "' AND  Is_Deleted = 0 ", con);
                     DataTable dt = new DataTable();
                     ad.Fill(dt);
                     if (dt.Rows.Count > 0)
@@ -3303,7 +3318,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
     public void GetPODate()
     {
 
-        SqlDataAdapter Daaa = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Sales WHERE Pono ='" + ddlagainstno.Text + "'  ", con);
+        SqlDataAdapter Daaa = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE Pono ='" + ddlagainstno.Text + "'  ", con);
         DataTable Dttt = new DataTable();
         Daaa.Fill(Dttt);
         if (Dttt.Rows.Count > 0)
