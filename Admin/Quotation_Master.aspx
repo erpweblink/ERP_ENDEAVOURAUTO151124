@@ -356,7 +356,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <asp:DropDownList ID="ddljobno" OnTextChanged="ddljobno_TextChanged" AutoPostBack="true" Width="230px" runat="server" AppendDataBoundItems="True">
+                                                <asp:DropDownList ID="ddljobno" OnTextChanged="ddljobno_TextChanged" AutoPostBack="true" Width="230px" runat="server" AppendDataBoundItems="True"  class="form-control">
                                                     <asp:ListItem Value="" Text="Select Job No.">
 
                                                     </asp:ListItem>
@@ -365,12 +365,12 @@
                                             </td>
 
                                             <td>
-                                                <asp:TextBox ID="txtpoduct" runat="server" AutoPostBack="true" Width="230px"></asp:TextBox>
+                                                <asp:TextBox ID="txtpoduct" runat="server" AutoPostBack="true" Width="230px"  class="form-control"></asp:TextBox>
                                             </td>
 
                                             <td>
 
-                                                <asp:TextBox ID="txt_discription_Tbl" runat="server" OnTextChanged="txt_discription_Tbl_TextChanged" AutoPostBack="true" Width="230px"></asp:TextBox>
+                                                <asp:TextBox ID="txt_discription_Tbl" runat="server" OnTextChanged="txt_discription_Tbl_TextChanged" AutoPostBack="true" Width="230px"   class="form-control"></asp:TextBox>
                                                 <asp:AutoCompleteExtender ID="AutoCompleteExtender1" CompletionListCssClass="completionList"
                                                     CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
                                                     CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetDescriptionList" TargetControlID="txt_discription_Tbl" runat="server">
@@ -378,7 +378,7 @@
                                             </td>
 
                                             <td>
-                                                <asp:TextBox ID="txtadddescription" runat="server" AutoPostBack="true" Width="230px" TextMode="MultiLine" Style="height: 37px;"></asp:TextBox>
+                                                <asp:TextBox ID="txtadddescription" runat="server" AutoPostBack="true" Width="230px" TextMode="MultiLine" Style="height: 37px;" class="form-control"></asp:TextBox>
                                             </td>
 
                                         </tr>
@@ -391,16 +391,16 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <asp:TextBox ID="txt_hsn_Tbl" runat="server" Width="230px"></asp:TextBox>
+                                                <asp:TextBox ID="txt_hsn_Tbl" runat="server" Width="230px"   class="form-control"></asp:TextBox>
                                             </td>
                                             <td>
-                                                <asp:TextBox ID="txt_rate_Tbl" AutoPostBack="true" OnTextChanged="txt_rate_Tbl_TextChanged" runat="server" Width="230px" onkeypress="return isNumberKey(event)"></asp:TextBox>
+                                                <asp:TextBox ID="txt_rate_Tbl" AutoPostBack="true" OnTextChanged="txt_rate_Tbl_TextChanged" runat="server" Width="230px" onkeypress="return isNumberKey(event)"   class="form-control"></asp:TextBox>
                                             </td>
                                             <td>
-                                                <asp:TextBox ID="txt_unit_Tbl" onkeypress="return character(event)" runat="server" Width="230px"></asp:TextBox>
+                                                <asp:TextBox ID="txt_unit_Tbl" onkeypress="return character(event)" runat="server" Width="230px"   class="form-control"></asp:TextBox>
                                             </td>
                                             <td>
-                                                <asp:TextBox ID="txt_quntity_Tbl" OnTextChanged="txt_quntity_Tbl_TextChanged" AutoPostBack="true" runat="server" Width="230px" onkeypress="return isNumberKey(event)"></asp:TextBox>
+                                                <asp:TextBox ID="txt_quntity_Tbl" OnTextChanged="txt_quntity_Tbl_TextChanged" AutoPostBack="true" runat="server" Width="230px" onkeypress="return isNumberKey(event)"   class="form-control"></asp:TextBox>
                                             </td>
 
                                         </tr>
@@ -414,19 +414,19 @@
 
                                         <tr>
                                             <td>
-                                                <asp:TextBox ID="txt_tax_Tbl" AutoPostBack="true" OnTextChanged="txt_tax_Tbl_TextChanged" runat="server" Width="230px" onkeypress="return isNumberKey(event)"></asp:TextBox>
+                                                <asp:TextBox ID="txt_tax_Tbl" AutoPostBack="true" OnTextChanged="txt_tax_Tbl_TextChanged" runat="server" Width="230px" onkeypress="return isNumberKey(event)" class="form-control"></asp:TextBox>
                                             </td>
                                             <td>
-                                                <asp:TextBox ID="txt_discount_Tbl" AutoPostBack="true" OnTextChanged="txt_discount_Tbl_TextChanged" runat="server" Width="230px" onkeypress="return isNumberKey(event)"></asp:TextBox>
+                                                <asp:TextBox ID="txt_discount_Tbl" AutoPostBack="true" OnTextChanged="txt_discount_Tbl_TextChanged" runat="server" Width="230px" onkeypress="return isNumberKey(event)" class="form-control"></asp:TextBox>
                                             </td>
                                             <td id="tdl" runat="server" visible="false">
-                                                <asp:TextBox ID="txt_total_amount_Tbl" ReadOnly="true" runat="server" Width="230px"></asp:TextBox>
+                                                <asp:TextBox ID="txt_total_amount_Tbl" ReadOnly="true" runat="server" Width="230px" class="form-control"></asp:TextBox>
                                             </td>
                                             <td>
-                                                <asp:TextBox ID="txt_Total_Tbl" onkeypress="return isNumberKey(event)" ReadOnly="true" runat="server" Width="230px"></asp:TextBox>
-                                            </td>
-                                            <td>
-                                                <asp:LinkButton runat="server" ID="btn_add_more_Tbl" CausesValidation="false" ToolTip="Add Component" Width="100px" CssClass="btn btn-facebook" OnClick="btn_add_more_Tbl_Click1" Text="Add More"></asp:LinkButton>
+                                                <asp:TextBox ID="txt_Total_Tbl" onkeypress="return isNumberKey(event)" ReadOnly="true" runat="server" Width="230px" class="form-control"></asp:TextBox>
+                                            </td>                                          
+                                            <td style="text-align:center">
+                                                <asp:LinkButton runat="server" ID="btn_add_more_Tbl" CausesValidation="false" ToolTip="Add Component" Width="100px" CssClass="btn btn-facebook" OnClick="btn_add_more_Tbl_Click1" Text="Add More" class="form-control"></asp:LinkButton>
                                             </td>
                                         </tr>
                                     </table>

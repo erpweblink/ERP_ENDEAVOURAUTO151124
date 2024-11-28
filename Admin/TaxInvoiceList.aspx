@@ -73,7 +73,124 @@
             background-color: #ADD6FF;
             font-weight: 900;
         }
+        /*New CSS*/
+        .panelinward {
+            border: 1px solid darkgray;
+            width: 55%;
+            padding: 20px !important;
+            background-color: whitesmoke;
+            left: 378px !important;
+        }
+
+        .floa {
+            float: right;
+        }
+
+        .lbl {
+            font-weight: bold;
+        }
+
+        .btnclose {
+            margin-top: -2%;
+        }
+
+        /*Bell Icon Css*/
+        @keyframes bellBounce {
+            0% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            50% {
+                transform: translateX(5px);
+            }
+
+            75% {
+                transform: translateX(-5px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .bell-bounce {
+            animation: bellBounce 1s ease-in-out infinite;
+        }
     </style>
+
+    <%-- New script Nikhil --%>
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        $("[src*=plus]").live("click", function () {
+            $(this).closest("tr").after("<tr><td></td><td colspan = '999'>" + $(this).next().html() + "</td></tr>")
+            $(this).attr("src", "img/minus.png");
+        });
+        $("[src*=minus]").live("click", function () {
+            $(this).attr("src", "img/plus.png");
+            $(this).closest("tr").next().remove();
+        });
+    </script>
+    <script type="text/javascript">
+
+        var selectedJobNos = [];
+
+        function toggleJobSelection(checkbox) {
+            debugger;
+            var jobNo = checkbox.closest('tr').querySelector('[data-jobno]').innerText;
+            if (checkbox.checked) {
+                if (!selectedJobNos.includes(jobNo)) {
+                    selectedJobNos.push(jobNo);
+                }
+            } else {
+                var index = selectedJobNos.indexOf(jobNo);
+                if (index !== -1) {
+                    selectedJobNos.splice(index, 1);
+                }
+            }
+        }
+
+        function validateJobSelection() {
+            if (selectedJobNos.length === 0) {
+                alert('Please select a Job to be closed...');
+                return false;
+            } else {
+                if (confirm('Are you sure you want to close selected Jobs?')) {
+                    sendJobNosToServer(selectedJobNos);
+                }
+            }
+            return false;
+        }
+        function sendJobNosToServer(jobNos) {
+            fetch('TaxInvoiceList.aspx/ProcessJobNos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ jobNos: jobNos }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.d) {
+                        alert('Job closed successfully.');
+                    } else {
+                        alert('Failed to process job numbers.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while processing job numbers.');
+                });
+        }
+        function ReloadPage() {
+            window.location.href = "../Admin/TaxInvoiceList.aspx";
+        }
+    </script>
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <form runat="server">
@@ -82,6 +199,12 @@
 
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h5 class="m-0 font-weight-bold text-primary">Invoice List</h5>
+
+                <asp:LinkButton ID="lnkshow" runat="server" CommandArgument='20' OnClick="lnkshow_Click">
+                    <i class="fas fa-bell" style="font-size: 30px; color: #0755A1"><span class="badge bg-danger" id="notificationCount" runat="server">
+                        <asp:Label ID="lblcount" runat="server" Text="0"></asp:Label>
+                    </span></i>
+                </asp:LinkButton>
             </div>
 
             <div class="card-body">
@@ -291,7 +414,7 @@
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                              <asp:TemplateField HeaderText="P.O. No.">
+                        <asp:TemplateField HeaderText="P.O. No.">
                             <ItemTemplate>
                                 <asp:Label ID="lbl_Pono" runat="server" Text='<%# Eval("PoNo") %>'></asp:Label>
                             </ItemTemplate>
@@ -303,20 +426,20 @@
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                        
+
                         <asp:TemplateField HeaderText="Invoice Date">
                             <ItemTemplate>
                                 <asp:Label Text='<%# Eval("InvoiceDate", "{0:dd-MM-yyyy}") %>' runat="server" ID="lblcreteddate" />
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                          <asp:TemplateField HeaderText="Invoice Amount">
+                        <asp:TemplateField HeaderText="Invoice Amount">
                             <ItemTemplate>
                                 <asp:Label  ID="lblIGST" runat="server" Text='<%# Eval("GrandTotal") %>' />
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                              <asp:TemplateField HeaderText="Pay Term">
+                        <asp:TemplateField HeaderText="Pay Term">
                             <ItemTemplate>
                                 <asp:Label ID="lbl_PayTerm" runat="server" Text='<%# Eval("PayTerm") %>'></asp:Label>
                             </ItemTemplate>
@@ -328,7 +451,7 @@
                                 </ItemTemplate>
                             </asp:TemplateField>--%>
 
-                  
+
 
                         <asp:TemplateField HeaderText="Challan No.">
                             <ItemTemplate>
@@ -336,7 +459,7 @@
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                 
+
 
 
 
@@ -358,7 +481,7 @@
                             </ItemTemplate>
                         </asp:TemplateField>--%>
 
-                      
+
 
                         <asp:TemplateField HeaderText="Created By">
                             <ItemTemplate>
@@ -406,20 +529,20 @@
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                            <asp:TemplateField HeaderText="Customer Name">
+                        <asp:TemplateField HeaderText="Customer Name">
                             <ItemTemplate>
                                 <asp:Label ID="lbl_CompName" runat="server" Text='<%# Eval("CompName") %>'></asp:Label>
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                        
+
                         <asp:TemplateField HeaderText="Job No.">
                             <ItemTemplate>
                                 <asp:Label Text='<%# Eval("JobNo") %>' runat="server" ID="lblJobNo" />
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                            <asp:TemplateField HeaderText="P.O. No.">
+                        <asp:TemplateField HeaderText="P.O. No.">
                             <ItemTemplate>
                                 <asp:Label ID="lbl_Pono" runat="server" Text='<%# Eval("PoNo") %>'></asp:Label>
                             </ItemTemplate>
@@ -431,19 +554,19 @@
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                             <asp:TemplateField HeaderText="Invoice Date">
+                        <asp:TemplateField HeaderText="Invoice Date">
                             <ItemTemplate>
                                 <asp:Label Text='<%# Eval("InvoiceDate", "{0:dd-MM-yyyy}") %>' runat="server" ID="lblcreteddate" />
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                           <asp:TemplateField HeaderText="Invoice Amount">
+                        <asp:TemplateField HeaderText="Invoice Amount">
                             <ItemTemplate>
                                 <asp:Label ID="lblIGST" runat="server" Text='<%# Eval("GrandTotal") %>' />
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                          <asp:TemplateField HeaderText="Pay Term">
+                        <asp:TemplateField HeaderText="Pay Term">
                             <ItemTemplate>
                                 <asp:Label ID="lbl_PayTerm" runat="server" Text='<%# Eval("PayTerm") %>'></asp:Label>
                             </ItemTemplate>
@@ -456,17 +579,17 @@
                                 </ItemTemplate>
                             </asp:TemplateField>--%>
 
-                    
-                    
+
+
                         <asp:TemplateField HeaderText="Challan No.">
                             <ItemTemplate>
                                 <asp:Label ID="lbl_challanno" runat="server" Text='<%# Eval("ChallanNo") %>'></asp:Label>
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                      
 
-                   
+
+
 
 
 
@@ -490,7 +613,7 @@
                         </asp:TemplateField>--%>
 
 
-                     
+
                         <asp:TemplateField HeaderText="Created By">
                             <ItemTemplate>
                                 <asp:Label ID="lbl_createdby" runat="server" Text='<%# Eval("CreatedBy") %>'></asp:Label>
@@ -527,7 +650,115 @@
             </div>
             <%--    Export Grid End--%>
         </div>
+        <asp:Button ID="btnprof" runat="server" Style="display: none" />
+        <asp:ModalPopupExtender ID="modelprofile" runat="server" TargetControlID="btnprof"
+            PopupControlID="PopupAddDetail" OkControlID="Closepopdetail" BackgroundCssClass="modalBackground" />
 
+        <asp:Panel ID="PopupAddDetail" runat="server" class="w3-panel w3-white panelinward m-0 font-weight-bold text-primary"
+            Direction="LeftToRight" Wrap="true" Style="display: none;">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <h5 class="m-0 font-weight-bold text-primary">Pending Customer PO</h5>
+
+
+                <asp:LinkButton ID="Closepopdetail" runat="server" class="btn-close" OnClientClick="ReloadPage()">
+              <i class="fa fa-close" style="font-size:24px;color:red;"></i>
+                </asp:LinkButton>
+            </div>
+            <br />
+            <div class="row">
+                <div class="table-container" style="height: 300px; overflow-y: auto;">
+                    <asp:GridView ID="gv_Quot_List" runat="server" OnRowDataBound="gv_Quot_List_RowDataBound" AutoGenerateColumns="False"
+                        DataKeyNames="Quotationno" CssClass="custom-grid" RowStyle-HorizontalAlign="Center"
+                        CellPadding="3" HeaderStyle-HorizontalAlign="Center" AllowPaging="false">
+
+                        <Columns>
+                            <asp:TemplateField HeaderStyle-Width="20" HeaderText="View">
+                                <ItemTemplate>
+                                    <img alt="" style="cursor: pointer" src="img/plus.png" />
+                                    <asp:Panel ID="pnlOrders" runat="server" Style="display: none">
+                                        <asp:GridView ID="gvDetails" runat="server" AutoGenerateColumns="false" CssClass="ChildGrid">
+                                            <Columns>
+                                                <asp:TemplateField>
+                                                    <ItemTemplate>
+                                                        <asp:CheckBox ID="chkSelect" runat="server" OnClick="toggleJobSelection(this);" />
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+
+                                                <asp:TemplateField HeaderText="Job No.">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="Label1" HeaderText="Job No." runat="server" Text='<%# Eval("JobNo") %>'
+                                                            data-jobno='<%# Eval("JobNo") %>'></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                 <asp:BoundField ItemStyle-Width="150px" DataField="CreatedOn" HeaderText="Created Date"
+                                               SortExpression="CreatedOn" DataFormatString="{0:dd-MM-yyyy}" />
+                                           <asp:TemplateField HeaderText="Days Count">
+                                               <ItemTemplate>
+                                                   <asp:Label ID="lbldaycount" runat="server" Text='<%# Eval("JobDaysCount") %>'></asp:Label>
+                                               </ItemTemplate>
+                                           </asp:TemplateField>
+                                           <asp:TemplateField HeaderText="Job Status">
+                                               <ItemTemplate>
+                                                   <asp:Label ID="lblJobStatus" runat="server" Text='<%# Eval("JobStatus") %>'></asp:Label>
+                                               </ItemTemplate>
+                                           </asp:TemplateField>
+                                            </Columns>
+                                        </asp:GridView>
+                                    </asp:Panel>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Sr. No.">
+                                <ItemTemplate>
+                                    <asp:Label ID="lbl_srno" runat="server" Text='<%# Container.DataItemIndex+1 %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Quo No">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblQuNo"  runat="server" Text='<%# Eval("Quotationno") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="PO NO">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblPono"  runat="server" Text='<%# Eval("Pono") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Customer Name">
+                                <ItemTemplate>
+                                    <asp:Label ID="lbl_Customername" runat="server" Text='<%# Eval("CustomerName") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>                         
+                            <asp:TemplateField HeaderText="Jobs Count">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblcountdays" runat="server" Text='<%# Eval("JobCount") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>                            
+                            <asp:TemplateField HeaderText="Action" ItemStyle-Width="100px">
+                                <ItemTemplate>
+                                    <asp:LinkButton runat="server" ID="lnkbtnCorrect" ToolTip="Correct"
+                                        CommandArgument='<%# Eval("Id") %>' CommandName="RowCorrect"
+                                        CausesValidation="False" OnClick="lnkbtnCorrect_Click">
+                                     <i class="fa fa-check" style="font-size:24px; color:green"></i>
+                                    </asp:LinkButton>
+                                    &nbsp;&nbsp;
+                                <asp:LinkButton runat="server" ID="lnkbtnClose"
+                                    ToolTip="Close" OnClientClick="return validateJobSelection();" CommandArgument='0'
+                                    CommandName="RowClose" CausesValidation="False">
+                                     <i class="fa fa-times" style="font-size:24px; color:red"></i>
+                                </asp:LinkButton>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                        <FooterStyle BackColor="White" ForeColor="#000066" />
+                        <RowStyle ForeColor="#000066" />
+                        <SelectedRowStyle BackColor="#669999" Font-Bold="True" ForeColor="White" />
+                    </asp:GridView>
+                </div>
+            </div>
+        </asp:Panel>
     </form>
 
 </asp:Content>

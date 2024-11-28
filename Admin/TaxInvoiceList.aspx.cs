@@ -1,12 +1,14 @@
 ﻿using iTextSharp.text;
 using iTextSharp.text.html.simpleparser;
 using iTextSharp.text.pdf;
+using Org.BouncyCastle.Asn1.Cmp;
 using SelectPdf;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+//using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -47,6 +49,18 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
                 //{
                 //    Load_Record();                
                 //}            
+            }
+
+            // New Code to show  the count 
+            int jobCount = GetJobCount();
+            lblcount.Text = jobCount.ToString();
+            if (Convert.ToInt32(lblcount.Text) > 0)
+            {
+                lnkshow.Attributes.Add("class", "bell-bounce");
+            }
+            else
+            {
+                lnkshow.Attributes.Remove("class");
             }
         }
     }
@@ -3532,6 +3546,201 @@ FROM
         GridExportExcel.DataBind();
         GridExportExcel.EmptyDataText = "Not Records Found";
     }
+
+    // Nikhil Code for Pending Quotations
+
+    protected void gv_Quot_List_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+
+            Label lbl_Quo_no = (Label)e.Row.FindControl("lblQuNo");
+            Label lblcompanyname = (Label)e.Row.FindControl("lblCompName");
+            Label lblsubcustomer = (Label)e.Row.FindControl("lblsubcustomer");
+        
+            string Id = gv_Quot_List.DataKeys[e.Row.RowIndex].Value.ToString();
+            GridView gvDetails = e.Row.FindControl("gvDetails") as GridView;
+
+            SqlDataAdapter Daaa = new SqlDataAdapter(" SELECT * FROM [CustomerPO_Dtls_Both] WHERE [Quotationno]='" + Id + "' AND [JobNo] IS NOT NULL", Conn);
+            DataTable Dttt = new DataTable();
+            Daaa.Fill(Dttt);
+            foreach (DataRow row in Dttt.Rows)
+            {
+                
+                SqlDataAdapter Da = new SqlDataAdapter("SELECT CreatedOn FROM CustomerPO_Hdr_Both WHERE id ='" + row["PurchaseId"] + "'", Conn);
+                DataTable Dt = new DataTable();
+                Da.Fill(Dt);
+
+               
+                if (Dt.Rows.Count > 0)
+                {
+                    DateTime createdOn = Convert.ToDateTime(Dt.Rows[0]["CreatedOn"]);
+
+                    if (!Dttt.Columns.Contains("CreatedOn"))
+                    {
+                        Dttt.Columns.Add("CreatedOn", typeof(DateTime)); 
+                    }
+
+                    row["CreatedOn"] = createdOn;  
+
+                    if (row["JobDaysCount"] == DBNull.Value || Convert.ToInt32(row["JobDaysCount"]) == 0)
+                    {
+                        DateTime createdOnDateOnly = createdOn.Date;
+                        int jobDaysCount = (DateTime.Now.Date - createdOnDateOnly).Days;
+                        row["JobDaysCount"] = jobDaysCount; 
+                    }
+                }
+            }
+            gvDetails.DataSource = Dttt;
+            gvDetails.DataBind();
+
+
+        }
+    }
+
+    protected void lnkshow_Click(object sender, EventArgs e)
+    {
+
+        try
+        {
+            DateTime startDate = DateTime.Now.Date.AddDays(-30);
+            //DateTime endDate = DateTime.Now.Date;
+            DateTime endDate = DateTime.Now.Date.AddDays(1);
+
+            string formattedStartDate = startDate.ToString("yyyy-MM-dd");
+            string formattedEndDate = endDate.ToString("yyyy-MM-dd");
+
+            string role = Session["adminname"].ToString();
+            if (role == "SubCustomer")
+            {
+
+                DataTable Dt = new DataTable();
+
+                string query = @"
+             SELECT * FROM CustomerPO_Hdr_Both H
+          LEFT JOIN (
+              SELECT Quotationno, COUNT(JobNo) AS JobCount
+              FROM CustomerPO_Dtls_Both J
+              WHERE JobNo IS NOT NULL AND JobStatus ='Pending' 
+              GROUP BY Quotationno
+          ) J ON H.Quotationno = J.Quotationno 
+          WHERE H.Status = 'Pending' AND H.Is_deleted = '0' AND H.CreatedOn >= @StartDate AND H.CreatedOn <= @EndDate 
+          AND H.Customer_Name = 'Schneider Electric India Pvt.Ltd.' AND (J.JobCount > 0)
+          ORDER BY H.CreatedOn DESC;"
+                ;
+
+                SqlDataAdapter Da = new SqlDataAdapter(query, Conn);
+                Da.SelectCommand.Parameters.AddWithValue("@StartDate", formattedStartDate);
+                Da.SelectCommand.Parameters.AddWithValue("@EndDate", formattedEndDate);
+
+                Da.Fill(Dt);
+                gv_Quot_List.DataSource = Dt;
+                gv_Quot_List.DataBind();
+                modelprofile.Show();
+            }
+            else
+            {
+                DataTable Dt = new DataTable();
+
+                string query = @"
+                SELECT *,                     
+              ISNULL(J.JobCount, 0) AS JobCount
+          FROM CustomerPO_Hdr_Both H
+          LEFT JOIN (
+              SELECT Quotationno, COUNT(JobNo) AS JobCount
+              FROM CustomerPO_Dtls_Both J
+              WHERE JobNo IS NOT NULL AND JobStatus ='Pending' 
+              GROUP BY Quotationno
+          ) J ON H.Quotationno = J.Quotationno
+          WHERE H.Status = 'Pending' AND H.Is_deleted = '0' AND H.CreatedOn >= @StartDate AND H.CreatedOn <= @EndDate AND (J.JobCount > 0)
+          ORDER BY H.CreatedOn DESC;";
+
+                SqlDataAdapter Da = new SqlDataAdapter(query, Conn);
+                Da.SelectCommand.Parameters.AddWithValue("@StartDate", formattedStartDate);
+                Da.SelectCommand.Parameters.AddWithValue("@EndDate", formattedEndDate);
+
+                Da.Fill(Dt);
+                gv_Quot_List.DataSource = Dt;
+                gv_Quot_List.DataBind();
+                modelprofile.Show();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public static int GetJobCount()
+    {
+        int jobCount = 0;
+        DateTime startDate = DateTime.Now.Date.AddDays(-30);
+        //DateTime endDate = DateTime.Now.Date;
+        DateTime endDate = DateTime.Now.Date.AddDays(1);
+
+        string formattedStartDate = startDate.ToString("yyyy-MM-dd");
+        string formattedEndDate = endDate.ToString("yyyy-MM-dd");
+        string connString = System.Configuration.ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+
+        using (SqlConnection con = new SqlConnection(connString))
+        {
+            SqlDataAdapter Da = new SqlDataAdapter("SELECT Id FROM CustomerPO_Hdr_Both WHERE Is_deleted = '0' AND CreatedOn >= '" + formattedStartDate + "' AND CreatedOn <= '" + formattedEndDate + "'", con);
+            DataTable Dt = new DataTable();
+            Da.Fill(Dt);
+
+            foreach (DataRow row in Dt.Rows)
+            {
+                string purchaseId = row["Id"].ToString();
+                
+                SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM CustomerPO_Dtls_Both WHERE JobNo IS NOT NULL AND JobStatus = 'Pending' AND PurchaseId = @PurchaseId", con);
+                cmd.Parameters.AddWithValue("@PurchaseId", purchaseId); 
+
+                con.Open();
+                jobCount += (int)cmd.ExecuteScalar();
+                con.Close();
+            }
+        }
+
+        return jobCount;
+    }
+
+    protected void lnkbtnCorrect_Click(object sender, EventArgs e)
+    {
+        LinkButton clickedButton = (LinkButton)sender;
+        string QuoNo = clickedButton.CommandArgument;
+
+        Response.Redirect("TaxInvoice.aspx?QuoNo=" + encrypt(QuoNo) + "");
+    }
+
+    // Delete functionality 
+
+    [System.Web.Services.WebMethod]
+    public static bool ProcessJobNos(List<string> jobNos)
+    {
+        try
+        {
+            foreach (var jobNo in jobNos)
+            {
+                string connString = System.Configuration.ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+                using (SqlConnection con = new SqlConnection(connString))
+                {                    
+                        SqlCommand cmd = new SqlCommand("UPDATE CustomerPO_Dtls_Both SET JobStatus = 'Closed'," +
+                        " JobDaysCount = DATEDIFF(DAY, CreatedOn, GETDATE())" +
+                        "  WHERE JobNo = '" + jobNo + "'", con);
+                        con.Open();
+                        //cmd.ExecuteScalar();                   
+                }
+            }
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+
+
 }
 
 

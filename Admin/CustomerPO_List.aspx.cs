@@ -1,7 +1,9 @@
 ﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
+using Org.BouncyCastle.Asn1.X509;
 using System;
+using System.Activities.Expressions;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -24,6 +26,20 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        // New Code to show  the count 
+        int jobCount = GetJobCount();
+        lblcount.Text = jobCount.ToString();
+        if (Convert.ToInt32(lblcount.Text) > 0)
+        {
+            lnkshow.Attributes.Add("class", "bell-bounce");
+        }
+        else
+        {
+            lnkshow.Attributes.Remove("class");
+        }
+
+        /////////////////////////////////////
+       
         if (Session["adminname"] == null)
         {
             Response.Redirect("../LoginPage.aspx");
@@ -56,7 +72,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
         {
             string UserCompany = Session["name"].ToString();
             DataTable dt = new DataTable();
-            SqlDataAdapter sad = new SqlDataAdapter("SELECT Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,GrandTotal,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days FROM CustomerPO_Hdr WHERE Is_Deleted='0' AND CustomerName='" + UserCompany + "'", con);
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,GrandTotal,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days FROM CustomerPO_Hdr_Both WHERE Is_Deleted='0' AND CustomerName='" + UserCompany + "'", con);
             sad.Fill(dt);
             GvCustomerpoList.EmptyDataText = "Not Records Found";
             GvCustomerpoList.DataSource = dt;
@@ -71,7 +87,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
     private void ViewData()
     {
         //DataTable Dt = new DataTable();
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days FROM CustomerPO_Hdr WHERE Is_Deleted='0' ORDER BY CreatedOn DESC", con);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days FROM CustomerPO_Hdr_Both WHERE Is_Deleted='0' ORDER BY CreatedOn DESC", con);
         //da.Fill(Dt);
         //GvCustomerpoList.EmptyDataText = "Records Not Found";
         //GvCustomerpoList.DataSource = Dt;
@@ -79,7 +95,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
 
 
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT Id,jobNo,Quotationno,CustomerName,SubCustomer,Pono,PoDate,RefNo,Mobileno,GrandTotal,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days FROM CustomerPO_Hdr WHERE Is_Deleted='0' ORDER BY CreatedOn DESC", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT Id,jobNo,Quotationno,CustomerName,SubCustomer,Pono,PoDate,RefNo,Mobileno,GrandTotal,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days FROM CustomerPO_Hdr_Both WHERE Is_Deleted='0' ORDER BY CreatedOn DESC", con);
         da.Fill(Dt);
         GvCustomerpoList.EmptyDataText = "Records Not Found";
         GvCustomerpoList.DataSource = Dt;
@@ -89,7 +105,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
     private void GridExport()
     {
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT Id,jobNo,Quotationno,CustomerName,SubCustomer,Pono,PoDate,RefNo,Mobileno,GrandTotal,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days FROM CustomerPO_Hdr WHERE Is_Deleted='0' ORDER BY CreatedOn DESC", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT Id,jobNo,Quotationno,CustomerName,SubCustomer,Pono,PoDate,RefNo,Mobileno,GrandTotal,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days FROM CustomerPO_Hdr_Both WHERE Is_Deleted='0' ORDER BY CreatedOn DESC", con);
         da.Fill(Dt);
         GridExportExcel.EmptyDataText = "Records Not Found";
         GridExportExcel.DataSource = Dt;
@@ -117,7 +133,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT CustomerName from CustomerPO_Hdr where " + "CustomerName like @Search + '%' AND Is_Deleted='0'";
+                com.CommandText = "select DISTINCT CustomerName from CustomerPO_Hdr_Both where " + "CustomerName like @Search + '%' AND Is_Deleted='0'";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -151,7 +167,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT JobNo from CustomerPO_Hdr where " + "JobNo like @Search + '%' AND Is_Deleted='0'";
+                com.CommandText = "select DISTINCT JobNo from CustomerPO_Hdr_Both where " + "JobNo like @Search + '%' AND Is_Deleted='0'";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -185,7 +201,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT Pono from CustomerPO_Hdr where " + "Pono like @Search + '%' AND Is_Deleted='0'";
+                com.CommandText = "select DISTINCT Pono from CustomerPO_Hdr_Both where " + "Pono like @Search + '%' AND Is_Deleted='0'";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -224,7 +240,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
             ViewState["Excell"] = "GetSortedDatewisedata";
             GetSortedDatewisedata();
             //DataTable dtt = new DataTable();
-            //SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr where  PoDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND Is_Deleted='0'", con);
+            //SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr_Both where  PoDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND Is_Deleted='0'", con);
             //sad.Fill(dtt);
             //GvCustomerpoList.EmptyDataText = "Records Not Found";
             //GvCustomerpoList.DataSource = dtt;
@@ -237,7 +253,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
             ViewState["Excell"] = "Getsortedquation";
             Getsortedquation();
             //DataTable dtt = new DataTable();
-            //SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr where  Pono = '" + txt_pono_search.Text + "' AND Is_Deleted='0'", con);
+            //SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr_Both where  Pono = '" + txt_pono_search.Text + "' AND Is_Deleted='0'", con);
             //sad.Fill(dtt);
             //GvCustomerpoList.EmptyDataText = "Records Not Found";
             //GvCustomerpoList.DataSource = dtt;
@@ -251,7 +267,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
 
             Sortedcompony();
             //DataTable dtt = new DataTable();
-            //SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr where CustomerName = '" + txtJobno.Text + "' AND  Is_Deleted='0'", con);
+            //SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr_Both where CustomerName = '" + txtJobno.Text + "' AND  Is_Deleted='0'", con);
             //sad.Fill(dtt);
             //GvCustomerpoList.EmptyDataText = "Records Not Found";
             //GvCustomerpoList.DataSource = dtt;
@@ -310,7 +326,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
         if (e.CommandName == "RowDelete")
         {
             con.Open();
-            SqlCommand Cmd = new SqlCommand("UPDATE CustomerPO_Hdr SET Is_Deleted='1' WHERE Id=@Id", con);
+            SqlCommand Cmd = new SqlCommand("UPDATE CustomerPO_Hdr_Both SET Is_Deleted='1' WHERE Id=@Id", con);
             Cmd.Parameters.AddWithValue("@Id", Convert.ToInt32(e.CommandArgument.ToString()));
             Cmd.Parameters.AddWithValue("@Is_Deleted", '1');
 
@@ -378,7 +394,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
     private void Pdf(string id)
     {
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT CustomerPO_Hdr.Id,CustomerName,Description,Pono,PoDate,RefNo,Mobileno,KindAtt,DeliveryAddress,EmailId,GstNo,VehicelNo,PayTerm,Cgst,Sgst,Igst,AllTotalPrice,TotalInWord, RoundOff, GrandTotal, Term_Condition_1, Term_Condition_2, Term_Condition_3, Term_Condition_4, Description, Hsn_Sac,CreatedOn, TaxPercenteage, Quantity, Unit, Rate, DiscountPercentage, Total from CustomerPO_Hdr INNER JOIN CustomerPO_Dtls ON CustomerPO_Hdr.Id = CustomerPO_Dtls.PurchaseId WHERE CustomerPO_Hdr.Id='" + id + "'", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT CustomerPO_Hdr_Both.Id,CustomerName,Description,Pono,PoDate,RefNo,Mobileno,KindAtt,DeliveryAddress,EmailId,GstNo,VehicelNo,PayTerm,Cgst,Sgst,Igst,AllTotalPrice,TotalInWord, RoundOff, GrandTotal, Term_Condition_1, Term_Condition_2, Term_Condition_3, Term_Condition_4, Description, Hsn_Sac,CreatedOn, TaxPercenteage, Quantity, Unit, Rate, DiscountPercentage, Total from CustomerPO_Hdr_Both INNER JOIN CustomerPO_Dtls ON CustomerPO_Hdr_Both.Id = CustomerPO_Dtls.PurchaseId WHERE CustomerPO_Hdr_Both.Id='" + id + "'", con);
         da.Fill(Dt);
         GvCustomerpoList.DataSource = Dt;
         GvCustomerpoList.DataBind();
@@ -952,7 +968,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
             if (txtjob.Text == "")
             {
                 string query1 = string.Empty;
-                query1 = @"SELECT [JobNo] FROM [CustomerPO_Dtls] WHERE Quotationno ='" + Id + "'";
+                query1 = @"SELECT [JobNo] FROM [CustomerPO_Dtls_Both] WHERE Quotationno ='" + Id + "'";
                 SqlDataAdapter ad = new SqlDataAdapter(query1, con);
                 DataTable dt = new DataTable();
                 ad.Fill(dt);
@@ -962,7 +978,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
             else
             {
                 string query1 = string.Empty;
-                query1 = @"SELECT Top 1 [JobNo] FROM [CustomerPO_Dtls] WHERE JobNo ='" + txtjob.Text + "'";
+                query1 = @"SELECT Top 1 [JobNo] FROM [CustomerPO_Dtls_Both] WHERE JobNo ='" + txtjob.Text + "'";
                 SqlDataAdapter ad = new SqlDataAdapter(query1, con);
                 DataTable dt = new DataTable();
                 ad.Fill(dt);
@@ -1028,7 +1044,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
         GvCustomerpoList.Visible = false;
         ViewState["Record"] = "Date";
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr where  PoDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND Is_Deleted='0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr_Both where  PoDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND Is_Deleted='0'", con);
         sad.Fill(dtt);
         GvSorted.EmptyDataText = "Records Not Found";
         GvSorted.DataSource = dtt;
@@ -1040,7 +1056,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
     public void GetSortedDatewisedataGrid()
     {
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr where  PoDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND Is_Deleted='0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr_Both where  PoDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND Is_Deleted='0'", con);
         sad.Fill(dtt);
         GvSorted.EmptyDataText = "Records Not Found";
         GvSorted.DataSource = dtt;
@@ -1051,7 +1067,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
         GvCustomerpoList.Visible = false;
         ViewState["Record"] = "Quatation";
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr where  Pono = '" + txt_pono_search.Text + "' AND Is_Deleted='0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr_Both where  Pono = '" + txt_pono_search.Text + "' AND Is_Deleted='0'", con);
         sad.Fill(dtt);
         GvSorted.EmptyDataText = "Records Not Found";
         GvSorted.DataSource = dtt;
@@ -1061,7 +1077,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
     {
         GvCustomerpoList.Visible = false;
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr where  Pono = '" + txt_pono_search.Text + "' AND Is_Deleted='0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr_Both where  Pono = '" + txt_pono_search.Text + "' AND Is_Deleted='0'", con);
         sad.Fill(dtt);
         GvSorted.EmptyDataText = "Records Not Found";
         GvSorted.DataSource = dtt;
@@ -1072,7 +1088,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
         GvCustomerpoList.Visible = false;
         ViewState["Record"] = "company";
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr where CustomerName = '" + txtJobno.Text + "' AND  Is_Deleted='0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr_Both where CustomerName = '" + txtJobno.Text + "' AND  Is_Deleted='0'", con);
         sad.Fill(dtt);
         GvSorted.EmptyDataText = "Records Not Found";
         GvSorted.DataSource = dtt;
@@ -1082,7 +1098,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
     {
         GvCustomerpoList.Visible = false;
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr where CustomerName = '" + txtJobno.Text + "' AND  Is_Deleted='0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr_Both where CustomerName = '" + txtJobno.Text + "' AND  Is_Deleted='0'", con);
         sad.Fill(dtt);
         GvSorted.EmptyDataText = "Records Not Found";
         GvSorted.DataSource = dtt;
@@ -1093,7 +1109,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
         GvCustomerpoList.Visible = false;
         ViewState["Record"] = "Datewisecustyomer";
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("SELECT Id, CustomerName, SubCustomer, JobNo, Pono, PoDate, RefNo, Mobileno, Quotationno, CreatedBy, CreatedOn, DATEDIFF(DAY, PoDate, GETDATE()) AS days FROM CustomerPO_Hdr WHERE PoDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND CustomerName = '" + txtJobno.Text + "' AND Is_Deleted = '0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("SELECT Id, CustomerName, SubCustomer, JobNo, Pono, PoDate, RefNo, Mobileno, Quotationno, CreatedBy, CreatedOn, DATEDIFF(DAY, PoDate, GETDATE()) AS days FROM CustomerPO_Hdr_Both WHERE PoDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND CustomerName = '" + txtJobno.Text + "' AND Is_Deleted = '0'", con);
 
         sad.Fill(dtt);
         GvSorted.EmptyDataText = "Records Not Found";
@@ -1104,7 +1120,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
     {
         GvCustomerpoList.Visible = false;
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("SELECT Id, CustomerName, SubCustomer, JobNo, Pono, PoDate, RefNo, Mobileno, Quotationno, CreatedBy, CreatedOn, DATEDIFF(DAY, PoDate, GETDATE()) AS days FROM CustomerPO_Hdr WHERE PoDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND CustomerName = '" + txtJobno.Text + "' AND Is_Deleted = '0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("SELECT Id, CustomerName, SubCustomer, JobNo, Pono, PoDate, RefNo, Mobileno, Quotationno, CreatedBy, CreatedOn, DATEDIFF(DAY, PoDate, GETDATE()) AS days FROM CustomerPO_Hdr_Both WHERE PoDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND CustomerName = '" + txtJobno.Text + "' AND Is_Deleted = '0'", con);
         sad.Fill(dtt);
         GvSorted.EmptyDataText = "Records Not Found";
         GvSorted.DataSource = dtt;
@@ -1115,7 +1131,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
         GvCustomerpoList.Visible = false;
         ViewState["Record"] = "DatewisePO";
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("SELECT Id, CustomerName, SubCustomer, JobNo, Pono, PoDate, RefNo, Mobileno, Quotationno, CreatedBy, CreatedOn, DATEDIFF(DAY, PoDate, GETDATE()) AS days FROM CustomerPO_Hdr WHERE PoDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND  Pono = '" + txt_pono_search.Text + "' AND Is_Deleted = '0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("SELECT Id, CustomerName, SubCustomer, JobNo, Pono, PoDate, RefNo, Mobileno, Quotationno, CreatedBy, CreatedOn, DATEDIFF(DAY, PoDate, GETDATE()) AS days FROM CustomerPO_Hdr_Both WHERE PoDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND  Pono = '" + txt_pono_search.Text + "' AND Is_Deleted = '0'", con);
         sad.Fill(dtt);
         GvSorted.EmptyDataText = "Records Not Found";
         GvSorted.DataSource = dtt;
@@ -1125,7 +1141,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
     {
         GvCustomerpoList.Visible = false;
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("SELECT Id, CustomerName, SubCustomer, JobNo, Pono, PoDate, RefNo, Mobileno, Quotationno, CreatedBy, CreatedOn, DATEDIFF(DAY, PoDate, GETDATE()) AS days FROM CustomerPO_Hdr WHERE PoDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND  Pono = '" + txt_pono_search.Text + "' AND Is_Deleted = '0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("SELECT Id, CustomerName, SubCustomer, JobNo, Pono, PoDate, RefNo, Mobileno, Quotationno, CreatedBy, CreatedOn, DATEDIFF(DAY, PoDate, GETDATE()) AS days FROM CustomerPO_Hdr_Both WHERE PoDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND  Pono = '" + txt_pono_search.Text + "' AND Is_Deleted = '0'", con);
         sad.Fill(dtt);
         GvSorted.EmptyDataText = "Records Not Found";
         GvSorted.DataSource = dtt;
@@ -1204,7 +1220,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
         GvCustomerpoList.Visible = false;
         ViewState["Record"] = "Date";
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr where  PoDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND Is_Deleted='0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr_Both where  PoDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND Is_Deleted='0'", con);
         sad.Fill(dtt);
         GridExportExcel.EmptyDataText = "Records Not Found";
         GridExportExcel.DataSource = dtt;
@@ -1216,7 +1232,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
         GvCustomerpoList.Visible = false;
         ViewState["Record"] = "Quatation";
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr where  Pono = '" + txt_pono_search.Text + "' AND Is_Deleted='0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr_Both where  Pono = '" + txt_pono_search.Text + "' AND Is_Deleted='0'", con);
         sad.Fill(dtt);
         GridExportExcel.EmptyDataText = "Records Not Found";
         GridExportExcel.DataSource = dtt;
@@ -1228,7 +1244,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
         GvCustomerpoList.Visible = false;
         ViewState["Record"] = "company";
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr where CustomerName = '" + txtJobno.Text + "' AND  Is_Deleted='0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr_Both where CustomerName = '" + txtJobno.Text + "' AND  Is_Deleted='0'", con);
         sad.Fill(dtt);
         GridExportExcel.EmptyDataText = "Records Not Found";
         GridExportExcel.DataSource = dtt;
@@ -1240,7 +1256,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
         GvCustomerpoList.Visible = false;
         ViewState["Record"] = "Datewisecustyomer";
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("SELECT Id, CustomerName, SubCustomer, JobNo, Pono, PoDate, RefNo, Mobileno, Quotationno, CreatedBy, CreatedOn, DATEDIFF(DAY, PoDate, GETDATE()) AS days FROM CustomerPO_Hdr WHERE PoDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND CustomerName = '" + txtJobno.Text + "' AND Is_Deleted = '0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("SELECT Id, CustomerName, SubCustomer, JobNo, Pono, PoDate, RefNo, Mobileno, Quotationno, CreatedBy, CreatedOn, DATEDIFF(DAY, PoDate, GETDATE()) AS days FROM CustomerPO_Hdr_Both WHERE PoDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND CustomerName = '" + txtJobno.Text + "' AND Is_Deleted = '0'", con);
 
         sad.Fill(dtt);
         GridExportExcel.EmptyDataText = "Records Not Found";
@@ -1253,7 +1269,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
         GvCustomerpoList.Visible = false;
         ViewState["Record"] = "DatewisePO";
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("SELECT Id, CustomerName, SubCustomer, JobNo, Pono, PoDate, RefNo, Mobileno, Quotationno, CreatedBy, CreatedOn, DATEDIFF(DAY, PoDate, GETDATE()) AS days FROM CustomerPO_Hdr WHERE PoDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND  Pono = '" + txt_pono_search.Text + "' AND Is_Deleted = '0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("SELECT Id, CustomerName, SubCustomer, JobNo, Pono, PoDate, RefNo, Mobileno, Quotationno, CreatedBy, CreatedOn, DATEDIFF(DAY, PoDate, GETDATE()) AS days FROM CustomerPO_Hdr_Both WHERE PoDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND  Pono = '" + txt_pono_search.Text + "' AND Is_Deleted = '0'", con);
         sad.Fill(dtt);
         GridExportExcel.EmptyDataText = "Records Not Found";
         GridExportExcel.DataSource = dtt;
@@ -1263,7 +1279,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
     public void GetJobNowise()
     {
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("SELECT hdr.Id,CustomerName,SubCustomer,DTLS.JobNo,Pono,PoDate,RefNo,Mobileno,hdr.Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days  FROM [DB_EndeAuto].[EndeavourAuto].[CustomerPO_Dtls] As DTLS Inner join [DB_EndeAuto].[EndeavourAuto].[CustomerPO_Hdr] AS hdr on hdr.Quotationno = DTLS.Quotationno where DTLS.JobNo = '" + txtjob.Text + "' AND  hdr.Is_Deleted='0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("SELECT hdr.Id,CustomerName,SubCustomer,DTLS.JobNo,Pono,PoDate,RefNo,Mobileno,hdr.Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days  FROM [DB_EndeAuto].[EndeavourAuto].[CustomerPO_Dtls] As DTLS Inner join [DB_EndeAuto].[EndeavourAuto].[CustomerPO_Hdr_Both] AS hdr on hdr.Quotationno = DTLS.Quotationno where DTLS.JobNo = '" + txtjob.Text + "' AND  hdr.Is_Deleted='0'", con);
         sad.Fill(dtt);
         ViewState["Record"] = "Jobwise";
         GvCustomerpoList.EmptyDataText = "Records Not Found";
@@ -1276,7 +1292,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
     public void GetJobNowiseForExcell()
     {
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("SELECT hdr.Id,CustomerName,SubCustomer,DTLS.JobNo,Pono,PoDate,RefNo,Mobileno,hdr.Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days  FROM [DB_EndeAuto].[EndeavourAuto].[CustomerPO_Dtls] As DTLS Inner join [DB_EndeAuto].[EndeavourAuto].[CustomerPO_Hdr] AS hdr on hdr.Quotationno = DTLS.Quotationno where DTLS.JobNo = '" + txtjob.Text + "' AND  hdr.Is_Deleted='0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("SELECT hdr.Id,CustomerName,SubCustomer,DTLS.JobNo,Pono,PoDate,RefNo,Mobileno,hdr.Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days  FROM [DB_EndeAuto].[EndeavourAuto].[CustomerPO_Dtls] As DTLS Inner join [DB_EndeAuto].[EndeavourAuto].[CustomerPO_Hdr_Both] AS hdr on hdr.Quotationno = DTLS.Quotationno where DTLS.JobNo = '" + txtjob.Text + "' AND  hdr.Is_Deleted='0'", con);
         sad.Fill(dtt);
         ViewState["Record"] = "Jobwise";
         GridExportExcel.EmptyDataText = "Records Not Found";
@@ -1289,7 +1305,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
     public void GetCustomerowisejob()
     {
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("SELECT hdr.Id, CustomerName, SubCustomer, DTLS.JobNo, Pono, PoDate, RefNo, Mobileno, hdr.Quotationno, CreatedBy, CreatedOn, DATEDIFF(DAY, PoDate, GETDATE()) AS days FROM [DB_EndeAuto].[EndeavourAuto].[CustomerPO_Dtls] AS DTLS INNER JOIN [DB_EndeAuto].[EndeavourAuto].[CustomerPO_Hdr] AS hdr ON hdr.Quotationno = DTLS.Quotationno WHERE DTLS.JobNo = '" + txtjob.Text + "' AND hdr.CustomerName = '" + txtJobno.Text + "' AND hdr.Is_Deleted = '0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("SELECT hdr.Id, CustomerName, SubCustomer, DTLS.JobNo, Pono, PoDate, RefNo, Mobileno, hdr.Quotationno, CreatedBy, CreatedOn, DATEDIFF(DAY, PoDate, GETDATE()) AS days FROM [DB_EndeAuto].[EndeavourAuto].[CustomerPO_Dtls] AS DTLS INNER JOIN [DB_EndeAuto].[EndeavourAuto].[CustomerPO_Hdr_Both] AS hdr ON hdr.Quotationno = DTLS.Quotationno WHERE DTLS.JobNo = '" + txtjob.Text + "' AND hdr.CustomerName = '" + txtJobno.Text + "' AND hdr.Is_Deleted = '0'", con);
 
         sad.Fill(dtt);
         ViewState["Record"] = "CustomerwiseJob";
@@ -1301,7 +1317,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
     public void GetCustomerowisejobForExcell()
     {
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("SELECT hdr.Id, CustomerName, SubCustomer, DTLS.JobNo, Pono, PoDate, RefNo, Mobileno, hdr.Quotationno, CreatedBy, CreatedOn, DATEDIFF(DAY, PoDate, GETDATE()) AS days FROM [DB_EndeAuto].[EndeavourAuto].[CustomerPO_Dtls] AS DTLS INNER JOIN [DB_EndeAuto].[EndeavourAuto].[CustomerPO_Hdr] AS hdr ON hdr.Quotationno = DTLS.Quotationno WHERE DTLS.JobNo = '" + txtjob.Text + "' AND hdr.CustomerName = '" + txtJobno.Text + "' AND hdr.Is_Deleted = '0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("SELECT hdr.Id, CustomerName, SubCustomer, DTLS.JobNo, Pono, PoDate, RefNo, Mobileno, hdr.Quotationno, CreatedBy, CreatedOn, DATEDIFF(DAY, PoDate, GETDATE()) AS days FROM [DB_EndeAuto].[EndeavourAuto].[CustomerPO_Dtls] AS DTLS INNER JOIN [DB_EndeAuto].[EndeavourAuto].[CustomerPO_Hdr_Both] AS hdr ON hdr.Quotationno = DTLS.Quotationno WHERE DTLS.JobNo = '" + txtjob.Text + "' AND hdr.CustomerName = '" + txtJobno.Text + "' AND hdr.Is_Deleted = '0'", con);
 
         sad.Fill(dtt);
         ViewState["Record"] = "CustomerwiseJob";
@@ -1314,7 +1330,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
     {
         GvCustomerpoList.Visible = false;
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr where  ServiceType ='" + ddlservicetype.Text + "' AND Is_Deleted = '0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr_Both where  ServiceType ='" + ddlservicetype.Text + "' AND Is_Deleted = '0'", con);
 
         // SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where ServiceType ='" + ddlservicetype.Text + "' AND isdeleted = '0'", con);
         sad.Fill(dtt);
@@ -1322,5 +1338,203 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
         GvSorted.DataSource = dtt;
         GvSorted.DataBind();
 
+    }
+
+
+
+
+
+    // Nikhil Code for Pending Quotations
+     
+    protected void gv_Quot_List_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            LinkButton Lnk_Edit = (LinkButton)e.Row.FindControl("lnkbtnEdit");
+            LinkButton Lnk_Create = (LinkButton)e.Row.FindControl("lnkCreateQua");
+            LinkButton Lnk_vw_Quo = (LinkButton)e.Row.FindControl("lnkBtn_View");
+            Label lbl_Quo_no = (Label)e.Row.FindControl("lblQuNo");
+            Label lblcompanyname = (Label)e.Row.FindControl("lblCompName");
+            Label lblsubcustomer = (Label)e.Row.FindControl("lblsubcustomer");
+
+            SqlDataAdapter Da = new SqlDataAdapter("SELECT Quotation_no From tbl_Quotation_two_Hdr WHERE Quotation_no='" + lbl_Quo_no + "'", con);
+            DataTable Dt = new DataTable();
+            Da.Fill(Dt);
+           
+            string Id = gv_Quot_List.DataKeys[e.Row.RowIndex].Value.ToString();
+            GridView gvDetails = e.Row.FindControl("gvDetails") as GridView;
+
+            SqlDataAdapter Daaa = new SqlDataAdapter(" SELECT * FROM [tbl_Quotation_two_Dtls] WHERE [Quotation_no]='" + Id + "'", con);
+            DataTable Dttt = new DataTable();
+            Daaa.Fill(Dttt);
+            foreach (DataRow row in Dttt.Rows)
+            {
+                if (row["JobDaysCount"] == DBNull.Value || Convert.ToInt32(row["JobDaysCount"]) == 0)
+                {
+                    DateTime createdOn = Convert.ToDateTime(row["CreatedOn"]);
+                   
+                    
+                    DateTime createdOnDateOnly = createdOn.Date;
+
+                    
+                    int jobDaysCount = (DateTime.Now.Date - createdOnDateOnly).Days;
+                    row["JobDaysCount"] = jobDaysCount;
+                }                
+            }
+            gvDetails.DataSource = Dttt;
+            gvDetails.DataBind();
+
+            foreach (GridViewRow gvRow in gvDetails.Rows)
+            {
+                // Find the checkbox control in the current row of gvDetails
+                CheckBox chkSelect = (CheckBox)gvRow.FindControl("chkSelect");
+
+                // Find the JobStatus label control in the current row of gvDetails
+                Label lblJobStatus = (Label)gvRow.FindControl("lblJobStatus");
+
+                // If JobStatus is "Completed", disable the checkbox
+                if (lblJobStatus != null && lblJobStatus.Text == "Completed" && chkSelect != null)
+                {
+                    chkSelect.Enabled = false; // Disable the checkbox
+                }
+            }
+        }
+    }
+
+    protected void lnkshow_Click(object sender, EventArgs e)
+    {
+
+        try
+        {
+            DateTime startDate = DateTime.Now.Date.AddDays(-30);
+            //DateTime endDate = DateTime.Now.Date;
+            DateTime endDate = DateTime.Now.Date.AddDays(1);
+
+            string formattedStartDate = startDate.ToString("yyyy-MM-dd");
+            string formattedEndDate = endDate.ToString("yyyy-MM-dd");
+
+            string role = Session["adminname"].ToString();
+            if (role == "SubCustomer")
+            {
+               
+                DataTable Dt = new DataTable();
+
+                string query = @"
+                SELECT  H.ID,  H.Quotation_no, H.Quotation_Date, H.ExpiryDate, H.CreatedOn AS QuotationCreatedOn, H.Customer_Name, 
+                    H.SubCustomer, H.Address, H.Mobile_No, H.Phone_No, H.GST_No, H.State_Code, H.kind_Att,  H.CGST, H.SGST, 
+                    H.AllTotal_price, H.Total_in_word, H.IsDeleted, H.CreatedBy, H.CreatedOn, H.Againstby,                     
+                    ISNULL(J.JobCount, 0) AS JobCount
+                FROM tbl_Quotation_two_Hdr H
+                LEFT JOIN (
+                    SELECT Quotation_no, COUNT(JobNo) AS JobCount
+                    FROM tbl_Quotation_two_Dtls
+                    WHERE JobStatus ='Pending' 
+                    GROUP BY Quotation_no
+                ) J ON H.Quotation_no = J.Quotation_no
+                WHERE H.Againstby = 'JobNo'  AND H.Customer_Name = 'Schneider Electric India Pvt.Ltd.' AND H.IsDeleted = '0'
+                AND H.CreatedOn >= @StartDate AND H.CreatedOn <= @EndDate
+                ORDER BY H.CreatedOn DESC;";
+
+                SqlDataAdapter Da = new SqlDataAdapter(query, con);
+                Da.SelectCommand.Parameters.AddWithValue("@StartDate", formattedStartDate);
+                Da.SelectCommand.Parameters.AddWithValue("@EndDate", formattedEndDate);
+
+                Da.Fill(Dt);
+                gv_Quot_List.DataSource = Dt;
+                gv_Quot_List.DataBind();
+                modelprofile.Show();
+            }
+            else
+            {
+                DataTable Dt = new DataTable();
+
+                string query = @"
+                SELECT  H.ID,  H.Quotation_no, H.Quotation_Date, H.ExpiryDate, H.CreatedOn AS QuotationCreatedOn, H.Customer_Name, 
+                    H.SubCustomer, H.Address, H.Mobile_No, H.Phone_No, H.GST_No, H.State_Code, H.kind_Att,  H.CGST, H.SGST, 
+                    H.AllTotal_price, H.Total_in_word, H.IsDeleted, H.CreatedBy, H.CreatedOn, H.Againstby,                     
+                    ISNULL(J.JobCount, 0) AS JobCount
+                FROM tbl_Quotation_two_Hdr H
+                LEFT JOIN (
+                    SELECT Quotation_no, COUNT(JobNo) AS JobCount
+                    FROM tbl_Quotation_two_Dtls
+                    WHERE JobStatus ='Pending'
+                    GROUP BY Quotation_no
+                ) J ON H.Quotation_no = J.Quotation_no
+                WHERE H.Againstby = 'JobNo' AND H.IsDeleted = '0'
+                AND H.CreatedOn >= @StartDate AND H.CreatedOn <= @EndDate
+                ORDER BY H.CreatedOn DESC;";
+
+                SqlDataAdapter Da = new SqlDataAdapter(query, con);
+                Da.SelectCommand.Parameters.AddWithValue("@StartDate", formattedStartDate);
+                Da.SelectCommand.Parameters.AddWithValue("@EndDate", formattedEndDate);
+
+                Da.Fill(Dt);
+                gv_Quot_List.DataSource = Dt;
+                gv_Quot_List.DataBind();
+                modelprofile.Show();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public static int GetJobCount()
+    {
+        int jobCount = 0;
+        DateTime startDate = DateTime.Now.Date.AddDays(-30);
+        //DateTime endDate = DateTime.Now.Date;
+        DateTime endDate = DateTime.Now.Date.AddDays(1);
+
+        string formattedStartDate = startDate.ToString("yyyy-MM-dd");
+        string formattedEndDate = endDate.ToString("yyyy-MM-dd");
+        string connString = System.Configuration.ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+
+        using (SqlConnection con = new SqlConnection(connString))
+        {
+           
+            SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM tbl_Quotation_two_Dtls WHERE JobNo IS NOT NULL AND JobStatus = 'Pending' AND CreatedOn >= '" + formattedStartDate + "' AND CreatedOn <= '" + formattedEndDate + "'", con);
+            con.Open();
+            jobCount = (int)cmd.ExecuteScalar();
+        }
+
+        return jobCount;
+    }
+
+    protected void lnkbtnCorrect_Click(object sender, EventArgs e)
+    {
+        LinkButton clickedButton = (LinkButton)sender;
+        string QoutationNO = clickedButton.CommandArgument;
+
+        Response.Redirect("Customer_PO.aspx?QuoNo=" + encrypt(QoutationNO) + "");
+    }
+
+    // Delete functionality 
+
+    [System.Web.Services.WebMethod]
+    public static bool ProcessJobNos(List<string> jobNos)
+    {
+        try
+        {
+            foreach (var jobNo in jobNos)
+            {
+                string connString = System.Configuration.ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+                using (SqlConnection con = new SqlConnection(connString))
+                {
+                                   
+                    SqlCommand cmd = new SqlCommand("UPDATE tbl_Quotation_two_Dtls SET JobStatus = 'Closed'," +
+                        " JobDaysCount = DATEDIFF(DAY, CreatedOn, GETDATE())" +
+                        "  WHERE JobNo = '" + jobNo + "'", con);
+                    con.Open();
+                    cmd.ExecuteScalar();
+                }
+            }
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 }

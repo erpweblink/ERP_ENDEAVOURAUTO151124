@@ -168,7 +168,7 @@
 
         function validateJobSelection() {
             if (selectedJobNos.length === 0) {
-                alert('Please select at least one Job ');
+                alert('Please select a Job to be closed...');
                 return false;
             } else {
                 if (confirm('Are you sure you want to close selected Jobs?')) {

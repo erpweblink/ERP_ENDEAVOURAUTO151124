@@ -67,14 +67,31 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
                 //ReportLoadData();
                 //reportresdonly();
             }
-            //NEW CODE FOR FETCH THE QUOTATION DATA END
+
+            // Nikhil Code for Pending Quotations by JobNo.
+            if (Request.QueryString["QuoNo"] != null)
+            {
+                btn_save.Text = "Save";
+                ID = Decrypt(Request.QueryString["QuoNo"].ToString());
+                ShowQuotationsHeader();
+                ShowQuotationDtl();
+                txt_Customer_name.ReadOnly = true;
+                txt_gst_no.ReadOnly = true;
+                txtstatecode.ReadOnly = true;
+                txtsubcust.ReadOnly = true;
+                txt_mobile_no.ReadOnly = true;
+                txt_delivery_address.ReadOnly = true;
+                ddlquotationno.Enabled = true;              
+                ddlagainstby.Items.Clear();
+                ddlagainstby.Items.Add(new ListItem("Order", "Order"));               
+            }
         }
     }
 
     //NEW METHODS FOR QUOTATION DATA FETCH START
     protected void ShowHeaderEdit()
     {
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_Hdr WHERE Quotation_no='" + ID + "'", con);
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ID + "'", con);
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
         if (Dt.Rows.Count > 0)
@@ -156,7 +173,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
         DataTable dt3 = new DataTable();
         //SqlDataAdapter sad3 = new SqlDataAdapter("select * from vw_Quot_pdf where JobNo='" + txt_job_no.Text + "'", con);
         //SqlDataAdapter sad3 = new SqlDataAdapter("select * from [tbl_Quotation_Dtl] where Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
-        SqlDataAdapter sad3 = new SqlDataAdapter("select  product as MateName ,  Description As PrintDescription, * from [tbl_Quotation_Dtl] where Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
+        SqlDataAdapter sad3 = new SqlDataAdapter("select  product as MateName ,  Description As PrintDescription, * from [tbl_Quotation_two_Dtls] where Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
         sad3.Fill(dt3);
         int count = 1;
         if (dt3.Rows.Count > 0)
@@ -363,7 +380,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
             txt_ref_no.Text = Dt.Rows[0]["RefNo"].ToString();
             txt_mobile_no.Text = Dt.Rows[0]["Mobileno"].ToString();
             txt_delivery_address.Text = Dt.Rows[0]["DeliveryAddress"].ToString();
-           // txt_kind_att.SelectedItem.Text = Dt.Rows[0]["KindAtt"].ToString();
+            // txt_kind_att.SelectedItem.Text = Dt.Rows[0]["KindAtt"].ToString();
             txtShippingAddr.Text = Dt.Rows[0]["ShippingAddress"].ToString();
             txt_gst_no.Text = Dt.Rows[0]["GstNo"].ToString();
             // txt_vehicel_no.Text = Dt.Rows[0]["VehicelNo"].ToString();
@@ -1791,6 +1808,138 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
             ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Updated Sucessfully');", true);
         }
 
+        else if(btn_save.Text == "Save")
+        {
+            try
+            {
+                SqlCommand Cmd = new SqlCommand("SP_CustomerPO_Both", con);
+                Cmd.CommandType = CommandType.StoredProcedure;
+                Cmd.Parameters.AddWithValue("@JobNo", txt_job_no.Text);
+                Cmd.Parameters.AddWithValue("@Quotationno", ddlquotationno.SelectedItem.Text);
+                Cmd.Parameters.AddWithValue("@CustomerName", txt_Customer_name.Text);
+                Cmd.Parameters.AddWithValue("@SubCustomer", txtsubcust.Text);
+                Cmd.Parameters.AddWithValue("@Pono", txt_po_no.Text);
+                Cmd.Parameters.AddWithValue("@PoDate", txt_po_date.Text);
+                Cmd.Parameters.AddWithValue("@RefNo", txt_ref_no.Text);
+                Cmd.Parameters.AddWithValue("@Mobileno", txt_mobile_no.Text);
+                if (txt_kind_att.Text == "")
+                {
+                    Cmd.Parameters.AddWithValue("@KindAtt", "NA");
+                }
+                else
+                {
+                    Cmd.Parameters.AddWithValue("@KindAtt", txt_kind_att.SelectedItem.Text);
+                }
+                Cmd.Parameters.AddWithValue("@ShippingAddress", txtShippingAddr.Text);
+                Cmd.Parameters.AddWithValue("@DeliveryAddress", txt_delivery_address.Text);
+                Cmd.Parameters.AddWithValue("@GstNo", txt_gst_no.Text);
+                Cmd.Parameters.AddWithValue("@statecode", txtstatecode.Text);
+                Cmd.Parameters.AddWithValue("@PayTerm", txt_pay_term.Text);
+                Cmd.Parameters.AddWithValue("@Cgst", txt_cgst_amt.Text);
+                Cmd.Parameters.AddWithValue("@Sgst", txt_sgst_amt.Text);
+                Cmd.Parameters.AddWithValue("@Igst", txt_igst_amt.Text);
+                Cmd.Parameters.AddWithValue("@AllTotalPrice", txt_total.Text);
+                Cmd.Parameters.AddWithValue("@TotalInWord", lbl_Amount_In_Word.Text);
+                Cmd.Parameters.AddWithValue("@RoundOff", txt_round_off.Text);
+                Cmd.Parameters.AddWithValue("@GrandTotal", txt_grand_total.Text);
+                Cmd.Parameters.AddWithValue("@Term_Condition_1", txt_term_1.Text + "-" + txt_condition_1.Text);
+                Cmd.Parameters.AddWithValue("@Term_Condition_2", txt_term_2.Text + "-" + txt_condition_2.Text);
+                Cmd.Parameters.AddWithValue("@Term_Condition_3", txt_term_3.Text + "-" + txt_condition_3.Text);
+                Cmd.Parameters.AddWithValue("@Term_Condition_4", txt_term_4.Text + "-" + txt_condition_4.Text);
+                Cmd.Parameters.AddWithValue("@Term_Condition_5", txt_term_5.Text + "-" + txt_condition_5.Text);
+                Cmd.Parameters.AddWithValue("@Term_Condition_6", txt_term_6.Text + "-" + txt_condition_6.Text);
+                Cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
+                Cmd.Parameters.AddWithValue("@AgainstBy", ddlagainstby.SelectedItem.Text);
+
+                if (FileUpload.HasFile)
+                {
+                    var Filenamenew = FileUpload.FileName;
+                    string codenew = Guid.NewGuid().ToString();
+                    Path = Server.MapPath("~/Attachpo/") + codenew + "_" + Filenamenew;
+                    FileUpload.SaveAs(Path);
+                    Cmd.Parameters.AddWithValue("@Imagepath", "~/Attachpo/" + codenew + "_" + Filenamenew);
+                }
+
+                Cmd.Parameters.AddWithValue("@Is_Deleted", '0');
+                Cmd.Parameters.AddWithValue("@CreatedBy", CretedBy);
+                Cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                Cmd.Parameters.Add("@purchase_id", SqlDbType.Int).Direction = ParameterDirection.Output;
+                 Cmd.ExecuteNonQuery();
+
+                id = Convert.ToInt32(Cmd.Parameters["@purchase_id"].Value);
+
+                foreach (GridViewRow g1 in gvPurchaseRecord.Rows)
+                {
+                    string JobNO = (g1.FindControl("lblJob") as Label).Text;
+                    string Discription = (g1.FindControl("txt_discription_grd") as Label).Text;
+                    string HSN = (g1.FindControl("txt_hsn_grd") as Label).Text;
+                    string Tax = (g1.FindControl("lbl_tax_grd") as Label).Text;
+                    string Quntity = (g1.FindControl("lbl_quntity_grd") as Label).Text;
+                    string Unit = (g1.FindControl("txt_unit_grd") as Label).Text;
+                    string Rate = (g1.FindControl("lbl_rate_grd") as Label).Text;
+                    string Discount = (g1.FindControl("lbl_discount_grd") as Label).Text;
+                    string Total_Amount = (g1.FindControl("lbl_total_amount_grd") as Label).Text;
+                    string MateName = (g1.FindControl("lblproduct") as Label).Text;
+                    string PrintDescription = (g1.FindControl("lblprintdescription") as Label).Text;
+                    Cmd.Parameters.AddWithValue("@Quotationno", ddlquotationno.SelectedItem.Text);
+
+                    SqlCommand Cmd1 = new SqlCommand("INSERT INTO CustomerPO_Dtls_Both (PurchaseId,Description,Hsn_Sac,TaxPercenteage,Quantity,Unit,Rate,DiscountPercentage,Total,JobNo,PrintDescription,MateName,Quotationno) " +
+                        "VALUES('" + id + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "','" + JobNO + "', '" + PrintDescription + "', '" + MateName + "','" + ddlquotationno.SelectedItem.Text + "')", con);
+
+                    Cmd1.ExecuteNonQuery();
+                }
+                foreach (GridViewRow g1 in quatationgrid.Rows)
+                {
+                    CheckBox chkSelect = g1.FindControl("chkSelect") as CheckBox;
+
+                    if (chkSelect != null && chkSelect.Checked)
+                    {
+                        string JobCreatedCount = (g1.FindControl("LblJobNoss") as Label).Text;
+                        string JobNo = (g1.FindControl("LblJobNo") as Label).Text;
+                        string Discription = (g1.FindControl("txt_discription_grd") as Label).Text;
+                        string HSN = (g1.FindControl("txt_hsn_grd") as Label).Text;
+                        string Tax = (g1.FindControl("lbl_tax_grd") as Label).Text;
+                        string Quntity = (g1.FindControl("lbl_quntity_grd") as Label).Text;
+                        string Unit = (g1.FindControl("txt_unit_grd") as Label).Text;
+                        string Rate = (g1.FindControl("lbl_rate_grd") as Label).Text;
+                        string Discount = (g1.FindControl("lbl_discount_grd") as Label).Text;
+                        string MateName = (g1.FindControl("lblproduct") as Label).Text;
+                        string PrintDescription = (g1.FindControl("Lblprintdescription_grd") as Label).Text;
+                        string Total_Amount = (g1.FindControl("lbl_total_amount_grd") as Label).Text;
+                        Cmd.Parameters.AddWithValue("@Quotationno", ddlquotationno.SelectedItem.Text);
+
+                        SqlCommand Cmd1 = new SqlCommand("INSERT INTO CustomerPO_Dtls_Both (PurchaseId,Description,Hsn_Sac,TaxPercenteage,Quantity,Unit,Rate,DiscountPercentage,Total,JobNo,MateName,PrintDescription,Quotationno,JobStatus) " +
+                             "VALUES('" + id + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "','" + JobNo + "' ,'" + MateName + "' ,'" + PrintDescription + "','" + ddlquotationno.SelectedItem.Text + "','Pending')", con);
+                       
+                        SqlCommand Cmd2 = new SqlCommand("UPDATE tbl_Quotation_two_Dtls SET JobStatus = 'Completed', JobDaysCount = '"+ JobCreatedCount + "'" +
+                            "WHERE JobNo = '"+ JobNo + "'", con);
+                       
+                        Cmd1.ExecuteNonQuery();
+                        Cmd2.ExecuteNonQuery();
+
+                    }
+                }
+                foreach (GridViewRow g1 in Grd_MAIL.Rows)
+                {
+                    string MAIL = (g1.FindControl("lblmultMail") as Label).Text;
+                    string Designation = (g1.FindControl("lbldesignation") as Label).Text;
+                    SqlCommand cmdtable = new SqlCommand("insert into tblCustomerPOMail(QuotationNo,Email,CreatedBy,CreatedOn,pono,designation) values(@QuotationNo,@Email,@CreatedBy,@CreatedOn,@pono,@designation)", con);
+                    //  cmdtable.Parameters.AddWithValue("@JobNo", txt_job_no.Text);   // new change 
+                    cmdtable.Parameters.AddWithValue("@QuotationNo", ddlquotationno.SelectedItem.Text);   // new change 
+                    cmdtable.Parameters.AddWithValue("@Email", MAIL);
+                    cmdtable.Parameters.AddWithValue("@pono", txt_po_no.Text);
+                    cmdtable.Parameters.AddWithValue("@CreatedBy", CretedBy);
+                    cmdtable.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                    cmdtable.Parameters.AddWithValue("@designation", Designation);
+                    cmdtable.ExecuteNonQuery();
+                }
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Save Sucessfully');", true);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         else
         {
             try
@@ -1847,7 +1996,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
                 Cmd.Parameters.AddWithValue("@CreatedBy", CretedBy);
                 Cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
                 Cmd.Parameters.Add("@purchase_id", SqlDbType.Int).Direction = ParameterDirection.Output;
-                Cmd.ExecuteNonQuery();
+               // Cmd.ExecuteNonQuery();
 
                 id = Convert.ToInt32(Cmd.Parameters["@purchase_id"].Value);
 
@@ -1869,7 +2018,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
                     SqlCommand Cmd1 = new SqlCommand("INSERT INTO CustomerPO_Dtls (PurchaseId,Description,Hsn_Sac,TaxPercenteage,Quantity,Unit,Rate,DiscountPercentage,Total,JobNo,PrintDescription,MateName,Quotationno) " +
                         "VALUES('" + id + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "','" + JobNO + "', '" + PrintDescription + "', '" + MateName + "','" + ddlquotationno.SelectedItem.Text + "')", con);
 
-                    Cmd1.ExecuteNonQuery();
+                   // Cmd1.ExecuteNonQuery();
                 }
                 foreach (GridViewRow g1 in quatationgrid.Rows)
                 {
@@ -1890,7 +2039,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
 
                     SqlCommand Cmd1 = new SqlCommand("INSERT INTO CustomerPO_Dtls (PurchaseId,Description,Hsn_Sac,TaxPercenteage,Quantity,Unit,Rate,DiscountPercentage,Total,JobNo,MateName,PrintDescription,Quotationno) " +
                          "VALUES('" + id + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "','" + JobNo + "' ,'" + MateName + "' ,'" + PrintDescription + "','" + ddlquotationno.SelectedItem.Text + "')", con);
-                    Cmd1.ExecuteNonQuery();
+                   // Cmd1.ExecuteNonQuery();
                 }
                 foreach (GridViewRow g1 in Grd_MAIL.Rows)
                 {
@@ -1904,7 +2053,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
                     cmdtable.Parameters.AddWithValue("@CreatedBy", CretedBy);
                     cmdtable.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
                     cmdtable.Parameters.AddWithValue("@designation", Designation);
-                    cmdtable.ExecuteNonQuery();
+                   // cmdtable.ExecuteNonQuery();
                 }
                 ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Save Sucessfully');", true);
             }
@@ -1913,6 +2062,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
                 throw ex;
             }
         }
+        
     }
 
     protected void btn_save_Click(object sender, EventArgs e)
@@ -2005,7 +2155,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
             txt_gst_no.Text = Dtt.Rows[0]["GSTNo"].ToString();
             txtstatecode.Text = Dtt.Rows[0]["StateCode"].ToString();
             txt_mobile_no.Text = Dtt.Rows[0]["MobNo"].ToString();
-          //  txt_kind_att.Text = Dtt.Rows[0]["ContactPerName1"].ToString();
+            //  txt_kind_att.Text = Dtt.Rows[0]["ContactPerName1"].ToString();
         }
         //contact person list bind
         DataTable dt1 = new DataTable();
@@ -2531,6 +2681,198 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
         {
             ddlquotationno.Enabled = true;
         }
+    }
+
+
+    // Nikhil Custom code to load Quotation records 
+
+    protected void ShowQuotationsHeader()
+    {
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ID + "'", con);
+        DataTable Dt = new DataTable();
+        Da.Fill(Dt);
+        if (Dt.Rows.Count > 0)
+        {            
+            ddlquotationno.SelectedItem.Text = Dt.Rows[0]["Quotation_no"].ToString();
+            txt_Customer_name.Text = Dt.Rows[0]["Customer_Name"].ToString();
+            txtsubcust.Text = Dt.Rows[0]["SubCustomer"].ToString();
+            txt_delivery_address.Text = Dt.Rows[0]["Address"].ToString();
+            txt_mobile_no.Text = Dt.Rows[0]["Mobile_No"].ToString();
+            txt_kind_att.Text = Dt.Rows[0]["kind_Att"].ToString();
+            txt_gst_no.Text = Dt.Rows[0]["GST_No"].ToString();
+            txtstatecode.Text = Dt.Rows[0]["State_Code"].ToString();
+
+            string str = Dt.Rows[0]["Term_Condition_1"].ToString();
+            string str1 = Dt.Rows[0]["Term_Condition_2"].ToString();
+            string str2 = Dt.Rows[0]["Term_Condition_3"].ToString();
+            string str3 = Dt.Rows[0]["Term_Condition_4"].ToString();
+            string str4 = Dt.Rows[0]["Term_Condition_5"].ToString();
+            string str5 = Dt.Rows[0]["Term_Condition_6"].ToString();
+            string[] arrstr = str.ToString().Split('-');
+            string[] arrstr1 = str1.ToString().Split('-');
+            string[] arrstr2 = str2.ToString().Split('-');
+            string[] arrstr3 = str3.ToString().Split('-');
+            string[] arrstr4 = str4.ToString().Split('-');
+            string[] arrstr5 = str5.ToString().Split('-');
+
+            if (arrstr.Length > 0)
+            {
+                txt_term_1.Text = arrstr[0].ToString();
+                txt_condition_1.Text = arrstr[1].ToString();
+            }
+            if (arrstr1.Length > 0)
+            {
+                txt_term_2.Text = arrstr1[0].ToString();
+                txt_condition_2.Text = arrstr1[1].ToString();
+            }
+            if (arrstr2.Length > 0)
+            {
+                txt_term_3.Text = arrstr2[0].ToString();
+                txt_condition_3.Text = arrstr2[1].ToString();
+            }
+            if (arrstr3.Length > 0)
+            {
+                txt_term_4.Text = arrstr3[0].ToString();
+                txt_condition_4.Text = arrstr3[1].ToString();
+            }
+
+            if (arrstr4.Length > 0)
+            {
+                txt_term_5.Text = arrstr4[0].ToString();
+                txt_condition_5.Text = arrstr4[1].ToString();
+            }
+            if (arrstr5.Length > 0)
+            {
+                txt_term_6.Text = arrstr5[0].ToString();
+                txt_condition_6.Text = arrstr5[1].ToString();
+            }
+        }
+
+        SqlDataAdapter Sda = new SqlDataAdapter("SELECT * FROM tblCustomerContactPerson WHERE CustName='" + txt_Customer_name.Text + "'", con);
+        DataTable Sdt = new DataTable();
+        Sda.Fill(Sdt);
+        Grd_MAIL.DataSource = Sdt;
+        Grd_MAIL.DataBind();
+
+   
+    }
+
+    protected void ShowQuotationDtl()
+    {
+        ////Automatic description bind in job number from quaation details table
+        DataTable dt3 = new DataTable();
+        SqlDataAdapter sad3 = new SqlDataAdapter("select  product as MateName , Description As PrintDescription, " +
+            "DATEDIFF(DAY, CreatedOn, GETDATE()) AS DaysSinceCreated, * from [tbl_Quotation_two_Dtls] where " +
+            "Quotation_no='" + ddlquotationno.SelectedItem.Text + "' AND JobStatus = 'Pending'", con);
+        sad3.Fill(dt3);
+        int count = 1;
+        if (dt3.Rows.Count > 0)
+        {
+            ViewState["RowNo"] = 0;
+            Dt_Itemsdetails.Columns.AddRange(new DataColumn[13] { new DataColumn("Id"),new DataColumn("JobNo"), new DataColumn("MateName"),
+                    new DataColumn("CompName"),  new DataColumn("PrintDescription"), new DataColumn("HSN"),
+                    new DataColumn("Rate"),  new DataColumn("Units"),
+                    new DataColumn("Qty"),  new DataColumn("Tax"),
+                    new DataColumn("Disc_per"), new DataColumn("total"), new DataColumn("DaysSinceCreated")
+                  });
+
+            ViewState["Customerdetails"] = Dt_Itemsdetails;
+            for (int i = 0; i < dt3.Rows.Count; i++)
+            {
+                 Dt_Itemsdetails.Rows.Add(count, dt3.Rows[i]["JobNo"].ToString(), dt3.Rows[i]["MateName"].ToString(), dt3.Rows[i]["CompName"].ToString(), dt3.Rows[i]["PrintDescription"].ToString(), dt3.Rows[i]["HSN"].ToString(), dt3.Rows[i]["Rate"].ToString(), dt3.Rows[i]["Units"].ToString(), dt3.Rows[i]["Qty"].ToString(), dt3.Rows[i]["Tax"].ToString(), 
+                     dt3.Rows[i]["Disc_per"].ToString(), dt3.Rows[i]["total"].ToString(), dt3.Rows[i]["DaysSinceCreated"].ToString());
+                count = count + 1;
+            }
+            quatationgrid.DataSource = Dt_Itemsdetails;
+            quatationgrid.DataBind();
+            quatationgrid.EmptyDataText = "Not Records Found";        
+        }
+
+        //SqlDataAdapter Sda = new SqlDataAdapter("SELECT * FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
+        //DataTable Sdt = new DataTable();
+        //Sda.Fill(Sdt);
+        //if (Sdt.Rows.Count > 0)
+        //{
+        //    txt_cgst_amt.Text = Sdt.Rows[0]["CGST"].ToString();
+        //    txt_sgst_amt.Text = Sdt.Rows[0]["SGST"].ToString();
+        //    txt_grand_total.Text = Sdt.Rows[0]["AllTotal_price"].ToString();
+
+        //}
+    }
+
+    protected void chkSelect_CheckedChanged(object sender, EventArgs e)
+    {
+        CheckBox chk = (CheckBox)sender;
+        GridViewRow row = (GridViewRow)chk.NamingContainer;
+
+
+        string jobNo = ((Label)row.FindControl("LblJobNo")).Text;
+        decimal totalAmount = Convert.ToDecimal(((Label)row.FindControl("lbl_total_amount_grd")).Text); 
+        
+        if (!chk.Checked)
+        {
+          
+            HandleJobNoUncheck(jobNo, totalAmount);
+        }
+        else
+        {
+          
+            HandleJobNoCheck(jobNo, totalAmount);
+        }
+    }
+
+    private void HandleJobNoUncheck(string jobNo, decimal amount)
+    {
+        
+        UpdateGrandTotal(amount, isAdding: false);
+       
+    }
+
+    private void HandleJobNoCheck(string jobNo, decimal amount)
+    {
+       
+        UpdateGrandTotal(amount, isAdding: true);
+    
+    }
+
+    private void UpdateGrandTotal(decimal amount, bool isAdding)
+    {
+
+        decimal SubTotal = Convert.ToDecimal(txt_total.Text);
+       
+        decimal GrandTotal =Convert.ToDecimal(txt_grand_total.Text);
+       
+        if (isAdding)
+        {
+            Total = SubTotal + amount; 
+        }
+        else
+        {
+            Total = SubTotal - amount; 
+        }
+
+        txt_total.Text = Total.ToString("##.00");
+
+        decimal GSTamt = (Total * 9 / 100); 
+       decimal IGSTamt = (Total * 18 / 100);
+
+        if (txtstatecode.Text == "27 MAHARASHTRA")
+        {
+            txt_sgst_amt.Text = GSTamt.ToString();
+            txt_cgst_amt.Text = GSTamt.ToString();
+            txt_igst_amt.Text = "0";
+        }
+        else
+        {
+            txt_sgst_amt.Text = "0";
+            txt_cgst_amt.Text = "0";
+            txt_igst_amt.Text = IGSTamt.ToString();
+        }
+   
+        decimal grd_total = Total + Convert.ToDecimal(txt_sgst_amt.Text) + Convert.ToDecimal(txt_cgst_amt.Text) + Convert.ToDecimal(txt_igst_amt.Text);
+        txt_grand_total.Text = grd_total.ToString("##.00");
+
+        lbl_Amount_In_Word.Text = ConvertToWords(grd_total.ToString());
     }
 }
 
