@@ -139,11 +139,11 @@
                                     <br />
                                 </div>
 
-                                  <div class="col-md-3">
+                                <div class="col-md-3">
                                     <asp:Label ID="Label15" runat="server" class="control-label col-sm-6">Against By :<span class="spncls">*</span></asp:Label>
-                                   <asp:DropDownList runat="server" class="form-control"  AutoPostBack="true"  ID="ddlagainstby">	
-                                        <%--<asp:ListItem Value="Sales" Text="Sales"></asp:ListItem>--%>   
-                                        <asp:ListItem Value="JobNo" Text="JobNo"></asp:ListItem>                                                              
+                                    <asp:DropDownList runat="server" class="form-control" AutoPostBack="true" ID="ddlagainstby">
+                                        <%--<asp:ListItem Value="Sales" Text="Sales"></asp:ListItem>--%>
+                                        <asp:ListItem Value="JobNo" Text="JobNo"></asp:ListItem>
                                     </asp:DropDownList>
                                     <br />
                                 </div>
@@ -151,16 +151,17 @@
                                 <div class="col-md-6">
                                     <asp:Label ID="Label14" runat="server" class="control-label col-sm-4">Service Type :<span class="spncls">*</span></asp:Label>
                                     <asp:DropDownList runat="server" class="form-control" ID="ddlservicetype">
-										
+
                                         <asp:ListItem Value="Service" Text="Service"></asp:ListItem>
                                         <asp:ListItem Value="Sales" Text="Sales"></asp:ListItem>
                                         <asp:ListItem Value="Reparing" Text="Reparing"></asp:ListItem>
-										<asp:ListItem Value="Testing" Text="Testing"></asp:ListItem>
+                                        <asp:ListItem Value="Testing" Text="Testing"></asp:ListItem>
                                     </asp:DropDownList>
                                 </div>
                             </div>
 
                             <div class="row">
+
                                 <div class="col-md-6">
                                     <asp:Label ID="lbl_Comp_name" runat="server" class="control-label col-sm-6">Customer Name :<span class="spncls">*</span></asp:Label>
                                     <asp:TextBox runat="server" OnTextChanged="txt_Comp_name_TextChanged" AutoPostBack="true" onkeypress="return character(event)" class="form-control" ID="txt_Comp_name"></asp:TextBox>
@@ -234,6 +235,7 @@
                                     <asp:TextBox runat="server" class="form-control" ID="txt_state" ReadOnly="true"></asp:TextBox>
                                     <br />
                                 </div>
+
                                 <div class="col-md-6">
                                     <asp:Label ID="Lbl_mail" runat="server" class="control-label col-sm-6">Mail ID :<span class="spncls">*</span></asp:Label>
                                     <asp:LinkButton ID="lnkbtnAdd" runat="server" Font-Bold="true" CausesValidation="false" CommandArgument='<%#Eval("Custid") %>' OnClick="lnkbtnAdd_Click">+Add Mail</asp:LinkButton>
@@ -304,12 +306,6 @@
                                                         <asp:Label ID="lblsrno" runat="server" Text='<%#Container.DataItemIndex +1 %>'></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
-
-                                                <%-- <asp:TemplateField HeaderText="Select">
-                                                    <ItemTemplate>
-                                                        <asp:CheckBox ID="chkjobno" runat="server" />
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>--%>
                                                 <asp:TemplateField HeaderText="Job No.">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lbljobno" Text='<%# Eval("Jobno") %>' runat="server"></asp:Label>
@@ -356,7 +352,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <asp:DropDownList ID="ddljobno" OnTextChanged="ddljobno_TextChanged" AutoPostBack="true" Width="230px" runat="server" AppendDataBoundItems="True"  class="form-control">
+                                                <asp:DropDownList ID="ddljobno" OnTextChanged="ddljobno_TextChanged" AutoPostBack="true" Width="230px" runat="server" AppendDataBoundItems="True" class="form-control">
                                                     <asp:ListItem Value="" Text="Select Job No.">
 
                                                     </asp:ListItem>
@@ -365,12 +361,12 @@
                                             </td>
 
                                             <td>
-                                                <asp:TextBox ID="txtpoduct" runat="server" AutoPostBack="true" Width="230px"  class="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="txtpoduct" runat="server" AutoPostBack="true" Width="230px" class="form-control"></asp:TextBox>
                                             </td>
 
                                             <td>
 
-                                                <asp:TextBox ID="txt_discription_Tbl" runat="server" OnTextChanged="txt_discription_Tbl_TextChanged" AutoPostBack="true" Width="230px"   class="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="txt_discription_Tbl" runat="server" OnTextChanged="txt_discription_Tbl_TextChanged" AutoPostBack="true" Width="230px" class="form-control"></asp:TextBox>
                                                 <asp:AutoCompleteExtender ID="AutoCompleteExtender1" CompletionListCssClass="completionList"
                                                     CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
                                                     CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetDescriptionList" TargetControlID="txt_discription_Tbl" runat="server">
@@ -391,16 +387,16 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <asp:TextBox ID="txt_hsn_Tbl" runat="server" Width="230px"   class="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="txt_hsn_Tbl" runat="server" Width="230px" class="form-control"></asp:TextBox>
                                             </td>
                                             <td>
-                                                <asp:TextBox ID="txt_rate_Tbl" AutoPostBack="true" OnTextChanged="txt_rate_Tbl_TextChanged" runat="server" Width="230px" onkeypress="return isNumberKey(event)"   class="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="txt_rate_Tbl" AutoPostBack="true" OnTextChanged="txt_rate_Tbl_TextChanged" runat="server" Width="230px" onkeypress="return isNumberKey(event)" class="form-control"></asp:TextBox>
                                             </td>
                                             <td>
-                                                <asp:TextBox ID="txt_unit_Tbl" onkeypress="return character(event)" runat="server" Width="230px"   class="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="txt_unit_Tbl" onkeypress="return character(event)" runat="server" Width="230px" class="form-control"></asp:TextBox>
                                             </td>
                                             <td>
-                                                <asp:TextBox ID="txt_quntity_Tbl" OnTextChanged="txt_quntity_Tbl_TextChanged" AutoPostBack="true" runat="server" Width="230px" onkeypress="return isNumberKey(event)"   class="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="txt_quntity_Tbl" OnTextChanged="txt_quntity_Tbl_TextChanged" AutoPostBack="true" runat="server" Width="230px" onkeypress="return isNumberKey(event)" class="form-control"></asp:TextBox>
                                             </td>
 
                                         </tr>
@@ -424,8 +420,8 @@
                                             </td>
                                             <td>
                                                 <asp:TextBox ID="txt_Total_Tbl" onkeypress="return isNumberKey(event)" ReadOnly="true" runat="server" Width="230px" class="form-control"></asp:TextBox>
-                                            </td>                                          
-                                            <td style="text-align:center">
+                                            </td>
+                                            <td style="text-align: center">
                                                 <asp:LinkButton runat="server" ID="btn_add_more_Tbl" CausesValidation="false" ToolTip="Add Component" Width="100px" CssClass="btn btn-facebook" OnClick="btn_add_more_Tbl_Click1" Text="Add More" class="form-control"></asp:LinkButton>
                                             </td>
                                         </tr>
@@ -433,7 +429,7 @@
                                 </div>
                             </div>
 
-                         
+
 
                             <hr />
                             <div class="row" id="Quatationgrid">
@@ -449,6 +445,14 @@
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
 
+                                                <%-- New Codee for Job Days Count --%>
+                                                <asp:TemplateField Visible="false">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lbljobDaysCount" ReadOnly="true" Text='<%# Eval("DaysSinceCreated") %>' runat="server"></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <%-- End  --%>
+                                               
                                                 <asp:TemplateField HeaderText="Job No.">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lbljobno" ReadOnly="true" runat="server" Text='<%# Eval("JobNo") %>'></asp:Label>
@@ -568,11 +572,11 @@
                                         <div class="col-md-6">
                                             <br />
                                             <center>
-                                        <div class="col-md-12">
-                                            <asp:Label ID="lbl_total_amt" runat="server" class="control-label col-sm-6">Total Amount (In Words) :<span class="spncls"></span></asp:Label><br />
-                                            <asp:Label ID="lbl_total_amt_Value" class="control-label col-sm-6 font-weight-bold" runat="server" Text=""></asp:Label>
-                                             <asp:HiddenField ID="hfTotal" runat="server" />
-                                        </div>
+                                                <div class="col-md-12">
+                                                    <asp:Label ID="lbl_total_amt" runat="server" class="control-label col-sm-6">Total Amount (In Words) :<span class="spncls"></span></asp:Label><br />
+                                                    <asp:Label ID="lbl_total_amt_Value" class="control-label col-sm-6 font-weight-bold" runat="server" Text=""></asp:Label>
+                                                    <asp:HiddenField ID="hfTotal" runat="server" />
+                                                </div>
                                             </center>
                                         </div>
                                         <div class="col-md-6" style="text-align: right">
@@ -742,34 +746,36 @@
                             </div>
                             <div class="col-md-4" id="mailcheck" runat="server">
                                 <center>
-                                <asp:CheckBox ID="ChkSendQuotation" runat="server"></asp:CheckBox>
-                                &nbsp;
+                                    <asp:CheckBox ID="ChkSendQuotation" runat="server"></asp:CheckBox>
+                                    &nbsp;
                                     <asp:Label runat="server" Text="Send Quotation on Mail ID"></asp:Label>
-                                <br />
-                               </center>
+                                    <br />
+                                </center>
                             </div>
                             <div class="col-md-1">
                             </div>
                             <div class="col-md-4">
                             </div>
                         </div>
-                        <center>   <div class="col-md-6">  
-                            <br />
-             <asp:Button  ID="btnSubmit" runat="server" class="btn btn-primary col-sm-3 " Text="Submit" OnClick="btnSubmit_Click"   ></asp:Button>
-                &nbsp;&nbsp;        &nbsp;&nbsp;       
-             <asp:Button  ID="btnCancel" runat="server" class="btn btn-primary col-sm-3 " OnClick="btnCancel_Click" CausesValidation="False"  Text="Cancel"   ></asp:Button>
-                &nbsp;&nbsp;        &nbsp;&nbsp; 
+                        <center>
+                            <div class="col-md-6">
+                                <br />
+                                <asp:Button ID="btnSubmit" runat="server" class="btn btn-primary col-sm-3 " Text="Submit" OnClick="btnSubmit_Click"></asp:Button>
+                                &nbsp;&nbsp;        &nbsp;&nbsp;       
+             <asp:Button ID="btnCancel" runat="server" class="btn btn-primary col-sm-3 " OnClick="btnCancel_Click" CausesValidation="False" Text="Cancel"></asp:Button>
+                                &nbsp;&nbsp;        &nbsp;&nbsp; 
              <%--<asp:Button  ID="btnsendpo" runat="server" class="btn btn-primary col-sm-3" OnClick="btnsendpo_Click" CausesValidation="False"  Text="Send PO"   ></asp:Button>--%>
 
-                               <asp:HiddenField runat="server" ID="hidden" /> 
-            </div></center>
+                                <asp:HiddenField runat="server" ID="hidden" />
+                            </div>
+                        </center>
                     </div>
                 </div>
 
             </div>
         </div>
 
-      
+
     </form>
 
 </asp:Content>
