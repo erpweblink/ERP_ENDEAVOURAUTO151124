@@ -1746,7 +1746,9 @@ public partial class Admin_Customer_PO_Sales : System.Web.UI.Page
 
             Cmd.Parameters.AddWithValue("@UpdatedBy", CretedBy);
             Cmd.Parameters.AddWithValue("@UpdatedOn", DateTime.Now);
+
             Cmd.ExecuteNonQuery();
+           
 
             SqlCommand cmddelete = new SqlCommand("DELETE FROM CustomerPO_Dtls_Both WHERE PurchaseId=@PurchaseId", con);
             cmddelete.Parameters.AddWithValue("@PurchaseId", hdnID.Value);
@@ -1851,6 +1853,10 @@ public partial class Admin_Customer_PO_Sales : System.Web.UI.Page
                 Cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
                 Cmd.Parameters.Add("@purchase_id", SqlDbType.Int).Direction = ParameterDirection.Output;
                 Cmd.ExecuteNonQuery();
+                // New Code Shubham Patil
+                SqlCommand Cmds = new SqlCommand("UPDATE tbl_Quotation_two_Hdr SET Status='Completed' WHERE Customer_Name='" + txt_Customer_name.Text + "'", con);
+                Cmds.ExecuteNonQuery();
+                // New Code End
 
                 id = Convert.ToInt32(Cmd.Parameters["@purchase_id"].Value);
 

@@ -2,10 +2,12 @@
 using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
 using System;
+using System.Activities.Statements;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IdentityModel.Protocols.WSTrust;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -23,30 +25,36 @@ public partial class Admin_CustomerPO_List_Sales : System.Web.UI.Page
     string UserCompany = "";
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["adminname"] == null)
+        if (!IsPostBack)
         {
-            Response.Redirect("../LoginPage.aspx");
-        }
-        else
-        {
-            ViewData();
-            // GvCustomerpoList.DataSource = dt11;
-            GvCustomerpoList.DataBind();
+            int QuatationCount = GetJobCount();  // Call your backend method
+            lblquatation.Text = QuatationCount.ToString();  // Set the job count on the label
 
-            //UserCompany = Session["adminname"].ToString();
-            //if (UserCompany != "Admin")
-            //{
-            //    gvbind_Company();
-            //    btncreate.Visible = false;
-            //}
-            //else
-            //{
-            //    ViewData();
-            //    GvCustomerpoList.DataSource = dt11;
-            //    GvCustomerpoList.DataBind();
-            //}
-            //this.txtDateSearch.Text = DateTime.Now.ToString("yyyy-MM-dd");
-            //this.txtDateSearch.TextMode = TextBoxMode.Date;
+            if (Session["adminname"] == null)
+            {
+                Response.Redirect("../LoginPage.aspx");
+            }
+            else
+            {
+                ViewData();
+                // GvCustomerpoList.DataSource = dt11;
+                GvCustomerpoList.DataBind();
+
+                //UserCompany = Session["adminname"].ToString();
+                //if (UserCompany != "Admin")
+                //{
+                //    gvbind_Company();
+                //    btncreate.Visible = false;
+                //}
+                //else
+                //{
+                //    ViewData();
+                //    GvCustomerpoList.DataSource = dt11;
+                //    GvCustomerpoList.DataBind();
+                //}
+                //this.txtDateSearch.Text = DateTime.Now.ToString("yyyy-MM-dd");
+                //this.txtDateSearch.TextMode = TextBoxMode.Date;
+            }
         }
     }
 
@@ -882,6 +890,49 @@ public partial class Admin_CustomerPO_List_Sales : System.Web.UI.Page
     SqlDataAdapter sadquatation;
     protected void GvCustomerpoList_RowDataBound(object sender, GridViewRowEventArgs e)
     {
+        //Added New for Count by Shubham Patil
+        if (e.Row.RowType == DataControlRowType.Footer)
+        {
+            decimal totalAmount = 0;
+
+            if (GvSorted.Rows.Count > 0)
+            {
+                foreach (GridViewRow row in GvSorted.Rows)
+                {
+
+                    Label lbltotal = row.FindControl("lbltotal") as Label;
+                    if (lbltotal != null)
+                    {
+                        if (decimal.TryParse(lbltotal.Text, out decimal rowAmount))
+                        {
+                            totalAmount += rowAmount;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (GridViewRow row in GvCustomerpoList.Rows)
+                {
+                    Label lbltotal = row.FindControl("lbltotal") as Label;
+                    if (lbltotal != null)
+                    {
+                        if (decimal.TryParse(lbltotal.Text, out decimal rowAmount))
+                        {
+                            totalAmount += rowAmount;
+                        }
+                    }
+                }
+            }
+
+            Label lblFooterTotalAmt = (Label)e.Row.FindControl("lblFooterTotalAmt");
+            if (lblFooterTotalAmt != null)
+            {
+                lblFooterTotalAmt.Text = "Total Amt: ₹" + totalAmount.ToString("N2");
+            }
+        }
+        //End
+
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
             string Id = GvCustomerpoList.DataKeys[e.Row.RowIndex].Value.ToString();
@@ -1277,4 +1328,103 @@ public partial class Admin_CustomerPO_List_Sales : System.Web.UI.Page
         GvSorted.DataBind();
 
     }
+
+
+    // New Code by Shubham Patil
+    protected void lnkshow_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            DataTable dt = new DataTable();
+            string query = @"
+            SELECT *,
+                   DATEDIFF(DAY, Quotation_Date, GETDATE()) AS Days_Completed
+            FROM tbl_Quotation_two_Hdr
+            WHERE Status = 'Pending'"; // Filter by Status
+
+            // Replace with your actual connection string
+            string connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        con.Open();
+                        da.Fill(dt);
+                    }
+                }
+            }
+
+            // Bind the data to your GridView
+            gv_EstimationList.DataSource = dt;
+            gv_EstimationList.EmptyDataText = "Record Not Found";
+            gv_EstimationList.DataBind();
+
+            // Show the modal profile as before
+            modelprofile.Show();
+        }
+        catch (Exception ex)
+        {
+            // Example: log the error or show a user-friendly message
+            // LogError(ex); 
+            Response.Write($"<script>alert('An error occurred: {ex.Message}');</script>");
+        }
+    }
+
+    public static int GetJobCount()
+    {
+        int QuatationCount = 0;
+
+        string connString = System.Configuration.ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+        using (SqlConnection con = new SqlConnection(connString))
+        {
+
+            SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM tbl_Quotation_two_Hdr WHERE Status = 'Pending'", con);
+            con.Open();
+            QuatationCount = (int)cmd.ExecuteScalar();
+        }
+        return QuatationCount;
+    }
+
+    protected void gv_EstimationList_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        if (e.CommandName == "CloseQuotation")
+        {
+            int Id = Convert.ToInt32(e.CommandArgument);
+
+            // Update the database to set the status to "Closed"
+            CloseQuotation(Id);
+            lnkshow_Click(sender, e);
+
+        }
+    }
+
+    private void CloseQuotation(int Id)
+    {
+        string connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+
+        using (SqlConnection conn = new SqlConnection(connectionString))
+        {
+            string query = "UPDATE tbl_Quotation_two_Hdr SET Status = 'Closed' WHERE ID = @ID";
+
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@ID", Id);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+    } 
+    
+    protected void lnkbtnCorrect_Click(object sender, EventArgs e)
+    {
+        LinkButton btn = (LinkButton)sender;
+        string quatno = btn.CommandArgument;
+        Response.Redirect("Customer_PO_Sales.aspx?Quotation_no=" + encrypt(quatno) + "");
+    }
+
 }

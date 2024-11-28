@@ -8,11 +8,11 @@
             Swal.fire({
                 icon: 'success',
                 text: msg,
-                timer: 5000,
+                timer: 3000,
                 showCancelButton: false,
                 showConfirmButton: false
             }).then(function () {
-                window.location.href = "../Admin/TaxInvoiceList_Sales.aspx";
+                window.location.href = "../Admin/TaxInvoiceList_Sales.aspx"; 
             })
         };
     </script>
@@ -260,17 +260,17 @@
                             </div>
                             <br />
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <asp:Label ID="lbl_payterm" runat="server" class="control-label col-sm-6" for="cust"> Pay Term :<span class="spncls"></span></asp:Label>
                                     <asp:TextBox ID="txt_Payterm" runat="server" CssClass="form-control"></asp:TextBox><br />
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <asp:Label ID="lbl_KindAtt" runat="server" class="control-label col-sm-6" for="cust">Kind Att :<span class="spncls"></span></asp:Label>
                                     <asp:TextBox ID="txt_KindAtt" runat="server" CssClass="form-control"></asp:TextBox><br />
 
                                 </div>
 
-                                   <div class="col-md-3">
+                                   <div class="col-md-4">
                                     <asp:Label ID="Label14" runat="server" class="control-label col-sm-4">Service Type :<span class="spncls">*</span></asp:Label>
                                     <asp:DropDownList runat="server" class="form-control" ID="ddlservicetype">
                                         <asp:ListItem Value="Service" Text="Service"></asp:ListItem>
@@ -278,10 +278,17 @@
                                         <asp:ListItem Value="Reparing" Text="Reparing"></asp:ListItem>
                                     </asp:DropDownList>
                                 </div>
-                                <%--  <div class="col-md-3">
+                                 <%-- <div class="col-md-3">
                                     <asp:Label ID="Label9" runat="server" class="control-label col-sm-6" for="cust">Status :<span class="spncls"></span></asp:Label>
                                       <asp:TextBox ID="txtstatus" runat="server" CssClass="form-control"></asp:TextBox><br />
                                 </div>--%>
+                                <div class="col-md-3 d-none">
+                                    <asp:Label ID="Label9" runat="server" class="control-label col-sm-6" for="cust">Type:<span class="spncls">*</span></asp:Label>
+                                    <asp:DropDownList ID="ddltype" runat="server" CssClass="form-control">
+                                        <asp:ListItem Text="Sales" Value="Sales"></asp:ListItem>
+                                    </asp:DropDownList>
+                                    <br />
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">

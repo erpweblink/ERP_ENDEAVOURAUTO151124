@@ -188,6 +188,53 @@ DI.GrandTotal
     }
 
 
+    protected void gv_Tax_List_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        //Added New for Count by Shubham Patil
+        if (e.Row.RowType == DataControlRowType.Footer)
+        {
+            decimal totalAmount = 0;
+
+            if (Gvsorted.Rows.Count > 0)
+            {
+                foreach (GridViewRow row in Gvsorted.Rows)
+                {
+
+                    Label lblIGST = row.FindControl("lblIGST") as Label;
+                    if (lblIGST != null)
+                    {
+                        if (decimal.TryParse(lblIGST.Text, out decimal rowAmount)) 
+                        {
+                            totalAmount += rowAmount;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (GridViewRow row in GvPurchaseOrderList.Rows)
+                {
+                    Label lblIGST = row.FindControl("lblIGST") as Label;
+                    if (lblIGST != null)
+                    {
+                        if (decimal.TryParse(lblIGST.Text, out decimal rowAmount))
+                        {
+                            totalAmount += rowAmount;
+                        }
+                    }
+                }
+            }
+
+            Label lblFooterTotalAmt = (Label)e.Row.FindControl("lblFooterTotalAmt");
+            if (lblFooterTotalAmt != null)
+            {
+                lblFooterTotalAmt.Text = "Total Amt: ₹" + totalAmount.ToString("N2");
+            }
+        }
+        //End
+    }
+
+
     protected void GvPurchaseOrderList_RowCommand(object sender, GridViewCommandEventArgs e)
     {
         if (e.CommandName == "RowDelete")
@@ -1640,6 +1687,7 @@ DI.GrandTotal
         IH.InvoiceNo,
         IH.PoNo,
         IH.CompName,
+        IH.GrandTotal,
         IH.ChallanNo,
         IH.PayTerm,
         IH.InvoiceDate,
@@ -1659,6 +1707,7 @@ SELECT
     DI.InvoiceNo,
     DI.PoNo,
     DI.CompName,
+    DI.GrandTotal,
     DI.ChallanNo,
     DI.PayTerm,
     DI.InvoiceDate,
@@ -1758,6 +1807,7 @@ WHERE
         IH.InvoiceNo,
         IH.PoNo,
         IH.CompName,
+        IH.GrandTotal,
         IH.ChallanNo,
         IH.PayTerm,
         IH.InvoiceDate,
@@ -1777,6 +1827,7 @@ SELECT
     DI.InvoiceNo,
     DI.PoNo,
     DI.CompName,
+    DI.GrandTotal,
     DI.ChallanNo,
     DI.PayTerm,
     DI.InvoiceDate,
@@ -2002,6 +2053,7 @@ WHERE
         IH.InvoiceNo,
         IH.PoNo,
         IH.CompName,
+        IH.GrandTotal,
         IH.ChallanNo,
         IH.PayTerm,
         IH.InvoiceDate,
@@ -2021,6 +2073,7 @@ SELECT
     DI.InvoiceNo,
     DI.PoNo,
     DI.CompName,
+    DI.GrandTotal,
     DI.ChallanNo,
     DI.PayTerm,
     DI.InvoiceDate,
@@ -2119,6 +2172,7 @@ WHERE
         IH.InvoiceNo,
         IH.PoNo,
         IH.CompName,
+        IH.GrandTotal,
         IH.ChallanNo,
         IH.PayTerm,
         IH.InvoiceDate,
@@ -2138,6 +2192,7 @@ SELECT
     DI.InvoiceNo,
     DI.PoNo,
     DI.CompName,
+    DI.GrandTotal,
     DI.ChallanNo,
     DI.PayTerm,
     DI.InvoiceDate,
@@ -2243,6 +2298,7 @@ WHERE
         IH.InvoiceNo,
         IH.PoNo,
         IH.CompName,
+        IH.GrandTotal,
         IH.ChallanNo,
         IH.PayTerm,
         IH.InvoiceDate,
@@ -2262,6 +2318,7 @@ SELECT
     DI.InvoiceNo,
     DI.PoNo,
     DI.CompName,
+    DI.GrandTotal,
     DI.ChallanNo,
     DI.PayTerm,
     DI.InvoiceDate,
@@ -2369,6 +2426,7 @@ FROM
         IH.InvoiceNo,
         IH.PoNo,
         IH.CompName,
+        IH.GrandTotal,
         IH.ChallanNo,
         IH.PayTerm,
         IH.InvoiceDate,
@@ -2388,6 +2446,7 @@ SELECT
     DI.InvoiceNo,
     DI.PoNo,
     DI.CompName,
+    DI.GrandTotal,
     DI.ChallanNo,
     DI.PayTerm,
     DI.InvoiceDate,
@@ -2488,6 +2547,7 @@ FROM
         IH.InvoiceNo,
         IH.PoNo,
         IH.CompName,
+        IH.GrandTotal,
         IH.ChallanNo,
         IH.PayTerm,
         IH.InvoiceDate,
@@ -2507,6 +2567,7 @@ SELECT
     DI.InvoiceNo,
     DI.PoNo,
     DI.CompName,
+    DI.GrandTotal,
     DI.ChallanNo,
     DI.PayTerm,
     DI.InvoiceDate,
@@ -2614,6 +2675,7 @@ FROM
         IH.InvoiceNo,
         IH.PoNo,
         IH.CompName,
+        IH.GrandTotal,
         IH.ChallanNo,
         IH.PayTerm,
         IH.InvoiceDate,
@@ -2633,6 +2695,7 @@ SELECT
     DI.InvoiceNo,
     DI.PoNo,
     DI.CompName,
+    DI.GrandTotal,
     DI.ChallanNo,
     DI.PayTerm,
     DI.InvoiceDate,
@@ -2735,6 +2798,7 @@ FROM
         IH.InvoiceNo,
         IH.PoNo,
         IH.CompName,
+        IH.GrandTotal,
         IH.ChallanNo,
         IH.PayTerm,
         IH.InvoiceDate,
@@ -2754,6 +2818,7 @@ SELECT
     DI.InvoiceNo,
     DI.PoNo,
     DI.CompName,
+    DI.GrandTotal,
     DI.ChallanNo,
     DI.PayTerm,
     DI.InvoiceDate,

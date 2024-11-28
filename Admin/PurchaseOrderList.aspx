@@ -157,7 +157,8 @@
                         </div>
                     </div>
                     <div class="table-responsive text-center" style="width: 100%; padding: 20px;">
-                        <asp:GridView ID="GvPurchaseOrderList" runat="server" AutoGenerateColumns="false" CssClass="grid" AllowPaging="true" Width="100%" OnRowDataBound="GvPurchaseOrderList_RowDataBound" OnRowCommand="GvPurchaseOrderList_RowCommand" PagerStyle-CssClass="paging" PageSize="10" OnPageIndexChanging="GvPurchaseOrderList_PageIndexChanging">
+                        <asp:GridView ID="GvPurchaseOrderList" runat="server" AutoGenerateColumns="false" CssClass="grid" Width="100%" OnRowDataBound="GvPurchaseOrderList_RowDataBound" OnRowCommand="GvPurchaseOrderList_RowCommand">
+                            <%--AllowPaging="true" PagerStyle-CssClass="paging" PageSize="10" OnPageIndexChanging="GvPurchaseOrderList_PageIndexChanging"--%>
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr. No.">
                                     <ItemTemplate>
@@ -220,7 +221,8 @@
                         <asp:HiddenField ID="hdId" runat="server"></asp:HiddenField>
 
                         <%--   sorted Grid started--%>
-                        <asp:GridView ID="sortedGv" runat="server" AutoGenerateColumns="false" CssClass="grid" AllowPaging="true" Width="100%" OnRowDataBound="GvPurchaseOrderList_RowDataBound" OnRowCommand="GvPurchaseOrderList_RowCommand" PagerStyle-CssClass="paging" PageSize="10" OnPageIndexChanging="sortedGv_PageIndexChanging">
+                        <asp:GridView ID="sortedGv" runat="server" AutoGenerateColumns="false" CssClass="grid" Width="100%" OnRowDataBound="GvPurchaseOrderList_RowDataBound" OnRowCommand="GvPurchaseOrderList_RowCommand">
+                            <%--AllowPaging="true" PagerStyle-CssClass="paging" PageSize="10" OnPageIndexChanging="sortedGv_PageIndexChanging"--%>
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr. No.">
                                     <ItemTemplate>

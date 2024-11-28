@@ -170,7 +170,12 @@
                 </br>
                 <div style="width: 100%;">
                     <div class="table-responsive">
-                        <asp:GridView ID="gv_Quot_List" runat="server" OnRowDataBound="gv_Quot_List_RowDataBound" AutoGenerateColumns="False" DataKeyNames="Quotation_no" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Quot_List_RowCommand" PagerStyle-CssClass="paging" AllowPaging="true" PageSize="15" OnPageIndexChanging="gv_Quot_List_PageIndexChanging">
+                        <asp:GridView ID="gv_Quot_List" runat="server"  OnRowDataBound="gv_Quot_List_RowDataBound" 
+                            AutoGenerateColumns="False" DataKeyNames="Quotation_no" CellPadding="3" Width="100%" BackColor="White"
+                            BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" 
+                            RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Quot_List_RowCommand" 
+                            ShowFooter="True">
+                             <%--AllowPaging="true" PageSize="15" PagerStyle-CssClass="paging"  OnPageIndexChanging="gv_Quot_List_PageIndexChanging"--%>
                             <Columns>
                           <%--      <asp:TemplateField HeaderStyle-Width="20" HeaderText="View">
                                     <ItemTemplate>
@@ -273,6 +278,11 @@
                                         <asp:LinkButton runat="server" ID="lnkbtnsendpo" ToolTip="Send PO" CommandName="SendPO" CommandArgument='<%# Eval("Quotation_no") %>'><i class="fa fa-paper-plane"  style="font-size: 26px; color:black; "></i></i></asp:LinkButton>
 
                                     </ItemTemplate>
+
+                                     <FooterTemplate>
+                                        <asp:Label ID="lblFooterTotalAmt" runat="server" Text="Total Amt:" Font-Bold="True"></asp:Label>
+                                    </FooterTemplate>
+
                                 </asp:TemplateField>
                             </Columns>
                             <FooterStyle BackColor="White" ForeColor="#000066" />
@@ -288,7 +298,8 @@
 
                         <%--   Sorted Grid start--%>
 
-                        <asp:GridView ID="sortedgv" runat="server" OnRowDataBound="gv_Quot_List_RowDataBound" AutoGenerateColumns="False" DataKeyNames="Quotation_no" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Quot_List_RowCommand" PagerStyle-CssClass="paging" AllowPaging="true" PageSize="15" OnPageIndexChanging="sortedgv_PageIndexChanging">
+                        <asp:GridView ID="sortedgv" runat="server" OnRowDataBound="gv_Quot_List_RowDataBound" AutoGenerateColumns="False" DataKeyNames="Quotation_no" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Quot_List_RowCommand" ShowFooter="True">
+                            <%--PagerStyle-CssClass="paging" AllowPaging="true" PageSize="15" OnPageIndexChanging="sortedgv_PageIndexChanging"--%>
                             <Columns>
                         <%--        <asp:TemplateField HeaderStyle-Width="20" HeaderText="View">
                                     <ItemTemplate>
@@ -381,6 +392,11 @@
                                         &nbsp;&nbsp; 
                                         <asp:LinkButton runat="server" ID="lnkBtn_View" ToolTip="View Quotation PDF" CommandName="RowView" CommandArgument='<%# Eval("Quotation_no") %>'><i class="fas fa-file-pdf"  style="font-size: 26px; color:red; "></i></i></asp:LinkButton>
                                     </ItemTemplate>
+
+                                     <FooterTemplate>
+                                        <asp:Label ID="lblFooterTotalAmt" runat="server" Text="Total Amt:" Font-Bold="True"></asp:Label>
+                                    </FooterTemplate>
+
                                 </asp:TemplateField>
                             </Columns>
                             <FooterStyle BackColor="White" ForeColor="#000066" />

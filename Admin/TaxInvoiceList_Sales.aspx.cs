@@ -25,6 +25,11 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
+            //New Code by Shubham Patil
+            int QuatationCount = GetJobCount();  
+            lblquatation.Text = QuatationCount.ToString();  
+            //End
+
             if (Session["adminname"] == null)
             {
                 Response.Redirect("../LoginPage.aspx");
@@ -179,8 +184,55 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
         GridExportExcel.DataBind();
     }
 
+    protected void gv_Tax_List_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        //Added New for Count by Shubham Patil
+        if (e.Row.RowType == DataControlRowType.Footer)
+        {
+            decimal totalAmount = 0;
+
+            if (Gvsorted.Rows.Count > 0)
+            {
+                foreach (GridViewRow row in Gvsorted.Rows)
+                {
+
+                    Label lblGrandTotal = row.FindControl("lblGrandTotal") as Label;
+                    if (lblGrandTotal != null)
+                    {
+                        if (decimal.TryParse(lblGrandTotal.Text, out decimal rowAmount))
+                        {
+                            totalAmount += rowAmount;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (GridViewRow row in GvPurchaseOrderList.Rows)
+                {
+                    Label lblGrandTotal = row.FindControl("lblGrandTotal") as Label;
+                    if (lblGrandTotal != null)
+                    {
+                        if (decimal.TryParse(lblGrandTotal.Text, out decimal rowAmount))
+                        {
+                            totalAmount += rowAmount;
+                        }
+                    }
+                }
+            }
+
+            Label lblFooterTotalAmt = (Label)e.Row.FindControl("lblFooterTotalAmt");
+            if (lblFooterTotalAmt != null)
+            {
+                lblFooterTotalAmt.Text = "Total Amt: ₹" + totalAmount.ToString("N2");
+            }
+        }
+        //End
+    }
+
     protected void GvPurchaseOrderList_RowCommand(object sender, GridViewCommandEventArgs e)
     {
+
         if (e.CommandName == "RowDelete")
         {
             Conn.Open();
@@ -1480,7 +1532,8 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
 
     protected void btn_refresh_Click(object sender, EventArgs e)
     {
-        Response.Redirect("TaxInvoiceList.aspx");
+        //Response.Redirect("TaxInvoiceList.aspx");
+        Response.Redirect("TaxInvoiceList_Sales.aspx");
     }
 
     protected void btncreate_Click(object sender, EventArgs e)
@@ -3458,6 +3511,104 @@ FROM
         GridExportExcel.DataBind();
         GridExportExcel.EmptyDataText = "Not Records Found";
     }
+
+    // New Code by Shubham Patil
+    protected void lnkshow_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            DataTable dt = new DataTable();
+            string query = @"
+            SELECT *,
+                   DATEDIFF(DAY, PoDate, GETDATE()) AS Days_Completed
+            FROM CustomerPO_Hdr_Both
+            WHERE Status = 'Pending'"; // Filter by Status
+
+            // Replace with your actual connection string
+            string connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        con.Open();
+                        da.Fill(dt);
+                    }
+                }
+            }
+
+            // Bind the data to your GridView
+            gv_EstimationList.DataSource = dt;
+            gv_EstimationList.EmptyDataText = "Record Not Found";
+            gv_EstimationList.DataBind();
+
+            // Show the modal profile as before
+            modelprofile.Show();
+        }
+        catch (Exception ex)
+        {
+            // Example: log the error or show a user-friendly message
+            // LogError(ex); 
+            Response.Write($"<script>alert('An error occurred: {ex.Message}');</script>");
+        }
+    }
+
+    public static int GetJobCount()
+    {
+        int QuatationCount = 0;
+
+        string connString = System.Configuration.ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+        using (SqlConnection con = new SqlConnection(connString))
+        {
+
+            SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM CustomerPO_Hdr_Both WHERE Status = 'Pending'", con);
+            con.Open();
+            QuatationCount = (int)cmd.ExecuteScalar();
+        }
+        return QuatationCount;
+    }
+
+    protected void gv_EstimationList_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        if (e.CommandName == "CloseQuotation")
+        {
+            int Id = Convert.ToInt32(e.CommandArgument);
+
+            // Update the database to set the status to "Closed"
+            CloseQuotation(Id);
+            lnkshow_Click(sender, e);
+
+        }
+    }
+
+    private void CloseQuotation(int Id)
+    {
+        string connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+
+        using (SqlConnection conn = new SqlConnection(connectionString))
+        {
+            string query = "UPDATE CustomerPO_Hdr_Both SET Status = 'Closed' WHERE Id = @Id";
+
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@Id", Id);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+    }
+
+    protected void lnkbtnCorrect_Click(object sender, EventArgs e)
+    {
+        LinkButton btn = (LinkButton)sender;
+        string quatno = btn.CommandArgument;
+        Response.Redirect("TaxInvoice_Sales.aspx?QuatationNo=" + encrypt(quatno) + "");
+    }
+
 }
 
 

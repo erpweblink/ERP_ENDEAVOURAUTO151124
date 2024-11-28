@@ -177,8 +177,9 @@
                     </div>
                     </div>
                  <div class="table-responsive text-center">
-                        <asp:GridView ID="GvPurchaseOrderList" runat="server" AutoGenerateColumns="false" CssClass="grid"  Width="100%"   AllowPaging="true"  PageSize="10" PagerStyle-CssClass="paging" 
-                            OnRowCommand="GvPurchaseOrderList_RowCommand" OnPageIndexChanging="GvPurchaseOrderList_PageIndexChanging" >
+                        <asp:GridView ID="GvPurchaseOrderList" runat="server" AutoGenerateColumns="false" CssClass="grid"  Width="100%"
+                            OnRowCommand="GvPurchaseOrderList_RowCommand">
+                            <%--AllowPaging="true"  PageSize="10" PagerStyle-CssClass="paging" OnPageIndexChanging="GvPurchaseOrderList_PageIndexChanging"--%> 
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr. No.">
                                     <ItemTemplate>

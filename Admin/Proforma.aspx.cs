@@ -2529,7 +2529,9 @@ public partial class Admin_Proforma : System.Web.UI.Page
         }
         else
         {
-            Response.Redirect("TaxInvoiceList.aspx");
+            //Response.Redirect("TaxInvoiceList.aspx");
+            Response.Redirect("SalesProformaList.aspx");
+
         }
 
     }

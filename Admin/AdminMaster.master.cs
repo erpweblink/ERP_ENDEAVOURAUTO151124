@@ -291,11 +291,11 @@ public partial class Admin_MasterPage : System.Web.UI.MasterPage
                     string pageView = row["PagesView"].ToString();
                     if (page1 == "False" && pageView == "False")
                     {
-                        purchaseorderlistid.Visible = false;
+                        //purchaseorderlistid.Visible = false;
                     }
                     else
                     {
-                        purchaseorderlistid.Visible = true;
+                        //purchaseorderlistid.Visible = true;
                     }
                 }
                 if (MenuName == "CustomerPO_List.aspx")
@@ -304,11 +304,11 @@ public partial class Admin_MasterPage : System.Web.UI.MasterPage
                     string pageView = row["PagesView"].ToString();
                     if (page1 == "False" && pageView == "False")
                     {
-                        CustomerPOBoth.Visible = false;
+                        //CustomerPOBoth.Visible = false;
                     }
                     else
                     {
-                        CustomerPOBoth.Visible = true;
+                        //CustomerPOBoth.Visible = true;
                     }
                 }
                 if (MenuName == "TaxInvoiceList.aspx")
@@ -330,11 +330,11 @@ public partial class Admin_MasterPage : System.Web.UI.MasterPage
                     string pageView = row["PagesView"].ToString();
                     if (page1 == "False" && pageView == "False")
                     {
-                        deliverychallanid.Visible = false;
+                        //deliverychallanid.Visible = false;
                     }
                     else
                     {
-                        deliverychallanid.Visible = true;
+                        //deliverychallanid.Visible = true;
                     }
                 }
                 if (MenuName == "SalesProformaList.aspx")
