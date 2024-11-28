@@ -109,12 +109,12 @@
                             <asp:HiddenField ID="hdnPoProductTot" runat="server" />
                             <asp:HiddenField ID="taxhidden" runat="server" />
                             <div class="row">
-                                  <div class="col-md-6">
+                                <div class="col-md-6">
                                     <asp:Label ID="Label4" runat="server" class="control-label col-sm-4">Against By :<span class="spncls">*</span></asp:Label>
                                     <asp:DropDownList runat="server" class="form-control" OnTextChanged="ddlagainstby_TextChanged" AutoPostBack="true" ID="ddlagainstby">
                                         <asp:ListItem Value="--Select--" Text="--Select--"></asp:ListItem>
                                         <asp:ListItem Value="Direct" Text="Direct"></asp:ListItem>
-                                        <asp:ListItem Value="Order" Text="Order"></asp:ListItem>                                
+                                        <asp:ListItem Value="Order" Text="Order"></asp:ListItem>
                                     </asp:DropDownList>
                                 </div>
                                 <div class="col-md-6">
@@ -264,82 +264,95 @@
                             <div class="row" id="tbl" runat="server">
                                 <div class="col-md-12">
                                     <center>
-                                    <table class="table-responsive" >
-                                        <tr>
-                                            <td style="width: 10px;">Job No.</td>
-                                            <td style="width: 10px;">Product</td>
-                                            <td style="width: 10px;">Component</td>
-                                 <%--           <td style="width: 10px;">Description</td>--%>
-                                            <td style="width: 10px;">Print Description</td>
-                                            <td style="width: 10px;">HSN/SAC</td>
-                                            <td style="width: 10px;">Rate</td>
-                                            <td style="width: 10px;">Unit</td>
-                                            <td style="width: 10px;">Quntity</td>
-                                            <td style="width: 10px;">Tax(%)</td>
-                                            <td style="width: 10px;">Discount(%)</td>
-                                            <td style="width: 10px;">Total_Amount</td>
-                                        </tr>
-                                        <tr>
-                                         <%--     <td>
+                                        <table class="table-responsive">
+                                            <tr>
+                                                <td style="width: 10px;">Job No.</td>
+                                                <td style="width: 10px;">Product</td>
+                                                <td style="width: 10px;">Component</td>
+                                                <%--           <td style="width: 10px;">Description</td>--%>
+                                                <td style="width: 10px;">Print Description</td>
+                                                <td style="width: 10px;">HSN/SAC</td>
+                                                <td style="width: 10px;">Rate</td>
+                                                <td style="width: 10px;">Unit</td>
+                                                <td style="width: 10px;">Quntity</td>
+                                                <td style="width: 10px;">Tax(%)</td>
+                                                <td style="width: 10px;">Discount(%)</td>
+                                                <td style="width: 10px;">Total_Amount</td>
+                                            </tr>
+                                            <tr>
+                                                <%--     <td>
                                                 <asp:TextBox ID="txt_jobno" runat="server" Width="100px"></asp:TextBox>
                                             </td>--%>
-                                            <td>
-                                        <asp:DropDownList ID="txt_jobno" OnTextChanged="txt_jobno_TextChanged" AutoPostBack="true" CssClass="form-control" runat="server" Width="150px">
-                                        <asp:ListItem Value="" Text="Select Job No.">
-                                        </asp:ListItem>
-                                    </asp:DropDownList>
-                                            </td>
-                                             <td>
-                                                <asp:TextBox ID="txtpoduct" runat="server" AutoPostBack="true" Width="230px"></asp:TextBox>
-                                             <td>
-                                                <asp:TextBox ID="txt_discription" runat="server" OnTextChanged="txt_discription_TextChanged" AutoPostBack="true" Width="230px"></asp:TextBox>
-                                                 <asp:AutoCompleteExtender ID="AutoCompleteExtender2" CompletionListCssClass="completionList"
-                                            CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
-                                            CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetDescriptionList" TargetControlID="txt_discription" runat="server">
-                                        </asp:AutoCompleteExtender>
-                                            </td>
-                                            <td>
-                                                <asp:TextBox ID="txt_printdescription" runat="server"  AutoPostBack="true" Width="230px"  TextMode="MultiLine"></asp:TextBox>                                            
-                                            </td>
-                                            <td>
-                                                <asp:TextBox ID="txt_hsn" runat="server" Width="100px"></asp:TextBox>
-                                            </td>
-                                            <td>
-                                                <asp:TextBox ID="txt_rate" AutoPostBack="true" OnTextChanged="txt_rate_TextChanged" runat="server" Width="100px" onkeypress="return isNumberKey(event)"></asp:TextBox>
-                                             </td>
-                                               <td>
-                                                <asp:TextBox ID="txt_unit" onkeypress="return character(event)" runat="server" Width="100px"></asp:TextBox>
-                                            </td>
-                                            <td>
-                                                <asp:TextBox ID="txt_quntity" AutoPostBack="true" OnTextChanged="txt_quntity_TextChanged" runat="server" Width="100px" onkeypress="return isNumberKey(event)"></asp:TextBox>
-                                            </td>
-                                           <%--  <td>
+                                                <td>
+                                                    <asp:DropDownList ID="txt_jobno" OnTextChanged="txt_jobno_TextChanged" AutoPostBack="true" CssClass="form-control" runat="server" Width="150px">
+                                                        <asp:ListItem Value="" Text="Select Job No.">
+                                                        </asp:ListItem>
+                                                    </asp:DropDownList>
+                                                </td>
+                                                <td>
+                                                    <asp:TextBox ID="txtpoduct" runat="server" AutoPostBack="true" Width="230px"></asp:TextBox>
+                                                <td>
+                                                    <asp:TextBox ID="txt_discription" runat="server" OnTextChanged="txt_discription_TextChanged" AutoPostBack="true" Width="230px"></asp:TextBox>
+                                                    <asp:AutoCompleteExtender ID="AutoCompleteExtender2" CompletionListCssClass="completionList"
+                                                        CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
+                                                        CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetDescriptionList" TargetControlID="txt_discription" runat="server">
+                                                    </asp:AutoCompleteExtender>
+                                                </td>
+                                                <td>
+                                                    <asp:TextBox ID="txt_printdescription" runat="server" AutoPostBack="true" Width="230px" TextMode="MultiLine"></asp:TextBox>
+                                                </td>
+                                                <td>
+                                                    <asp:TextBox ID="txt_hsn" runat="server" Width="100px"></asp:TextBox>
+                                                </td>
+                                                <td>
+                                                    <asp:TextBox ID="txt_rate" AutoPostBack="true" OnTextChanged="txt_rate_TextChanged" runat="server" Width="100px" onkeypress="return isNumberKey(event)"></asp:TextBox>
+                                                </td>
+                                                <td>
+                                                    <asp:TextBox ID="txt_unit" onkeypress="return character(event)" runat="server" Width="100px"></asp:TextBox>
+                                                </td>
+                                                <td>
+                                                    <asp:TextBox ID="txt_quntity" AutoPostBack="true" OnTextChanged="txt_quntity_TextChanged" runat="server" Width="100px" onkeypress="return isNumberKey(event)"></asp:TextBox>
+                                                </td>
+                                                <%--  <td>
                                                 <asp:TextBox ID="txt_quntity_Tbl" OnTextChanged="txt_quntity_Tbl_TextChanged" AutoPostBack="true" runat="server" Width="100px" onkeypress="return isNumberKey(event)"></asp:TextBox>
                                             </td>--%>
-                                            <td>
-                                                <asp:TextBox ID="txt_tax" AutoPostBack="true" OnTextChanged="txt_tax_TextChanged" runat="server" Width="100px" onkeypress="return isNumberKey(event)"></asp:TextBox>
-                                            </td>
-                                            <td>
-                                                <asp:TextBox ID="txt_discount" AutoPostBack="true" OnTextChanged="txt_discount_TextChanged" runat="server" Width="100px" onkeypress="return isNumberKey(event)"></asp:TextBox>
-                                            </td>
-                                            <td>
-                                                <asp:TextBox ID="txt_total_amount" ReadOnly="true" runat="server" Width="100px"></asp:TextBox>
-                                            </td>
-                                            <td>
-                                                <asp:Button ID="btn_add_more" CausesValidation="false" OnClick="btn_add_more_Click" runat="server" Text="Add More" CssClass="btn btn-primary" />
-                                            </td>
-                                        </tr>
-                                    </table>
-                                        </center>
+                                                <td>
+                                                    <asp:TextBox ID="txt_tax" AutoPostBack="true" OnTextChanged="txt_tax_TextChanged" runat="server" Width="100px" onkeypress="return isNumberKey(event)"></asp:TextBox>
+                                                </td>
+                                                <td>
+                                                    <asp:TextBox ID="txt_discount" AutoPostBack="true" OnTextChanged="txt_discount_TextChanged" runat="server" Width="100px" onkeypress="return isNumberKey(event)"></asp:TextBox>
+                                                </td>
+                                                <td>
+                                                    <asp:TextBox ID="txt_total_amount" ReadOnly="true" runat="server" Width="100px"></asp:TextBox>
+                                                </td>
+                                                <td>
+                                                    <asp:Button ID="btn_add_more" CausesValidation="false" OnClick="btn_add_more_Click" runat="server" Text="Add More" CssClass="btn btn-primary" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </center>
                                 </div>
                             </div>
                             <hr />
                             <div class="table-responsive text-center">
                                 <asp:GridView ID="quatationgrid" runat="server" AutoGenerateColumns="false" CssClass="grid" AllowPaging="false" Width="100%" OnRowEditing="quatationgrid_RowEditing" OnRowDataBound="quatationgrid_RowDataBound">
                                     <Columns>
+                                        <%-- New Code For Selecting the Jobs --%>
+                                        <asp:TemplateField HeaderText="Select Jobs">
+                                            <ItemTemplate>
+                                                <asp:CheckBox ID="chkSelect" runat="server" Checked="true" AutoPostBack="true" OnCheckedChanged="chkSelect_CheckedChanged" />
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <%-- /////////////////////////////////////////// --%>
+
                                         <asp:TemplateField HeaderText="Sr. No.">
                                             <ItemTemplate>
                                                 <asp:Label ID="txt_sr_no" ReadOnly="true" runat="server" Text='<%# Container.DataItemIndex+1%>'></asp:Label>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField Visible="false">
+                                            <ItemTemplate>
+                                                <asp:Label ID="LblJobNoss" ReadOnly="true" runat="server" Text='<%# Eval("DaysSinceCreated") %>'></asp:Label>
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="Job No.">
@@ -735,14 +748,16 @@
                     </asp:UpdatePanel>
 
                     <br />
-                    <center>   <div class="col-md-6">  
-              <asp:Button  ID="btn_save" runat="server" class="btn btn-primary col-sm-3 " Text="Submit" OnClick="btn_save_Click"   ></asp:Button>
-                &nbsp;&nbsp;        &nbsp;&nbsp;     &nbsp;&nbsp;     &nbsp;&nbsp; 
-             <asp:Button  ID="btnCancel" runat="server" class="btn btn-primary col-sm-3 " OnClick="btnCancel_Click"  CausesValidation="False"  Text="Cancel"   ></asp:Button>
-                               <asp:HiddenField runat="server" ID="hidden" /> 
-                        <asp:HiddenField runat="server" ID="statecodehidden" /> 
-                         
-            </div></center>
+                    <center>
+                        <div class="col-md-6">
+                            <asp:Button ID="btn_save" runat="server" class="btn btn-primary col-sm-3 " Text="Submit" OnClick="btn_save_Click"></asp:Button>
+                            &nbsp;&nbsp;        &nbsp;&nbsp;     &nbsp;&nbsp;     &nbsp;&nbsp; 
+             <asp:Button ID="btnCancel" runat="server" class="btn btn-primary col-sm-3 " OnClick="btnCancel_Click" CausesValidation="False" Text="Cancel"></asp:Button>
+                            <asp:HiddenField runat="server" ID="hidden" />
+                            <asp:HiddenField runat="server" ID="statecodehidden" />
+
+                        </div>
+                    </center>
                 </div>
             </div>
 

@@ -269,7 +269,7 @@
 
                                 </div>
 
-                                   <div class="col-md-3">
+                                <div class="col-md-3">
                                     <asp:Label ID="Label14" runat="server" class="control-label col-sm-4">Service Type :<span class="spncls">*</span></asp:Label>
                                     <asp:DropDownList runat="server" class="form-control" ID="ddlservicetype">
                                         <asp:ListItem Value="Service" Text="Service"></asp:ListItem>
@@ -539,9 +539,19 @@
                                 <div class="table-responsive text-center">
                                     <asp:GridView ID="grd_getDTLS" runat="server" AutoGenerateColumns="false" CssClass="grid" AllowPaging="false" Width="100%" OnRowDataBound="grd_getDTLS_RowDataBound">
                                         <Columns>
+                                            <asp:TemplateField HeaderText="Select Jobs">
+                                                <ItemTemplate>
+                                                    <asp:CheckBox ID="chkSelect" runat="server" Checked="true" AutoPostBack="true" OnCheckedChanged="chkSelect_CheckedChanged" />
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
                                             <asp:TemplateField HeaderText="Sr No">
                                                 <ItemTemplate>
                                                     <asp:Label ID="txt_sr_no_GET" ReadOnly="true" runat="server" Text='<%# Container.DataItemIndex+1%>'></asp:Label>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField Visible="false">
+                                                <ItemTemplate>
+                                                    <asp:Label ID="LblJobNoss" ReadOnly="true" runat="server" Text='<%# Eval("JobDaysCount") %>'></asp:Label>
                                                 </ItemTemplate>
                                             </asp:TemplateField>
                                             <asp:TemplateField HeaderText="Job No.">
@@ -834,27 +844,27 @@
                                     <asp:Label ID="lbl_condition_4" runat="server" class="control-label col-sm-6" for="cust">Condition 4 <span class="spncls"></span></asp:Label>
                                     <asp:TextBox ID="txt_condition_4" runat="server" CssClass="form-control"></asp:TextBox>
                                 </div>
-                         
 
 
 
-                            <div class="col-md-6">
-                                <asp:Label ID="lbl_term_5" runat="server" class="control-label col-sm-6" for="cust">Term 5<span class="spncls"></span></asp:Label>
-                                <asp:TextBox ID="txt_term_5" runat="server" CssClass="form-control"></asp:TextBox>
+
+                                <div class="col-md-6">
+                                    <asp:Label ID="lbl_term_5" runat="server" class="control-label col-sm-6" for="cust">Term 5<span class="spncls"></span></asp:Label>
+                                    <asp:TextBox ID="txt_term_5" runat="server" CssClass="form-control"></asp:TextBox>
+                                </div>
+                                <div class="col-md-6">
+                                    <asp:Label ID="lbl_condition_5" runat="server" class="control-label col-sm-6" for="cust">Condition : 5 <span class="spncls"></span></asp:Label>
+                                    <asp:TextBox ID="txt_condition_5" runat="server" CssClass="form-control"></asp:TextBox>
+                                </div>
+                                <div class="col-md-6">
+                                    <asp:Label ID="lbl_term_6" runat="server" class="control-label col-sm-6" for="cust">Term 6<span class="spncls"></span></asp:Label>
+                                    <asp:TextBox ID="txt_term_6" runat="server" CssClass="form-control"></asp:TextBox>
+                                </div>
+                                <div class="col-md-6">
+                                    <asp:Label ID="lbl_condition_6" runat="server" class="control-label col-sm-6" for="cust">Condition : 6 <span class="spncls"></span></asp:Label>
+                                    <asp:TextBox ID="txt_condition_6" runat="server" CssClass="form-control"></asp:TextBox>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <asp:Label ID="lbl_condition_5" runat="server" class="control-label col-sm-6" for="cust">Condition : 5 <span class="spncls"></span></asp:Label>
-                                <asp:TextBox ID="txt_condition_5" runat="server" CssClass="form-control"></asp:TextBox>
-                            </div>
-                            <div class="col-md-6">
-                                <asp:Label ID="lbl_term_6" runat="server" class="control-label col-sm-6" for="cust">Term 6<span class="spncls"></span></asp:Label>
-                                <asp:TextBox ID="txt_term_6" runat="server" CssClass="form-control"></asp:TextBox>
-                            </div>
-                            <div class="col-md-6">
-                                <asp:Label ID="lbl_condition_6" runat="server" class="control-label col-sm-6" for="cust">Condition : 6 <span class="spncls"></span></asp:Label>
-                                <asp:TextBox ID="txt_condition_6" runat="server" CssClass="form-control"></asp:TextBox>
-                            </div>
-                               </div>
                         </ContentTemplate>
                     </asp:UpdatePanel>
 
@@ -885,10 +895,10 @@
                             <div class="col-sm-7">
                                 <asp:Button ID="btn_save" OnClick="btn_save_Click" runat="server" Text="Save" CssClass="btn btn-primary" />
                                 <asp:Button ID="btn_Cancel" runat="server" Text="Cancel" CssClass="btn btn-primary" CausesValidation="false" OnClick="btn_Cancel_Click" />
-                           
-                                 <asp:HiddenField runat="server" ID="hidden" /> 
 
-                                </div>
+                                <asp:HiddenField runat="server" ID="hidden" />
+
+                            </div>
 
                         </div>
                     </div>

@@ -1003,6 +1003,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                 }
                 else
                 {
+                                   
                     string[] subs = txt_Quo_No.Text.Split('_');
                     //if (subs[0] == "MN")
                     //{
@@ -1044,7 +1045,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@Action", "Insert");
                     con.Open();
                     cmd.ExecuteNonQuery();
-                    con.Close();
+                    con.Close();                   
                     foreach (GridViewRow grd1 in dgvProductDtl.Rows)
                     {
                         string lbljobno = (grd1.FindControl("lbljobno") as Label).Text;
@@ -1060,7 +1061,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                         string DiscPer_grd = (grd1.FindControl("lbl_Discount") as Label).Text;
                         string Total_grd = (grd1.FindControl("lblTotalPrice") as Label).Text;
 
-                        SqlCommand cmdd = new SqlCommand("INSERT INTO tbl_Quotation_two_Dtls (Quotation_no,CompName,HSN,Tax,Qty,Units,total,Rate,Disc_per,FTotal,CreatedBy,CreatedOn,UpdatedBy,UpdatedOn,Description,product,JobNo) VALUES(@Quotation_no,@CompName,@HSN,@Tax,@Qty,@Units,@total,@Rate,@Disc_per,@FTotal,@CreatedBy,@CreatedOn,@UpdatedBy,@UpdatedOn,@Description,@product,@JobNo)", con);
+                        SqlCommand cmdd = new SqlCommand("INSERT INTO tbl_Quotation_two_Dtls (Quotation_no,CompName,HSN,Tax,Qty,Units,total,Rate,Disc_per,FTotal,CreatedBy,CreatedOn,UpdatedBy,UpdatedOn,Description,product,JobNo,JobStatus) VALUES(@Quotation_no,@CompName,@HSN,@Tax,@Qty,@Units,@total,@Rate,@Disc_per,@FTotal,@CreatedBy,@CreatedOn,@UpdatedBy,@UpdatedOn,@Description,@product,@JobNo,@JobStatus)", con);
                         cmdd.Parameters.AddWithValue("@Quotation_no", txt_Quo_No.Text);
                         cmdd.Parameters.AddWithValue("@CompName", Description_grd);
                         cmdd.Parameters.AddWithValue("@HSN", HSN_grd);
@@ -1078,9 +1079,11 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                         cmdd.Parameters.AddWithValue("@Description", AddDescription);
                         cmdd.Parameters.AddWithValue("@product", product);
                         cmdd.Parameters.AddWithValue("@JobNo", lbljobno);
+                        cmdd.Parameters.AddWithValue("@JobStatus", "Pending");
 
                         con.Open();
                         cmdd.ExecuteNonQuery();
+                        con.Close();
                         SqlCommand cmdds = new SqlCommand("UPDATE tblEstimationHdr SET QuotationStatus = 'Completed' WHERE JobNo = '" + lbljobno + "'", con);
                         con.Open();
                         cmdds.ExecuteNonQuery();
@@ -1101,10 +1104,11 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                         cmdtable.Parameters.AddWithValue("@CreatedOn", Date);
                         cmdtable.ExecuteNonQuery();
                         con.Close();
-                    }
+                    }                   
                     ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Saved Sucessfully');", true);
 
                 }
+
             }
 
             else if (btnSubmit.Text == "Update")
@@ -1177,7 +1181,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                     string Total_grd = (grd1.FindControl("lblTotalPrice") as Label).Text;
 
 
-                    SqlCommand cmdd = new SqlCommand("INSERT INTO tbl_Quotation_two_Dtls (Quotation_no,CompName,HSN,Tax,Qty,Units,total,Rate,Disc_per,FTotal,CreatedBy,CreatedOn,UpdatedBy,UpdatedOn,Description,product,JobNo) VALUES(@Quotation_no,@CompName,@HSN,@Tax,@Qty,@Units,@total,@Rate,@Disc_per,@FTotal,@CreatedBy,@CreatedOn,@UpdatedBy,@UpdatedOn,@Description,@product,@JobNo)", con);
+                    SqlCommand cmdd = new SqlCommand("INSERT INTO tbl_Quotation_two_Dtls (Quotation_no,CompName,HSN,Tax,Qty,Units,total,Rate,Disc_per,FTotal,CreatedBy,CreatedOn,UpdatedBy,UpdatedOn,Description,product,JobNo,JobStatus) VALUES(@Quotation_no,@CompName,@HSN,@Tax,@Qty,@Units,@total,@Rate,@Disc_per,@FTotal,@CreatedBy,@CreatedOn,@UpdatedBy,@UpdatedOn,@Description,@product,@JobNo,@JobStatus)", con);
                     cmdd.Parameters.AddWithValue("@Quotation_no", txt_Quo_No.Text);
                     cmdd.Parameters.AddWithValue("@CompName", Description_grd);
                     cmdd.Parameters.AddWithValue("@HSN", HSN_grd);
@@ -1195,6 +1199,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                     cmdd.Parameters.AddWithValue("@Description", AddDescription);
                     cmdd.Parameters.AddWithValue("@product", product);
                     cmdd.Parameters.AddWithValue("@JobNo", lbljobno);
+                    cmdd.Parameters.AddWithValue("@JobStatus", "Pending");
                     cmdd.ExecuteNonQuery();
                     con.Close();
                 }
