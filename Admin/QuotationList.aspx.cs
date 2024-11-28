@@ -626,7 +626,7 @@ public partial class Admin_QuotationList : System.Web.UI.Page
             GridView gvDetails = e.Row.FindControl("gvDetails") as GridView;
 
             //SqlDataAdapter Daaa = new SqlDataAdapter("SELECT * FROM [EndeavourAuto].[tbl_Quotationjobno] WHERE [Quotation_no]='"+Id+ "' AND chkjobno=1 ", con);
-            SqlDataAdapter Daaa = new SqlDataAdapter(" SELECT * FROM [tbl_Quotation_Dtl] WHERE [Quotation_no]='" + Id + "'", con);
+            SqlDataAdapter Daaa = new SqlDataAdapter(" SELECT * FROM [tbl_Quotation_two_Dtls] WHERE [Quotation_no]='" + Id + "'", con);
             DataTable Dttt = new DataTable();
             Daaa.Fill(Dttt);
             gvDetails.DataSource = Dttt;
@@ -1688,7 +1688,7 @@ public partial class Admin_QuotationList : System.Web.UI.Page
                     conn.Open();
 
                     using (SqlCommand cmd = new SqlCommand(
-                        "SELECT JobNo, CreatedDate " +
+                        "SELECT JobNo, CreatedDate, DATEDIFF(DAY, CreatedDate, GETDATE()) AS DaysSinceCreated " +
                         "FROM tblEstimationHdr " +
                         "WHERE isdeleted = '0' AND QuotationStatus = 'Pending'" +
                         "AND CustName = @CustName " +

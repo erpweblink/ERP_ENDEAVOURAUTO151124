@@ -172,7 +172,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
         ////Automatic description bind in job number from quaation details table
         DataTable dt3 = new DataTable();
         //SqlDataAdapter sad3 = new SqlDataAdapter("select * from vw_Quot_pdf where JobNo='" + txt_job_no.Text + "'", con);
-        //SqlDataAdapter sad3 = new SqlDataAdapter("select * from [tbl_Quotation_Dtl] where Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
+        //SqlDataAdapter sad3 = new SqlDataAdapter("select * from [tbl_Quotation_two_Dtls] where Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
         SqlDataAdapter sad3 = new SqlDataAdapter("select  product as MateName ,  Description As PrintDescription, * from [tbl_Quotation_two_Dtls] where Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
         sad3.Fill(dt3);
         int count = 1;
@@ -200,7 +200,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
             quatationgrid.EmptyDataText = "Not Records Found"; //9975468880         
         }
 
-        //SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM tbl_Quotation_Dtl WHERE Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
+        //SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM tbl_Quotation_two_Dtls WHERE Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
         //DataTable DTCOMP = new DataTable();
         //Da.Fill(DTCOMP);
 
@@ -228,7 +228,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
         //}
 
 
-        SqlDataAdapter Sda = new SqlDataAdapter("SELECT * FROM tbl_Quotation_Hdr WHERE Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
+        SqlDataAdapter Sda = new SqlDataAdapter("SELECT * FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
         DataTable Sdt = new DataTable();
         Sda.Fill(Sdt);
         if (Sdt.Rows.Count > 0)
@@ -244,7 +244,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
 
     private void ddlQuotationno()
     {
-        SqlDataAdapter ad = new SqlDataAdapter("SELECT Id,Quotation_no FROM [tbl_Quotation_Hdr] WHERE Customer_Name = '" + txt_Customer_name.Text + "' AND IsDeleted ='0'", con);
+        SqlDataAdapter ad = new SqlDataAdapter("SELECT Id,Quotation_no FROM [tbl_Quotation_two_Hdr] WHERE Customer_Name = '" + txt_Customer_name.Text + "' AND IsDeleted ='0'", con);
         DataTable dt = new DataTable();
         ad.Fill(dt);
         if (dt.Rows.Count > 0)
@@ -678,8 +678,8 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT JobNo from tbl_Quotation_Hdr where " + "JobNo like @Search + '%' AND isCompleted='1' AND (isCreateQuata='1' OR mnQuatation='1') AND IsDeleted='0'  ";
-                //  com.CommandText = "select DISTINCT JobNo from tbl_Quotation_Dtl where " + "JobNo like @Search + '%' ";
+                com.CommandText = "select DISTINCT JobNo from tbl_Quotation_two_Hdr where " + "JobNo like @Search + '%' AND isCompleted='1' AND (isCreateQuata='1' OR mnQuatation='1') AND IsDeleted='0'  ";
+                //  com.CommandText = "select DISTINCT JobNo from tbl_Quotation_two_Dtls where " + "JobNo like @Search + '%' ";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -1888,6 +1888,8 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
 
                     Cmd1.ExecuteNonQuery();
                 }
+                int JobNoCount = Convert.ToInt32(txtJobNoCount.Text);
+                int JobNoCount1 = 1;
                 foreach (GridViewRow g1 in quatationgrid.Rows)
                 {
                     CheckBox chkSelect = g1.FindControl("chkSelect") as CheckBox;
@@ -1910,11 +1912,26 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
 
                         SqlCommand Cmd1 = new SqlCommand("INSERT INTO CustomerPO_Dtls_Both (PurchaseId,Description,Hsn_Sac,TaxPercenteage,Quantity,Unit,Rate,DiscountPercentage,Total,JobNo,MateName,PrintDescription,Quotationno,JobStatus) " +
                              "VALUES('" + id + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "','" + JobNo + "' ,'" + MateName + "' ,'" + PrintDescription + "','" + ddlquotationno.SelectedItem.Text + "','Pending')", con);
-                       
-                        SqlCommand Cmd2 = new SqlCommand("UPDATE tbl_Quotation_two_Dtls SET JobStatus = 'Completed', JobDaysCount = '"+ JobCreatedCount + "'" +
-                            "WHERE JobNo = '"+ JobNo + "'", con);
-                       
                         Cmd1.ExecuteNonQuery();
+                                              
+                        // Updating the job count for the Customer PO                         
+                        SqlCommand cmdss = new SqlCommand("UPDATE CustomerPO_Hdr_Both SET JobNoCount = '" + JobNoCount1 + "' WHERE id = '" + id + "'", con);
+                        cmdss.ExecuteNonQuery();
+                        ++JobNoCount1;
+
+
+                        // Substract the Job count for that quotation 
+                        -- JobNoCount;
+                        SqlCommand cmds = new SqlCommand("UPDATE tbl_Quotation_two_Hdr SET JobNoCount = '" + JobNoCount + "' WHERE Quotation_no = '" + ddlquotationno.SelectedItem.Text + "'", con);
+                        cmds.ExecuteNonQuery();
+                        if(JobNoCount == 0)
+                        {
+                            SqlCommand cmds1 = new SqlCommand("UPDATE tbl_Quotation_two_Hdr SET Status = 'Completed' WHERE Quotation_no = '" + ddlquotationno.SelectedItem.Text + "'", con);
+                            cmds1.ExecuteNonQuery();
+                        }
+
+                        SqlCommand Cmd2 = new SqlCommand("UPDATE tbl_Quotation_two_Dtls SET JobStatus = 'Completed', JobDaysCount = '" + JobCreatedCount + "'" +
+                            "WHERE JobNo = '" + JobNo + "'", con);
                         Cmd2.ExecuteNonQuery();
 
                     }
@@ -2138,7 +2155,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
     //Job No Text Change
     protected void txt_job_no_TextChanged(object sender, EventArgs e)
     {
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT Customer_Name FROM tbl_Quotation_Hdr WHERE Customer_Name ='" + txt_Customer_name.Text + "' AND isCompleted='1'  AND IsDeleted='0'", con);
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT Customer_Name FROM tbl_Quotation_two_Hdr WHERE Customer_Name ='" + txt_Customer_name.Text + "' AND isCompleted='1'  AND IsDeleted='0'", con);
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
         if (Dt.Rows.Count > 0)
@@ -2231,7 +2248,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
 
         ddlQuotationno();
 
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT Customer_Name FROM tbl_Quotation_Hdr WHERE Customer_Name='" + txt_Customer_name.Text + "' AND isCompleted='1'  AND IsDeleted='0'", con);
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT Customer_Name FROM tbl_Quotation_two_Hdr WHERE Customer_Name='" + txt_Customer_name.Text + "' AND isCompleted='1'  AND IsDeleted='0'", con);
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
         if (Dt.Rows.Count > 0)
@@ -2299,7 +2316,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
 
     //protected void txtinvno_TextChanged(object sender, EventArgs e)
     //{
-    //    SqlDataAdapter Da = new SqlDataAdapter("SELECT Customer_Name FROM tbl_Quotation_Hdr WHERE Customer_Name ='" + txt_Customer_name.Text + "' AND isCompleted='1'  AND IsDeleted='0'", con);
+    //    SqlDataAdapter Da = new SqlDataAdapter("SELECT Customer_Name FROM tbl_Quotation_two_Hdr WHERE Customer_Name ='" + txt_Customer_name.Text + "' AND isCompleted='1'  AND IsDeleted='0'", con);
     //    DataTable Dt = new DataTable();
     //    Da.Fill(Dt);
     //    if (Dt.Rows.Count > 0)
@@ -2337,7 +2354,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
     //    ////Automatic description bind in job number from quaation details table
     //    DataTable dt3 = new DataTable();
     //    //SqlDataAdapter sad3 = new SqlDataAdapter("select * from vw_Quot_pdf where JobNo='" + txt_job_no.Text + "'", con);
-    //    SqlDataAdapter sad3 = new SqlDataAdapter("select * from [tbl_Quotation_Dtl] where Quotation_no='" + txtinvno.Text + "'", con);
+    //    SqlDataAdapter sad3 = new SqlDataAdapter("select * from [tbl_Quotation_two_Dtls] where Quotation_no='" + txtinvno.Text + "'", con);
     //    sad3.Fill(dt3);
     //    int count = 1;
     //    if (dt3.Rows.Count > 0)
@@ -2365,7 +2382,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
 
     protected void ddlquotationno_TextChanged(object sender, EventArgs e)
     {
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM tbl_Quotation_Hdr WHERE Customer_Name ='" + txt_Customer_name.Text + "' AND isCompleted='1'  AND IsDeleted='0'", con);
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM tbl_Quotation_two_Hdr WHERE Customer_Name ='" + txt_Customer_name.Text + "' AND isCompleted='1'  AND IsDeleted='0'", con);
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
         if (Dt.Rows.Count > 0)
@@ -2408,12 +2425,15 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
         ////Automatic description bind in job number from quaation details table
         DataTable dt3 = new DataTable();
         //SqlDataAdapter sad3 = new SqlDataAdapter("select * from vw_Quot_pdf where JobNo='" + txt_job_no.Text + "'", con);
-        //SqlDataAdapter sad3 = new SqlDataAdapter("select * from [tbl_Quotation_Dtl] where Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
-        SqlDataAdapter sad3 = new SqlDataAdapter("select  product as MateName ,  Description As PrintDescription, * from [tbl_Quotation_Dtl] where Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
+        //SqlDataAdapter sad3 = new SqlDataAdapter("select * from [tbl_Quotation_two_Dtls] where Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
+        SqlDataAdapter sad3 = new SqlDataAdapter("select  product as MateName ,  Description As PrintDescription, * from [tbl_Quotation_two_Dtls] where Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
         sad3.Fill(dt3);
         int count = 1;
         if (dt3.Rows.Count > 0)
         {
+            
+            
+
             ViewState["RowNo"] = 0;
             Dt_Itemsdetails.Columns.AddRange(new DataColumn[12] { new DataColumn("Id"),new DataColumn("JobNo"), new DataColumn("MateName"),
                     new DataColumn("CompName"),  new DataColumn("PrintDescription"), new DataColumn("HSN"),
@@ -2422,7 +2442,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
                     new DataColumn("Disc_per"), new DataColumn("total")
 
                   });
-
+            Dt_Itemsdetails.Columns.Add("DaysSinceCreated", typeof(int));
             ViewState["Customerdetails"] = Dt_Itemsdetails;
             for (int i = 0; i < dt3.Rows.Count; i++)
             {
@@ -2688,11 +2708,12 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
 
     protected void ShowQuotationsHeader()
     {
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ID + "'", con);
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNoCount,JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ID + "'", con);
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
         if (Dt.Rows.Count > 0)
-        {            
+        {
+            txtJobNoCount.Text = Dt.Rows[0]["JobNoCount"].ToString();
             ddlquotationno.SelectedItem.Text = Dt.Rows[0]["Quotation_no"].ToString();
             txt_Customer_name.Text = Dt.Rows[0]["Customer_Name"].ToString();
             txtsubcust.Text = Dt.Rows[0]["SubCustomer"].ToString();

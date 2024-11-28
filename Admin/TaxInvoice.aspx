@@ -119,6 +119,13 @@
                             <asp:HiddenField ID="taxhidden" runat="server" />
                             <div class="row">
 
+                                <%-- New Code for JobNoCount --%>
+                                <div class="col-md-6" style="display: none">
+                                    <asp:Label ID="lblJobNoCount" runat="server" class="control-label col-sm-6">Job No <span class="spncls"></span></asp:Label>
+                                    <asp:TextBox ID="txtJobNoCount" runat="server" CssClass="form-control"></asp:TextBox>
+                                </div>
+                                <%-- End  --%>
+
                                 <div class="col-md-6">
                                     <asp:Label ID="lblcompname" runat="server" class="control-label col-sm-6" for="cust">Company Name :<span class="spncls">*</span></asp:Label>
                                     <asp:TextBox ID="txtCompName" OnTextChanged="txtCompName_TextChanged" runat="server" AutoPostBack="true" CssClass="form-control"></asp:TextBox>

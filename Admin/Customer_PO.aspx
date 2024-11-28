@@ -141,6 +141,13 @@
                                     <asp:Label ID="lblsubcust" runat="server" class="control-label col-sm-6" for="cust">Sub Customer :<span class="spncls">*</span></asp:Label>
                                     <asp:TextBox ID="txtsubcust" AutoPostBack="true" onkeypress="return character(event)" runat="server" CssClass="form-control"></asp:TextBox>
                                 </div>
+                                <%-- New Code for JobNoCount --%>
+                                <div class="col-md-6" style="display:none" >
+                                    <asp:Label ID="lblJobNoCount" runat="server" class="control-label col-sm-6">Job No <span class="spncls"></span></asp:Label>
+                                    <asp:TextBox ID="txtJobNoCount" runat="server" CssClass="form-control"></asp:TextBox>
+                                </div>
+                                <%-- End  --%>
+
                                 <div class="col-md-3">
                                     <asp:Label ID="lblQuotationno" runat="server" class="control-label col-sm-6" for="cust">Quotation No. :<span class="spncls">*</span></asp:Label>
                                     <asp:DropDownList ID="ddlquotationno" OnTextChanged="ddlquotationno_TextChanged" AutoPostBack="true" CssClass="form-control" runat="server">

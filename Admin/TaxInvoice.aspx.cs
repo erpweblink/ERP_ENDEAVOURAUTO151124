@@ -901,6 +901,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                     con.Close();
                 }
 
+                int JobNoCount = Convert.ToInt32(txtJobNoCount.Text);               
                 foreach (GridViewRow G2 in grd_getDTLS.Rows)
                 {
                     CheckBox chkSelect = G2.FindControl("chkSelect") as CheckBox;
@@ -923,12 +924,33 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                         SqlCommand Cmd1 = new SqlCommand("INSERT INTO tblInvoiceDtls (InvoiceId,JobNo,Description,Hsn,TaxPercentage,Quntity,Unit,Rate,DiscountPercentage,Total, MateName, PrintDescription, InvoiceNo) " +
                         //"VALUES ('" + Id + "','" + JobNo_GET + "','" + Discription_GET + "','" + HSN_GET + "','" + Tax_GET + "','" + Quntity_GET + "','" + Unit_GET + "','" + Rate_GET + "','" + Discount_GET + "','" + Total_Amount_GET + "')", con);
                         "VALUES ('" + Id + "','" + JobNo_GET + "','" + Discription_GET + "','" + HSN_GET + "','" + Tax_GET + "','" + Quntity_GET + "','" + Unit_GET + "','" + Rate_GET + "','" + Discount_GET + "','" + Total_Amount_GET + "'  ,'" + MateName + "', '" + PrintDescription + "','" + InvoiceNo + "' )", con);
-
-                        SqlCommand Cmd2 = new SqlCommand("UPDATE CustomerPO_Dtls_Both SET JobStatus = 'Completed', JobDaysCount = '" + JobCreatedCount + "'" +
-                        "WHERE JobNo = '" + JobNo_GET + "'", con);
                         con.Open();
                         Cmd1.ExecuteNonQuery();
+
+                        SqlCommand Cmd2 = new SqlCommand("UPDATE CustomerPO_Dtls_Both SET JobStatus = 'Completed', JobDaysCount = '" + JobCreatedCount + "'" +
+                        "WHERE JobNo = '" + JobNo_GET + "'", con);                                              
                          Cmd2.ExecuteNonQuery();
+
+                        // Substract the Job count for that quotation 
+                        SqlCommand cmdss = new SqlCommand("SELECT PurchaseId FROM CustomerPO_Dtls_Both WHERE JobNo = '" + JobNo_GET + "'", con);
+                        object result = cmdss.ExecuteScalar();
+
+                        int purchaseId = 0; 
+
+                        if (result != DBNull.Value && result != null)
+                        {
+                            purchaseId = Convert.ToInt32(result);  
+                        }
+                        --JobNoCount;
+                        SqlCommand cmds = new SqlCommand("UPDATE CustomerPO_Hdr_Both SET JobNoCount = '" + JobNoCount + "' WHERE id = '" + purchaseId + "'", con);
+                        cmds.ExecuteNonQuery();
+
+                        if (JobNoCount == 0)
+                        {
+                            SqlCommand cmds1 = new SqlCommand("UPDATE CustomerPO_Hdr_Both SET Status = 'Completed' WHERE id = '" + purchaseId + "'", con);
+                            cmds1.ExecuteNonQuery();
+                        }
+
                         con.Close();
                     }
                 }
@@ -3460,7 +3482,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             ddlagainstno.Enabled = false;
             ddlagainst.SelectedItem.Text = "Order";
             //ddlagainstno.SelectedItem.Text = Dt.Rows[0]["Pono"].ToString(); 
-
+            txtJobNoCount.Text = Dt.Rows[0]["JobNoCount"].ToString();
             txtCompName.Text = Dt.Rows[0]["CustomerName"].ToString();
             txtCompName.ReadOnly = true;
 

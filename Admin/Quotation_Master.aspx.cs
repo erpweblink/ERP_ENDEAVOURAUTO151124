@@ -49,7 +49,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                 ViewState["RowNo"] = 0;
 
                 //07-04-23
-                Dt_Component.Columns.AddRange(new DataColumn[13] { new DataColumn("id"), new DataColumn("JobNo"), new DataColumn("MateName"), new DataColumn("Description"), new DataColumn("AddDescription"), new DataColumn("HSN/SAC"), new DataColumn("Rate"), new DataColumn("Unit"), new DataColumn("Quantity"), new DataColumn("Tax"), new DataColumn("Discount"), new DataColumn("Total"), new DataColumn("Total Amount") });
+                Dt_Component.Columns.AddRange(new DataColumn[14] { new DataColumn("id"), new DataColumn("JobNo"), new DataColumn("MateName"), new DataColumn("Description"), new DataColumn("AddDescription"), new DataColumn("HSN/SAC"), new DataColumn("Rate"), new DataColumn("Unit"), new DataColumn("Quantity"), new DataColumn("Tax"), new DataColumn("Discount"), new DataColumn("Total"), new DataColumn("Total Amount"), new DataColumn("DaysSinceCreated") });
                 ViewState["QuotationComp"] = Dt_Component;
 
                 ViewState["RowNo"] = 0;
@@ -106,7 +106,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
             ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('" + errorMsg + "') ", true);
         }
     }
-   
+
     protected void ReportLoadData()
     {
         try
@@ -1003,7 +1003,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                 }
                 else
                 {
-                                   
+
                     string[] subs = txt_Quo_No.Text.Split('_');
                     //if (subs[0] == "MN")
                     //{
@@ -1045,9 +1045,14 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@Action", "Insert");
                     con.Open();
                     cmd.ExecuteNonQuery();
-                    con.Close();                   
+                    con.Close();
+                    int JobNoCount = 1;
                     foreach (GridViewRow grd1 in dgvProductDtl.Rows)
                     {
+                        // New field to update the count                        
+                        string JobCount = (grd1.FindControl("lbljobDaysCount") as Label).Text;                        
+                        //End 
+
                         string lbljobno = (grd1.FindControl("lbljobno") as Label).Text;
                         string product = (grd1.FindControl("lblproduct") as Label).Text;
                         string Description_grd = (grd1.FindControl("lbl_Description") as Label).Text;
@@ -1061,7 +1066,10 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                         string DiscPer_grd = (grd1.FindControl("lbl_Discount") as Label).Text;
                         string Total_grd = (grd1.FindControl("lblTotalPrice") as Label).Text;
 
-                        SqlCommand cmdd = new SqlCommand("INSERT INTO tbl_Quotation_two_Dtls (Quotation_no,CompName,HSN,Tax,Qty,Units,total,Rate,Disc_per,FTotal,CreatedBy,CreatedOn,UpdatedBy,UpdatedOn,Description,product,JobNo,JobStatus) VALUES(@Quotation_no,@CompName,@HSN,@Tax,@Qty,@Units,@total,@Rate,@Disc_per,@FTotal,@CreatedBy,@CreatedOn,@UpdatedBy,@UpdatedOn,@Description,@product,@JobNo,@JobStatus)", con);
+                        SqlCommand cmdd = new SqlCommand("INSERT INTO tbl_Quotation_two_Dtls (Quotation_no,CompName,HSN,Tax,Qty,Units,total," +
+                            "Rate,Disc_per,FTotal,CreatedBy,CreatedOn,UpdatedBy,UpdatedOn,Description,product,JobNo,JobStatus)" +
+                            " VALUES(@Quotation_no,@CompName,@HSN,@Tax,@Qty,@Units,@total,@Rate,@Disc_per,@FTotal,@CreatedBy," +
+                            "@CreatedOn,@UpdatedBy,@UpdatedOn,@Description,@product,@JobNo,@JobStatus)", con);
                         cmdd.Parameters.AddWithValue("@Quotation_no", txt_Quo_No.Text);
                         cmdd.Parameters.AddWithValue("@CompName", Description_grd);
                         cmdd.Parameters.AddWithValue("@HSN", HSN_grd);
@@ -1083,8 +1091,14 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
 
                         con.Open();
                         cmdd.ExecuteNonQuery();
+
+                        // insert the Job count for that particular quotation
+                        SqlCommand cmds = new SqlCommand("UPDATE tbl_Quotation_two_Hdr SET JobNoCount = '"+JobNoCount+ "' WHERE Quotation_no = '" + txt_Quo_No.Text + "'", con);
+                        cmds.ExecuteNonQuery();
+                         ++JobNoCount;
+
                         con.Close();
-                        SqlCommand cmdds = new SqlCommand("UPDATE tblEstimationHdr SET QuotationStatus = 'Completed' WHERE JobNo = '" + lbljobno + "'", con);
+                        SqlCommand cmdds = new SqlCommand("UPDATE tblEstimationHdr SET QuotationStatus = 'Completed', JobDaysCount = '"+ JobCount + "' WHERE JobNo = '" + lbljobno + "'", con);
                         con.Open();
                         cmdds.ExecuteNonQuery();
                         con.Close();
@@ -1104,7 +1118,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                         cmdtable.Parameters.AddWithValue("@CreatedOn", Date);
                         cmdtable.ExecuteNonQuery();
                         con.Close();
-                    }                   
+                    }
                     ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Saved Sucessfully');", true);
 
                 }
@@ -2231,8 +2245,20 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
 
         //07-04-23
         DataTable Dt = (DataTable)ViewState["QuotationComp"];
+
+
+        // New Code to add Days count of the job no 28-11-2024
+        SqlCommand cmd = new SqlCommand("SELECT DATEDIFF(DAY, CreatedDate, GETDATE()) AS DaysSinceCreated FROM tblEstimationHdr WHERE JobNo = @JobNo", con);
+        cmd.Parameters.AddWithValue("@JobNo", ddljobno.SelectedItem.Text);
+
+        con.Open();
+        object result = cmd.ExecuteScalar();
+        con.Close();
+
+
         Dt.Rows.Add(ViewState["RowNo"], ddljobno.SelectedItem.Text, txtpoduct.Text, txt_discription_Tbl.Text.Trim(), txtadddescription.Text.Trim(), txt_hsn_Tbl.Text, txt_rate_Tbl.Text, txt_unit_Tbl.Text, txt_quntity_Tbl.Text, txt_tax_Tbl.Text,
-        txt_discount_Tbl.Text, txt_Total_Tbl.Text, txt_total_amount_Tbl.Text);
+        txt_discount_Tbl.Text, txt_Total_Tbl.Text, txt_total_amount_Tbl.Text, /*New row added for count*/ result);
+             
         ViewState["QuotationComp"] = Dt;
         txt_discription_Tbl.Text = string.Empty;
         txt_hsn_Tbl.Text = string.Empty;
@@ -2638,7 +2664,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
             DataTable Dt = new DataTable();
             Da.Fill(Dt);
             if (Dt.Rows.Count > 0)
-            {
+            {                
                 txt_Comp_name.Text = Dt.Rows[0]["CustName"].ToString();
                 txt_Comp_name.ReadOnly = true;
                 jobnogrids();
@@ -2696,7 +2722,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
     {
         try
         {
-            SqlDataAdapter Sda = new SqlDataAdapter("SELECT JobNo, productname FROM tblEstimationHdr WHERE QuotationStatus = 'Pending' AND CustName = '" + txt_Comp_name.Text + "' ", con);
+            SqlDataAdapter Sda = new SqlDataAdapter("SELECT JobNo, productname, DATEDIFF(DAY, CreatedDate, GETDATE()) AS DaysSinceCreated FROM tblEstimationHdr WHERE QuotationStatus = 'Pending' AND CustName = '" + txt_Comp_name.Text + "' ", con);
             DataTable Sdt = new DataTable();
             Sda.Fill(Sdt);
             if (Sdt.Columns.Contains("productname"))

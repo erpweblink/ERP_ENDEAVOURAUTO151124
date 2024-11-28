@@ -3626,8 +3626,7 @@ FROM
           ) J ON H.Quotationno = J.Quotationno 
           WHERE H.Status = 'Pending' AND H.Is_deleted = '0' AND H.CreatedOn >= @StartDate AND H.CreatedOn <= @EndDate 
           AND H.Customer_Name = 'Schneider Electric India Pvt.Ltd.' AND (J.JobCount > 0)
-          ORDER BY H.CreatedOn DESC;"
-                ;
+          ORDER BY H.CreatedOn DESC;";
 
                 SqlDataAdapter Da = new SqlDataAdapter(query, Conn);
                 Da.SelectCommand.Parameters.AddWithValue("@StartDate", formattedStartDate);
