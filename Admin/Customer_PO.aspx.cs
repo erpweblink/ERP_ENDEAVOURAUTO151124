@@ -91,7 +91,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
     //NEW METHODS FOR QUOTATION DATA FETCH START
     protected void ShowHeaderEdit()
     {
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ID + "'", con);
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_two_Hdr WHERE  Quotation_no='" + ID + "'", con);
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
         if (Dt.Rows.Count > 0)
@@ -244,7 +244,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
 
     private void ddlQuotationno()
     {
-        SqlDataAdapter ad = new SqlDataAdapter("SELECT Id,Quotation_no FROM [tbl_Quotation_two_Hdr] WHERE Customer_Name = '" + txt_Customer_name.Text + "' AND IsDeleted ='0'", con);
+        SqlDataAdapter ad = new SqlDataAdapter("SELECT Id,Quotation_no FROM [tbl_Quotation_two_Hdr] WHERE AgainstBy ='JobNo' AND Customer_Name = '" + txt_Customer_name.Text + "' AND IsDeleted ='0'", con);
         DataTable dt = new DataTable();
         ad.Fill(dt);
         if (dt.Rows.Count > 0)
@@ -506,8 +506,8 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
     private void Load_Record()
     {
         DataTable Dt = new DataTable();
-        //SqlDataAdapter da = new SqlDataAdapter("select CustomerPO_Dtls.JobNo,CustomerPO_Dtls.Quotationno,CustomerPO_Hdr.Id,CustomerPO_Hdr.JobNo,CustomerPO_Hdr.ShippingAddress,CustomerName,SubCustomer,Pono,PoDate,RefNo,Mobileno,KindAtt,DeliveryAddress,EmailId,GstNo,VehicelNo,PayTerm,Cgst,Sgst,Igst,AllTotalPrice,TotalInWord, RoundOff, GrandTotal, Term_Condition_1, Term_Condition_2, Term_Condition_3, Term_Condition_4, Description, Hsn_Sac,Rate,Unit,Quantity, TaxPercenteage, DiscountPercentage, Total,statecode from CustomerPO_Hdr INNER JOIN CustomerPO_Dtls ON CustomerPO_Hdr.Id = CustomerPO_Dtls.PurchaseId WHERE CustomerPO_Hdr.Id='" + ID + "'", con);
-        SqlDataAdapter da = new SqlDataAdapter("select CustomerPO_Dtls.JobNo,CustomerPO_Dtls.MateName,CustomerPO_Dtls.PrintDescription,CustomerPO_Dtls.Quotationno,CustomerPO_Hdr.Id,CustomerPO_Hdr.JobNo,CustomerPO_Hdr.ShippingAddress,AgainstBy,CustomerName,SubCustomer,Pono,PoDate,RefNo,Mobileno,KindAtt,DeliveryAddress,EmailId,GstNo,VehicelNo,PayTerm,Cgst,Sgst,Igst,AllTotalPrice,TotalInWord, RoundOff, GrandTotal, Term_Condition_1, Term_Condition_2, Term_Condition_3, Term_Condition_4,Term_Condition_5,Term_Condition_6, Description, Hsn_Sac,Rate,Unit,Quantity, TaxPercenteage, DiscountPercentage, Total,statecode,Imagepath from CustomerPO_Hdr INNER JOIN CustomerPO_Dtls ON CustomerPO_Hdr.Id = CustomerPO_Dtls.PurchaseId WHERE CustomerPO_Hdr.Id='" + ID + "'", con);
+        //SqlDataAdapter da = new SqlDataAdapter("select CustomerPO_Dtls_Both.JobNo,CustomerPO_Dtls_Both.Quotationno,CustomerPO_Hdr_Both.Id,CustomerPO_Hdr_Both.JobNo,CustomerPO_Hdr_Both.ShippingAddress,CustomerName,SubCustomer,Pono,PoDate,RefNo,Mobileno,KindAtt,DeliveryAddress,EmailId,GstNo,VehicelNo,PayTerm,Cgst,Sgst,Igst,AllTotalPrice,TotalInWord, RoundOff, GrandTotal, Term_Condition_1, Term_Condition_2, Term_Condition_3, Term_Condition_4, Description, Hsn_Sac,Rate,Unit,Quantity, TaxPercenteage, DiscountPercentage, Total,statecode from CustomerPO_Hdr_Both INNER JOIN CustomerPO_Dtls_Both ON CustomerPO_Hdr_Both.Id = CustomerPO_Dtls_Both.PurchaseId WHERE CustomerPO_Hdr_Both.Id='" + ID + "'", con);
+        SqlDataAdapter da = new SqlDataAdapter("select CustomerPO_Dtls_Both.JobNo,CustomerPO_Dtls_Both.MateName,CustomerPO_Dtls_Both.PrintDescription,CustomerPO_Dtls_Both.Quotationno,CustomerPO_Hdr_Both.Id,CustomerPO_Hdr_Both.JobNo,CustomerPO_Hdr_Both.ShippingAddress,AgainstBy,CustomerName,SubCustomer,Pono,PoDate,RefNo,Mobileno,KindAtt,DeliveryAddress,EmailId,GstNo,VehicelNo,PayTerm,Cgst,Sgst,Igst,AllTotalPrice,TotalInWord, RoundOff, GrandTotal, Term_Condition_1, Term_Condition_2, Term_Condition_3, Term_Condition_4,Term_Condition_5,Term_Condition_6, Description, Hsn_Sac,Rate,Unit,Quantity, TaxPercenteage, DiscountPercentage, Total,statecode,Imagepath from CustomerPO_Hdr_Both INNER JOIN CustomerPO_Dtls_Both ON CustomerPO_Hdr_Both.Id = CustomerPO_Dtls_Both.PurchaseId WHERE CustomerPO_Hdr_Both.Id='" + ID + "'", con);
         da.Fill(Dt);
 
         if (Dt.Rows.Count > 0)
@@ -597,8 +597,8 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
             }
         }
         DataTable Dtproduct = new DataTable();
-        SqlDataAdapter daa = new SqlDataAdapter("SELECT JobNo,MateName,Description,MateName,Hsn_Sac,Rate,Unit,Quantity,TaxPercenteage,DiscountPercentage,Total FROM CustomerPO_Dtls WHERE Id='" + hdnID.Value + "' ", con);
-        // SqlDataAdapter daa = new SqlDataAdapter("SELECT * FROM CustomerPO_Dtls WHERE Id='" + hdnID.Value + "' ", con);
+        SqlDataAdapter daa = new SqlDataAdapter("SELECT JobNo,MateName,Description,MateName,Hsn_Sac,Rate,Unit,Quantity,TaxPercenteage,DiscountPercentage,Total FROM CustomerPO_Dtls_Both WHERE Id='" + hdnID.Value + "' ", con);
+        // SqlDataAdapter daa = new SqlDataAdapter("SELECT * FROM CustomerPO_Dtls_Both WHERE Id='" + hdnID.Value + "' ", con);
         da.Fill(Dtproduct);
 
         int count = 1;
@@ -1705,7 +1705,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
         string Path = null;
         if (btn_save.Text == "Update")
         {
-            SqlCommand Cmd = new SqlCommand("UPDATE CustomerPO_Hdr SET Quotationno=@Quotationno,CustomerName=@CustomerName,SubCustomer=@SubCustomer,Pono=@Pono,PoDate=@PoDate,RefNo=@RefNo,Mobileno=@Mobileno,KindAtt=@KindAtt,ShippingAddress=@ShippingAddress,DeliveryAddress=@DeliveryAddress,GstNo=@GstNo,Cgst=@Cgst,Sgst=@Sgst,Igst=@Igst,AllTotalPrice=@AllTotalPrice,RoundOff=@RoundOff,GrandTotal=@GrandTotal,TotalInWord=@TotalInWord,Is_Deleted=@Is_Deleted,PayTerm=@PayTerm,Imagepath=@Imagepath,AgainstBy=@AgainstBy,Term_Condition_1=@Term_Condition_1,Term_Condition_2=@Term_Condition_2,Term_Condition_3=@Term_Condition_3,Term_Condition_4=@Term_Condition_4,Term_Condition_5=@Term_Condition_5,Term_Condition_6=@Term_Condition_6,statecode=@statecode,UpdatedBy=@UpdatedBy,UpdatedOn=@UpdatedOn WHERE Id='" + hdnID.Value + "'", con);
+            SqlCommand Cmd = new SqlCommand("UPDATE CustomerPO_Hdr_Both SET Quotationno=@Quotationno,CustomerName=@CustomerName,SubCustomer=@SubCustomer,Pono=@Pono,PoDate=@PoDate,RefNo=@RefNo,Mobileno=@Mobileno,KindAtt=@KindAtt,ShippingAddress=@ShippingAddress,DeliveryAddress=@DeliveryAddress,GstNo=@GstNo,Cgst=@Cgst,Sgst=@Sgst,Igst=@Igst,AllTotalPrice=@AllTotalPrice,RoundOff=@RoundOff,GrandTotal=@GrandTotal,TotalInWord=@TotalInWord,Is_Deleted=@Is_Deleted,PayTerm=@PayTerm,Imagepath=@Imagepath,AgainstBy=@AgainstBy,Term_Condition_1=@Term_Condition_1,Term_Condition_2=@Term_Condition_2,Term_Condition_3=@Term_Condition_3,Term_Condition_4=@Term_Condition_4,Term_Condition_5=@Term_Condition_5,Term_Condition_6=@Term_Condition_6,statecode=@statecode,UpdatedBy=@UpdatedBy,UpdatedOn=@UpdatedOn WHERE Id='" + hdnID.Value + "'", con);
             Cmd.Parameters.AddWithValue("@Quotationno", ddlquotationno.SelectedItem.Text);
             Cmd.Parameters.AddWithValue("@CustomerName", txt_Customer_name.Text);
             Cmd.Parameters.AddWithValue("@SubCustomer", txtsubcust.Text);
@@ -1762,7 +1762,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
             Cmd.Parameters.AddWithValue("@UpdatedOn", DateTime.Now);
             Cmd.ExecuteNonQuery();
 
-            SqlCommand cmddelete = new SqlCommand("DELETE FROM CustomerPO_Dtls WHERE PurchaseId=@PurchaseId", con);
+            SqlCommand cmddelete = new SqlCommand("DELETE FROM CustomerPO_Dtls_Both WHERE PurchaseId=@PurchaseId", con);
             cmddelete.Parameters.AddWithValue("@PurchaseId", hdnID.Value);
 
             cmddelete.ExecuteNonQuery();
@@ -1782,7 +1782,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
                 string Total_Amount = (g2.FindControl("lbl_total_amount_grd") as Label).Text;
                 string MateName = (g2.FindControl("lblproduct") as Label).Text;
                 string PrintDescription = (g2.FindControl("lblprintdescription") as Label).Text;
-                SqlCommand Cmd1 = new SqlCommand("INSERT INTO CustomerPO_Dtls (PurchaseId,JobNO,Description,Hsn_Sac,TaxPercenteage,Quantity,Unit,Rate,DiscountPercentage,Total, PrintDescription, MateName,Quotationno) " +
+                SqlCommand Cmd1 = new SqlCommand("INSERT INTO CustomerPO_Dtls_Both (PurchaseId,JobNO,Description,Hsn_Sac,TaxPercenteage,Quantity,Unit,Rate,DiscountPercentage,Total, PrintDescription, MateName,Quotationno) " +
                     "VALUES('" + hdnID.Value + "','" + JobNO + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "','" + PrintDescription + "', '" + MateName + "', '" + ddlquotationno.SelectedItem.Text + "')", con);
 
                 Cmd1.ExecuteNonQuery();
@@ -1850,6 +1850,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
                 Cmd.Parameters.AddWithValue("@Term_Condition_6", txt_term_6.Text + "-" + txt_condition_6.Text);
                 Cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
                 Cmd.Parameters.AddWithValue("@AgainstBy", ddlagainstby.SelectedItem.Text);
+                Cmd.Parameters.AddWithValue("@Type", ddltype.SelectedItem.Text);
 
                 if (FileUpload.HasFile)
                 {
@@ -1883,7 +1884,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
                     string PrintDescription = (g1.FindControl("lblprintdescription") as Label).Text;
                     Cmd.Parameters.AddWithValue("@Quotationno", ddlquotationno.SelectedItem.Text);
 
-                    SqlCommand Cmd1 = new SqlCommand("INSERT INTO CustomerPO_Dtls_Both (PurchaseId,Description,Hsn_Sac,TaxPercenteage,Quantity,Unit,Rate,DiscountPercentage,Total,JobNo,PrintDescription,MateName,Quotationno) " +
+                    SqlCommand Cmd1 = new SqlCommand("INSERT INTO CustomerPO_Dtls_Both_Both (PurchaseId,Description,Hsn_Sac,TaxPercenteage,Quantity,Unit,Rate,DiscountPercentage,Total,JobNo,PrintDescription,MateName,Quotationno) " +
                         "VALUES('" + id + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "','" + JobNO + "', '" + PrintDescription + "', '" + MateName + "','" + ddlquotationno.SelectedItem.Text + "')", con);
 
                     Cmd1.ExecuteNonQuery();
@@ -1910,12 +1911,12 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
                         string Total_Amount = (g1.FindControl("lbl_total_amount_grd") as Label).Text;
                         Cmd.Parameters.AddWithValue("@Quotationno", ddlquotationno.SelectedItem.Text);
 
-                        SqlCommand Cmd1 = new SqlCommand("INSERT INTO CustomerPO_Dtls_Both (PurchaseId,Description,Hsn_Sac,TaxPercenteage,Quantity,Unit,Rate,DiscountPercentage,Total,JobNo,MateName,PrintDescription,Quotationno,JobStatus) " +
+                        SqlCommand Cmd1 = new SqlCommand("INSERT INTO CustomerPO_Dtls_Both_Both (PurchaseId,Description,Hsn_Sac,TaxPercenteage,Quantity,Unit,Rate,DiscountPercentage,Total,JobNo,MateName,PrintDescription,Quotationno,JobStatus) " +
                              "VALUES('" + id + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "','" + JobNo + "' ,'" + MateName + "' ,'" + PrintDescription + "','" + ddlquotationno.SelectedItem.Text + "','Pending')", con);
                         Cmd1.ExecuteNonQuery();
                                               
                         // Updating the job count for the Customer PO                         
-                        SqlCommand cmdss = new SqlCommand("UPDATE CustomerPO_Hdr_Both SET JobNoCount = '" + JobNoCount1 + "' WHERE id = '" + id + "'", con);
+                        SqlCommand cmdss = new SqlCommand("UPDATE CustomerPO_Hdr_Both_Both SET JobNoCount = '" + JobNoCount1 + "' WHERE id = '" + id + "'", con);
                         cmdss.ExecuteNonQuery();
                         ++JobNoCount1;
 
@@ -1961,7 +1962,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
         {
             try
             {
-                SqlCommand Cmd = new SqlCommand("SP_CustomerPO", con);
+                SqlCommand Cmd = new SqlCommand("SP_CustomerPO_Both", con);
                 Cmd.CommandType = CommandType.StoredProcedure;
                 Cmd.Parameters.AddWithValue("@JobNo", txt_job_no.Text);
                 Cmd.Parameters.AddWithValue("@Quotationno", ddlquotationno.SelectedItem.Text);
@@ -1999,6 +2000,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
                 Cmd.Parameters.AddWithValue("@Term_Condition_6", txt_term_6.Text + "-" + txt_condition_6.Text);
                 Cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
                 Cmd.Parameters.AddWithValue("@AgainstBy", ddlagainstby.SelectedItem.Text);
+                Cmd.Parameters.AddWithValue("@Type", ddlagainstby.SelectedItem.Text);
 
                 if (FileUpload.HasFile)
                 {
@@ -2013,7 +2015,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
                 Cmd.Parameters.AddWithValue("@CreatedBy", CretedBy);
                 Cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
                 Cmd.Parameters.Add("@purchase_id", SqlDbType.Int).Direction = ParameterDirection.Output;
-               // Cmd.ExecuteNonQuery();
+                Cmd.ExecuteNonQuery();
 
                 id = Convert.ToInt32(Cmd.Parameters["@purchase_id"].Value);
 
@@ -2032,15 +2034,13 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
                     string PrintDescription = (g1.FindControl("lblprintdescription") as Label).Text;
                     Cmd.Parameters.AddWithValue("@Quotationno", ddlquotationno.SelectedItem.Text);
 
-                    SqlCommand Cmd1 = new SqlCommand("INSERT INTO CustomerPO_Dtls (PurchaseId,Description,Hsn_Sac,TaxPercenteage,Quantity,Unit,Rate,DiscountPercentage,Total,JobNo,PrintDescription,MateName,Quotationno) " +
+                    SqlCommand Cmd1 = new SqlCommand("INSERT INTO CustomerPO_Dtls_Both_Both (PurchaseId,Description,Hsn_Sac,TaxPercenteage,Quantity,Unit,Rate,DiscountPercentage,Total,JobNo,PrintDescription,MateName,Quotationno) " +
                         "VALUES('" + id + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "','" + JobNO + "', '" + PrintDescription + "', '" + MateName + "','" + ddlquotationno.SelectedItem.Text + "')", con);
 
-                   // Cmd1.ExecuteNonQuery();
+                   Cmd1.ExecuteNonQuery();
                 }
                 foreach (GridViewRow g1 in quatationgrid.Rows)
                 {
-
-
                     string JobNo = (g1.FindControl("LblJobNo") as Label).Text;
                     string Discription = (g1.FindControl("txt_discription_grd") as Label).Text;
                     string HSN = (g1.FindControl("txt_hsn_grd") as Label).Text;
@@ -2054,9 +2054,9 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
                     string Total_Amount = (g1.FindControl("lbl_total_amount_grd") as Label).Text;
                     Cmd.Parameters.AddWithValue("@Quotationno", ddlquotationno.SelectedItem.Text);
 
-                    SqlCommand Cmd1 = new SqlCommand("INSERT INTO CustomerPO_Dtls (PurchaseId,Description,Hsn_Sac,TaxPercenteage,Quantity,Unit,Rate,DiscountPercentage,Total,JobNo,MateName,PrintDescription,Quotationno) " +
+                    SqlCommand Cmd1 = new SqlCommand("INSERT INTO CustomerPO_Dtls_Both_Both (PurchaseId,Description,Hsn_Sac,TaxPercenteage,Quantity,Unit,Rate,DiscountPercentage,Total,JobNo,MateName,PrintDescription,Quotationno) " +
                          "VALUES('" + id + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "','" + JobNo + "' ,'" + MateName + "' ,'" + PrintDescription + "','" + ddlquotationno.SelectedItem.Text + "')", con);
-                   // Cmd1.ExecuteNonQuery();
+                   Cmd1.ExecuteNonQuery();
                 }
                 foreach (GridViewRow g1 in Grd_MAIL.Rows)
                 {
@@ -2070,7 +2070,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
                     cmdtable.Parameters.AddWithValue("@CreatedBy", CretedBy);
                     cmdtable.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
                     cmdtable.Parameters.AddWithValue("@designation", Designation);
-                   // cmdtable.ExecuteNonQuery();
+                    cmdtable.ExecuteNonQuery();
                 }
                 ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Save Sucessfully');", true);
             }

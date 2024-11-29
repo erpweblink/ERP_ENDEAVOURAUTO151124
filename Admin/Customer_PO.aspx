@@ -125,6 +125,13 @@
                                         <asp:ListItem Value="Reparing" Text="Reparing"></asp:ListItem>
                                     </asp:DropDownList>
                                 </div>
+                                <div class="col-md-4 d-none">
+                                    <asp:Label ID="Label5" runat="server" class="control-label col-sm-4">Type :<span class="spncls">*</span></asp:Label>
+                                    <asp:DropDownList runat="server" class="form-control" ID="ddltype">
+                                        <asp:ListItem Value="JobNo" Text="JobNo"></asp:ListItem>    
+                                        <%--<asp:ListItem Value="Sales" Text="Sales"></asp:ListItem>--%>
+                                    </asp:DropDownList>
+                                </div>
                             </div>
                             <br />
                             <div class="row">
@@ -142,7 +149,7 @@
                                     <asp:TextBox ID="txtsubcust" AutoPostBack="true" onkeypress="return character(event)" runat="server" CssClass="form-control"></asp:TextBox>
                                 </div>
                                 <%-- New Code for JobNoCount --%>
-                                <div class="col-md-6" style="display:none" >
+                                <div class="col-md-6" style="display: none">
                                     <asp:Label ID="lblJobNoCount" runat="server" class="control-label col-sm-6">Job No <span class="spncls"></span></asp:Label>
                                     <asp:TextBox ID="txtJobNoCount" runat="server" CssClass="form-control"></asp:TextBox>
                                 </div>

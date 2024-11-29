@@ -268,7 +268,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
     //Bind Against No
     private void Fillddlagainstnumber()
     {
-        SqlDataAdapter ad = new SqlDataAdapter("SELECT DISTINCT [AgainstNo] FROM [tblInvoiceHdr] ", con);
+        SqlDataAdapter ad = new SqlDataAdapter("SELECT DISTINCT [AgainstNo] FROM [tbl_Invoice_both_hdr] ", con);
         DataTable dt = new DataTable();
         ad.Fill(dt);
         if (dt.Rows.Count > 0)
@@ -467,14 +467,11 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
         return cipherText;
     }
 
+
     protected void GenerateInvoice()
     {
-        // Get the current year
-        int currentYear = DateTime.Now.Year;
-        int lastTwoDigitsOfYear = currentYear % 100;
-
-        // Construct the SQL query to get the maximum invoice ID for the current year
-        string query = $"SELECT MAX([Id]) AS maxid FROM [tblInvoiceHdr] WHERE YEAR([InvoiceDate]) IN ({currentYear - 1}, {currentYear})";
+        // Construct the SQL query to get the maximum invoice number
+        string query = "SELECT MAX(CAST([InvoiceNo] AS INT)) AS maxid FROM [tbl_Invoice_both_hdr]";
 
         // Use parameterized query to prevent SQL injection
         using (SqlDataAdapter ad = new SqlDataAdapter(query, con))
@@ -482,28 +479,70 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             DataTable dt = new DataTable();
             ad.Fill(dt);
 
+            // Check if there is any record in the database
             if (dt.Rows.Count > 0)
             {
                 int maxid = dt.Rows[0]["maxid"] == DBNull.Value ? 0 : Convert.ToInt32(dt.Rows[0]["maxid"]);
 
+                // If a maxid was found, increment it, else start from 1
                 if (maxid > 0)
                 {
-                    // If records found for the current or previous year, use the maximum ID + 1
-                    txt_InvoiceNo.Text = $"{currentYear - 1}-{lastTwoDigitsOfYear}/{maxid + 1:D4}";
+                    txt_InvoiceNo.Text = $"{(maxid + 1):D4}";  // Increment the invoice number and format it as 4 digits
                 }
                 else
                 {
-                    // If no records found for the current or previous year, start with 1
-                    txt_InvoiceNo.Text = $"{currentYear - 1}-{lastTwoDigitsOfYear}/1";
+                    // If no records found, start with 0001
+                    txt_InvoiceNo.Text = "0231";
                 }
             }
             else
             {
-                // If no records found for the current or previous year, start with 1
-                txt_InvoiceNo.Text = $"{currentYear - 1}-{lastTwoDigitsOfYear}/1";
+                // If no records found, start with 0001
+                txt_InvoiceNo.Text = "0001";
             }
         }
     }
+
+
+
+
+    //protected void GenerateInvoice()
+    //{
+    //    // Get the current year
+    //    int currentYear = DateTime.Now.Year;
+    //    int lastTwoDigitsOfYear = currentYear % 100;
+
+    //    // Construct the SQL query to get the maximum invoice ID for the current year
+    //    string query = $"SELECT MAX([Id]) AS maxid FROM [tbl_Invoice_both_hdr] WHERE YEAR([InvoiceDate]) IN ({currentYear - 1}, {currentYear})";
+
+    //    // Use parameterized query to prevent SQL injection
+    //    using (SqlDataAdapter ad = new SqlDataAdapter(query, con))
+    //    {
+    //        DataTable dt = new DataTable();
+    //        ad.Fill(dt);
+
+    //        if (dt.Rows.Count > 0)
+    //        {
+    //            int maxid = dt.Rows[0]["maxid"] == DBNull.Value ? 0 : Convert.ToInt32(dt.Rows[0]["maxid"]);
+
+    //            if (maxid > 0)
+    //            {
+    //                // If records found for the current or previous year, use the maximum ID + 1
+    //                txt_InvoiceNo.Text = $"{currentYear - 1}-{lastTwoDigitsOfYear}/{maxid + 1:D4}";
+    //            }
+    //            else
+    //            {
+    //                // If no records found for the current or previous year, start with 1
+    //                txt_InvoiceNo.Text = $"{currentYear - 1}-{lastTwoDigitsOfYear}/1";
+    //            }
+    //        }
+    //        else
+    //        {
+    //            // If no records found for the current or previous year, start with 1
+    //            txt_InvoiceNo.Text = $"{currentYear - 1}-{lastTwoDigitsOfYear}/1";
+    //        }
+    //    }
+    //}
 
     //protected void GenerateInvoice()
     //{
@@ -511,7 +550,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
     //    int currentYear = DateTime.Now.Year;
 
     //    // Construct the SQL query to get the maximum invoice ID for the current year
-    //    string query = $"SELECT MAX([Id]) AS maxid FROM [tblInvoiceHdr] WHERE YEAR([InvoiceDate]) = {currentYear}";
+    //    string query = $"SELECT MAX([Id]) AS maxid FROM [tbl_Invoice_both_hdr] WHERE YEAR([InvoiceDate]) = {currentYear}";
 
     //    // Use parameterized query to prevent SQL injection
     //    using (SqlDataAdapter ad = new SqlDataAdapter(query, con))
@@ -535,7 +574,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
 
     //protected void GenerateInvoice()
     //{
-    //    SqlDataAdapter ad = new SqlDataAdapter("SELECT max([Id]) as maxid FROM [tblInvoiceHdr]", con);
+    //    SqlDataAdapter ad = new SqlDataAdapter("SELECT max([Id]) as maxid FROM [tbl_Invoice_both_hdr]", con);
     //    DataTable dt = new DataTable();
     //    ad.Fill(dt);
     //    if (dt.Rows.Count > 0)
@@ -551,7 +590,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
 
     protected void GenerateChallan()
     {
-        SqlDataAdapter ad = new SqlDataAdapter("SELECT max([Id]) as maxid FROM [tblInvoiceHdr]", con);
+        SqlDataAdapter ad = new SqlDataAdapter("SELECT max([Id]) as maxid FROM [tbl_Invoice_both_hdr]", con);
         DataTable dt = new DataTable();
         ad.Fill(dt);
         if (dt.Rows.Count > 0)
@@ -568,7 +607,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
     private void Load_Record()
     {
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT tblInvoiceDtls.JobNo, tblInvoiceDtls.MateName,tblInvoiceDtls.PrintDescription,tblInvoiceHdr.InvoiceNo,tblInvoiceHdr.InvoiceAgainst,tblInvoiceHdr.AgainstNo,InvoiceDate,tblInvoiceHdr.JobNo,tblInvoiceHdr.CompName,tblInvoiceHdr.CustName,PoNo,PoDate,ChallanNo,ChallanDate,PayTerm,Delivery,KindAtt,CompanyAddress,CompanyGstNo,CompanyPanNo, ComapyRegType, CompanyStateCode, CustomerShippingAddress, CustomerGstNo,Term_Condition_1,Term_Condition_2,Term_Condition_3,Term_Condition_4,Term_Condition_5,Term_Condition_6, CustomerPanNo, CustomerRegType,CustomerStateCode, CGST, SGST,IGST, AllTotalAmount, GrandTotal, TotalInWord, Description, Hsn, TaxPercentage, Quntity, Unit, Rate, DiscountPercentage, Total FROM tblInvoiceHdr INNER JOIN tblInvoiceDtls ON tblInvoiceDtls.InvoiceId = tblInvoiceHdr.Id WHERE tblInvoiceHdr.Id='" + hdnID.Value + "'", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT tbl_Invoice_both_Dtls.JobNo, tbl_Invoice_both_Dtls.MateName,tbl_Invoice_both_Dtls.PrintDescription,tbl_Invoice_both_hdr.InvoiceNo,tbl_Invoice_both_hdr.InvoiceAgainst,tbl_Invoice_both_hdr.AgainstNo,InvoiceDate,tbl_Invoice_both_hdr.JobNo,tbl_Invoice_both_hdr.CompName,tbl_Invoice_both_hdr.CustName,PoNo,PoDate,ChallanNo,ChallanDate,PayTerm,Delivery,KindAtt,CompanyAddress,CompanyGstNo,CompanyPanNo, ComapyRegType, CompanyStateCode, CustomerShippingAddress, CustomerGstNo,Term_Condition_1,Term_Condition_2,Term_Condition_3,Term_Condition_4,Term_Condition_5,Term_Condition_6, CustomerPanNo, CustomerRegType,CustomerStateCode, CGST, SGST,IGST, AllTotalAmount, GrandTotal, TotalInWord, Description, Hsn, TaxPercentage, Quntity, Unit, Rate, DiscountPercentage, Total FROM tbl_Invoice_both_hdr INNER JOIN tbl_Invoice_both_Dtls ON tbl_Invoice_both_Dtls.InvoiceId = tbl_Invoice_both_hdr.Id WHERE tbl_Invoice_both_hdr.Id='" + hdnID.Value + "'", con);
         da.Fill(Dt);
 
         if (Dt.Rows.Count > 0)
@@ -658,7 +697,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             }
         }
         DataTable Dt_Product = new DataTable();
-        SqlDataAdapter daa = new SqlDataAdapter("SELECT  JobNo,Description,Hsn,Rate,Unit,Quntity,TaxPercentage,DiscountPercentage,Total FROM tblInvoiceDtls WHERE tblInvoiceHdr.Id='" + hdnID.Value + "'", con);
+        SqlDataAdapter daa = new SqlDataAdapter("SELECT  JobNo,Description,Hsn,Rate,Unit,Quntity,TaxPercentage,DiscountPercentage,Total FROM tbl_Invoice_both_Dtls WHERE tbl_Invoice_both_hdr.Id='" + hdnID.Value + "'", con);
         da.Fill(Dt_Product);
 
         int Count = 1;
@@ -709,13 +748,14 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
         DateTime Date = DateTime.Now;
         if (btn_save.Text == "Update")
         {
-            SqlCommand Cmd = new SqlCommand("UPDATE tblInvoiceHdr SET InvoiceNo=@InvoiceNo,InvoiceDate=@InvoiceDate,InvoiceAgainst=@InvoiceAgainst,AgainstNo=@AgainstNo,PoNo=@PoNo,PoDate=@PoDate," +
+            SqlCommand Cmd = new SqlCommand("UPDATE tbl_Invoice_both_hdr SET InvoiceNo=@InvoiceNo,InvoiceDate=@InvoiceDate,InvoiceAgainst=@InvoiceAgainst,AgainstNo=@AgainstNo,PoNo=@PoNo,PoDate=@PoDate," +
                 "CompName=@CompName,CustName=@CustName,ChallanNo=@ChallanNo,ChallanDate=@ChallanDate,PayTerm=@PayTerm," +
                 "KindAtt=@KindAtt,CompanyAddress=@CompanyAddress,CompanyGstNo=@CompanyGstNo,CompanyPanNo=@CompanyPanNo,ComapyRegType=@ComapyRegType," +
                 "CompanyStateCode=@CompanyStateCode,CustomerShippingAddress=@CustomerShippingAddress,CustomerGstNo=@CustomerGstNo," +
                 "CustomerPanNo=@CustomerPanNo,CustomerRegType=@CustomerRegType,CustomerStateCode=@CustomerStateCode,CGST=@CGST,SGST=@SGST," +
                 "AllTotalAmount=@AllTotalAmount,GrandTotal=@GrandTotal,TotalInWord=@TotalInWord,Term_Condition_1=@Term_Condition_1," +
-                "Term_Condition_2=@Term_Condition_2,Term_Condition_3=@Term_Condition_3,Term_Condition_4=@Term_Condition_4,Term_Condition_5=@Term_Condition_5,Term_Condition_6=@Term_Condition_6,ServiceType=@ServiceType,IGST=@IGST,Is_Deleted=@Is_Deleted,UpdatedOn=@UpdatedOn,UpdatedBy=@UpdatedBy " +
+                "Term_Condition_2=@Term_Condition_2,Term_Condition_3=@Term_Condition_3,Term_Condition_4=@Term_Condition_4,Term_Condition_5=@Term_Condition_5,Term_Condition_6=@Term_Condition_6," +
+                "ServiceType=@ServiceType,IGST=@IGST,Is_Deleted=@Is_Deleted,UpdatedOn=@UpdatedOn,UpdatedBy=@UpdatedBy,Type ='JobNo'" +
                 "WHERE Id='" + hdnID.Value + "' ", con);  //Remove Delivery Col....
 
             Cmd.Parameters.AddWithValue("@InvoiceNo", txt_InvoiceNo.Text);
@@ -762,10 +802,10 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
 
             DataTable Dt = new DataTable();
             SqlDataAdapter daa = new SqlDataAdapter("SELECT JobNo,Description,Hsn,TaxPercentage,Quntity,Unit,Rate," +
-                "DiscountPercentage,Total FROM tblInvoiceDtls WHERE Id='" + hdnID.Value + "'", con);
+                "DiscountPercentage,Total FROM tbl_Invoice_both_Dtls WHERE Id='" + hdnID.Value + "'", con);
             daa.Fill(Dt);
 
-            SqlCommand CmdDelete = new SqlCommand("DELETE FROM tblInvoiceDtls WHERE InvoiceId=@InvoiceId", con);
+            SqlCommand CmdDelete = new SqlCommand("DELETE FROM tbl_Invoice_both_Dtls WHERE InvoiceId=@InvoiceId", con);
             CmdDelete.Parameters.AddWithValue("@InvoiceId", hdnID.Value);
 
             CmdDelete.ExecuteNonQuery();
@@ -783,7 +823,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 string Total_Amount = (g1.FindControl("lbl_total_amount_grd") as Label).Text;
                 string MateName = (g1.FindControl("lblproduct") as Label).Text;
                 string PrintDescription = (g1.FindControl("LblPrintdescription") as Label).Text;
-                SqlCommand Cmd2 = new SqlCommand("INSERT INTO tblInvoiceDtls (InvoiceId,JobNo,Description,Hsn,TaxPercentage,Quntity,Unit,Rate,DiscountPercentage, MateName, PrintDescription,Total) " +
+                SqlCommand Cmd2 = new SqlCommand("INSERT INTO tbl_Invoice_both_Dtls (InvoiceId,JobNo,Description,Hsn,TaxPercentage,Quntity,Unit,Rate,DiscountPercentage, MateName, PrintDescription,Total) " +
                     "VALUES ('" + hdnID.Value + "','" + JobNo + "','" + Discription + "','" + HSN + "','" + TAX + "','" + Quntity + "'," +
                     "'" + unit + "','" + Rate + "','" + Discount + "',  '" + MateName + "',  '" + PrintDescription + "','" + Total_Amount + "')", con);
 
@@ -822,7 +862,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             {
                 con.Close();
 
-                SqlCommand Cmd = new SqlCommand("SPTaxInvoice", con);
+                SqlCommand Cmd = new SqlCommand("SP_Invoice_both", con);
                 Cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 Cmd.Parameters.AddWithValue("@InvoiceNo", txt_InvoiceNo.Text);
                 Cmd.Parameters.AddWithValue("@InvoiceDate", txt_InvoiceDate.Text);
@@ -870,6 +910,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 Cmd.Parameters.AddWithValue("@Is_Deleted", '0');
                 Cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
                 Cmd.Parameters.AddWithValue("@CreatedBy", CretedBy);
+                Cmd.Parameters.AddWithValue("@Type", "JobNo");
                 //Cmd.Parameters.AddWithValue("@JobNo", );
                 // Cmd.Parameters.AddWithValue("@status", txtstatus.Text);
                 Cmd.Parameters.Add("@InvoiceId", SqlDbType.Int).Direction = ParameterDirection.Output;
@@ -893,7 +934,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                     string InvoiceNo = txt_InvoiceNo.Text;
                     string MateName = (G1.FindControl("lblproduct") as Label).Text;
                     string PrintDescription = (G1.FindControl("LblPrintdescription") as Label).Text;
-                    SqlCommand Cmd1 = new SqlCommand("INSERT INTO tblInvoiceDtls (InvoiceId,JobNo,Description,Hsn,TaxPercentage,Quntity,Unit,Rate,DiscountPercentage,Total,MateName,PrintDescription ,InvoiceNo) " +
+                    SqlCommand Cmd1 = new SqlCommand("INSERT INTO tbl_Invoice_both_Dtls (InvoiceId,JobNo,Description,Hsn,TaxPercentage,Quntity,Unit,Rate,DiscountPercentage,Total,MateName,PrintDescription ,InvoiceNo) " +
                          //"VALUES ('" + Id + "','" + JobNo + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "' )", con);
                          "VALUES ('" + Id + "','" + JobNo + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "' ,'" + MateName + "','" + PrintDescription + "' ,'" + InvoiceNo + "' )", con);
                     con.Open();
@@ -921,7 +962,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                         string MateName = (G2.FindControl("lblproduct") as Label).Text;
                         string PrintDescription = (G2.FindControl("Lblprintdescription_grd") as Label).Text;
                         string InvoiceNo = txt_InvoiceNo.Text;
-                        SqlCommand Cmd1 = new SqlCommand("INSERT INTO tblInvoiceDtls (InvoiceId,JobNo,Description,Hsn,TaxPercentage,Quntity,Unit,Rate,DiscountPercentage,Total, MateName, PrintDescription, InvoiceNo) " +
+                        SqlCommand Cmd1 = new SqlCommand("INSERT INTO tbl_Invoice_both_Dtls (InvoiceId,JobNo,Description,Hsn,TaxPercentage,Quntity,Unit,Rate,DiscountPercentage,Total, MateName, PrintDescription, InvoiceNo) " +
                         //"VALUES ('" + Id + "','" + JobNo_GET + "','" + Discription_GET + "','" + HSN_GET + "','" + Tax_GET + "','" + Quntity_GET + "','" + Unit_GET + "','" + Rate_GET + "','" + Discount_GET + "','" + Total_Amount_GET + "')", con);
                         "VALUES ('" + Id + "','" + JobNo_GET + "','" + Discription_GET + "','" + HSN_GET + "','" + Tax_GET + "','" + Quntity_GET + "','" + Unit_GET + "','" + Rate_GET + "','" + Discount_GET + "','" + Total_Amount_GET + "'  ,'" + MateName + "', '" + PrintDescription + "','" + InvoiceNo + "' )", con);
                         con.Open();
@@ -987,7 +1028,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             {
                 con.Close();
 
-                SqlCommand Cmd = new SqlCommand("SPTaxInvoice", con);
+                SqlCommand Cmd = new SqlCommand("SP_Invoice_both", con);
                 Cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 Cmd.Parameters.AddWithValue("@InvoiceNo", txt_InvoiceNo.Text);
                 Cmd.Parameters.AddWithValue("@InvoiceDate", txt_InvoiceDate.Text);
@@ -1035,6 +1076,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 Cmd.Parameters.AddWithValue("@Is_Deleted", '0');
                 Cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
                 Cmd.Parameters.AddWithValue("@CreatedBy", CretedBy);
+                Cmd.Parameters.AddWithValue("@Type", "JobNo");
                 //Cmd.Parameters.AddWithValue("@JobNo", );
                 // Cmd.Parameters.AddWithValue("@status", txtstatus.Text);
                 Cmd.Parameters.Add("@InvoiceId", SqlDbType.Int).Direction = ParameterDirection.Output;
@@ -1058,7 +1100,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                     string InvoiceNo = txt_InvoiceNo.Text;
                     string MateName = (G1.FindControl("lblproduct") as Label).Text;
                     string PrintDescription = (G1.FindControl("LblPrintdescription") as Label).Text;
-                    SqlCommand Cmd1 = new SqlCommand("INSERT INTO tblInvoiceDtls (InvoiceId,JobNo,Description,Hsn,TaxPercentage,Quntity,Unit,Rate,DiscountPercentage,Total,MateName,PrintDescription ,InvoiceNo) " +
+                    SqlCommand Cmd1 = new SqlCommand("INSERT INTO tbl_Invoice_both_Dtls (InvoiceId,JobNo,Description,Hsn,TaxPercentage,Quntity,Unit,Rate,DiscountPercentage,Total,MateName,PrintDescription ,InvoiceNo) " +
                          //"VALUES ('" + Id + "','" + JobNo + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "' )", con);
                          "VALUES ('" + Id + "','" + JobNo + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "' ,'" + MateName + "','" + PrintDescription + "' ,'" + InvoiceNo + "' )", con);
                     con.Open();
@@ -1080,7 +1122,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                     string MateName = (G2.FindControl("lblproduct") as Label).Text;
                     string PrintDescription = (G2.FindControl("Lblprintdescription_grd") as Label).Text;
                     string InvoiceNo = txt_InvoiceNo.Text;
-                    SqlCommand Cmd1 = new SqlCommand("INSERT INTO tblInvoiceDtls (InvoiceId,JobNo,Description,Hsn,TaxPercentage,Quntity,Unit,Rate,DiscountPercentage,Total, MateName, PrintDescription, InvoiceNo) " +
+                    SqlCommand Cmd1 = new SqlCommand("INSERT INTO tbl_Invoice_both_Dtls (InvoiceId,JobNo,Description,Hsn,TaxPercentage,Quntity,Unit,Rate,DiscountPercentage,Total, MateName, PrintDescription, InvoiceNo) " +
                     //"VALUES ('" + Id + "','" + JobNo_GET + "','" + Discription_GET + "','" + HSN_GET + "','" + Tax_GET + "','" + Quntity_GET + "','" + Unit_GET + "','" + Rate_GET + "','" + Discount_GET + "','" + Total_Amount_GET + "')", con);
                     "VALUES ('" + Id + "','" + JobNo_GET + "','" + Discription_GET + "','" + HSN_GET + "','" + Tax_GET + "','" + Quntity_GET + "','" + Unit_GET + "','" + Rate_GET + "','" + Discount_GET + "','" + Total_Amount_GET + "'  ,'" + MateName + "', '" + PrintDescription + "','" + InvoiceNo + "' )", con);
                     con.Open();
@@ -2014,7 +2056,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
         //SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Taxinvoice_pdf WHERE InvoiceNo='" + txt_InvoiceNo.Text + "' AND Email='" + MAIL + "'   ", con);
 
         //Changes for Temparay
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Taxinvoice_pdf As TP Inner join tblInvoiceDtls As TD on TP.Id= TD.InvoiceId WHERE TP.InvoiceNo='" + txt_InvoiceNo.Text + "' ", con);
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Taxinvoice_pdf As TP Inner join tbl_Invoice_both_Dtls As TD on TP.Id= TD.InvoiceId WHERE TP.InvoiceNo='" + txt_InvoiceNo.Text + "' ", con);
         // SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Taxinvoice_pdf WHERE InvoiceNo='" + txt_InvoiceNo.Text + "' ", con);
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
@@ -3361,11 +3403,11 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             if (SDt.Rows.Count > 0)
             {
                 ViewState["RowNo"] = 0;
-                Dt_Itemsdetails.Columns.AddRange(new DataColumn[12] { new DataColumn("Id"),new DataColumn("JobNo"), new DataColumn("MateName"),
+                Dt_Itemsdetails.Columns.AddRange(new DataColumn[13] { new DataColumn("Id"),new DataColumn("JobNo"), new DataColumn("MateName"),
                     new DataColumn("Description"), new DataColumn("PrintDescription"),  new DataColumn("Hsn_Sac"),
                     new DataColumn("Rate"),  new DataColumn("Unit"),
                     new DataColumn("Quantity"),  new DataColumn("TaxPercenteage"),
-                    new DataColumn("DiscountPercentage"),  new DataColumn("Total"),
+                    new DataColumn("DiscountPercentage"),  new DataColumn("Total"), new DataColumn("JobDaysCount"),
                   });
 
                 ViewState["Invoicedetails"] = Dt_Itemsdetails;
@@ -3621,6 +3663,10 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
 
                 Dt_Itemsdetails.Rows.Add(count, dt3.Rows[i]["JobNo"].ToString(), dt3.Rows[i]["MateName"].ToString(), dt3.Rows[i]["Description"].ToString(), dt3.Rows[i]["PrintDescription"].ToString(), dt3.Rows[i]["Hsn_Sac"].ToString(), dt3.Rows[i]["Rate"].ToString(), dt3.Rows[i]["Unit"].ToString(), dt3.Rows[i]["Quantity"].ToString(), dt3.Rows[i]["TaxPercenteage"].ToString(), dt3.Rows[i]["DiscountPercentage"].ToString(), dt3.Rows[i]["Total"].ToString(), jobDaysCount);
                 count = count + 1;
+            }
+            if (Dt_Itemsdetails.Rows.Count > 0)
+            {
+               grd_getDTLS.Columns[0].Visible = true;
             }
             grd_getDTLS.DataSource = Dt_Itemsdetails;
             grd_getDTLS.DataBind();

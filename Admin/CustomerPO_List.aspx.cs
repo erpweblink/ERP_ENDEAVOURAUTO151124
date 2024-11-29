@@ -1,15 +1,12 @@
 ﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
-using Org.BouncyCastle.Asn1.X509;
 using System;
-using System.Activities.Expressions;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
@@ -95,7 +92,21 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
 
 
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT Id,jobNo,Quotationno,CustomerName,SubCustomer,Pono,PoDate,RefNo,Mobileno,GrandTotal,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days FROM CustomerPO_Hdr_Both WHERE Is_Deleted='0' ORDER BY CreatedOn DESC", con);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT Id,jobNo,Quotationno,CustomerName,SubCustomer,Pono,PoDate,RefNo,Mobileno," +
+        //    "GrandTotal,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days, Type FROM CustomerPO_Hdr_Both WHERE Type = 'JobNo' " +
+        //    "AND Is_Deleted='0' ORDER BY CreatedOn DESC", con);
+
+        SqlDataAdapter da = new SqlDataAdapter(
+                     "SELECT C.Id, C.Quotationno, C.CustomerName," +
+                     "C.SubCustomer, C.SubCustomer, C.Pono, C.PoDate, C.RefNo, *," +
+                     "CASE " +
+                         "WHEN NOT EXISTS (SELECT 1 FROM CustomerPO_Dtls_Both D WHERE D.PurchaseId = C.Id AND D.JobStatus != 'Completed') " +
+                         "THEN (SELECT MAX(D.JobDaysCount) FROM CustomerPO_Dtls_Both D WHERE D.PurchaseId = C.Id) " +
+                         "ELSE DATEDIFF(DAY, C.CreatedOn, GETDATE()) " +
+                     "END AS CountDays " +
+                     "FROM CustomerPO_Hdr_Both C " +
+                     "WHERE C.Type = 'JobNo' " +
+                     "ORDER BY C.CreatedOn DESC;", con);
         da.Fill(Dt);
         GvCustomerpoList.EmptyDataText = "Records Not Found";
         GvCustomerpoList.DataSource = Dt;
@@ -968,17 +979,35 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
             if (txtjob.Text == "")
             {
                 string query1 = string.Empty;
-                query1 = @"SELECT [JobNo] FROM [CustomerPO_Dtls_Both] WHERE Quotationno ='" + Id + "'";
+                query1 = @"SELECT *,[JobNo] FROM [CustomerPO_Dtls_Both] WHERE Quotationno ='" + Id + "'";
                 SqlDataAdapter ad = new SqlDataAdapter(query1, con);
                 DataTable dt = new DataTable();
                 ad.Fill(dt);
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (row["JobDaysCount"] == DBNull.Value || Convert.ToInt32(row["JobDaysCount"]) == 0 && row["JobStatus"].ToString() == "Pending")
+                    {
+                        con.Open();
+                        SqlCommand cmdss = new SqlCommand("SELECT CreatedOn FROM CustomerPO_Hdr_Both WHERE Id = '" + row["PurchaseId"] + "'", con);
+                        object result = cmdss.ExecuteScalar();
+
+                        if (result != DBNull.Value)
+                        {
+                            DateTime createdOn = Convert.ToDateTime(result);
+                            DateTime createdOnDateOnly = createdOn.Date;
+                            int jobDaysCount = (DateTime.Now.Date - createdOnDateOnly).Days;
+                            row["JobDaysCount"] = jobDaysCount;
+                        }
+                        con.Close();
+                    }
+                }
                 gvDetailss.DataSource = dt;
                 gvDetailss.DataBind();
             }
             else
             {
                 string query1 = string.Empty;
-                query1 = @"SELECT Top 1 [JobNo] FROM [CustomerPO_Dtls_Both] WHERE JobNo ='" + txtjob.Text + "'";
+                query1 = @"SELECT Top 1 [JobNo], * FROM [CustomerPO_Dtls_Both] WHERE JobNo ='" + txtjob.Text + "'";
                 SqlDataAdapter ad = new SqlDataAdapter(query1, con);
                 DataTable dt = new DataTable();
                 ad.Fill(dt);

@@ -360,6 +360,12 @@
                                 </ItemTemplate>
                             </asp:TemplateField>
 
+                             <asp:TemplateField HeaderText="Against By">
+                                <ItemTemplate>
+                                    <asp:Label ID="lbl_Type" runat="server" Text='<%# Eval("Type") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
                             <asp:TemplateField HeaderText="Action">
                                 <ItemTemplate>
 

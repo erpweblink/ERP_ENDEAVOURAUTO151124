@@ -10,6 +10,9 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Org.BouncyCastle.Asn1.X509;
+using System.Activities.Expressions;
+using System.Activities.Statements;
 
 public partial class Admin_QuotationList : System.Web.UI.Page
 {
@@ -74,8 +77,27 @@ public partial class Admin_QuotationList : System.Web.UI.Page
                 DataTable Dt = new DataTable();
                 //original
                 //SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE IsDeleted='0' AND isCompleted='1' ORDER BY Quotation_Date DESC ", con);
-                SqlDataAdapter Da = new SqlDataAdapter(" SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,Againstby,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE Againstby='JobNo' AND Customer_Name='Schneider Electric India Pvt.Ltd.' AND IsDeleted='0'  ORDER BY Quotation_Date DESC ", con);
                 // SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Quotationjobno", con);
+                
+                //Old code 
+                //SqlDataAdapter Da = new SqlDataAdapter(" SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,Againstby,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE Againstby='JobNo' AND Customer_Name='Schneider Electric India Pvt.Ltd.' AND IsDeleted='0'  ORDER BY Quotation_Date DESC ", con);
+
+                //New code with days count
+                SqlDataAdapter Da = new SqlDataAdapter(
+                     "SELECT Q.ID, Q.Quotation_no, Q.Quotation_Date, Q.ExpiryDate, Q.CreatedOn AS QuotationCreatedOn, " +
+                     "Q.Customer_Name, Q.SubCustomer, Q.Address, Q.Mobile_No, Q.Phone_No, Q.GST_No, Q.State_Code, " +
+                     "Q.kind_Att, Q.CGST, Q.SGST, Q.AllTotal_price, Q.Total_in_word, Q.IsDeleted, Q.CreatedBy, Q.CreatedOn, " +
+                     "Q.Againstby, " +
+                     "CASE " +
+                         "WHEN NOT EXISTS (SELECT 1 FROM tbl_Quotation_two_Dtls D WHERE D.Quotation_no = Q.Quotation_no AND D.JobStatus != 'Completed') " +
+                         "THEN (SELECT MAX(D.JobDaysCount) FROM tbl_Quotation_two_Dtls D WHERE D.Quotation_no = Q.Quotation_no) " +
+                         "ELSE DATEDIFF(DAY, Q.Quotation_Date, GETDATE()) " +
+                     "END AS CountDays " +
+                     "FROM tbl_Quotation_two_Hdr Q " +
+                     "WHERE Q.Againstby = 'JobNo'AND Customer_Name='Schneider Electric India Pvt.Ltd.'" +
+                     " AND Q.IsDeleted = '0' ORDER BY Q.CreatedOn DESC;", con
+                   );
+
 
                 Da.Fill(Dt);
                 gv_Quot_List.DataSource = Dt;
@@ -83,14 +105,30 @@ public partial class Admin_QuotationList : System.Web.UI.Page
             }
             else
             {
-                DataTable Dt = new DataTable();
                 //original
-
                 //SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE IsDeleted='0'  ORDER BY Quotation_Date DESC ", con);
-
-                SqlDataAdapter Da = new SqlDataAdapter(" SELECT ID, Quotation_no, Quotation_Date, ExpiryDate, Q.CreatedOn AS QuotationCreatedOn, Customer_Name, SubCustomer, Address, Mobile_No, Phone_No, GST_No, State_Code, kind_Att, CGST, SGST, AllTotal_price, Total_in_word, IsDeleted, Q.CreatedBy, Q.CreatedOn,Againstby, DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr Q WHERE Againstby='JobNo' AND IsDeleted = '0' ORDER BY Q.CreatedOn DESC;", con);
-
                 // SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Quotationjobno", con);
+
+                DataTable Dt = new DataTable();
+
+                //SqlDataAdapter Da = new SqlDataAdapter(" SELECT ID, Quotation_no, Quotation_Date, ExpiryDate, Q.CreatedOn AS QuotationCreatedOn," +
+                //    " Customer_Name, SubCustomer, Address, Mobile_No, Phone_No, GST_No, State_Code, kind_Att, CGST, SGST, " +
+                //    "AllTotal_price, Total_in_word, IsDeleted, Q.CreatedBy, Q.CreatedOn,Againstby, DATEDIFF(DAY, Quotation_Date, getdate()) AS days " +
+                //    "FROM tbl_Quotation_two_Hdr Q WHERE Againstby='JobNo' AND IsDeleted = '0' ORDER BY Q.CreatedOn DESC;", con);
+
+                SqlDataAdapter Da = new SqlDataAdapter(
+                      "SELECT Q.ID, Q.Quotation_no, Q.Quotation_Date, Q.ExpiryDate, Q.CreatedOn AS QuotationCreatedOn, " +
+                      "Q.Customer_Name, Q.SubCustomer, Q.Address, Q.Mobile_No, Q.Phone_No, Q.GST_No, Q.State_Code, " +
+                      "Q.kind_Att, Q.CGST, Q.SGST, Q.AllTotal_price, Q.Total_in_word, Q.IsDeleted, Q.CreatedBy, Q.CreatedOn, " +
+                      "Q.Againstby, " +
+                      "CASE " +
+                          "WHEN NOT EXISTS (SELECT 1 FROM tbl_Quotation_two_Dtls D WHERE D.Quotation_no = Q.Quotation_no AND D.JobStatus != 'Completed') " +
+                          "THEN (SELECT MAX(D.JobDaysCount) FROM tbl_Quotation_two_Dtls D WHERE D.Quotation_no = Q.Quotation_no) " +
+                          "ELSE DATEDIFF(DAY, Q.Quotation_Date, GETDATE()) " +
+                      "END AS CountDays " +
+                      "FROM tbl_Quotation_two_Hdr Q " +
+                      "WHERE Q.Againstby = 'JobNo' AND Q.IsDeleted = '0' " +
+                      "ORDER BY Q.CreatedOn DESC;", con);
 
                 Da.Fill(Dt);
                 gv_Quot_List.DataSource = Dt;
@@ -629,6 +667,21 @@ public partial class Admin_QuotationList : System.Web.UI.Page
             SqlDataAdapter Daaa = new SqlDataAdapter(" SELECT * FROM [tbl_Quotation_two_Dtls] WHERE [Quotation_no]='" + Id + "'", con);
             DataTable Dttt = new DataTable();
             Daaa.Fill(Dttt);
+            foreach (DataRow row in Dttt.Rows)
+            {
+                if (row["JobDaysCount"] == DBNull.Value || Convert.ToInt32(row["JobDaysCount"]) == 0 && row["JobStatus"].ToString() == "Pending")
+                {
+                    DateTime createdOn = Convert.ToDateTime(row["CreatedOn"]);
+
+
+                    DateTime createdOnDateOnly = createdOn.Date;
+
+
+                    int jobDaysCount = (DateTime.Now.Date - createdOnDateOnly).Days;
+                    row["JobDaysCount"] = jobDaysCount;
+                }
+            }
+
             gvDetails.DataSource = Dttt;
             gvDetails.DataBind();
 
