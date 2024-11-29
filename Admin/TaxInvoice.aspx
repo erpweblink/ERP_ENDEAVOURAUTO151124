@@ -546,7 +546,7 @@
                                 <div class="table-responsive text-center">
                                     <asp:GridView ID="grd_getDTLS" runat="server" AutoGenerateColumns="false" CssClass="grid" AllowPaging="false" Width="100%" OnRowDataBound="grd_getDTLS_RowDataBound">
                                         <Columns>
-                                            <asp:TemplateField HeaderText="Select Jobs">
+                                            <asp:TemplateField HeaderText="Select Jobs" Visible="false">
                                                 <ItemTemplate>
                                                     <asp:CheckBox ID="chkSelect" runat="server" Checked="true" AutoPostBack="true" OnCheckedChanged="chkSelect_CheckedChanged" />
                                                 </ItemTemplate>

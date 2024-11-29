@@ -244,10 +244,12 @@
                         <asp:Label ID="Label2" runat="server" Text="Quotation Date :" CssClass="lblquatation"></asp:Label>
                         <asp:TextBox runat="server" class="form-control txtdate" ID="txtDateSearch" name="Search" placeholder=" Enter Date" TextMode="Date" />
                     </div>
+
                     <%-- <div class="col-md-2 mt-top">
                         <asp:Label ID="Label3" runat="server" Text="Expiry Date" CssClass="lblexpirydate"></asp:Label>
                         <asp:TextBox runat="server" class="form-control txtdate" ID="txtexpirydate" name="Search" placeholder=" Expiry Date" TextMode="Date" />
                     </div>--%>
+
                     <div class="col-md-2 mt-top">
                         <br />
                         <asp:LinkButton ID="lnkBtnsearch" runat="server" CssClass="btn btn-primary " OnClick="lnkBtnsearch_Click"><i class="fa fa-search" style="font-size: 24px"></i></asp:LinkButton>
@@ -295,7 +297,12 @@
                                                     <%--<asp:Label ID="lblSrNo" runat="server" Text='<%#Container.DataItemIndex +1 %>'></asp:Label>--%>
                                                     <%--<asp:BoundField ItemStyle-Width="150px" DataField="Id" HeaderText="Sr. No." />--%>
                                                     <asp:BoundField ItemStyle-Width="150px" DataField="Jobno" HeaderText="Job No." />
-
+                                                </Columns>
+                                                <Columns>
+                                                    <asp:BoundField ItemStyle-Width="150px" DataField="JobStatus" HeaderText="Status" />
+                                                </Columns>
+                                                <Columns>
+                                                    <asp:BoundField ItemStyle-Width="150px" DataField="JobDaysCount" HeaderText="Completed Days" />
                                                 </Columns>
                                             </asp:GridView>
                                         </asp:Panel>
@@ -365,7 +372,7 @@
 
                                 <asp:TemplateField HeaderText="Count Days">
                                     <ItemTemplate>
-                                        <asp:Label ID="lbldaycount" runat="server" Text='<%# Eval("days") %>'></asp:Label>
+                                        <asp:Label ID="lbldaycount" runat="server" Text='<%# Eval("CountDays") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
 
@@ -386,7 +393,6 @@
                                         <asp:LinkButton runat="server" ID="lnkBtn_View" ToolTip="View Quotation PDF" CommandName="RowView" CommandArgument='<%# Eval("Quotation_no") %>'><i class="fas fa-file-pdf"  style="font-size: 26px; color:red; "></i></i></asp:LinkButton>
                                         <%--&nbsp;&nbsp; 
                                         <asp:LinkButton runat="server" ID="lnkbtnsendpo" ToolTip="Send PO" CommandName="SendPO" CommandArgument='<%# Eval("Quotation_no") %>'><i class="fa fa-paper-plane"  style="font-size: 26px; color:black; "></i></i></asp:LinkButton>--%>
-
                                     </ItemTemplate>
                                     <FooterTemplate>
                                         <asp:Label ID="lblFooterTotalAmt" runat="server" Text="Total Amt:" Font-Bold="True"></asp:Label>
@@ -666,7 +672,7 @@
                                                                     SortExpression="CreatedDate" DataFormatString="{0:dd-MM-yyyy}" />
                                                                 <asp:TemplateField HeaderText="Job Days Count">
                                                                     <ItemTemplate>
-                                                                        <asp:Label style="justify-content:center; display:flex" ID="lblDaysSinceCreated" runat="server"
+                                                                        <asp:Label Style="justify-content: center; display: flex" ID="lblDaysSinceCreated" runat="server"
                                                                             Text='<%# Eval("DaysSinceCreated") %>'></asp:Label>
                                                                     </ItemTemplate>
                                                                 </asp:TemplateField>

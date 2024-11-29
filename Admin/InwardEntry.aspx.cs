@@ -191,15 +191,16 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                 {
 
                     string customerName = enquiryTable.Rows[0]["customername"].ToString();
-                    string email = enquiryTable.Rows[0]["email"].ToString();
-                    string mobile = enquiryTable.Rows[0]["MobNo"].ToString();
+                    //string email = enquiryTable.Rows[0]["email"].ToString();
+                    //string mobile = enquiryTable.Rows[0]["MobNo"].ToString();
 
 
                     SqlDataAdapter customerAdapter = new SqlDataAdapter(
-                        "SELECT * FROM [tblCustomer] WHERE [CustomerName] = @Name AND [Email] = @Email AND [MobNo] = @Mobile", con);
+                       // "SELECT * FROM [tblCustomer] WHERE [CustomerName] = @Name AND [Email] = @Email AND [MobNo] = @Mobile", con);
+                        "SELECT * FROM [tblCustomer] WHERE [CustomerName] = @Name", con);
                     customerAdapter.SelectCommand.Parameters.AddWithValue("@Name", customerName);
-                    customerAdapter.SelectCommand.Parameters.AddWithValue("@Email", email);
-                    customerAdapter.SelectCommand.Parameters.AddWithValue("@Mobile", mobile);
+                    //customerAdapter.SelectCommand.Parameters.AddWithValue("@Email", email);
+                    //customerAdapter.SelectCommand.Parameters.AddWithValue("@Mobile", mobile);
                     customerAdapter.Fill(customerTable);
 
                     if (customerTable.Rows.Count > 0)

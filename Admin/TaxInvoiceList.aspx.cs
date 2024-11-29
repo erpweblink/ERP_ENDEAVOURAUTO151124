@@ -71,7 +71,7 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
         {
             string UserCompany = Session["name"].ToString();
             DataTable dt = new DataTable();
-            SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE Is_Deleted='0' AND CustName='" + UserCompany + "' ", Conn);
+            SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE Is_Deleted='0' AND CustName='" + UserCompany + "' ", Conn);
             //SqlDataAdapter sad = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,JobNo,Customer_Name,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_Hdr WHERE IsDeleted='0' AND isCompleted='1'", con);
             da.Fill(dt);
             GvPurchaseOrderList.EmptyDataText = "Not Records Found";
@@ -87,7 +87,7 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
     private void Load_Record()
     {
         DataTable Dt = new DataTable();
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE Is_Deleted='0' ORDER BY CreatedOn Desc ", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE Is_Deleted='0' ORDER BY CreatedOn Desc ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
         SELECT DISTINCT
             IH.Id,
@@ -103,11 +103,12 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
             IH.SGST,
             IH.IGST,
             IH.AllTotalAmount,
-            IH.GrandTotal
+            IH.GrandTotal,
+            IH.Type
         FROM
-            tblInvoiceHdr AS IH
+            tbl_Invoice_both_hdr AS IH
         WHERE
-            IH.Is_Deleted = '0'
+            IH.Is_Deleted = '0' AND Type = 'JobNo'
     )
     SELECT
         DI.Id,
@@ -122,12 +123,13 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
         DI.CGST,
         DI.SGST,
         DI.IGST,
+        DI.Type,
 DI.AllTotalAmount,
 DI.GrandTotal,
         (
             SELECT STUFF((
                 SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-                FROM tblInvoiceDtls AS dtls
+                FROM tbl_Invoice_both_Dtls AS dtls
                 WHERE dtls.InvoiceNo = DI.InvoiceNo
                 FOR XML PATH(''), TYPE
             ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -145,7 +147,7 @@ DI.GrandTotal,
     private void GridExport()
     {
         DataTable Dt = new DataTable();
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE Is_Deleted='0' ORDER BY CreatedOn Desc ", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE Is_Deleted='0' ORDER BY CreatedOn Desc ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
         SELECT DISTINCT
             IH.Id,
@@ -164,7 +166,7 @@ IH.AllTotalAmount,
 IH.GrandTotal
 
         FROM
-            tblInvoiceHdr AS IH
+            tbl_Invoice_both_hdr AS IH
         WHERE
             IH.Is_Deleted = '0'
     )
@@ -186,7 +188,7 @@ DI.GrandTotal
         (
             SELECT STUFF((
                 SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-                FROM tblInvoiceDtls AS dtls
+                FROM tbl_Invoice_both_Dtls AS dtls
                 WHERE dtls.InvoiceNo = DI.InvoiceNo
                 FOR XML PATH(''), TYPE
             ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -254,7 +256,7 @@ DI.GrandTotal
         if (e.CommandName == "RowDelete")
         {
             Conn.Open();
-            SqlCommand Cmd = new SqlCommand("UPDATE tblInvoiceHdr SET Is_Deleted='1' WHERE Id=@Id", Conn);
+            SqlCommand Cmd = new SqlCommand("UPDATE tbl_Invoice_both_hdr SET Is_Deleted='1' WHERE Id=@Id", Conn);
 
             Cmd.Parameters.AddWithValue("Id", Convert.ToInt32(e.CommandArgument.ToString()));
             Cmd.Parameters.AddWithValue("Is_Deleted", '1');
@@ -311,11 +313,11 @@ DI.GrandTotal
     //private void Pdf(string ID)
     //{
     //    DataTable Dt = new DataTable();
-    //    SqlDataAdapter da = new SqlDataAdapter("SELECT tblInvoiceHdr.Id,InvoiceNo,InvoiceDate,PoNo,PoDate,ChallanNo,ChallanDate,PayTerm," +
+    //    SqlDataAdapter da = new SqlDataAdapter("SELECT tbl_Invoice_both_hdr.Id,InvoiceNo,InvoiceDate,PoNo,PoDate,ChallanNo,ChallanDate,PayTerm," +
     //        "Delivery,KindAtt,CompanyAddress,CompanyGstNo,CompanyPanNo, ComapyRegType, CompanyStateCode, " +
     //        "CustomerShippingAddress, CustomerGstNo, CustomerPanNo, CustomerRegType,CustomerStateCode, CGST, SGST," +
     //        " AllTotalAmount, GrandTotal, TotalInWord, Description, Hsn, TaxPercentage, Quntity, Unit, Rate, DiscountPercentage," +
-    //        " Total,CreatedOn FROM tblInvoiceHdr INNER JOIN tblInvoiceDtls ON tblInvoiceDtls.InvoiceId = tblInvoiceHdr.Id WHERE tblInvoiceHdr.Id='" + ID + "'", Conn);
+    //        " Total,CreatedOn FROM tbl_Invoice_both_hdr INNER JOIN tbl_Invoice_both_Dtls ON tbl_Invoice_both_Dtls.InvoiceId = tbl_Invoice_both_hdr.Id WHERE tbl_Invoice_both_hdr.Id='" + ID + "'", Conn);
     //    da.Fill(Dt);
     //    GvPurchaseOrderList.DataSource = Dt;
     //    GvPurchaseOrderList.DataBind();
@@ -814,11 +816,11 @@ DI.GrandTotal
     private void Pdf(string ID)
     {
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT tblInvoiceHdr.Id,InvoiceNo,InvoiceDate,PoNo,PoDate,ChallanNo,ChallanDate,PayTerm," +
+        SqlDataAdapter da = new SqlDataAdapter("SELECT tbl_Invoice_both_hdr.Id,InvoiceNo,InvoiceDate,PoNo,PoDate,ChallanNo,ChallanDate,PayTerm," +
             "Delivery,KindAtt,CompanyAddress,CompanyGstNo,CompanyPanNo, ComapyRegType, CompanyStateCode, " +
             "CustomerShippingAddress, CustomerGstNo, CustomerPanNo, CustomerRegType,CustomerStateCode, CGST, SGST," +
             " AllTotalAmount, GrandTotal, TotalInWord, Description, Hsn, TaxPercentage, Quntity, Unit, Rate, DiscountPercentage," +
-            " Total,CreatedOn FROM tblInvoiceHdr INNER JOIN tblInvoiceDtls ON tblInvoiceDtls.InvoiceId = tblInvoiceHdr.Id WHERE tblInvoiceHdr.Id='" + ID + "'", Conn);
+            " Total,CreatedOn FROM tbl_Invoice_both_hdr INNER JOIN tbl_Invoice_both_Dtls ON tbl_Invoice_both_Dtls.InvoiceId = tbl_Invoice_both_hdr.Id WHERE tbl_Invoice_both_hdr.Id='" + ID + "'", Conn);
         da.Fill(Dt);
         GvPurchaseOrderList.DataSource = Dt;
         GvPurchaseOrderList.DataBind();
@@ -1378,7 +1380,7 @@ DI.GrandTotal
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT CompName from tblInvoiceHdr where " + "CompName like @Search + '%'";
+                com.CommandText = "select DISTINCT CompName from tbl_Invoice_both_hdr where " + "CompName like @Search + '%'";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -1412,7 +1414,7 @@ DI.GrandTotal
                 ViewState["Excell"] = "GetsortedInvoiceno";
                 GetsortedInvoiceno();
                 //DataTable Dt = new DataTable();
-                //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo = '" + txt_Invoice_search.Text + "' AND Is_Deleted='0' ", Conn);
+                //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo = '" + txt_Invoice_search.Text + "' AND Is_Deleted='0' ", Conn);
                 //da.Fill(Dt);
                 //GvPurchaseOrderList.DataSource = Dt;
                 //GvPurchaseOrderList.DataBind();
@@ -1423,7 +1425,7 @@ DI.GrandTotal
                 ViewState["Excell"] = "Getsortedjobno";
                 Getsortedjobno();
                 //DataTable Dt = new DataTable();
-                //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE CompName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted='0' ", Conn);
+                //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE CompName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted='0' ", Conn);
                 //da.Fill(Dt);
                 //GvPurchaseOrderList.DataSource = Dt;
                 //GvPurchaseOrderList.DataBind();
@@ -1439,7 +1441,7 @@ DI.GrandTotal
                 //DataTable Dt = new DataTable();
                 //txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
 
-                //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceDate= '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+                //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceDate= '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
                 //da.Fill(Dt);
                 //GvPurchaseOrderList.DataSource = Dt;
                 //GvPurchaseOrderList.DataBind();
@@ -1453,7 +1455,7 @@ DI.GrandTotal
                 //txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
 
                 //DataTable Dt = new DataTable();
-                //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%'AND CompName LIKE '%" + txtJobno.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+                //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%'AND CompName LIKE '%" + txtJobno.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
                 //da.Fill(Dt);
                 //GvPurchaseOrderList.DataSource = Dt;
                 //GvPurchaseOrderList.DataBind();
@@ -1465,7 +1467,7 @@ DI.GrandTotal
                 ViewState["Excell"] = "GetsortedInvoicejob";
                 GetsortedInvoicejob();
                 //DataTable Dt = new DataTable();
-                //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND CompName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted='0' ", Conn);
+                //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND CompName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted='0' ", Conn);
                 //da.Fill(Dt);
                 //GvPurchaseOrderList.DataSource = Dt;
                 //GvPurchaseOrderList.DataBind();
@@ -1479,7 +1481,7 @@ DI.GrandTotal
                 //txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
 
                 //DataTable Dt = new DataTable();
-                //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+                //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
                 //da.Fill(Dt);
                 //GvPurchaseOrderList.DataSource = Dt;
                 //GvPurchaseOrderList.DataBind();
@@ -1493,7 +1495,7 @@ DI.GrandTotal
                 //txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
 
                 //DataTable Dt = new DataTable();
-                //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE CompName LIKE '%" + txtJobno.Text + "%' AND   InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+                //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE CompName LIKE '%" + txtJobno.Text + "%' AND   InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
                 //da.Fill(Dt);
                 //GvPurchaseOrderList.DataSource = Dt;
                 //GvPurchaseOrderList.DataBind();
@@ -1511,7 +1513,7 @@ DI.GrandTotal
                 //txt_to_podate_search.Text = datee.ToString("yyyy-MM-dd");
 
                 //DataTable Dt = new DataTable();
-                //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE  InvoiceDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+                //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE  InvoiceDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
                 //da.Fill(Dt);
                 //GvPurchaseOrderList.DataSource = Dt;
                 //GvPurchaseOrderList.DataBind();
@@ -1526,7 +1528,7 @@ DI.GrandTotal
 
 
                 //DataTable Dt = new DataTable();
-                //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE  InvoiceDate= '" + txt_form_podate_search.Text + "'   AND Is_Deleted='0' ", Conn);
+                //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE  InvoiceDate= '" + txt_form_podate_search.Text + "'   AND Is_Deleted='0' ", Conn);
                 //da.Fill(Dt);
                 //GvPurchaseOrderList.DataSource = Dt;
                 //GvPurchaseOrderList.DataBind();
@@ -1539,7 +1541,7 @@ DI.GrandTotal
     {
         GvPurchaseOrderList.Visible = false;
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM [tblInvoiceHdr] where  ServiceType ='" + ddlservicetype.Text + "' AND Is_Deleted = '0'", Conn);
+        SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM [tbl_Invoice_both_hdr] where  ServiceType ='" + ddlservicetype.Text + "' AND Is_Deleted = '0'", Conn);
         //SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr where  ServiceType ='" + ddlservicetype.Text + "' AND Is_Deleted = '0'", con);
 
         sad.Fill(dtt);
@@ -1573,7 +1575,7 @@ DI.GrandTotal
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT InvoiceNo from tblInvoiceHdr where " + "InvoiceNo like @Search + '%' AND Is_Deleted='0' ";
+                com.CommandText = "select DISTINCT InvoiceNo from tbl_Invoice_both_hdr where " + "InvoiceNo like @Search + '%' AND Is_Deleted='0' ";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -1607,7 +1609,7 @@ DI.GrandTotal
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT PoNo from tblInvoiceHdr where " + "PoNo like @Search + '%' AND Is_Deleted='0' ";
+                com.CommandText = "select DISTINCT PoNo from tbl_Invoice_both_hdr where " + "PoNo like @Search + '%' AND Is_Deleted='0' ";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -1694,7 +1696,7 @@ DI.GrandTotal
         GvPurchaseOrderList.Visible = false;
         ViewState["Record"] = "Invoice";
         DataTable Dt = new DataTable();
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo = '" + txt_Invoice_search.Text + "' AND Is_Deleted='0' ", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo = '" + txt_Invoice_search.Text + "' AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -1712,7 +1714,7 @@ DI.GrandTotal
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -1734,7 +1736,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -1755,7 +1757,7 @@ WHERE
     {
         GvPurchaseOrderList.Visible = false;
         DataTable Dt = new DataTable();
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo = '" + txt_Invoice_search.Text + "' AND Is_Deleted='0' ", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo = '" + txt_Invoice_search.Text + "' AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -1772,7 +1774,7 @@ WHERE
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -1793,7 +1795,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -1814,7 +1816,7 @@ WHERE
         GvPurchaseOrderList.Visible = false;
         ViewState["Record"] = "Job";
         DataTable Dt = new DataTable();
-        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE CompName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted='0' ", Conn);
+        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE CompName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -1832,7 +1834,7 @@ WHERE
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -1854,7 +1856,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -1874,7 +1876,7 @@ WHERE
 
         GvPurchaseOrderList.Visible = false;
         DataTable Dt = new DataTable();
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE CompName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted='0' ", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE CompName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -1891,7 +1893,7 @@ WHERE
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -1912,7 +1914,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -1937,7 +1939,7 @@ WHERE
         DateTime date = Convert.ToDateTime(txt_form_podate_search.Text.ToString());
         DataTable Dt = new DataTable();
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceDate= '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceDate= '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -1954,7 +1956,7 @@ WHERE
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -1975,7 +1977,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -1999,7 +2001,7 @@ WHERE
         DateTime date = Convert.ToDateTime(txt_form_podate_search.Text.ToString());
         DataTable Dt = new DataTable();
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceDate= '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceDate= '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -2016,7 +2018,7 @@ WHERE
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -2037,7 +2039,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -2060,7 +2062,7 @@ WHERE
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
 
         DataTable Dt = new DataTable();
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%'AND CompName LIKE '%" + txtJobno.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%'AND CompName LIKE '%" + txtJobno.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -2078,7 +2080,7 @@ WHERE
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -2100,7 +2102,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -2121,7 +2123,7 @@ WHERE
         DateTime date = Convert.ToDateTime(txt_form_podate_search.Text.ToString());
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
         DataTable Dt = new DataTable();
-        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%'AND CompName LIKE '%" + txtJobno.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%'AND CompName LIKE '%" + txtJobno.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -2138,7 +2140,7 @@ WHERE
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -2159,7 +2161,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -2179,7 +2181,7 @@ WHERE
         GvPurchaseOrderList.Visible = false;
         ViewState["Record"] = "Inoce&Job";
         DataTable Dt = new DataTable();
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND CompName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted='0' ", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND CompName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -2197,7 +2199,7 @@ WHERE
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -2219,7 +2221,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -2238,7 +2240,7 @@ WHERE
     {
         GvPurchaseOrderList.Visible = false;
         DataTable Dt = new DataTable();
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND CompName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted='0' ", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND CompName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted='0' ", Conn);
 
 
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
@@ -2257,7 +2259,7 @@ WHERE
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -2278,7 +2280,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -2303,8 +2305,8 @@ WHERE
         DateTime date = Convert.ToDateTime(txt_form_podate_search.Text.ToString());
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
         DataTable Dt = new DataTable();
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND Is_Deleted = '0'", Conn);
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND Is_Deleted = '0'", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
 
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
@@ -2323,7 +2325,7 @@ WHERE
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -2345,7 +2347,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -2370,8 +2372,8 @@ FROM
         DateTime date = Convert.ToDateTime(txt_form_podate_search.Text.ToString());
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
         DataTable Dt = new DataTable();
-        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND Is_Deleted = '0'", Conn);
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND Is_Deleted = '0'", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
 
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
@@ -2389,7 +2391,7 @@ FROM
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -2410,7 +2412,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -2433,7 +2435,7 @@ FROM
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
 
         DataTable Dt = new DataTable();
-        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE CompName LIKE '%" + txtJobno.Text + "%' AND   InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE CompName LIKE '%" + txtJobno.Text + "%' AND   InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -2451,7 +2453,7 @@ FROM
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -2473,7 +2475,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -2493,7 +2495,7 @@ FROM
         DateTime date = Convert.ToDateTime(txt_form_podate_search.Text.ToString());
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
         DataTable Dt = new DataTable();
-        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE CompName LIKE '%" + txtJobno.Text + "%' AND   InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE CompName LIKE '%" + txtJobno.Text + "%' AND   InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -2510,7 +2512,7 @@ FROM
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -2531,7 +2533,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -2554,7 +2556,7 @@ FROM
         DateTime datee = Convert.ToDateTime(txt_to_podate_search.Text.ToString());
         txt_to_podate_search.Text = datee.ToString("yyyy-MM-dd");
         DataTable Dt = new DataTable();
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE  InvoiceDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE  InvoiceDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -2572,7 +2574,7 @@ FROM
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -2594,7 +2596,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -2621,7 +2623,7 @@ FROM
         DateTime datee = Convert.ToDateTime(txt_to_podate_search.Text.ToString());
         txt_to_podate_search.Text = datee.ToString("yyyy-MM-dd");
         DataTable Dt = new DataTable();
-        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE  InvoiceDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE  InvoiceDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -2638,7 +2640,7 @@ FROM
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -2659,7 +2661,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -2682,7 +2684,7 @@ FROM
         DateTime date = Convert.ToDateTime(txt_form_podate_search.Text.ToString());
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
         DataTable Dt = new DataTable();
-        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE  InvoiceDate= '" + txt_form_podate_search.Text + "'   AND Is_Deleted='0' ", Conn);
+        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE  InvoiceDate= '" + txt_form_podate_search.Text + "'   AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -2700,7 +2702,7 @@ FROM
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -2722,7 +2724,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -2744,7 +2746,7 @@ FROM
         DateTime date = Convert.ToDateTime(txt_form_podate_search.Text.ToString());
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
         DataTable Dt = new DataTable();
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE  InvoiceDate= '" + txt_form_podate_search.Text + "'   AND Is_Deleted='0' ", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE  InvoiceDate= '" + txt_form_podate_search.Text + "'   AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -2761,7 +2763,7 @@ FROM
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -2782,7 +2784,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -2804,7 +2806,7 @@ FROM
         DateTime date = Convert.ToDateTime(txt_form_podate_search.Text.ToString());
         DataTable Dt = new DataTable();
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
-        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND CustName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted = '0'", Conn);
+        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND CustName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted = '0'", Conn);
 
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
@@ -2823,7 +2825,7 @@ FROM
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -2845,7 +2847,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -2869,7 +2871,7 @@ FROM
         DateTime date = Convert.ToDateTime(txt_form_podate_search.Text.ToString());
         DataTable Dt = new DataTable();
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
-        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND CustName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted = '0'", Conn);
+        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND CustName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted = '0'", Conn);
 
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
@@ -2887,7 +2889,7 @@ FROM
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -2908,7 +2910,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -3010,7 +3012,7 @@ FROM
         GvPurchaseOrderList.Visible = false;
         ViewState["Record"] = "Invoice";
         DataTable Dt = new DataTable();
-        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo = '" + txt_Invoice_search.Text + "' AND Is_Deleted='0' ", Conn);
+        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo = '" + txt_Invoice_search.Text + "' AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -3027,7 +3029,7 @@ FROM
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -3048,7 +3050,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -3069,7 +3071,7 @@ WHERE
         GvPurchaseOrderList.Visible = false;
         ViewState["Record"] = "Job";
         DataTable Dt = new DataTable();
-        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE CompName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted='0' ", Conn);
+        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE CompName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -3086,7 +3088,7 @@ WHERE
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -3107,7 +3109,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -3128,7 +3130,7 @@ WHERE
         DateTime date = Convert.ToDateTime(txt_form_podate_search.Text.ToString());
         DataTable Dt = new DataTable();
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
-        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND CustName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted = '0'", Conn);
+        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND CustName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted = '0'", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -3145,7 +3147,7 @@ WHERE
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -3166,7 +3168,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -3189,7 +3191,7 @@ WHERE
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
 
         DataTable Dt = new DataTable();
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%'AND CompName LIKE '%" + txtJobno.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%'AND CompName LIKE '%" + txtJobno.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -3206,7 +3208,7 @@ WHERE
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -3227,7 +3229,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -3247,7 +3249,7 @@ WHERE
         GvPurchaseOrderList.Visible = false;
         ViewState["Record"] = "Inoce&Job";
         DataTable Dt = new DataTable();
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND CompName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted='0' ", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND CompName LIKE '%" + txtJobno.Text + "%' AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -3264,7 +3266,7 @@ WHERE
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -3285,7 +3287,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -3307,8 +3309,8 @@ WHERE
         DateTime date = Convert.ToDateTime(txt_form_podate_search.Text.ToString());
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
         DataTable Dt = new DataTable();
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND Is_Deleted = '0'", Conn);
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND Is_Deleted = '0'", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
 
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
@@ -3326,7 +3328,7 @@ WHERE
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -3347,7 +3349,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -3372,7 +3374,7 @@ FROM
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
 
         DataTable Dt = new DataTable();
-        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE CompName LIKE '%" + txtJobno.Text + "%' AND   InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE CompName LIKE '%" + txtJobno.Text + "%' AND   InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -3389,7 +3391,7 @@ FROM
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -3410,7 +3412,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -3433,7 +3435,7 @@ FROM
         DateTime datee = Convert.ToDateTime(txt_to_podate_search.Text.ToString());
         txt_to_podate_search.Text = datee.ToString("yyyy-MM-dd");
         DataTable Dt = new DataTable();
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE  InvoiceDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE  InvoiceDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -3450,7 +3452,7 @@ FROM
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -3471,7 +3473,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
@@ -3493,7 +3495,7 @@ FROM
         DateTime date = Convert.ToDateTime(txt_form_podate_search.Text.ToString());
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
         DataTable Dt = new DataTable();
-        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE  InvoiceDate= '" + txt_form_podate_search.Text + "'   AND Is_Deleted='0' ", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE  InvoiceDate= '" + txt_form_podate_search.Text + "'   AND Is_Deleted='0' ", Conn);
         SqlDataAdapter da = new SqlDataAdapter(@"WITH DistinctInvoices AS (
     SELECT DISTINCT
         IH.Id,
@@ -3510,7 +3512,7 @@ FROM
         IH.IGST,
         IH.Is_Deleted
     FROM
-        tblInvoiceHdr AS IH
+        tbl_Invoice_both_hdr AS IH
     WHERE
         IH.Is_Deleted = '0'
 )
@@ -3531,7 +3533,7 @@ SELECT
     (
         SELECT STUFF((
             SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-            FROM tblInvoiceDtls AS dtls
+            FROM tbl_Invoice_both_Dtls AS dtls
             WHERE dtls.InvoiceNo = DI.InvoiceNo
             FOR XML PATH(''), TYPE
         ).value('.', 'VARCHAR(MAX)'), 1, 1, '')

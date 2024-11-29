@@ -315,6 +315,12 @@
                                                 <Columns>
                                                     <asp:BoundField ItemStyle-Width="150px" DataField="Jobno" HeaderText="Job No." />
                                                 </Columns>
+                                                <Columns>
+                                                    <asp:BoundField ItemStyle-Width="150px" DataField="JobStatus" HeaderText="Status" />
+                                                </Columns>
+                                                <Columns>
+                                                    <asp:BoundField ItemStyle-Width="150px" DataField="JobDaysCount" HeaderText="Completed Days" />
+                                                </Columns>
                                             </asp:GridView>
                                         </asp:Panel>
                                     </ItemTemplate>
@@ -383,7 +389,12 @@
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Count days">
                                     <ItemTemplate>
-                                        <asp:Label ID="lblcountdays" runat="server" Text='<%# Eval("days") %>'></asp:Label>
+                                        <asp:Label ID="lblcountdays" runat="server" Text='<%# Eval("CountDays") %>'></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Against By">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblType" runat="server" Text='<%# Eval("Type") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
 
@@ -405,12 +416,12 @@
                                         <%-- <a href="<%#"Customer_PO.aspx?Id="+Eval("Id") %>"><i class='far fa-edit' style='font-size: 26px'></i></a>--%>
                                         <asp:LinkButton ID="btn_edit" runat="server" CommandName="Rowedit" CommandArgument='<%#Eval("Id") %>' ToolTip="Edit"><i class="far fa-edit"  style="font-size:26px"></i></asp:LinkButton>
                                         <asp:LinkButton ID="btn_delete" runat="server" Text="" ToolTip="Delete" CommandName="RowDelete" CommandArgument='<%# Eval("Id") %>' OnClientClick="Javascript:return confirm('Are you sure to Delete?')"><i class="fa fa-trash" aria-hidden="true" style="font-size:26px"></i></asp:LinkButton>
-                                       <%-- <asp:LinkButton ID="lnkbtnsendpo" runat="server" CommandName="SendINV" CommandArgument='<%# Container.DataItemIndex %>' ToolTip="Send Invoice">
+                                        <%-- <asp:LinkButton ID="lnkbtnsendpo" runat="server" CommandName="SendINV" CommandArgument='<%# Container.DataItemIndex %>' ToolTip="Send Invoice">
                                           <i class="fa fa-paper-plane" style="font-size:26px;color:black"></i>
                                         </asp:LinkButton>--%>
                                         <%--<asp:LinkButton runat="server" ID="lnkbtnsendpo" ToolTip="Send PO" CommandName="SendINV"><i class="fa fa-paper-plane"  style="font-size: 26px; color:black; "></i></i></asp:LinkButton>--%>
                                     </ItemTemplate>
-                                     <FooterTemplate>
+                                    <FooterTemplate>
                                         <asp:Label ID="lblFooterTotalAmt" runat="server" Text="Total Amt:" Font-Bold="True"></asp:Label>
                                     </FooterTemplate>
                                 </asp:TemplateField>
@@ -430,7 +441,7 @@
 
                     <%--   SortedGrid start--%>
                     <div class="table-responsive text-center" style="width: 100%; padding: 20px;">
-                        <asp:GridView ID="GvSorted" runat="server" AutoGenerateColumns="false" CssClass="grid" DataKeyNames="Quotationno"  Width="100%" OnRowCommand="GvCustomerpoList_RowCommand" OnRowDataBound="GvCustomerpoList_RowDataBound" ShowFooter="True">
+                        <asp:GridView ID="GvSorted" runat="server" AutoGenerateColumns="false" CssClass="grid" DataKeyNames="Quotationno" Width="100%" OnRowCommand="GvCustomerpoList_RowCommand" OnRowDataBound="GvCustomerpoList_RowDataBound" ShowFooter="True">
                             <%--AllowPaging="true" PagerStyle-CssClass="paging" PageSize="10" OnPageIndexChanging="GvSorted_PageIndexChanging"--%>
                             <Columns>
                                 <asp:TemplateField HeaderStyle-Width="20" HeaderText="View">
@@ -531,7 +542,7 @@
 
 
                                     </ItemTemplate>
-                                     <FooterTemplate>
+                                    <FooterTemplate>
                                         <asp:Label ID="lblFooterTotalAmt" runat="server" Text="Total Amt:" Font-Bold="True"></asp:Label>
                                     </FooterTemplate>
                                 </asp:TemplateField>
@@ -720,7 +731,7 @@
                                                                 SortExpression="CreatedOn" DataFormatString="{0:dd-MM-yyyy}" />
                                                             <asp:TemplateField HeaderText="Days Count">
                                                                 <ItemTemplate>
-                                                                    <asp:Label ID="lbldaycount" runat="server" Text='<%# Eval("JobDaysCount") %>'></asp:Label>                                                                   
+                                                                    <asp:Label ID="lbldaycount" runat="server" Text='<%# Eval("JobDaysCount") %>'></asp:Label>
                                                                 </ItemTemplate>
                                                             </asp:TemplateField>
                                                             <asp:TemplateField HeaderText="Job Status">
