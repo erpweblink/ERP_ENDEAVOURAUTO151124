@@ -3632,6 +3632,7 @@ FROM
           AND H.Customer_Name = 'Schneider Electric India Pvt.Ltd.' AND (J.JobCount > 0)
           ORDER BY H.CreatedOn DESC;";
 
+
                 SqlDataAdapter Da = new SqlDataAdapter(query, Conn);
                 Da.SelectCommand.Parameters.AddWithValue("@StartDate", formattedStartDate);
                 Da.SelectCommand.Parameters.AddWithValue("@EndDate", formattedEndDate);

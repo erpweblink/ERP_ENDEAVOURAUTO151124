@@ -352,6 +352,7 @@
                                         <tr>
                                             <td>
                                                 <asp:DropDownList ID="ddljobno" OnTextChanged="ddljobno_TextChanged" AutoPostBack="true" Width="230px" runat="server" AppendDataBoundItems="True" class="form-control">
+
                                                     <asp:ListItem Value="" Text="Select Job No.">
 
                                                     </asp:ListItem>
@@ -361,11 +362,13 @@
 
                                             <td>
                                                 <asp:TextBox ID="txtpoduct" runat="server" AutoPostBack="true" Width="230px" class="form-control"></asp:TextBox>
+
                                             </td>
 
                                             <td>
 
                                                 <asp:TextBox ID="txt_discription_Tbl" runat="server" OnTextChanged="txt_discription_Tbl_TextChanged" AutoPostBack="true" Width="230px" class="form-control"></asp:TextBox>
+
                                                 <asp:AutoCompleteExtender ID="AutoCompleteExtender1" CompletionListCssClass="completionList"
                                                     CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
                                                     CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetDescriptionList" TargetControlID="txt_discription_Tbl" runat="server">
@@ -421,6 +424,7 @@
                                                 <asp:TextBox ID="txt_Total_Tbl" onkeypress="return isNumberKey(event)" ReadOnly="true" runat="server" Width="230px" class="form-control"></asp:TextBox>
                                             </td>
                                             <td style="text-align: center">
+
                                                 <asp:LinkButton runat="server" ID="btn_add_more_Tbl" CausesValidation="false" ToolTip="Add Component" Width="100px" CssClass="btn btn-facebook" OnClick="btn_add_more_Tbl_Click1" Text="Add More" class="form-control"></asp:LinkButton>
                                             </td>
                                         </tr>

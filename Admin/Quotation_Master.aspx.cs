@@ -1006,7 +1006,6 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                 }
                 else
                 {
-
                     string[] subs = txt_Quo_No.Text.Split('_');
                     //if (subs[0] == "MN")
                     //{
@@ -1050,6 +1049,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                     cmd.ExecuteNonQuery();
                     con.Close();
                     int JobNoCount = 1;
+
                     foreach (GridViewRow grd1 in dgvProductDtl.Rows)
                     {
                         // New field to update the count                        
@@ -1073,6 +1073,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                             "Rate,Disc_per,FTotal,CreatedBy,CreatedOn,UpdatedBy,UpdatedOn,Description,product,JobNo,JobStatus)" +
                             " VALUES(@Quotation_no,@CompName,@HSN,@Tax,@Qty,@Units,@total,@Rate,@Disc_per,@FTotal,@CreatedBy," +
                             "@CreatedOn,@UpdatedBy,@UpdatedOn,@Description,@product,@JobNo,@JobStatus)", con);
+
                         cmdd.Parameters.AddWithValue("@Quotation_no", txt_Quo_No.Text);
                         cmdd.Parameters.AddWithValue("@CompName", Description_grd);
                         cmdd.Parameters.AddWithValue("@HSN", HSN_grd);
@@ -1095,6 +1096,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                         con.Open();
                         cmdd.ExecuteNonQuery();
 
+
                         // insert the Job count for that particular quotation
                         SqlCommand cmds = new SqlCommand("UPDATE tbl_Quotation_two_Hdr SET JobNoCount = '"+JobNoCount+ "' WHERE Quotation_no = '" + txt_Quo_No.Text + "'", con);
                         cmds.ExecuteNonQuery();
@@ -1102,6 +1104,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
 
                         con.Close();
                         SqlCommand cmdds = new SqlCommand("UPDATE tblEstimationHdr SET QuotationStatus = 'Completed', JobDaysCount = '"+ JobCount + "' WHERE JobNo = '" + lbljobno + "'", con);
+
                         con.Open();
                         cmdds.ExecuteNonQuery();
                         con.Close();
@@ -1121,7 +1124,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                         cmdtable.Parameters.AddWithValue("@CreatedOn", Date);
                         cmdtable.ExecuteNonQuery();
                         con.Close();
-                    }
+                    }                   
                     ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Saved Sucessfully');", true);
 
                 }

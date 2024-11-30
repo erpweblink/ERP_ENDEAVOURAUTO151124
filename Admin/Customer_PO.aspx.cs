@@ -91,7 +91,9 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
     //NEW METHODS FOR QUOTATION DATA FETCH START
     protected void ShowHeaderEdit()
     {
+
         SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST,ServiceType FROM tbl_Quotation_two_Hdr WHERE  Quotation_no='" + ID + "'", con);
+
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
         if (Dt.Rows.Count > 0)
@@ -173,7 +175,9 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
         ////Automatic description bind in job number from quaation details table
         DataTable dt3 = new DataTable();
         //SqlDataAdapter sad3 = new SqlDataAdapter("select * from vw_Quot_pdf where JobNo='" + txt_job_no.Text + "'", con);
+
         //SqlDataAdapter sad3 = new SqlDataAdapter("select * from [tbl_Quotation_two_Dtls] where Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
+
         SqlDataAdapter sad3 = new SqlDataAdapter("select  product as MateName ,  Description As PrintDescription, * from [tbl_Quotation_two_Dtls] where Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
         sad3.Fill(dt3);
         int count = 1;
@@ -1892,6 +1896,138 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
                 Cmd.Parameters.AddWithValue("@Term_Condition_6", txt_term_6.Text + "-" + txt_condition_6.Text);
                 Cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
                 Cmd.Parameters.AddWithValue("@AgainstBy", ddlagainstby.SelectedItem.Text);
+
+                if (FileUpload.HasFile)
+                {
+                    var Filenamenew = FileUpload.FileName;
+                    string codenew = Guid.NewGuid().ToString();
+                    Path = Server.MapPath("~/Attachpo/") + codenew + "_" + Filenamenew;
+                    FileUpload.SaveAs(Path);
+                    Cmd.Parameters.AddWithValue("@Imagepath", "~/Attachpo/" + codenew + "_" + Filenamenew);
+                }
+
+                Cmd.Parameters.AddWithValue("@Is_Deleted", '0');
+                Cmd.Parameters.AddWithValue("@CreatedBy", CretedBy);
+                Cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                Cmd.Parameters.Add("@purchase_id", SqlDbType.Int).Direction = ParameterDirection.Output;
+                 Cmd.ExecuteNonQuery();
+
+                id = Convert.ToInt32(Cmd.Parameters["@purchase_id"].Value);
+
+                foreach (GridViewRow g1 in gvPurchaseRecord.Rows)
+                {
+                    string JobNO = (g1.FindControl("lblJob") as Label).Text;
+                    string Discription = (g1.FindControl("txt_discription_grd") as Label).Text;
+                    string HSN = (g1.FindControl("txt_hsn_grd") as Label).Text;
+                    string Tax = (g1.FindControl("lbl_tax_grd") as Label).Text;
+                    string Quntity = (g1.FindControl("lbl_quntity_grd") as Label).Text;
+                    string Unit = (g1.FindControl("txt_unit_grd") as Label).Text;
+                    string Rate = (g1.FindControl("lbl_rate_grd") as Label).Text;
+                    string Discount = (g1.FindControl("lbl_discount_grd") as Label).Text;
+                    string Total_Amount = (g1.FindControl("lbl_total_amount_grd") as Label).Text;
+                    string MateName = (g1.FindControl("lblproduct") as Label).Text;
+                    string PrintDescription = (g1.FindControl("lblprintdescription") as Label).Text;
+                    Cmd.Parameters.AddWithValue("@Quotationno", ddlquotationno.SelectedItem.Text);
+
+                    SqlCommand Cmd1 = new SqlCommand("INSERT INTO CustomerPO_Dtls_Both (PurchaseId,Description,Hsn_Sac,TaxPercenteage,Quantity,Unit,Rate,DiscountPercentage,Total,JobNo,PrintDescription,MateName,Quotationno) " +
+                        "VALUES('" + id + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "','" + JobNO + "', '" + PrintDescription + "', '" + MateName + "','" + ddlquotationno.SelectedItem.Text + "')", con);
+
+                    Cmd1.ExecuteNonQuery();
+                }
+                foreach (GridViewRow g1 in quatationgrid.Rows)
+                {
+                    CheckBox chkSelect = g1.FindControl("chkSelect") as CheckBox;
+
+                    if (chkSelect != null && chkSelect.Checked)
+                    {
+                        string JobCreatedCount = (g1.FindControl("LblJobNoss") as Label).Text;
+                        string JobNo = (g1.FindControl("LblJobNo") as Label).Text;
+                        string Discription = (g1.FindControl("txt_discription_grd") as Label).Text;
+                        string HSN = (g1.FindControl("txt_hsn_grd") as Label).Text;
+                        string Tax = (g1.FindControl("lbl_tax_grd") as Label).Text;
+                        string Quntity = (g1.FindControl("lbl_quntity_grd") as Label).Text;
+                        string Unit = (g1.FindControl("txt_unit_grd") as Label).Text;
+                        string Rate = (g1.FindControl("lbl_rate_grd") as Label).Text;
+                        string Discount = (g1.FindControl("lbl_discount_grd") as Label).Text;
+                        string MateName = (g1.FindControl("lblproduct") as Label).Text;
+                        string PrintDescription = (g1.FindControl("Lblprintdescription_grd") as Label).Text;
+                        string Total_Amount = (g1.FindControl("lbl_total_amount_grd") as Label).Text;
+                        Cmd.Parameters.AddWithValue("@Quotationno", ddlquotationno.SelectedItem.Text);
+
+                        SqlCommand Cmd1 = new SqlCommand("INSERT INTO CustomerPO_Dtls_Both (PurchaseId,Description,Hsn_Sac,TaxPercenteage,Quantity,Unit,Rate,DiscountPercentage,Total,JobNo,MateName,PrintDescription,Quotationno,JobStatus) " +
+                             "VALUES('" + id + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "','" + JobNo + "' ,'" + MateName + "' ,'" + PrintDescription + "','" + ddlquotationno.SelectedItem.Text + "','Pending')", con);
+                       
+                        SqlCommand Cmd2 = new SqlCommand("UPDATE tbl_Quotation_two_Dtls SET JobStatus = 'Completed', JobDaysCount = '"+ JobCreatedCount + "'" +
+                            "WHERE JobNo = '"+ JobNo + "'", con);
+                       
+                        Cmd1.ExecuteNonQuery();
+                        Cmd2.ExecuteNonQuery();
+
+                    }
+                }
+                foreach (GridViewRow g1 in Grd_MAIL.Rows)
+                {
+                    string MAIL = (g1.FindControl("lblmultMail") as Label).Text;
+                    string Designation = (g1.FindControl("lbldesignation") as Label).Text;
+                    SqlCommand cmdtable = new SqlCommand("insert into tblCustomerPOMail(QuotationNo,Email,CreatedBy,CreatedOn,pono,designation) values(@QuotationNo,@Email,@CreatedBy,@CreatedOn,@pono,@designation)", con);
+                    //  cmdtable.Parameters.AddWithValue("@JobNo", txt_job_no.Text);   // new change 
+                    cmdtable.Parameters.AddWithValue("@QuotationNo", ddlquotationno.SelectedItem.Text);   // new change 
+                    cmdtable.Parameters.AddWithValue("@Email", MAIL);
+                    cmdtable.Parameters.AddWithValue("@pono", txt_po_no.Text);
+                    cmdtable.Parameters.AddWithValue("@CreatedBy", CretedBy);
+                    cmdtable.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                    cmdtable.Parameters.AddWithValue("@designation", Designation);
+                    cmdtable.ExecuteNonQuery();
+                }
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Save Sucessfully');", true);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        else
+        {
+            try
+            {
+                SqlCommand Cmd = new SqlCommand("SP_CustomerPO_Both", con);
+                Cmd.CommandType = CommandType.StoredProcedure;
+                Cmd.Parameters.AddWithValue("@JobNo", txt_job_no.Text);
+                Cmd.Parameters.AddWithValue("@Quotationno", ddlquotationno.SelectedItem.Text);
+                Cmd.Parameters.AddWithValue("@CustomerName", txt_Customer_name.Text);
+                Cmd.Parameters.AddWithValue("@SubCustomer", txtsubcust.Text);
+                Cmd.Parameters.AddWithValue("@Pono", txt_po_no.Text);
+                Cmd.Parameters.AddWithValue("@PoDate", txt_po_date.Text);
+                Cmd.Parameters.AddWithValue("@RefNo", txt_ref_no.Text);
+                Cmd.Parameters.AddWithValue("@Mobileno", txt_mobile_no.Text);
+                if (txt_kind_att.Text == "")
+                {
+                    Cmd.Parameters.AddWithValue("@KindAtt", "NA");
+                }
+                else
+                {
+                    Cmd.Parameters.AddWithValue("@KindAtt", txt_kind_att.SelectedItem.Text);
+                }
+                Cmd.Parameters.AddWithValue("@ShippingAddress", txtShippingAddr.Text);
+                Cmd.Parameters.AddWithValue("@DeliveryAddress", txt_delivery_address.Text);
+                Cmd.Parameters.AddWithValue("@GstNo", txt_gst_no.Text);
+                Cmd.Parameters.AddWithValue("@statecode", txtstatecode.Text);
+                Cmd.Parameters.AddWithValue("@PayTerm", txt_pay_term.Text);
+                Cmd.Parameters.AddWithValue("@Cgst", txt_cgst_amt.Text);
+                Cmd.Parameters.AddWithValue("@Sgst", txt_sgst_amt.Text);
+                Cmd.Parameters.AddWithValue("@Igst", txt_igst_amt.Text);
+                Cmd.Parameters.AddWithValue("@AllTotalPrice", txt_total.Text);
+                Cmd.Parameters.AddWithValue("@TotalInWord", lbl_Amount_In_Word.Text);
+                Cmd.Parameters.AddWithValue("@RoundOff", txt_round_off.Text);
+                Cmd.Parameters.AddWithValue("@GrandTotal", txt_grand_total.Text);
+                Cmd.Parameters.AddWithValue("@Term_Condition_1", txt_term_1.Text + "-" + txt_condition_1.Text);
+                Cmd.Parameters.AddWithValue("@Term_Condition_2", txt_term_2.Text + "-" + txt_condition_2.Text);
+                Cmd.Parameters.AddWithValue("@Term_Condition_3", txt_term_3.Text + "-" + txt_condition_3.Text);
+                Cmd.Parameters.AddWithValue("@Term_Condition_4", txt_term_4.Text + "-" + txt_condition_4.Text);
+                Cmd.Parameters.AddWithValue("@Term_Condition_5", txt_term_5.Text + "-" + txt_condition_5.Text);
+                Cmd.Parameters.AddWithValue("@Term_Condition_6", txt_term_6.Text + "-" + txt_condition_6.Text);
+                Cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
+                Cmd.Parameters.AddWithValue("@AgainstBy", ddlagainstby.SelectedItem.Text);
                 Cmd.Parameters.AddWithValue("@Type", ddltype.SelectedItem.Text);
 
                 if (FileUpload.HasFile)
@@ -2000,127 +2136,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
                 throw ex;
             }
         }
-        else
-        {
-            try
-            {
-                SqlCommand Cmd = new SqlCommand("SP_CustomerPO_Both", con);
-                Cmd.CommandType = CommandType.StoredProcedure;
-                Cmd.Parameters.AddWithValue("@JobNo", txt_job_no.Text);
-                Cmd.Parameters.AddWithValue("@Quotationno", ddlquotationno.SelectedItem.Text);
-                Cmd.Parameters.AddWithValue("@CustomerName", txt_Customer_name.Text);
-                Cmd.Parameters.AddWithValue("@SubCustomer", txtsubcust.Text);
-                Cmd.Parameters.AddWithValue("@Pono", txt_po_no.Text);
-                Cmd.Parameters.AddWithValue("@PoDate", txt_po_date.Text);
-                Cmd.Parameters.AddWithValue("@RefNo", txt_ref_no.Text);
-                Cmd.Parameters.AddWithValue("@Mobileno", txt_mobile_no.Text);
-                if (txt_kind_att.Text == "")
-                {
-                    Cmd.Parameters.AddWithValue("@KindAtt", "NA");
-                }
-                else
-                {
-                    Cmd.Parameters.AddWithValue("@KindAtt", txt_kind_att.SelectedItem.Text);
-                }
-                Cmd.Parameters.AddWithValue("@ShippingAddress", txtShippingAddr.Text);
-                Cmd.Parameters.AddWithValue("@DeliveryAddress", txt_delivery_address.Text);
-                Cmd.Parameters.AddWithValue("@GstNo", txt_gst_no.Text);
-                Cmd.Parameters.AddWithValue("@statecode", txtstatecode.Text);
-                Cmd.Parameters.AddWithValue("@PayTerm", txt_pay_term.Text);
-                Cmd.Parameters.AddWithValue("@Cgst", txt_cgst_amt.Text);
-                Cmd.Parameters.AddWithValue("@Sgst", txt_sgst_amt.Text);
-                Cmd.Parameters.AddWithValue("@Igst", txt_igst_amt.Text);
-                Cmd.Parameters.AddWithValue("@AllTotalPrice", txt_total.Text);
-                Cmd.Parameters.AddWithValue("@TotalInWord", lbl_Amount_In_Word.Text);
-                Cmd.Parameters.AddWithValue("@RoundOff", txt_round_off.Text);
-                Cmd.Parameters.AddWithValue("@GrandTotal", txt_grand_total.Text);
-                Cmd.Parameters.AddWithValue("@Term_Condition_1", txt_term_1.Text + "-" + txt_condition_1.Text);
-                Cmd.Parameters.AddWithValue("@Term_Condition_2", txt_term_2.Text + "-" + txt_condition_2.Text);
-                Cmd.Parameters.AddWithValue("@Term_Condition_3", txt_term_3.Text + "-" + txt_condition_3.Text);
-                Cmd.Parameters.AddWithValue("@Term_Condition_4", txt_term_4.Text + "-" + txt_condition_4.Text);
-                Cmd.Parameters.AddWithValue("@Term_Condition_5", txt_term_5.Text + "-" + txt_condition_5.Text);
-                Cmd.Parameters.AddWithValue("@Term_Condition_6", txt_term_6.Text + "-" + txt_condition_6.Text);
-                Cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
-                Cmd.Parameters.AddWithValue("@AgainstBy", ddlagainstby.SelectedItem.Text);
-                Cmd.Parameters.AddWithValue("@Type", ddlagainstby.SelectedItem.Text);
-
-                if (FileUpload.HasFile)
-                {
-                    var Filenamenew = FileUpload.FileName;
-                    string codenew = Guid.NewGuid().ToString();
-                    Path = Server.MapPath("~/Attachpo/") + codenew + "_" + Filenamenew;
-                    FileUpload.SaveAs(Path);
-                    Cmd.Parameters.AddWithValue("@Imagepath", "~/Attachpo/" + codenew + "_" + Filenamenew);
-                }
-
-                Cmd.Parameters.AddWithValue("@Is_Deleted", '0');
-                Cmd.Parameters.AddWithValue("@CreatedBy", CretedBy);
-                Cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
-                Cmd.Parameters.Add("@purchase_id", SqlDbType.Int).Direction = ParameterDirection.Output;
-                Cmd.ExecuteNonQuery();
-
-                id = Convert.ToInt32(Cmd.Parameters["@purchase_id"].Value);
-
-                foreach (GridViewRow g1 in gvPurchaseRecord.Rows)
-                {
-                    string JobNO = (g1.FindControl("lblJob") as Label).Text;
-                    string Discription = (g1.FindControl("txt_discription_grd") as Label).Text;
-                    string HSN = (g1.FindControl("txt_hsn_grd") as Label).Text;
-                    string Tax = (g1.FindControl("lbl_tax_grd") as Label).Text;
-                    string Quntity = (g1.FindControl("lbl_quntity_grd") as Label).Text;
-                    string Unit = (g1.FindControl("txt_unit_grd") as Label).Text;
-                    string Rate = (g1.FindControl("lbl_rate_grd") as Label).Text;
-                    string Discount = (g1.FindControl("lbl_discount_grd") as Label).Text;
-                    string Total_Amount = (g1.FindControl("lbl_total_amount_grd") as Label).Text;
-                    string MateName = (g1.FindControl("lblproduct") as Label).Text;
-                    string PrintDescription = (g1.FindControl("lblprintdescription") as Label).Text;
-                    Cmd.Parameters.AddWithValue("@Quotationno", ddlquotationno.SelectedItem.Text);
-
-                    SqlCommand Cmd1 = new SqlCommand("INSERT INTO CustomerPO_Dtls_Both_Both (PurchaseId,Description,Hsn_Sac,TaxPercenteage,Quantity,Unit,Rate,DiscountPercentage,Total,JobNo,PrintDescription,MateName,Quotationno) " +
-                        "VALUES('" + id + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "','" + JobNO + "', '" + PrintDescription + "', '" + MateName + "','" + ddlquotationno.SelectedItem.Text + "')", con);
-
-                   Cmd1.ExecuteNonQuery();
-                }
-                foreach (GridViewRow g1 in quatationgrid.Rows)
-                {
-                    string JobNo = (g1.FindControl("LblJobNo") as Label).Text;
-                    string Discription = (g1.FindControl("txt_discription_grd") as Label).Text;
-                    string HSN = (g1.FindControl("txt_hsn_grd") as Label).Text;
-                    string Tax = (g1.FindControl("lbl_tax_grd") as Label).Text;
-                    string Quntity = (g1.FindControl("lbl_quntity_grd") as Label).Text;
-                    string Unit = (g1.FindControl("txt_unit_grd") as Label).Text;
-                    string Rate = (g1.FindControl("lbl_rate_grd") as Label).Text;
-                    string Discount = (g1.FindControl("lbl_discount_grd") as Label).Text;
-                    string MateName = (g1.FindControl("lblproduct") as Label).Text;
-                    string PrintDescription = (g1.FindControl("Lblprintdescription_grd") as Label).Text;
-                    string Total_Amount = (g1.FindControl("lbl_total_amount_grd") as Label).Text;
-                    Cmd.Parameters.AddWithValue("@Quotationno", ddlquotationno.SelectedItem.Text);
-
-                    SqlCommand Cmd1 = new SqlCommand("INSERT INTO CustomerPO_Dtls_Both_Both (PurchaseId,Description,Hsn_Sac,TaxPercenteage,Quantity,Unit,Rate,DiscountPercentage,Total,JobNo,MateName,PrintDescription,Quotationno) " +
-                         "VALUES('" + id + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "','" + JobNo + "' ,'" + MateName + "' ,'" + PrintDescription + "','" + ddlquotationno.SelectedItem.Text + "')", con);
-                   Cmd1.ExecuteNonQuery();
-                }
-                foreach (GridViewRow g1 in Grd_MAIL.Rows)
-                {
-                    string MAIL = (g1.FindControl("lblmultMail") as Label).Text;
-                    string Designation = (g1.FindControl("lbldesignation") as Label).Text;
-                    SqlCommand cmdtable = new SqlCommand("insert into tblCustomerPOMail(QuotationNo,Email,CreatedBy,CreatedOn,pono,designation) values(@QuotationNo,@Email,@CreatedBy,@CreatedOn,@pono,@designation)", con);
-                    //  cmdtable.Parameters.AddWithValue("@JobNo", txt_job_no.Text);   // new change 
-                    cmdtable.Parameters.AddWithValue("@QuotationNo", ddlquotationno.SelectedItem.Text);   // new change 
-                    cmdtable.Parameters.AddWithValue("@Email", MAIL);
-                    cmdtable.Parameters.AddWithValue("@pono", txt_po_no.Text);
-                    cmdtable.Parameters.AddWithValue("@CreatedBy", CretedBy);
-                    cmdtable.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
-                    cmdtable.Parameters.AddWithValue("@designation", Designation);
-                    cmdtable.ExecuteNonQuery();
-                }
-                ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Save Sucessfully');", true);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+      
         
     }
 
@@ -2750,6 +2766,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
 
     protected void ShowQuotationsHeader()
     {
+
         SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNoCount,JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ID + "'", con);
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
