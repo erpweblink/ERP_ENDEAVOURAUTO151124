@@ -8,7 +8,7 @@
             Swal.fire({
                 icon: 'success',
                 text: msg,
-                timer: 3000,
+                timer: 5000,
                 showCancelButton: false,
                 showConfirmButton: false
             }).then(function () {
@@ -117,6 +117,7 @@
                             <asp:HiddenField ID="hdnID" runat="server" />
                             <asp:HiddenField ID="hdnPoProductTot" runat="server" />
                             <asp:HiddenField ID="taxhidden" runat="server" />
+                            <asp:HiddenField ID="textquotationid" runat="server" />
                             <div class="row">
 
 
@@ -194,6 +195,13 @@
                                     <asp:TextBox ID="txt_poDate" runat="server" AutoPostBack="true" TextMode="Date" CssClass="form-control"></asp:TextBox>
                                 </div>
                             </div>
+
+                             <%-- For Count Stop--%>
+                              <div class="col-md-6 d-none">
+                                  <asp:Label ID="lblcountst" runat="server" class="control-label col-sm-6">Count Stop<span class="spncls"></span></asp:Label>
+                                  <asp:TextBox ID="txtcountst"  runat="server" CssClass="form-control"></asp:TextBox>
+                              </div>
+                             <%--End--%>
 
                             <div class="row">
                                 <div class="col-md-6">

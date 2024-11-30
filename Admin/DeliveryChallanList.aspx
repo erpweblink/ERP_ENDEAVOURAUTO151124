@@ -219,6 +219,11 @@
                                         <asp:Label ID="lblCreated" runat="server" Text='<%# Eval("CreatedBy") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Type">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lbltype" runat="server" Text='<%# Eval("Type") %>'></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Action">
                                     <ItemTemplate>
                                         <asp:LinkButton runat="server" ID="lnkbtnEdit" ToolTip="Edit Quotation" CommandName="RowEdit" CommandArgument='<%# Eval("ChallanNo") %>'><i class="fa fa-edit" style="font-size:24px"></i></asp:LinkButton>

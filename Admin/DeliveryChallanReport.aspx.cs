@@ -45,6 +45,54 @@ public partial class Admin_DeliveryChallanReport : System.Web.UI.Page
             throw;
         }
     }
+
+    protected void gv_Del_List_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        //Added New for Count by Shubham Patil
+        if (e.Row.RowType == DataControlRowType.Footer)
+        {
+            decimal totalAmount = 0;
+
+            if (sortedgv.Rows.Count > 0)
+            {
+                foreach (GridViewRow row in sortedgv.Rows)
+                {
+
+                    Label lblGrandTotal = row.FindControl("lblGrandTotal") as Label;
+                    if (lblGrandTotal != null)
+                    {
+                        if (decimal.TryParse(lblGrandTotal.Text, out decimal rowAmount))
+                        {
+                            totalAmount += rowAmount;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (GridViewRow row in gv_Deliverychallan.Rows)
+                {
+                    Label lblGrandTotal = row.FindControl("lblGrandTotal") as Label;
+                    if (lblGrandTotal != null)
+                    {
+                        if (decimal.TryParse(lblGrandTotal.Text, out decimal rowAmount))
+                        {
+                            totalAmount += rowAmount;
+                        }
+                    }
+                }
+            }
+
+            Label lblFooterTotalAmt = (Label)e.Row.FindControl("lblFooterTotalAmt");
+            if (lblFooterTotalAmt != null)
+            {
+                lblFooterTotalAmt.Text = "Total Amt: ₹" + totalAmount.ToString("N2");
+            }
+        }
+        //End 
+    }
+
+
     protected void btn_search_Click(object sender, EventArgs e) 
     {
         if (string.IsNullOrEmpty(txt_Customername_search.Text) && string.IsNullOrEmpty(txtchallanNo.Text) && string.IsNullOrEmpty(txt_formsearch.Text) && string.IsNullOrEmpty(txt_Tosearch.Text))

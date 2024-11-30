@@ -237,6 +237,12 @@
                                 </ItemTemplate>
                             </asp:TemplateField>
 
+                            <asp:TemplateField HeaderText="Agains By">
+                                <ItemTemplate>
+                                    <asp:Label ID="lbl_type" runat="server" Text='<%# Eval("Type") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
                             <asp:TemplateField HeaderText="Action">
                                 <ItemTemplate>
 

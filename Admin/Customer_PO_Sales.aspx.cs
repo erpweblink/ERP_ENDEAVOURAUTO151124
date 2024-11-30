@@ -74,13 +74,14 @@ public partial class Admin_Customer_PO_Sales : System.Web.UI.Page
     //NEW METHODS FOR QUOTATION DATA FETCH START
     protected void ShowHeaderEdit()
     {
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ID + "'", con);
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT DATEDIFF(DAY, Quotation_Date, GETDATE()) AS Days_Completed,JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ID + "'", con);
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
         if (Dt.Rows.Count > 0)
         {
             ddlagainstby.Enabled = false;
             ddlagainstby.SelectedItem.Text = "Order";
+            txtcountst.Text = Dt.Rows[0]["Days_Completed"].ToString(); //New added by Shubham Patil
             ddlquotationno.SelectedItem.Text = Dt.Rows[0]["Quotation_no"].ToString();
             txt_Customer_name.Text = Dt.Rows[0]["Customer_Name"].ToString();
             txtsubcust.Text = Dt.Rows[0]["SubCustomer"].ToString();
@@ -226,7 +227,7 @@ public partial class Admin_Customer_PO_Sales : System.Web.UI.Page
 
     private void ddlQuotationno()
     {
-        SqlDataAdapter ad = new SqlDataAdapter("SELECT Id,Quotation_no FROM [tbl_Quotation_two_Hdr] WHERE Customer_Name = '" + txt_Customer_name.Text + "' AND IsDeleted ='0'", con);
+        SqlDataAdapter ad = new SqlDataAdapter("SELECT Id,Quotation_no FROM [tbl_Quotation_two_Hdr] WHERE Customer_Name = '" + txt_Customer_name.Text + "' AND IsDeleted ='0' AND Againstby='Sales'", con);
         DataTable dt = new DataTable();
         ad.Fill(dt);
         if (dt.Rows.Count > 0)
@@ -1854,7 +1855,7 @@ public partial class Admin_Customer_PO_Sales : System.Web.UI.Page
                 Cmd.Parameters.Add("@purchase_id", SqlDbType.Int).Direction = ParameterDirection.Output;
                 Cmd.ExecuteNonQuery();
                 // New Code Shubham Patil
-                SqlCommand Cmds = new SqlCommand("UPDATE tbl_Quotation_two_Hdr SET Status='Completed' WHERE Customer_Name='" + txt_Customer_name.Text + "'", con);
+                SqlCommand Cmds = new SqlCommand("UPDATE tbl_Quotation_two_Hdr SET Status='Completed',JobNoCount='"+ txtcountst.Text + "' WHERE Quotationno='" + ddlquotationno.SelectedItem.Text + "'", con);
                 Cmds.ExecuteNonQuery();
                 // New Code End
 

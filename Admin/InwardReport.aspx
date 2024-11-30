@@ -222,8 +222,8 @@
 
             <div style="width: 100%; padding: 20px;">
                 <div class="table-responsive">
-                    <asp:GridView ID="gv_Inward" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
-                        OnPageIndexChanging="gv_Inward_PageIndexChanging" PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging">
+                    <asp:GridView ID="gv_Inward" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center">
+                        <%--OnPageIndexChanging="gv_Inward_PageIndexChanging" PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging"--%>
                         <Columns>
                             <asp:TemplateField HeaderText="Sr. No.">
 

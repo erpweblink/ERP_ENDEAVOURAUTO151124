@@ -179,6 +179,13 @@
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="Please Enter L R Date" ControlToValidate="txtLRdate" ForeColor="Red"></asp:RequiredFieldValidator>
                                     <br />
                                 </div>
+                                <div class="col-md-3">
+                                    <asp:Label ID="Label9" runat="server" class="control-label col-sm-6">Type :<span class="spncls">*</span></asp:Label>
+                                    <asp:DropDownList runat="server" class="form-control" ID="ddltype">
+                                        <asp:ListItem Value="Service" Text="Service"></asp:ListItem>
+                                        <asp:ListItem Value="Regular" Text="Regular"></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
 
                             </div>
                             <div class="row">

@@ -108,7 +108,8 @@
                         </div>
                    
                     <div class="table-responsive text-center">
-                        <asp:GridView ID="GvPurchaseOrderList" runat="server" AutoGenerateColumns="false" CssClass="grid" AllowPaging="true" Width="100%" OnRowCommand="GvPurchaseOrderList_RowCommand" OnPageIndexChanging="GvPurchaseOrderList_PageIndexChanging" PageSize="10" PagerStyle-CssClass="paging">
+                        <asp:GridView ID="GvPurchaseOrderList" runat="server" AutoGenerateColumns="false" CssClass="grid" Width="100%" OnRowCommand="GvPurchaseOrderList_RowCommand">
+                            <%--AllowPaging="true" OnPageIndexChanging="GvPurchaseOrderList_PageIndexChanging" PageSize="10" PagerStyle-CssClass="paging"--%>
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr. No.">
                                     <ItemTemplate>
@@ -153,6 +154,11 @@
                                         <asp:Label ID="lbl_createdby" runat="server" Text='<%# Eval("CreatedBy") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
+                                 <asp:TemplateField HeaderText="Type">
+                                     <ItemTemplate>
+                                         <asp:Label ID="lbl_type" runat="server" Text='<%# Eval("Type") %>'></asp:Label>
+                                     </ItemTemplate>
+                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Action">
                                     <ItemTemplate>
                                         <asp:LinkButton ID="lnkshow" runat="server" CommandName="ShowReport" CommandArgument='<%# Eval("InvoiceNo") %>' Visible="false"><i class="fas fa-eye" style="font-size:24px"></i></asp:LinkButton>
