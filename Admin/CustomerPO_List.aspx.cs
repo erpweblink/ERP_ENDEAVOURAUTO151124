@@ -92,6 +92,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
 
 
         DataTable Dt = new DataTable();
+
         //SqlDataAdapter da = new SqlDataAdapter("SELECT Id,jobNo,Quotationno,CustomerName,SubCustomer,Pono,PoDate,RefNo,Mobileno," +
         //    "GrandTotal,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days, Type FROM CustomerPO_Hdr_Both WHERE Type = 'JobNo' " +
         //    "AND Is_Deleted='0' ORDER BY CreatedOn DESC", con);
@@ -107,6 +108,9 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
                      "FROM CustomerPO_Hdr_Both C " +
                      "WHERE C.Type = 'JobNo' " +
                      "ORDER BY C.CreatedOn DESC;", con);
+
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT Id,jobNo,Quotationno,CustomerName,SubCustomer,Pono,PoDate,RefNo,Mobileno,GrandTotal,Type,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days FROM CustomerPO_Hdr_Both WHERE Is_Deleted='0' ORDER BY CreatedOn DESC", con);
+
         da.Fill(Dt);
         GvCustomerpoList.EmptyDataText = "Records Not Found";
         GvCustomerpoList.DataSource = Dt;
