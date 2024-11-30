@@ -221,7 +221,7 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Agains By">
                                         <ItemTemplate>
-                                            <asp:Label ID="lblagainsby" runat="server" Text='<%# Eval("AgainstBy") %>'></asp:Label>
+                                            <asp:Label ID="lblagainsby" runat="server" Text='<%# Eval("Type") %>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Created Date">

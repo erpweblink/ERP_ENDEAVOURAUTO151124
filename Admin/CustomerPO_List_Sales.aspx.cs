@@ -144,7 +144,7 @@ public partial class Admin_CustomerPO_List_Sales : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT CustomerName from CustomerPO_Hdr_Both where " + "CustomerName like @Search + '%' AND Is_Deleted='0'";
+                com.CommandText = "select DISTINCT CustomerName from CustomerPO_Hdr_Both where " + "CustomerName like @Search + '%' AND Is_Deleted='0' And Type = 'Sales'";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -212,7 +212,7 @@ public partial class Admin_CustomerPO_List_Sales : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT Pono from CustomerPO_Hdr_Both where " + "Pono like @Search + '%' AND Is_Deleted='0'";
+                com.CommandText = "select DISTINCT Pono from CustomerPO_Hdr_Both where " + "Pono like @Search + '%' AND Is_Deleted='0' And Type = 'Sales'";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;

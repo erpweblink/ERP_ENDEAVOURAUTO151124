@@ -164,7 +164,7 @@ public partial class Admin_Quotation_ListSales : System.Web.UI.Page
                 DataTable Dt = new DataTable();
                 //original
                 //SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE IsDeleted='0' AND isCompleted='1' ORDER BY Quotation_Date DESC ", con);
-                SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE Customer_Name='Schneider Electric India Pvt.Ltd.' AND IsDeleted='0'  ORDER BY Quotation_Date DESC ", con);
+                SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE Customer_Name='Schneider Electric India Pvt.Ltd.' AND IsDeleted='0' AND Againstby='Sales' ORDER BY Quotation_Date DESC ", con);
                 // SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Quotationjobno", con);
                 // SqlDataAdapter Da = new SqlDataAdapter("SELECT ID, Quotation_no, Quotation_Date, ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,GST_No,State_Code,kind_Att, CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE Customer_Name = "Schneder Electric India Pvt.Ltd.' AND IsDeleted='0' ORDER BY Quotation_Date DESC",con);
 
@@ -177,7 +177,7 @@ public partial class Admin_Quotation_ListSales : System.Web.UI.Page
                 DataTable Dt = new DataTable();
                 //original
                 //SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE IsDeleted='0' AND isCompleted='1' ORDER BY Quotation_Date DESC ", con);
-                SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE IsDeleted='0'  ORDER BY Quotation_Date DESC ", con);
+                SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE IsDeleted='0' AND Againstby='Sales'  ORDER BY Quotation_Date DESC ", con);
                 // SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Quotationjobno", con);
 
                 Da.Fill(Dt);
@@ -207,7 +207,7 @@ public partial class Admin_Quotation_ListSales : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT Customer_Name from tbl_Quotation_two_Hdr where " + "Customer_Name like @Search + '%'AND IsDeleted='0'";
+                com.CommandText = "select DISTINCT Customer_Name from tbl_Quotation_two_Hdr where " + "Customer_Name like @Search + '%'AND IsDeleted='0'AND Againstby = 'Sales'";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -240,7 +240,7 @@ public partial class Admin_Quotation_ListSales : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT Quotation_no from tbl_Quotation_two_Hdr where " + "Quotation_no like @Search + '%'AND IsDeleted='0'";
+                com.CommandText = "select DISTINCT Quotation_no from tbl_Quotation_two_Hdr where " + "Quotation_no like @Search + '%'AND IsDeleted='0' And Againstby = 'Sales'";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
