@@ -182,7 +182,8 @@
 
                 <div style="width: 100%; padding: 20px;">
                     <div class="table-responsive">
-                        <asp:GridView ID="gv_Quot_List" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Quot_List_RowCommand" OnPageIndexChanging="gv_Quot_List_PageIndexChanging" PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging">
+                        <asp:GridView ID="gv_Quot_List" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Quot_List_RowCommand" ShowFooter="True" OnRowDataBound="gv_QuotRe_List_RowDataBound">
+                            <%--OnPageIndexChanging="gv_Quot_List_PageIndexChanging" PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging"--%>
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr. No.">
                                     <ItemTemplate>
@@ -242,12 +243,20 @@
                                         <asp:Label ID="lblCreateuser" runat="server" Text='<%# Eval("CreatedBy") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Agains By">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblagainsby" runat="server" Text='<%# Eval("Againstby") %>'></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Action">
                                     <ItemTemplate>
                                         <asp:LinkButton ID="lnkshow" runat="server" CommandName="ShowReport" CommandArgument='<%# Eval("ID") %>' Visible="false"><i class="fas fa-eye" style="font-size:24px"></i></asp:LinkButton>
                                         <asp:LinkButton runat="server" ID="lnkBtn_View" ToolTip="View Quotation PDF" CommandName="RowView"
                                             CommandArgument='<%# Eval("Quotation_no") %>'><i class="fas fa-file-pdf"  style="font-size: 26px; color:red; "></i></i></asp:LinkButton>
                                     </ItemTemplate>
+                                     <FooterTemplate>
+                                        <asp:Label ID="lblFooterTotalAmt" runat="server" Text="Total Amt:" Font-Bold="True"></asp:Label>
+                                    </FooterTemplate>
                                 </asp:TemplateField>
 
                             </Columns>
@@ -266,7 +275,7 @@
 
                         <%--Filter grid start--%> 
 
-                          <asp:GridView ID="sortedgv" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Quot_List_RowCommand" >
+                          <asp:GridView ID="sortedgv" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Quot_List_RowCommand" ShowFooter="True" OnRowDataBound="gv_QuotRe_List_RowDataBound">
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr. No.">
                                     <ItemTemplate>
@@ -332,6 +341,9 @@
                                         <asp:LinkButton runat="server" ID="lnkBtn_View" ToolTip="View Quotation PDF" CommandName="RowView"
                                             CommandArgument='<%# Eval("Quotation_no") %>'><i class="fas fa-file-pdf"  style="font-size: 26px; color:red; "></i></i></asp:LinkButton>
                                     </ItemTemplate>
+                                     <FooterTemplate>
+                                        <asp:Label ID="lblFooterTotalAmt" runat="server" Text="Total Amt:" Font-Bold="True"></asp:Label>
+                                    </FooterTemplate>
                                 </asp:TemplateField>
 
                             </Columns>

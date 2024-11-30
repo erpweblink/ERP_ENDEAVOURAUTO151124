@@ -61,7 +61,7 @@ public partial class Admin_OutwardReport : System.Web.UI.Page
             DataTable dt = new DataTable();
 
             con.Open();
-            SqlDataAdapter sad = new SqlDataAdapter("select [Id],[JobNo],[DateOut],[CustName],[MateName],[ModelNo],[SerialNo],[JobWorkby],[DateReturn],[ReturnRepair],[CreateBy],[CreatedDate],[UpdateBy],[UpdateDate] from [tblOutwardEntry] where isdeleted='0' ORDER BY [DateOut] Desc", con);
+            SqlDataAdapter sad = new SqlDataAdapter("select [Id],[JobNo],[DateOut],[CustName],[MateName],[ModelNo],[SerialNo],[JobWorkby],[DateReturn],[ReturnRepair],[CreateBy],[CreatedDate],[UpdateBy],[UpdateDate],[againstby] from [tblOutwardEntry] where isdeleted='0' ORDER BY [DateOut] Desc", con);
             sad.Fill(dt);
 
             gv_Outward.EmptyDataText = "Not Records Found";

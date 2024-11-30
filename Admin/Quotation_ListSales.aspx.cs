@@ -61,8 +61,43 @@ public partial class Admin_Quotation_ListSales : System.Web.UI.Page
                 DataTable Dt = new DataTable();
                 //original
                 //SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE IsDeleted='0' AND isCompleted='1' ORDER BY Quotation_Date DESC ", con);
-                SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,Againstby,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE Againstby='Sales' AND Customer_Name='Schneider Electric India Pvt.Ltd.' AND IsDeleted='0'  ORDER BY Quotation_Date DESC  ", con);
+                //SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,Againstby,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE Againstby='Sales' AND Customer_Name='Schneider Electric India Pvt.Ltd.' AND IsDeleted='0'  ORDER BY Quotation_Date DESC  ", con);
                 // SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Quotationjobno", con);
+
+                SqlDataAdapter Da = new SqlDataAdapter(@"SELECT 
+                    ID, 
+                    Quotation_no, 
+                    Quotation_Date, 
+                    ExpiryDate, 
+                    Q.CreatedOn AS QuotationCreatedOn, 
+                    Customer_Name, 
+                    SubCustomer, 
+                    Address, 
+                    Mobile_No, 
+                    Phone_No, 
+                    GST_No, 
+                    State_Code, 
+                    kind_Att, 
+                    CGST, 
+                    SGST, 
+                    AllTotal_price, 
+                    Total_in_word, 
+                    Againstby, 
+                    IsDeleted, 
+                    Q.CreatedBy, 
+                    Q.CreatedOn,
+                    CASE 
+                        WHEN Status = 'Pending' AND AgainstBy = 'Sales' THEN DATEDIFF(DAY, Quotation_Date, GETDATE())
+                        WHEN Status = 'Completed' AND AgainstBy = 'Sales' THEN JobNoCount
+                        ELSE NULL
+                    END AS Counts
+                    FROM 
+                    tbl_Quotation_two_Hdr Q
+                    WHERE 
+                    AgainstBy = 'Sales' AND Customer_Name='Schneider Electric India Pvt.Ltd.'
+                    AND IsDeleted = '0'
+                    ORDER BY 
+                    Q.CreatedOn DESC", con);
 
                 Da.Fill(Dt);
                 gv_Quot_List.DataSource = Dt;
@@ -72,11 +107,41 @@ public partial class Admin_Quotation_ListSales : System.Web.UI.Page
             else
             {
                 DataTable Dt = new DataTable();
-               // SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE IsDeleted='0'  ORDER BY Quotation_Date DESC ", con);
-                SqlDataAdapter Da = new SqlDataAdapter("SELECT ID, Quotation_no, Quotation_Date, ExpiryDate, Q.CreatedOn AS QuotationCreatedOn, Customer_Name, SubCustomer, Address, Mobile_No, Phone_No, GST_No, State_Code, kind_Att, CGST, SGST, AllTotal_price, Total_in_word,Againstby, IsDeleted, Q.CreatedBy, Q.CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr Q WHERE Againstby='Sales' AND IsDeleted = '0' ORDER BY Q.CreatedOn DESC;", con);
-
-
-                
+                // SqlDataAdapter Da = new SqlDataAdapter("SELECT ID,Quotation_no,Quotation_Date,ExpiryDate,CreatedOn,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn,DATEDIFF(DAY, Quotation_Date, getdate()) AS days FROM tbl_Quotation_two_Hdr WHERE IsDeleted='0'  ORDER BY Quotation_Date DESC ", con);
+                SqlDataAdapter Da = new SqlDataAdapter(@"SELECT 
+                    ID, 
+                    Quotation_no, 
+                    Quotation_Date, 
+                    ExpiryDate, 
+                    Q.CreatedOn AS QuotationCreatedOn, 
+                    Customer_Name, 
+                    SubCustomer, 
+                    Address, 
+                    Mobile_No, 
+                    Phone_No, 
+                    GST_No, 
+                    State_Code, 
+                    kind_Att, 
+                    CGST, 
+                    SGST, 
+                    AllTotal_price, 
+                    Total_in_word, 
+                    Againstby, 
+                    IsDeleted, 
+                    Q.CreatedBy, 
+                    Q.CreatedOn,
+                    CASE 
+                        WHEN Status = 'Pending' AND AgainstBy = 'Sales' THEN DATEDIFF(DAY, Quotation_Date, GETDATE())
+                        WHEN Status = 'Completed' AND AgainstBy = 'Sales' THEN JobNoCount
+                        ELSE NULL
+                    END AS Counts
+                    FROM 
+                    tbl_Quotation_two_Hdr Q
+                    WHERE 
+                    AgainstBy = 'Sales' 
+                    AND IsDeleted = '0'
+                    ORDER BY 
+                    Q.CreatedOn DESC", con);
 
                 Da.Fill(Dt);
                 gv_Quot_List.DataSource = Dt;
@@ -544,7 +609,7 @@ public partial class Admin_Quotation_ListSales : System.Web.UI.Page
         {
             decimal totalAmount = 0;
 
-            if(sortedgv.Rows.Count>0)
+            if (sortedgv.Rows.Count > 0)
             {
                 foreach (GridViewRow row in sortedgv.Rows)
                 {
@@ -573,11 +638,11 @@ public partial class Admin_Quotation_ListSales : System.Web.UI.Page
                     }
                 }
             }
-          
+
             Label lblFooterTotalAmt = (Label)e.Row.FindControl("lblFooterTotalAmt");
             if (lblFooterTotalAmt != null)
             {
-                lblFooterTotalAmt.Text = "Total Amt: ₹" + totalAmount.ToString("N2"); 
+                lblFooterTotalAmt.Text = "Total Amt: ₹" + totalAmount.ToString("N2");
             }
         }
         //End
@@ -1193,7 +1258,7 @@ public partial class Admin_Quotation_ListSales : System.Web.UI.Page
     }
 
     SqlDataAdapter sad111;
-   
+
     protected void sortedgv_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
         if (ViewState["Record"].ToString() == "Vender")

@@ -757,6 +757,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 "AllTotalAmount=@AllTotalAmount,GrandTotal=@GrandTotal,TotalInWord=@TotalInWord,Term_Condition_1=@Term_Condition_1," +
                 "Term_Condition_2=@Term_Condition_2,Term_Condition_3=@Term_Condition_3,Term_Condition_4=@Term_Condition_4,Term_Condition_5=@Term_Condition_5,Term_Condition_6=@Term_Condition_6," +
                 "ServiceType=@ServiceType,IGST=@IGST,Is_Deleted=@Is_Deleted,UpdatedOn=@UpdatedOn,UpdatedBy=@UpdatedBy,Type ='JobNo'" +
+                "Term_Condition_2=@Term_Condition_2,Term_Condition_3=@Term_Condition_3,Term_Condition_4=@Term_Condition_4,Term_Condition_5=@Term_Condition_5,Term_Condition_6=@Term_Condition_6,ServiceType=@ServiceType,Type=@Type,IGST=@IGST,Is_Deleted=@Is_Deleted,UpdatedOn=@UpdatedOn,UpdatedBy=@UpdatedBy " +
                 "WHERE Id='" + hdnID.Value + "' ", con);  //Remove Delivery Col....
 
             Cmd.Parameters.AddWithValue("@InvoiceNo", txt_InvoiceNo.Text);
@@ -794,6 +795,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             Cmd.Parameters.AddWithValue("@Term_Condition_5", txt_term_5.Text + "-" + txt_condition_5.Text);
             Cmd.Parameters.AddWithValue("@Term_Condition_6", txt_term_6.Text + "-" + txt_condition_6.Text);
             Cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
+            Cmd.Parameters.AddWithValue("@Type", ddltype.SelectedItem.Text);
             Cmd.Parameters.AddWithValue("@Is_Deleted", '0');
             //Cmd.Parameters.AddWithValue("@status", txtstatus.Text);
             Cmd.Parameters.AddWithValue("@UpdatedBy", CretedBy);
@@ -908,6 +910,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 Cmd.Parameters.AddWithValue("@Term_Condition_5", txt_term_4.Text + "-" + txt_condition_5.Text);
                 Cmd.Parameters.AddWithValue("@Term_Condition_6", txt_term_4.Text + "-" + txt_condition_6.Text);
                 Cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
+                Cmd.Parameters.AddWithValue("@Type", ddltype.SelectedItem.Text);
                 Cmd.Parameters.AddWithValue("@Is_Deleted", '0');
                 Cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
                 Cmd.Parameters.AddWithValue("@CreatedBy", CretedBy);
@@ -1074,6 +1077,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 Cmd.Parameters.AddWithValue("@Term_Condition_5", txt_term_4.Text + "-" + txt_condition_5.Text);
                 Cmd.Parameters.AddWithValue("@Term_Condition_6", txt_term_4.Text + "-" + txt_condition_6.Text);
                 Cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
+                Cmd.Parameters.AddWithValue("@Type", ddltype.SelectedItem.Text);
                 Cmd.Parameters.AddWithValue("@Is_Deleted", '0');
                 Cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
                 Cmd.Parameters.AddWithValue("@CreatedBy", CretedBy);

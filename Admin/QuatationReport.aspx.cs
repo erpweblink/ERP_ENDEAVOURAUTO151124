@@ -25,6 +25,53 @@ public partial class Admin_QuatationReport : System.Web.UI.Page
             QuatationGrid();
         }
     }
+
+    protected void gv_QuotRe_List_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        //Added New for Count by Shubham Patil
+        if (e.Row.RowType == DataControlRowType.Footer)
+        {
+            decimal totalAmount = 0;
+
+            if (sortedgv.Rows.Count > 0)
+            {
+                foreach (GridViewRow row in sortedgv.Rows)
+                {
+
+                    Label lbltotalAmt = row.FindControl("lbltotalAmt") as Label;
+                    if (lbltotalAmt != null)
+                    {
+                        if (decimal.TryParse(lbltotalAmt.Text, out decimal rowAmount))
+                        {
+                            totalAmount += rowAmount;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (GridViewRow row in gv_Quot_List.Rows)
+                {
+                    Label lbltotalAmt = row.FindControl("lbltotalAmt") as Label;
+                    if (lbltotalAmt != null)
+                    {
+                        if (decimal.TryParse(lbltotalAmt.Text, out decimal rowAmount))
+                        {
+                            totalAmount += rowAmount;
+                        }
+                    }
+                }
+            }
+
+            Label lblFooterTotalAmt = (Label)e.Row.FindControl("lblFooterTotalAmt");
+            if (lblFooterTotalAmt != null)
+            {
+                lblFooterTotalAmt.Text = "Total Amt: ₹" + totalAmount.ToString("N2");
+            }
+        }
+        //End
+    }
+
     protected void QuatationGrid()
     {
         try
@@ -32,7 +79,7 @@ public partial class Admin_QuatationReport : System.Web.UI.Page
             DataTable Dt = new DataTable();
             con.Open();
            // SqlDataAdapter Da = new SqlDataAdapter("SELECT IsDeleted,isCreateQuata,mnQuatation, ID,Quotation_no,CreatedBy,Quotation_Date,JobNo,Customer_Name,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted FROM tbl_Quotation_Hdr WHERE IsDeleted=0 ", con);
-            SqlDataAdapter Da = new SqlDataAdapter("SELECT IsDeleted,isCreateQuata,mnQuatation,ID,Quotation_no,CreatedBy,Quotation_Date,JobNo,Customer_Name,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word FROM tbl_Quotation_Hdr WHERE IsDeleted=0 ORDER BY Quotation_Date DESC", con);
+            SqlDataAdapter Da = new SqlDataAdapter("SELECT IsDeleted,isCreateQuata,mnQuatation,ID,Quotation_no,CreatedBy,Quotation_Date,JobNo,Customer_Name,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,Againstby FROM tbl_Quotation_two_Hdr WHERE IsDeleted=0 ORDER BY Quotation_Date DESC", con);
             Da.Fill(Dt);
             gv_Quot_List.DataSource = Dt;
             gv_Quot_List.DataBind();
@@ -59,7 +106,7 @@ public partial class Admin_QuatationReport : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT Quotation_no from tbl_Quotation_Hdr where " + "Quotation_no like @Search + '%' AND isdeleted='0' AND isCompleted='1'";
+                com.CommandText = "select DISTINCT Quotation_no from tbl_Quotation_two_Hdr where " + "Quotation_no like @Search + '%' AND isdeleted='0' AND isCompleted='1'";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -91,7 +138,7 @@ public partial class Admin_QuatationReport : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT Customer_Name from tbl_Quotation_Hdr where " + "Customer_Name like @Search + '%' AND isdeleted='0' AND isCompleted='1'";
+                com.CommandText = "select DISTINCT Customer_Name from tbl_Quotation_two_Hdr where " + "Customer_Name like @Search + '%' AND isdeleted='0' AND isCompleted='1'";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -815,7 +862,7 @@ public partial class Admin_QuatationReport : System.Web.UI.Page
 
         con.Open();
         //SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_Hdr where [Quotation_no]='" + txtQuNo.Text + "' AND IsDeleted = '0' AND isCompleted = '1'", con);
-        SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_Hdr where [Quotation_no]='" + txtQuNo.Text + "' AND IsDeleted = '0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_two_Hdr where [Quotation_no]='" + txtQuNo.Text + "' AND IsDeleted = '0'", con);
         sad.Fill(dt);
         gv_Quot_List.EmptyDataText = "Not Records Found";
         gv_Quot_List.DataSource = dt;
@@ -832,7 +879,7 @@ public partial class Admin_QuatationReport : System.Web.UI.Page
         DataTable dt = new DataTable();
         con.Open();
         //SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_Hdr where Customer_Name='" + txtSearchCust.Text + "' AND IsDeleted = '0' AND isCompleted = '1'", con);   
-        SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_Hdr where Customer_Name='" + txtSearchCust.Text + "' AND IsDeleted = '0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_two_Hdr where Customer_Name='" + txtSearchCust.Text + "' AND IsDeleted = '0'", con);
         sad.Fill(dt);
 
         gv_Quot_List.EmptyDataText = "Not Records Found";
@@ -849,7 +896,7 @@ public partial class Admin_QuatationReport : System.Web.UI.Page
         DataTable dt = new DataTable();
 
         con.Open();
-        SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_Hdr where Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' AND isdeleted = '0' AND isCompleted = '1' ", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_two_Hdr where Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' AND isdeleted = '0' AND isCompleted = '1' ", con);
         sad.Fill(dt);
 
         gv_Quot_List.EmptyDataText = "Not Records Found";
@@ -863,7 +910,7 @@ public partial class Admin_QuatationReport : System.Web.UI.Page
         ViewState["Record"] = "Gedatwisecustomer";
         DataTable dt = new DataTable();
         con.Open();
-        SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_Hdr where Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' AND  Customer_Name = '" + txtSearchCust.Text + "' AND isdeleted = '0' AND isCompleted = '1' ", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_two_Hdr where Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' AND  Customer_Name = '" + txtSearchCust.Text + "' AND isdeleted = '0' AND isCompleted = '1' ", con);
         sad.Fill(dt);
         gv_Quot_List.EmptyDataText = "Not Records Found";
         gv_Quot_List.DataSource = dt;
@@ -887,7 +934,7 @@ public partial class Admin_QuatationReport : System.Web.UI.Page
 
         con.Open();
         //SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_Hdr where [Quotation_no]='" + txtQuNo.Text + "' AND IsDeleted = '0' AND isCompleted = '1'", con);
-        SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_Hdr where [Quotation_no]='" + txtQuNo.Text + "' AND IsDeleted = '0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_two_Hdr where [Quotation_no]='" + txtQuNo.Text + "' AND IsDeleted = '0'", con);
         sad.Fill(dt);
         sortedgv.EmptyDataText = "Not Records Found";
         sortedgv.DataSource = dt;
@@ -904,7 +951,7 @@ public partial class Admin_QuatationReport : System.Web.UI.Page
         DataTable dt = new DataTable();
         con.Open();
         //SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_Hdr where Customer_Name='" + txtSearchCust.Text + "' AND IsDeleted = '0' AND isCompleted = '1'", con);   
-        SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_Hdr where Customer_Name='" + txtSearchCust.Text + "' AND IsDeleted = '0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_two_Hdr where Customer_Name='" + txtSearchCust.Text + "' AND IsDeleted = '0'", con);
         sad.Fill(dt);
 
         sortedgv.EmptyDataText = "Not Records Found";
@@ -921,7 +968,7 @@ public partial class Admin_QuatationReport : System.Web.UI.Page
         DataTable dt = new DataTable();
 
         con.Open();
-        SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_Hdr where Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' AND isdeleted = '0' AND isCompleted = '1' ", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_two_Hdr where Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' AND isdeleted = '0' AND isCompleted = '1' ", con);
         sad.Fill(dt);
 
         sortedgv.EmptyDataText = "Not Records Found";
@@ -938,7 +985,7 @@ public partial class Admin_QuatationReport : System.Web.UI.Page
         DataTable dt = new DataTable();
 
         con.Open();
-        SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_Hdr where Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' AND  Customer_Name = '" + txtSearchCust.Text + "' AND isdeleted = '0' AND isCompleted = '1' ", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_two_Hdr where Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' AND  Customer_Name = '" + txtSearchCust.Text + "' AND isdeleted = '0' AND isCompleted = '1' ", con);
         sad.Fill(dt);
 
         gv_Quot_List.EmptyDataText = "Not Records Found";
@@ -959,7 +1006,7 @@ public partial class Admin_QuatationReport : System.Web.UI.Page
         DataTable dt = new DataTable();
 
         con.Open();
-        SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_Hdr where Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' AND  Customer_Name = '" + txtSearchCust.Text + "' AND isdeleted = '0' AND isCompleted = '1' ", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_Quotation_two_Hdr where Quotation_Date between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' AND  Customer_Name = '" + txtSearchCust.Text + "' AND isdeleted = '0' AND isCompleted = '1' ", con);
         sad.Fill(dt);
 
         sortedgv.EmptyDataText = "Not Records Found";

@@ -1330,6 +1330,7 @@ public partial class Admin_DeliveryChallan : System.Web.UI.Page
                 cmd.Parameters.AddWithValue("@OrderDate", txtorderDate.Text);
                 cmd.Parameters.AddWithValue("@LRdate", txtLRdate.Text);
                 cmd.Parameters.AddWithValue("@status", txtstatus.Text);
+                cmd.Parameters.AddWithValue("@Type", ddltype.SelectedItem.Text);
                 cmd.Parameters.AddWithValue("@CustomerName", txtcustomerName.Text);
                 cmd.Parameters.AddWithValue("@Address", txtAddress.Text);
                 cmd.Parameters.AddWithValue("@Refrence", txtRefrence.Text);
@@ -1453,6 +1454,7 @@ public partial class Admin_DeliveryChallan : System.Web.UI.Page
                 cmd.Parameters.AddWithValue("@Refrence", txtRefrence.Text);
                 cmd.Parameters.AddWithValue("@JobNo", txtjobNo.Text);
                 cmd.Parameters.AddWithValue("@status", txtstatus.Text);
+                cmd.Parameters.AddWithValue("@Type", ddltype.SelectedItem.Text);
                 cmd.Parameters.AddWithValue("@Delivery", txtdelivery.Text);
                 cmd.Parameters.AddWithValue("@Cgst", txt_cgst9.Text);
                 cmd.Parameters.AddWithValue("@Sgst", txt_sgst9.Text);

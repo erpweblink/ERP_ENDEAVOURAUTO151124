@@ -239,8 +239,8 @@
 
                 <div style="width: 100%; padding: 20px;">
                     <div class="table-responsive">
-                        <asp:GridView ID="gv_Outward" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
-                            OnPageIndexChanging="gv_Outward_PageIndexChanging" PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging">
+                        <asp:GridView ID="gv_Outward" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center">
+                            <%--OnPageIndexChanging="gv_Outward_PageIndexChanging" PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging"--%>
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr. No.">
                                     <ItemTemplate>
@@ -308,6 +308,11 @@
                                         <asp:Label ID="lblcreatedby" runat="server" Text='<%# Eval("CreateBy") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
+                                 <asp:TemplateField HeaderText="Agains By">
+                                     <ItemTemplate>
+                                         <asp:Label ID="lblagainsby" runat="server" Text='<%# Eval("againstby") %>'></asp:Label>
+                                     </ItemTemplate>
+                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Action" ItemStyle-Width="70px">
                                     <ItemTemplate>
                                         <asp:LinkButton ID="lnkshow" runat="server" class="btn btn-primary" CommandArgument='<%#Eval("JobNo")%>' OnClick="lnkshow_Click">Show</asp:LinkButton>

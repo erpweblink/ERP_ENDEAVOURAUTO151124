@@ -30,7 +30,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
             DataTable Dt = new DataTable();
             con.Open();
            // SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE Is_Deleted='0' ", con);
-            SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE Is_Deleted='0' ORDER BY PoDate DESC ", con);
+            SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE Is_Deleted='0' ORDER BY PoDate DESC ", con);
             Da.Fill(Dt);
             gv_PO_List.DataSource = Dt;
             gv_PO_List.DataBind();
@@ -55,7 +55,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT Pono from CustomerPO_Hdr where " + "Pono like @Search + '%' AND Is_Deleted='0'";
+                com.CommandText = "select DISTINCT Pono from CustomerPO_Hdr_Both where " + "Pono like @Search + '%' AND Is_Deleted='0'";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -116,7 +116,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
                 DataTable Dt = new DataTable();
                 txtDateSearchfrom.Text = date.ToString("yyyy-MM-dd");
 
-                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE PoDate= '" + txtDateSearchfrom.Text + "' AND Is_Deleted='0' ", con);
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE PoDate= '" + txtDateSearchfrom.Text + "' AND Is_Deleted='0' ", con);
                 da.Fill(Dt);
                 gv_PO_List.DataSource = Dt;
                 gv_PO_List.DataBind();
@@ -129,7 +129,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
                 txtDateSearchfrom.Text = date.ToString("yyyy-MM-dd");
 
                 DataTable Dt = new DataTable();
-                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE CustomerName LIKE '%" + txtSearchCust.Text + "%'AND Pono LIKE '%" + txtPONo.Text + "%' AND  PoDate = '" + txtDateSearchfrom.Text + "' AND Is_Deleted='0' ", con);
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE CustomerName LIKE '%" + txtSearchCust.Text + "%'AND Pono LIKE '%" + txtPONo.Text + "%' AND  PoDate = '" + txtDateSearchfrom.Text + "' AND Is_Deleted='0' ", con);
                 da.Fill(Dt);
                 gv_PO_List.DataSource = Dt;
                 gv_PO_List.DataBind();
@@ -138,7 +138,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
             {
                 ViewState["Record"] = "GetsortedCustomernamePo";
                 DataTable Dt = new DataTable();
-                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE CustomerName LIKE '%" + txtSearchCust.Text + "%' AND Pono LIKE '%" + txtPONo.Text + "%' AND Is_Deleted='0' ", con);
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE CustomerName LIKE '%" + txtSearchCust.Text + "%' AND Pono LIKE '%" + txtPONo.Text + "%' AND Is_Deleted='0' ", con);
                 da.Fill(Dt);
                 gv_PO_List.DataSource = Dt;
                 gv_PO_List.DataBind();
@@ -150,7 +150,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
                 txtDateSearchfrom.Text = date.ToString("yyyy-MM-dd");
 
                 DataTable Dt = new DataTable();
-                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE CustomerName LIKE '%" + txtSearchCust.Text + "%' AND  PoDate = '" + txtDateSearchfrom.Text + "' AND Is_Deleted='0' ", con);
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE CustomerName LIKE '%" + txtSearchCust.Text + "%' AND  PoDate = '" + txtDateSearchfrom.Text + "' AND Is_Deleted='0' ", con);
                 da.Fill(Dt);
                 gv_PO_List.DataSource = Dt;
                 gv_PO_List.DataBind();
@@ -162,7 +162,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
                 txtDateSearchfrom.Text = date.ToString("yyyy-MM-dd");
 
                 DataTable Dt = new DataTable();
-                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE Pono LIKE '%" + txtPONo.Text + "%' AND   PoDate = '" + txtDateSearchfrom.Text + "' AND Is_Deleted='0' ", con);
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE Pono LIKE '%" + txtPONo.Text + "%' AND   PoDate = '" + txtDateSearchfrom.Text + "' AND Is_Deleted='0' ", con);
                 da.Fill(Dt);
                 gv_PO_List.DataSource = Dt;
                 gv_PO_List.DataBind();
@@ -192,7 +192,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
             {
                 ViewState["Record"] = "Getsortedpodateserach";
                 DataTable Dt = new DataTable();
-                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE PoDate = '" + txtDateSearchfrom.Text + "' AND Is_Deleted='0' ", con);
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE PoDate = '" + txtDateSearchfrom.Text + "' AND Is_Deleted='0' ", con);
                 da.Fill(Dt);
                 gv_PO_List.DataSource = Dt;
                 gv_PO_List.DataBind();
@@ -240,7 +240,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT CustomerName from CustomerPO_Hdr where " + "CustomerName like @Search + '%' AND Is_Deleted='0'";
+                com.CommandText = "select DISTINCT CustomerName from CustomerPO_Hdr_Both where " + "CustomerName like @Search + '%' AND Is_Deleted='0'";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -304,7 +304,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
     private void Pdf(string id)
     {
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT CustomerPO_Hdr.Id,CustomerName,Description,Pono,PoDate,RefNo,Mobileno,KindAtt,DeliveryAddress,EmailId,GstNo,VehicelNo,PayTerm,Cgst,Sgst,Igst,AllTotalPrice,TotalInWord, RoundOff, GrandTotal, Term_Condition_1, Term_Condition_2, Term_Condition_3, Term_Condition_4, Description, Hsn_Sac,CreatedOn, TaxPercenteage, Quantity, Unit, Rate, DiscountPercentage, Total from CustomerPO_Hdr INNER JOIN CustomerPO_Dtls ON CustomerPO_Hdr.Id = CustomerPO_Dtls.PurchaseId WHERE CustomerPO_Hdr.Id='" + id + "'", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT CustomerPO_Hdr_Both.Id,CustomerName,Description,Pono,PoDate,RefNo,Mobileno,KindAtt,DeliveryAddress,EmailId,GstNo,VehicelNo,PayTerm,Cgst,Sgst,Igst,AllTotalPrice,TotalInWord, RoundOff, GrandTotal, Term_Condition_1, Term_Condition_2, Term_Condition_3, Term_Condition_4, Description, Hsn_Sac,CreatedOn, TaxPercenteage, Quantity, Unit, Rate, DiscountPercentage, Total from CustomerPO_Hdr_Both INNER JOIN CustomerPO_Dtls ON CustomerPO_Hdr_Both.Id = CustomerPO_Dtls.PurchaseId WHERE CustomerPO_Hdr_Both.Id='" + id + "'", con);
         da.Fill(Dt);
         gv_PO_List.DataSource = Dt;
         gv_PO_List.DataBind();
@@ -882,7 +882,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
         ViewState["Excell"] = "Getsortedcustomer";
         ViewState["Record"] = "Getsortedcustomer";
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE CustomerName LIKE '%" + txtSearchCust.Text + "%' AND Is_Deleted='0' ", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE CustomerName LIKE '%" + txtSearchCust.Text + "%' AND Is_Deleted='0' ", con);
         da.Fill(Dt);
         gv_PO_List.DataSource = Dt;
         gv_PO_List.DataBind();
@@ -893,7 +893,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
         ViewState["Excell"] = "GetsortedPono";
         ViewState["Record"] = "GetsortedPono";
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE Pono LIKE '%" + txtPONo.Text + "%' AND Is_Deleted='0' ", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE Pono LIKE '%" + txtPONo.Text + "%' AND Is_Deleted='0' ", con);
         da.Fill(Dt);
         gv_PO_List.DataSource = Dt;
         gv_PO_List.DataBind();
@@ -907,7 +907,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
         DataTable Dt = new DataTable();
         txtDateSearchfrom.Text = date.ToString("yyyy-MM-dd");
 
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE PoDate= '" + txtDateSearchfrom.Text + "' AND Is_Deleted='0' ", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE PoDate= '" + txtDateSearchfrom.Text + "' AND Is_Deleted='0' ", con);
         da.Fill(Dt);
         gv_PO_List.DataSource = Dt;
         gv_PO_List.DataBind();
@@ -922,7 +922,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
         txtDateSearchfrom.Text = date.ToString("yyyy-MM-dd");
 
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE CustomerName LIKE '%" + txtSearchCust.Text + "%'AND Pono LIKE '%" + txtPONo.Text + "%' AND  PoDate = '" + txtDateSearchfrom.Text + "' AND Is_Deleted='0' ", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE CustomerName LIKE '%" + txtSearchCust.Text + "%'AND Pono LIKE '%" + txtPONo.Text + "%' AND  PoDate = '" + txtDateSearchfrom.Text + "' AND Is_Deleted='0' ", con);
         da.Fill(Dt);
         gv_PO_List.DataSource = Dt;
         gv_PO_List.DataBind();
@@ -932,7 +932,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
     {
         ViewState["Record"] = "GetsortedCustomernamePo";
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE CustomerName LIKE '%" + txtSearchCust.Text + "%' AND Pono LIKE '%" + txtPONo.Text + "%' AND Is_Deleted='0' ", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE CustomerName LIKE '%" + txtSearchCust.Text + "%' AND Pono LIKE '%" + txtPONo.Text + "%' AND Is_Deleted='0' ", con);
         da.Fill(Dt);
         gv_PO_List.DataSource = Dt;
         gv_PO_List.DataBind();
@@ -945,7 +945,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
         txtDateSearchfrom.Text = date.ToString("yyyy-MM-dd");
 
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE CustomerName LIKE '%" + txtSearchCust.Text + "%' AND  PoDate = '" + txtDateSearchfrom.Text + "' AND Is_Deleted='0' ", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE CustomerName LIKE '%" + txtSearchCust.Text + "%' AND  PoDate = '" + txtDateSearchfrom.Text + "' AND Is_Deleted='0' ", con);
         da.Fill(Dt);
         gv_PO_List.DataSource = Dt;
         gv_PO_List.DataBind();
@@ -958,7 +958,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
         txtDateSearchfrom.Text = date.ToString("yyyy-MM-dd");
 
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE Pono LIKE '%" + txtPONo.Text + "%' AND   PoDate = '" + txtDateSearchfrom.Text + "' AND Is_Deleted='0' ", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE Pono LIKE '%" + txtPONo.Text + "%' AND   PoDate = '" + txtDateSearchfrom.Text + "' AND Is_Deleted='0' ", con);
         da.Fill(Dt);
         gv_PO_List.DataSource = Dt;
         gv_PO_List.DataBind();
@@ -976,7 +976,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
         txtDateSearchto.Text = datee.ToString("yyyy-MM-dd");
 
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE  PoDate between '" + txtDateSearchfrom.Text + "'  AND '" + txtDateSearchto.Text + "' AND Is_Deleted='0' ", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE  PoDate between '" + txtDateSearchfrom.Text + "'  AND '" + txtDateSearchto.Text + "' AND Is_Deleted='0' ", con);
         da.Fill(Dt);
         gv_PO_List.DataSource = Dt;
         gv_PO_List.DataBind();
@@ -986,7 +986,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
     {
         ViewState["Record"] = "Getsortedpodateserach";
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE PoDate = '" + txtDateSearchfrom.Text + "' AND Is_Deleted='0' ", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE PoDate = '" + txtDateSearchfrom.Text + "' AND Is_Deleted='0' ", con);
         da.Fill(Dt);
         gv_PO_List.DataSource = Dt;
         gv_PO_List.DataBind();
@@ -1004,7 +1004,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
         txtDateSearchto.Text = datee.ToString("yyyy-MM-dd");
 
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE PoDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND CustomerName = '" + txtSearchCust.Text + "' AND Is_Deleted = '0'", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE PoDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND CustomerName = '" + txtSearchCust.Text + "' AND Is_Deleted = '0'", con);
 
         da.Fill(Dt);
         gv_PO_List.DataSource = Dt;
@@ -1016,7 +1016,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
         ViewState["Excell"] = "GetsortedPono";
         ViewState["Record"] = "GetsortedPono";
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE Pono LIKE '%" + txtPONo.Text + "%' AND Is_Deleted='0' ", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE Pono LIKE '%" + txtPONo.Text + "%' AND Is_Deleted='0' ", con);
         da.Fill(Dt);
         sortedgv.DataSource = Dt;
         sortedgv.DataBind();
@@ -1027,7 +1027,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
         ViewState["Excell"] = "Getsortedcustomer";
         ViewState["Record"] = "Getsortedcustomer";
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE CustomerName LIKE '%" + txtSearchCust.Text + "%' AND Is_Deleted='0' ", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE CustomerName LIKE '%" + txtSearchCust.Text + "%' AND Is_Deleted='0' ", con);
         da.Fill(Dt);
         sortedgv.DataSource = Dt;
         sortedgv.DataBind();
@@ -1047,7 +1047,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
         txtDateSearchto.Text = datee.ToString("yyyy-MM-dd");
 
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE  PoDate between '" + txtDateSearchfrom.Text + "'  AND '" + txtDateSearchto.Text + "' AND Is_Deleted='0' ", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE  PoDate between '" + txtDateSearchfrom.Text + "'  AND '" + txtDateSearchto.Text + "' AND Is_Deleted='0' ", con);
         da.Fill(Dt);
         sortedgv.DataSource = Dt;
         sortedgv.DataBind();
@@ -1064,7 +1064,7 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
         txtDateSearchto.Text = datee.ToString("yyyy-MM-dd");
 
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr WHERE PoDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND CustomerName = '" + txtSearchCust.Text + "' AND Is_Deleted = '0'", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE PoDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND CustomerName = '" + txtSearchCust.Text + "' AND Is_Deleted = '0'", con);
 
         da.Fill(Dt);
         sortedgv.DataSource = Dt;

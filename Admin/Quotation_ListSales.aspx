@@ -255,11 +255,11 @@
 
                                  <asp:TemplateField HeaderText="Count Days">
                                     <ItemTemplate>
-                                        <asp:Label ID="lbldaycount" runat="server" Text='<%# Eval("days") %>'></asp:Label>
+                                        <asp:Label ID="lbldaycount" runat="server" Text='<%# Eval("Counts") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
 
-                                <asp:TemplateField HeaderText="Againstby">
+                                <asp:TemplateField HeaderText="Agains By">
                                     <ItemTemplate>
                                         <asp:Label ID="Againstby" runat="server" Text='<%# Eval("Againstby") %>'></asp:Label>
                                     </ItemTemplate>
@@ -275,7 +275,7 @@
                                         &nbsp;&nbsp; 
                                         <asp:LinkButton runat="server" ID="lnkBtn_View" ToolTip="View Quotation PDF" CommandName="RowView" CommandArgument='<%# Eval("Quotation_no") %>'><i class="fas fa-file-pdf"  style="font-size: 26px; color:red; "></i></i></asp:LinkButton>
              
-                                        <asp:LinkButton runat="server" ID="lnkbtnsendpo" ToolTip="Send PO" CommandName="SendPO" CommandArgument='<%# Eval("Quotation_no") %>'><i class="fa fa-paper-plane"  style="font-size: 26px; color:black; "></i></i></asp:LinkButton>
+                                        <%--<asp:LinkButton runat="server" ID="lnkbtnsendpo" ToolTip="Send PO" CommandName="SendPO" CommandArgument='<%# Eval("Quotation_no") %>'><i class="fa fa-paper-plane"  style="font-size: 26px; color:black; "></i></i></asp:LinkButton>--%>
 
                                     </ItemTemplate>
 

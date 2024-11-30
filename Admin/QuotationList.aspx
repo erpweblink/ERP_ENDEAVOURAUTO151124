@@ -376,7 +376,7 @@
                                     </ItemTemplate>
                                 </asp:TemplateField>
 
-                                <asp:TemplateField HeaderText="Againstby">
+                                <asp:TemplateField HeaderText="Agains By">
                                     <ItemTemplate>
                                         <asp:Label ID="Againstby" runat="server" Text='<%# Eval("Againstby") %>'></asp:Label>
                                     </ItemTemplate>
