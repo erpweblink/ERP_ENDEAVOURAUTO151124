@@ -118,6 +118,26 @@
             $("#MyPopup .modal-body").html(body);
             $("#MyPopup").modal("show");
         }
+
+        // Function to change the number of records shown based on dropdown selection
+        function updateRecords() {
+            var selectedValue = document.getElementById('<%= ddlShowEntries.ClientID %>').value;
+            var gvRows = document.querySelectorAll("#<%= gv_Evalution.ClientID %> tr:not(.paging)");
+
+            for (var i = 1; i < gvRows.length; i++) {
+                if (selectedValue === "All" || i <= parseInt(selectedValue)) {
+                    gvRows[i].style.display = "";
+                } else {
+                    gvRows[i].style.display = "none"; 
+                }
+            }
+        }
+
+        // Initial setup to show 25 records on page load
+        window.onload = function () {
+            document.getElementById('<%= ddlShowEntries.ClientID %>').value = "25";
+            updateRecords();
+        };
     </script>
 </asp:Content>
 
@@ -208,13 +228,22 @@
                 </div>
                 <br />
                 <div class="row">
-                    <div class="col-md-7"></div>
+                    <div class="col-md-6"></div>
                     <div class="col-md-2">
                         <asp:TextBox runat="server" BackColor="Red" Width="20px" Height="20px" Enabled="false"></asp:TextBox><asp:Label runat="server" Text="Testing Pending."></asp:Label>
                     </div>
-                    <div class="col-md-3 mt-top">
+                    <div class="col-md-2 mt-top">
                         <asp:TextBox runat="server" BackColor="green" Width="20px" Height="20px" Enabled="false"></asp:TextBox><asp:Label runat="server" Text="Testing Completed."></asp:Label>
                     </div>
+                     <div class="col-md-2">
+                         <!-- Show Entries Dropdown -->
+                         <asp:DropDownList ID="ddlShowEntries" runat="server" CssClass="form-control" onchange="updateRecords()">
+                             <asp:ListItem Text="25" Value="25"></asp:ListItem>
+                             <asp:ListItem Text="50" Value="50"></asp:ListItem>
+                             <asp:ListItem Text="100" Value="100"></asp:ListItem>
+                             <asp:ListItem Text="All" Value="All" Selected="True"></asp:ListItem>
+                         </asp:DropDownList>
+                     </div>
                 </div>
 
                 </br>
@@ -225,10 +254,8 @@
                         <div class="table-responsive">
                             <asp:GridView ID="gv_Evalution" runat="server" CellPadding="3" Width="100%" AutoGenerateColumns="false"
                                 BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center"
-                                RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Evalution_RowCommand" OnPageIndexChanging="gv_Evalution_PageIndexChanging"
-                                OnRowDataBound="gv_Evalution_RowDataBound" PageSize="5" PagerStyle-CssClass="paging" AllowPaging="true">
-
-
+                                RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Evalution_RowCommand" OnRowDataBound="gv_Evalution_RowDataBound">
+                                <%--PageSize="5" PagerStyle-CssClass="paging" AllowPaging="true" OnPageIndexChanging="gv_Evalution_PageIndexChanging"--%>
                                 <Columns>
                                     <asp:TemplateField HeaderText="Sr. No.">
                                         <ItemTemplate>

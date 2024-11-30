@@ -36,6 +36,26 @@
                 return false;
             }
         }
+
+        // Function to change the number of records shown based on dropdown selection
+        function updateRecords() {
+            var selectedValue = document.getElementById('<%= ddlShowEntries.ClientID %>').value;
+            var gvRows = document.querySelectorAll("#<%= gv_Prod.ClientID %> tr:not(.paging)");
+
+            for (var i = 1; i < gvRows.length; i++) {
+                if (selectedValue === "All" || i <= parseInt(selectedValue)) {
+                    gvRows[i].style.display = "";
+                } else {
+                    gvRows[i].style.display = "none"; 
+                }
+            }
+        }
+
+        // Initial setup to show 25 records on page load
+        window.onload = function () {
+            document.getElementById('<%= ddlShowEntries.ClientID %>').value = "25";
+            updateRecords();
+        };
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -153,13 +173,23 @@
                     <%--              <div class="col-md-2 col-xs-5 col-5"> 
                         <asp:Button ID="btnexportexcel" runat="server" class="btn btn-primary btncreate btncreatee" OnClick="btnexportexcel_Click" Text="Export-Excel" ></asp:Button>
                     </div>--%>
-                    <div class="col-md-2 col-xs-5 col-5">
+                    <div class="col-md-4 col-xs-5 col-5">
                         <asp:Button ID="btnceate" OnClick="btnceate_Click" runat="server" class="btn btn-primary btncreate" Text="Create"></asp:Button>
+                    </div>
+                    <div class="col-md-2">
+                        <!-- Show Entries Dropdown -->
+                        <asp:DropDownList ID="ddlShowEntries" runat="server" CssClass="form-control" onchange="updateRecords()">
+                            <asp:ListItem Text="25" Value="25"></asp:ListItem>
+                            <asp:ListItem Text="50" Value="50"></asp:ListItem>
+                            <asp:ListItem Text="100" Value="100"></asp:ListItem>
+                            <asp:ListItem Text="All" Value="All" Selected="True"></asp:ListItem>
+                        </asp:DropDownList>
                     </div>
                 </div>
                 <div style="width: 100%; padding: 20px; overflow: scroll;">
                     <asp:GridView ID="gv_Prod" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
-                        DataKeyNames="ID" PagerStyle-CssClass="paging" PageSize="10" OnRowCommand="gv_Prod_RowCommand" OnPageIndexChanging="gv_Prod_PageIndexChanging" AllowPaging="true">
+                        DataKeyNames="ID" OnRowCommand="gv_Prod_RowCommand">
+                        <%--PagerStyle-CssClass="paging" PageSize="10" OnPageIndexChanging="gv_Prod_PageIndexChanging" AllowPaging="true"--%>
                         <Columns>
                             <asp:TemplateField HeaderText="Sr.No.">
                                 <ItemTemplate>
