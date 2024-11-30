@@ -150,11 +150,12 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
             IH.CGST,
             IH.SGST,
             IH.IGST,
+            IH.GrandTotal,
             IH.Type
         FROM
             tbl_Invoice_both_hdr AS IH
         WHERE
-            IH.Is_Deleted = '0'0
+            IH.Is_Deleted = '0' And Type = 'Sales'
     )
     SELECT
         DI.Id,
@@ -169,6 +170,7 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
         DI.CGST,
         DI.SGST,
         DI.IGST,
+        DI.GrandTotal,
         DI.Type,
         (
             SELECT STUFF((
@@ -1364,7 +1366,7 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT CompName from tbl_Invoice_both_hdr where " + "CompName like @Search + '%'";
+                com.CommandText = "select DISTINCT CompName from tbl_Invoice_both_hdr where " + "CompName like @Search + '%' And Type = 'Sales'";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -1560,7 +1562,7 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT InvoiceNo from tbl_Invoice_both_hdr where " + "InvoiceNo like @Search + '%' AND Is_Deleted='0' ";
+                com.CommandText = "select DISTINCT InvoiceNo from tbl_Invoice_both_hdr where " + "InvoiceNo like @Search + '%' AND Is_Deleted='0' And Type = 'Sales'";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -1696,6 +1698,7 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -1715,6 +1718,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -1755,6 +1759,7 @@ WHERE
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -1774,6 +1779,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -1814,6 +1820,7 @@ WHERE
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -1833,6 +1840,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -1872,6 +1880,7 @@ WHERE
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -1891,6 +1900,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -1935,6 +1945,7 @@ WHERE
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -1954,6 +1965,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -1997,6 +2009,7 @@ WHERE
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -2016,6 +2029,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -2058,6 +2072,7 @@ WHERE
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -2077,6 +2092,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -2117,6 +2133,7 @@ WHERE
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -2136,6 +2153,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -2175,6 +2193,7 @@ WHERE
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -2194,6 +2213,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -2234,6 +2254,7 @@ WHERE
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -2253,6 +2274,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -2299,6 +2321,7 @@ WHERE
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -2318,6 +2341,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -2364,6 +2388,7 @@ FROM
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -2383,6 +2408,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -2425,6 +2451,7 @@ FROM
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -2444,6 +2471,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -2483,6 +2511,7 @@ FROM
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -2502,6 +2531,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -2544,6 +2574,7 @@ FROM
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -2563,6 +2594,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -2609,6 +2641,7 @@ FROM
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -2628,6 +2661,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -2670,6 +2704,7 @@ FROM
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -2689,6 +2724,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -2730,6 +2766,7 @@ FROM
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -2749,6 +2786,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -2791,6 +2829,7 @@ FROM
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -2810,6 +2849,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -2854,6 +2894,7 @@ FROM
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -2873,6 +2914,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -2994,6 +3036,7 @@ FROM
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -3013,6 +3056,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -3053,6 +3097,7 @@ WHERE
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -3072,6 +3117,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -3112,6 +3158,7 @@ WHERE
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -3131,6 +3178,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -3173,6 +3221,7 @@ WHERE
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -3192,6 +3241,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -3231,6 +3281,7 @@ WHERE
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -3250,6 +3301,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -3293,6 +3345,7 @@ WHERE
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -3312,6 +3365,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -3356,6 +3410,7 @@ FROM
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -3375,6 +3430,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -3417,6 +3473,7 @@ FROM
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -3436,6 +3493,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
@@ -3477,6 +3535,7 @@ FROM
         IH.CGST,
         IH.SGST,
         IH.IGST,
+        IH.GrandTotal,
         IH.Is_Deleted
     FROM
         tbl_Invoice_both_hdr AS IH
@@ -3496,6 +3555,7 @@ SELECT
     DI.CGST,
     DI.SGST,
     DI.IGST,
+    DI.GrandTotal,
     DI.Is_Deleted,
     (
         SELECT STUFF((
