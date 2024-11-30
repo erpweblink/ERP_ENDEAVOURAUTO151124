@@ -140,7 +140,8 @@
             <div class="card-body">
                 <div style="width: 100%; padding: 20px;">
                     <div class="table-responsive">
-                        <asp:GridView ID="gv_Deliverychallan" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Deliverychallan_RowCommand" PagerStyle-CssClass="paging" OnPageIndexChanging="gv_Deliverychallan_PageIndexChanging" AllowPaging="true" PageSize="10">
+                        <asp:GridView ID="gv_Deliverychallan" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Deliverychallan_RowCommand" ShowFooter="True" OnRowDataBound="gv_Del_List_RowDataBound">
+                            <%--PagerStyle-CssClass="paging" OnPageIndexChanging="gv_Deliverychallan_PageIndexChanging" AllowPaging="true" PageSize="10"--%>
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr. No.">
                                     <ItemTemplate>
@@ -194,6 +195,11 @@
                                         <asp:Label ID="lblCreated" runat="server" Text='<%# Eval("CreatedBy") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Type">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lbltype" runat="server" Text='<%# Eval("Type") %>'></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Action">
                                     <ItemTemplate>
                                         <asp:LinkButton runat="server" ID="lnkshow" ToolTip="Edit Quotation" Visible="false" CommandName="RowShow" CommandArgument='<%# Eval("Id") %>'><i class="fas fa-eye" style="font-size:24px"></i></asp:LinkButton>
@@ -201,6 +207,9 @@
                                         &nbsp;&nbsp; 
                                         <asp:LinkButton runat="server" ID="lnkBtn_View" ToolTip="View Quotation PDF" CommandName="RowView" CommandArgument='<%# Eval("ChallanNo") %>'><i class="fas fa-file-pdf"  style="font-size: 26px; color:red; "></i></i></asp:LinkButton>
                                     </ItemTemplate>
+                                     <FooterTemplate>
+                                        <asp:Label ID="lblFooterTotalAmt" runat="server" Text="Total Amt:" Font-Bold="True"></asp:Label>
+                                     </FooterTemplate>
                                 </asp:TemplateField>
                             </Columns>
                             <FooterStyle BackColor="White" ForeColor="#000066" />
@@ -216,7 +225,7 @@
 
                         <%--Export grid strat--%> 
 
-                          <asp:GridView ID="sortedgv" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Deliverychallan_RowCommand">
+                          <asp:GridView ID="sortedgv" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Deliverychallan_RowCommand" ShowFooter="True" OnRowDataBound="gv_Del_List_RowDataBound">
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr. No.">
                                     <ItemTemplate>
@@ -277,6 +286,9 @@
                                         &nbsp;&nbsp; 
                                         <asp:LinkButton runat="server" ID="lnkBtn_View" ToolTip="View Quotation PDF" CommandName="RowView" CommandArgument='<%# Eval("ChallanNo") %>'><i class="fas fa-file-pdf"  style="font-size: 26px; color:red; "></i></i></asp:LinkButton>
                                     </ItemTemplate>
+                                    <FooterTemplate>
+                                       <asp:Label ID="lblFooterTotalAmt" runat="server" Text="Total Amt:" Font-Bold="True"></asp:Label>
+                                    </FooterTemplate>
                                 </asp:TemplateField>
                             </Columns>
                             <FooterStyle BackColor="White" ForeColor="#000066" />

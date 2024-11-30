@@ -124,8 +124,8 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
         DI.SGST,
         DI.IGST,
         DI.Type,
-DI.AllTotalAmount,
-DI.GrandTotal,
+        DI.AllTotalAmount,
+        DI.GrandTotal,
         (
             SELECT STUFF((
                 SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
@@ -162,9 +162,9 @@ DI.GrandTotal,
             IH.CGST,
             IH.SGST,
             IH.IGST,
-IH.AllTotalAmount,
-IH.GrandTotal
-
+            IH.AllTotalAmount,
+            IH.GrandTotal,
+            IH.Type
         FROM
             tbl_Invoice_both_hdr AS IH
         WHERE
@@ -183,8 +183,9 @@ IH.GrandTotal
         DI.CGST,
         DI.SGST,
         DI.IGST,
-DI.AllTotalAmount,
-DI.GrandTotal
+        DI.AllTotalAmount,
+        DI.GrandTotal,
+        DI.Type
         (
             SELECT STUFF((
                 SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))

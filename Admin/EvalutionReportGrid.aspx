@@ -218,7 +218,8 @@
 
             <div style="width: 100%; padding: 20px;" runat="server">
                 <div class="table-responsive">
-                    <asp:GridView ID="gv_Evalution" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging" OnPageIndexChanging="gv_Evalution_PageIndexChanging" DataKeyNames="JobNo" OnRowDataBound="gv_Evalution_RowDataBound">
+                    <asp:GridView ID="gv_Evalution" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" DataKeyNames="JobNo" OnRowDataBound="gv_Evalution_RowDataBound">
+                        <%--PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging" OnPageIndexChanging="gv_Evalution_PageIndexChanging"--%>
                         <Columns>
 
                             <asp:TemplateField HeaderText="Sr. No.">

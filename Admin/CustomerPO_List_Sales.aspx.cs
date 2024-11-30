@@ -87,11 +87,31 @@ public partial class Admin_CustomerPO_List_Sales : System.Web.UI.Page
 
 
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT Id,jobNo,Quotationno,CustomerName,SubCustomer,Pono,PoDate,RefNo,Mobileno,GrandTotal,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days, Type FROM CustomerPO_Hdr_Both WHERE Type='Sales'and Is_Deleted='0' ORDER BY CreatedOn DESC", con);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT Id,jobNo,Quotationno,CustomerName,SubCustomer,Pono,PoDate,RefNo,Mobileno,GrandTotal,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days, Type FROM CustomerPO_Hdr_Both WHERE Type='Sales'and Is_Deleted='0' ORDER BY CreatedOn DESC", con);
+
+
+        SqlDataAdapter da = new SqlDataAdapter(@"SELECT 
+                     Id,JobNo,Quotationno,CustomerName,SubCustomer,Pono,PoDate,RefNo,Mobileno,GrandTotal,
+                    CreatedBy,CreatedOn,Type ,Status,
+                    CASE 
+                        WHEN Status = 'Pending' AND Type = 'Sales' THEN DATEDIFF(DAY, CreatedOn, GETDATE())
+                        WHEN Status = 'Completed' AND Type = 'Sales' THEN JobNoCount
+                        ELSE NULL
+                    END AS Counts
+                    FROM 
+                    CustomerPO_Hdr_Both
+                    WHERE 
+                    Type = 'Sales' 
+                    AND Is_Deleted = '0'
+                    ORDER BY 
+                    CreatedOn DESC", con);
+
         da.Fill(Dt);
         GvCustomerpoList.EmptyDataText = "Records Not Found";
         GvCustomerpoList.DataSource = Dt;
         GvCustomerpoList.DataBind();
+
+
     }
 
     private void GridExport()
@@ -1340,7 +1360,7 @@ public partial class Admin_CustomerPO_List_Sales : System.Web.UI.Page
             SELECT *,
                    DATEDIFF(DAY, Quotation_Date, GETDATE()) AS Days_Completed
             FROM tbl_Quotation_two_Hdr
-            WHERE Status = 'Pending'"; // Filter by Status
+            WHERE Status = 'Pending' And Againstby = 'Sales'"; // Filter by Status
 
             // Replace with your actual connection string
             string connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
@@ -1381,7 +1401,7 @@ public partial class Admin_CustomerPO_List_Sales : System.Web.UI.Page
         using (SqlConnection con = new SqlConnection(connString))
         {
 
-            SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM tbl_Quotation_two_Hdr WHERE Status = 'Pending'", con);
+            SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM tbl_Quotation_two_Hdr WHERE Status = 'Pending' And Againstby = 'Sales'", con);
             con.Open();
             QuatationCount = (int)cmd.ExecuteScalar();
         }

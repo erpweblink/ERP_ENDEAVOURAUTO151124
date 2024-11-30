@@ -172,7 +172,8 @@
                     </div>
                     <div style="width: 100%; padding: 20px;">
                         <div class="table-responsive">
-                            <asp:GridView ID="gv_PO_List" runat="server" OnRowCommand="gv_PO_List_RowCommand" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" PageSize="10" PagerStyle-CssClass="paging" OnPageIndexChanging="gv_PO_List_PageIndexChanging">
+                            <asp:GridView ID="gv_PO_List" runat="server" OnRowCommand="gv_PO_List_RowCommand" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center">
+                                <%--PageSize="10" PagerStyle-CssClass="paging" OnPageIndexChanging="gv_PO_List_PageIndexChanging"--%>
                                 <Columns>
                                     <asp:TemplateField HeaderText="Sr. No.">
                                         <ItemTemplate>
@@ -216,6 +217,11 @@
                                     <asp:TemplateField HeaderText="Created By">
                                         <ItemTemplate>
                                             <asp:Label ID="lblcreatedby" runat="server" Text='<%# Eval("CreatedBy") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Agains By">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblagainsby" runat="server" Text='<%# Eval("AgainstBy") %>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Created Date">

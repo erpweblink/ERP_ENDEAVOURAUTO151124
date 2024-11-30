@@ -29,7 +29,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
     {
         DataTable Dt = new DataTable();
        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE Is_Deleted='0'  ", Conn);
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE Is_Deleted='0' ORDER BY PoDate DESC  ", Conn);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE Is_Deleted='0' ORDER BY PoDate DESC  ", Conn);
         da.Fill(Dt);
         GvPurchaseOrderList.EmptyDataText = "Records Not Found";
         GvPurchaseOrderList.DataSource = Dt;
@@ -53,7 +53,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT InvoiceNo from tblInvoiceHdr where " + "InvoiceNo like @Search + '%' AND Is_Deleted='0' ";
+                com.CommandText = "select DISTINCT InvoiceNo from tbl_Invoice_both_hdr where " + "InvoiceNo like @Search + '%' AND Is_Deleted='0' ";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -89,7 +89,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT CompName from tblInvoiceHdr where " + "CompName like @Search + '%' AND Is_Deleted='0' ";
+                com.CommandText = "select DISTINCT CompName from tbl_Invoice_both_hdr where " + "CompName like @Search + '%' AND Is_Deleted='0' ";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -124,7 +124,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT PoNo from tblInvoiceHdr where " + "PoNo like @Search + '%' AND Is_Deleted='0' ";
+                com.CommandText = "select DISTINCT PoNo from tbl_Invoice_both_hdr where " + "PoNo like @Search + '%' AND Is_Deleted='0' ";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -151,11 +151,11 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
     private void Pdf(string ID)
     {
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT tblInvoiceHdr.Id,InvoiceNo,InvoiceDate,PoNo,PoDate,ChallanNo,ChallanDate,PayTerm," +
+        SqlDataAdapter da = new SqlDataAdapter("SELECT tbl_Invoice_both_hdr.Id,InvoiceNo,InvoiceDate,PoNo,PoDate,ChallanNo,ChallanDate,PayTerm," +
             "Delivery,KindAtt,CompanyAddress,CompanyGstNo,CompanyPanNo, ComapyRegType, CompanyStateCode, " +
             "CustomerShippingAddress, CustomerGstNo, CustomerPanNo, CustomerRegType,CustomerStateCode, CGST, SGST," +
             " AllTotalAmount, GrandTotal, TotalInWord, Description, Hsn, TaxPercentage, Quntity, Unit, Rate, DiscountPercentage," +
-            " Total,CreatedOn FROM tblInvoiceHdr INNER JOIN tblInvoiceDtls ON tblInvoiceDtls.InvoiceId = tblInvoiceHdr.Id WHERE tblInvoiceHdr.Id='" + ID + "'", Conn);
+            " Total,CreatedOn FROM tbl_Invoice_both_hdr INNER JOIN tbl_Invoice_both_Dtls ON tbl_Invoice_both_Dtls.InvoiceId = tbl_Invoice_both_hdr.Id WHERE tbl_Invoice_both_hdr.Id='" + ID + "'", Conn);
         da.Fill(Dt);
         GvPurchaseOrderList.DataSource = Dt;
         GvPurchaseOrderList.DataBind();
@@ -803,7 +803,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
                 DataTable Dt = new DataTable();
                 txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
 
-                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceDate= '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceDate= '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
                 da.Fill(Dt);
                 GvPurchaseOrderList.DataSource = Dt;
                 GvPurchaseOrderList.DataBind();
@@ -816,7 +816,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
                 txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
 
                 DataTable Dt = new DataTable();
-                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%'AND PoNo LIKE '%" + txt_pono_search.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%'AND PoNo LIKE '%" + txt_pono_search.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
                 da.Fill(Dt);
                 GvPurchaseOrderList.DataSource = Dt;
                 GvPurchaseOrderList.DataBind();
@@ -826,7 +826,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
             {
                 ViewState["Record"] = "Getsortedcustomer4";
                 DataTable Dt = new DataTable();
-                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND PoNo LIKE '%" + txt_pono_search.Text + "%' AND Is_Deleted='0' ", Conn);
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND PoNo LIKE '%" + txt_pono_search.Text + "%' AND Is_Deleted='0' ", Conn);
                 da.Fill(Dt);
                 GvPurchaseOrderList.DataSource = Dt;
                 GvPurchaseOrderList.DataBind();
@@ -839,7 +839,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
                 txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
 
                 DataTable Dt = new DataTable();
-                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
                 da.Fill(Dt);
                 GvPurchaseOrderList.DataSource = Dt;
                 GvPurchaseOrderList.DataBind();
@@ -852,7 +852,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
                 txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
 
                 DataTable Dt = new DataTable();
-                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE PoNo LIKE '%" + txt_pono_search.Text + "%' AND   InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE PoNo LIKE '%" + txt_pono_search.Text + "%' AND   InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
                 da.Fill(Dt);
                 GvPurchaseOrderList.DataSource = Dt;
                 GvPurchaseOrderList.DataBind();
@@ -892,7 +892,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
 
 
                 DataTable Dt = new DataTable();
-                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE  InvoiceDate= '" + txt_form_podate_search.Text + "'   AND Is_Deleted='0' ", Conn);
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE  InvoiceDate= '" + txt_form_podate_search.Text + "'   AND Is_Deleted='0' ", Conn);
                 da.Fill(Dt);
                 GvPurchaseOrderList.DataSource = Dt;
                 GvPurchaseOrderList.DataBind();
@@ -921,7 +921,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
         ViewState["Record"] = "Getsortedcustomer";
         ViewState["Excell"] = "Getsortedcustomer";
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo='" + txt_Invoice_search.Text + "' AND Is_Deleted='0' ", Conn);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo='" + txt_Invoice_search.Text + "' AND Is_Deleted='0' ", Conn);
         da.Fill(Dt);
         GvPurchaseOrderList.DataSource = Dt;
         GvPurchaseOrderList.DataBind();
@@ -933,7 +933,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
         ViewState["Record"] = "Getsortedcustomer1";
         ViewState["Excell"] = "Getsortedcustomer1";
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE PoNo LIKE '%" + txt_pono_search.Text + "%' AND Is_Deleted='0' ", Conn);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE PoNo LIKE '%" + txt_pono_search.Text + "%' AND Is_Deleted='0' ", Conn);
         da.Fill(Dt);
         GvPurchaseOrderList.DataSource = Dt;
         GvPurchaseOrderList.DataBind();
@@ -948,7 +948,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
         DataTable Dt = new DataTable();
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
 
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceDate= '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceDate= '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
         da.Fill(Dt);
         GvPurchaseOrderList.DataSource = Dt;
         GvPurchaseOrderList.DataBind();
@@ -962,7 +962,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
 
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%'AND PoNo LIKE '%" + txt_pono_search.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%'AND PoNo LIKE '%" + txt_pono_search.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
         da.Fill(Dt);
         GvPurchaseOrderList.DataSource = Dt;
         GvPurchaseOrderList.DataBind();
@@ -976,7 +976,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
 
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo LIKE '%" + txt_Invoice_search.Text + "%' AND  InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
         da.Fill(Dt);
         GvPurchaseOrderList.DataSource = Dt;
         GvPurchaseOrderList.DataBind();
@@ -990,7 +990,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
         txt_form_podate_search.Text = date.ToString("yyyy-MM-dd");
 
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE PoNo LIKE '%" + txt_pono_search.Text + "%' AND   InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE PoNo LIKE '%" + txt_pono_search.Text + "%' AND   InvoiceDate = '" + txt_form_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
         da.Fill(Dt);
         GvPurchaseOrderList.DataSource = Dt;
         GvPurchaseOrderList.DataBind();
@@ -1008,7 +1008,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
         txt_to_podate_search.Text = datee.ToString("yyyy-MM-dd");
 
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE  InvoiceDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE  InvoiceDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
         da.Fill(Dt);
         GvPurchaseOrderList.DataSource = Dt;
         GvPurchaseOrderList.DataBind();
@@ -1028,7 +1028,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
         txt_to_podate_search.Text = datee.ToString("yyyy-MM-dd");
 
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE  InvoiceDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND CompName= '" + txtcustomer.Text + "' AND Is_Deleted='0' ", Conn);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE  InvoiceDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND CompName= '" + txtcustomer.Text + "' AND Is_Deleted='0' ", Conn);
         da.Fill(Dt);
         GvPurchaseOrderList.DataSource = Dt;
         GvPurchaseOrderList.DataBind();
@@ -1050,7 +1050,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
         ViewState["Excell"] = "Getsortedcustomer9";
         ViewState["Record"] = "Getsortedcustomer9";
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE  CompName= '" + txtcustomer.Text + "'   AND Is_Deleted='0' ", Conn);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE  CompName= '" + txtcustomer.Text + "'   AND Is_Deleted='0' ", Conn);
         da.Fill(Dt);
         GvPurchaseOrderList.DataSource = Dt;
         GvPurchaseOrderList.DataBind();
@@ -1062,7 +1062,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
         ViewState["Record"] = "Getsortedcustomer";
         ViewState["Excell"] = "Getsortedcustomer";
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE InvoiceNo='" + txt_Invoice_search.Text + "' AND Is_Deleted='0' ", Conn);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE InvoiceNo='" + txt_Invoice_search.Text + "' AND Is_Deleted='0' ", Conn);
         da.Fill(Dt);
         sortedgv.DataSource = Dt;
         sortedgv.DataBind();
@@ -1074,7 +1074,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
         ViewState["Record"] = "Getsortedcustomer1";
         ViewState["Excell"] = "Getsortedcustomer1";
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE PoNo LIKE '%" + txt_pono_search.Text + "%' AND Is_Deleted='0' ", Conn);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE PoNo LIKE '%" + txt_pono_search.Text + "%' AND Is_Deleted='0' ", Conn);
         da.Fill(Dt);
         sortedgv.DataSource = Dt;
         sortedgv.DataBind();
@@ -1086,7 +1086,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
         ViewState["Excell"] = "Getsortedcustomer9";
         ViewState["Record"] = "Getsortedcustomer9";
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE  CompName= '" + txtcustomer.Text + "'   AND Is_Deleted='0' ", Conn);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE  CompName= '" + txtcustomer.Text + "'   AND Is_Deleted='0' ", Conn);
         da.Fill(Dt);
         sortedgv.DataSource = Dt;
         sortedgv.DataBind();
@@ -1105,7 +1105,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
         txt_to_podate_search.Text = datee.ToString("yyyy-MM-dd");
 
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE  InvoiceDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE  InvoiceDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND Is_Deleted='0' ", Conn);
         da.Fill(Dt);
         sortedgv.DataSource = Dt;
         sortedgv.DataBind();
@@ -1126,7 +1126,7 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
         txt_to_podate_search.Text = datee.ToString("yyyy-MM-dd");
 
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE  InvoiceDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND CompName= '" + txtcustomer.Text + "' AND Is_Deleted='0' ", Conn);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE  InvoiceDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND CompName= '" + txtcustomer.Text + "' AND Is_Deleted='0' ", Conn);
         da.Fill(Dt);
         sortedgv.DataSource = Dt;
         sortedgv.DataBind();

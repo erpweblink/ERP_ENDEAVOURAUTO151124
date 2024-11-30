@@ -302,11 +302,11 @@
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Count days">
                                     <ItemTemplate>
-                                        <asp:Label ID="lblcountdays" runat="server" Text='<%# Eval("days") %>'></asp:Label>
+                                        <asp:Label ID="lblcountdays" runat="server" Text='<%# Eval("Counts") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
 
-                                 <asp:TemplateField HeaderText="Type">
+                                 <asp:TemplateField HeaderText="Agains By">
                                      <ItemTemplate>
                                          <asp:Label ID="lbltype" runat="server" Text='<%# Eval("Type") %>'></asp:Label>
                                      </ItemTemplate>
@@ -331,9 +331,9 @@
                                         <%-- <a href="<%#"Customer_PO.aspx?Id="+Eval("Id") %>"><i class='far fa-edit' style='font-size: 26px'></i></a>--%>
                                         <asp:LinkButton ID="btn_edit" runat="server" CommandName="Rowedit" CommandArgument='<%#Eval("Id") %>' ToolTip="Edit"><i class="far fa-edit"  style="font-size:26px"></i></asp:LinkButton>
                                         <asp:LinkButton ID="btn_delete" runat="server" Text="" ToolTip="Delete" CommandName="RowDelete" CommandArgument='<%# Eval("Id") %>' OnClientClick="Javascript:return confirm('Are you sure to Delete?')"><i class="fa fa-trash" aria-hidden="true" style="font-size:26px"></i></asp:LinkButton>
-                                        <asp:LinkButton ID="lnkbtnsendpo" runat="server" CommandName="SendINV" CommandArgument='<%# Container.DataItemIndex %>' ToolTip="Send Invoice">
+                                       <%-- <asp:LinkButton ID="lnkbtnsendpo" runat="server" CommandName="SendINV" CommandArgument='<%# Container.DataItemIndex %>' ToolTip="Send Invoice">
                                           <i class="fa fa-paper-plane" style="font-size:26px;color:black"></i>
-                                        </asp:LinkButton>
+                                        </asp:LinkButton>--%>
                                         <%--<asp:LinkButton runat="server" ID="lnkbtnsendpo" ToolTip="Send PO" CommandName="SendINV"><i class="fa fa-paper-plane"  style="font-size: 26px; color:black; "></i></i></asp:LinkButton>--%>
                                     </ItemTemplate>
                                      <FooterTemplate>
