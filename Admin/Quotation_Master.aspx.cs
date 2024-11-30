@@ -327,7 +327,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
     {
         try
         {
-            SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ID + "'", con);
+            SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST,ServiceType FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ID + "'", con);
             DataTable Dt = new DataTable();
             Da.Fill(Dt);
             if (Dt.Rows.Count > 0)
@@ -352,7 +352,10 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                 txtigst.Text = Dt.Rows[0]["IGST"].ToString();
                 txt_grandTotal.Text = Dt.Rows[0]["AllTotal_price"].ToString();
                 lbl_total_amt_Value.Text = Dt.Rows[0]["Total_in_word"].ToString();
+                ddlservicetype.SelectedValue = Dt.Rows[0]["ServiceType"].ToString();
 
+                
+            
                 string str = Dt.Rows[0]["Term_Condition_1"].ToString();
                 string str1 = Dt.Rows[0]["Term_Condition_2"].ToString();
                 string str2 = Dt.Rows[0]["Term_Condition_3"].ToString();

@@ -607,7 +607,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
     private void Load_Record()
     {
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT tbl_Invoice_both_Dtls.JobNo, tbl_Invoice_both_Dtls.MateName,tbl_Invoice_both_Dtls.PrintDescription,tbl_Invoice_both_hdr.InvoiceNo,tbl_Invoice_both_hdr.InvoiceAgainst,tbl_Invoice_both_hdr.AgainstNo,InvoiceDate,tbl_Invoice_both_hdr.JobNo,tbl_Invoice_both_hdr.CompName,tbl_Invoice_both_hdr.CustName,PoNo,PoDate,ChallanNo,ChallanDate,PayTerm,Delivery,KindAtt,CompanyAddress,CompanyGstNo,CompanyPanNo, ComapyRegType, CompanyStateCode, CustomerShippingAddress, CustomerGstNo,Term_Condition_1,Term_Condition_2,Term_Condition_3,Term_Condition_4,Term_Condition_5,Term_Condition_6, CustomerPanNo, CustomerRegType,CustomerStateCode, CGST, SGST,IGST, AllTotalAmount, GrandTotal, TotalInWord, Description, Hsn, TaxPercentage, Quntity, Unit, Rate, DiscountPercentage, Total FROM tbl_Invoice_both_hdr INNER JOIN tbl_Invoice_both_Dtls ON tbl_Invoice_both_Dtls.InvoiceId = tbl_Invoice_both_hdr.Id WHERE tbl_Invoice_both_hdr.Id='" + hdnID.Value + "'", con);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT tbl_Invoice_both_Dtls.JobNo, tbl_Invoice_both_Dtls.MateName,tbl_Invoice_both_Dtls.PrintDescription,tbl_Invoice_both_hdr.InvoiceNo,tbl_Invoice_both_hdr.InvoiceAgainst,tbl_Invoice_both_hdr.AgainstNo,InvoiceDate,tbl_Invoice_both_hdr.JobNo,tbl_Invoice_both_hdr.CompName,tbl_Invoice_both_hdr.CustName,PoNo,PoDate,ChallanNo,ChallanDate,PayTerm,Delivery,KindAtt,CompanyAddress,CompanyGstNo,CompanyPanNo, ComapyRegType, CompanyStateCode, CustomerShippingAddress, CustomerGstNo,Term_Condition_1,Term_Condition_2,Term_Condition_3,Term_Condition_4,Term_Condition_5,Term_Condition_6, CustomerPanNo, CustomerRegType,CustomerStateCode, CGST, SGST,IGST, AllTotalAmount, GrandTotal, TotalInWord, Description, Hsn, TaxPercentage, Quntity, Unit, Rate, DiscountPercentage, Total, ServiceType FROM tbl_Invoice_both_hdr INNER JOIN tbl_Invoice_both_Dtls ON tbl_Invoice_both_Dtls.InvoiceId = tbl_Invoice_both_hdr.Id WHERE tbl_Invoice_both_hdr.Id='" + hdnID.Value + "'", con);
         da.Fill(Dt);
 
         if (Dt.Rows.Count > 0)
@@ -649,6 +649,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
 
             drop_CompanyRegisterType.Text = Dt.Rows[0]["ComapyRegType"].ToString();
             drop_CustomerRagisterType.Text = Dt.Rows[0]["CustomerRegType"].ToString();
+            ddlservicetype.SelectedValue = Dt.Rows[0]["ServiceType"].ToString();
 
             string str = Dt.Rows[0]["Term_Condition_1"].ToString();
             string str1 = Dt.Rows[0]["Term_Condition_2"].ToString();

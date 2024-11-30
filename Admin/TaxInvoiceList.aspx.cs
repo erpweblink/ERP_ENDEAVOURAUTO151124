@@ -198,6 +198,7 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
         DistinctInvoices AS DI
     ORDER BY
         DI.CreatedOn DESC;", Conn);
+
         da.Fill(Dt);
         GridExportExcel.EmptyDataText = "Records Not Found";
         GridExportExcel.DataSource = Dt;
