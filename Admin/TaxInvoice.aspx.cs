@@ -866,6 +866,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 con.Close();
 
                 SqlCommand Cmd = new SqlCommand("SP_Invoice_both", con);
+
                 Cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 Cmd.Parameters.AddWithValue("@InvoiceNo", txt_InvoiceNo.Text);
                 Cmd.Parameters.AddWithValue("@InvoiceDate", txt_InvoiceDate.Text);
@@ -938,7 +939,9 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                     string InvoiceNo = txt_InvoiceNo.Text;
                     string MateName = (G1.FindControl("lblproduct") as Label).Text;
                     string PrintDescription = (G1.FindControl("LblPrintdescription") as Label).Text;
+
                     SqlCommand Cmd1 = new SqlCommand("INSERT INTO tbl_Invoice_both_Dtls (InvoiceId,JobNo,Description,Hsn,TaxPercentage,Quntity,Unit,Rate,DiscountPercentage,Total,MateName,PrintDescription ,InvoiceNo) " +
+
                          //"VALUES ('" + Id + "','" + JobNo + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "' )", con);
                          "VALUES ('" + Id + "','" + JobNo + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "' ,'" + MateName + "','" + PrintDescription + "' ,'" + InvoiceNo + "' )", con);
                     con.Open();
@@ -947,6 +950,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 }
 
                 int JobNoCount = Convert.ToInt32(txtJobNoCount.Text);               
+
                 foreach (GridViewRow G2 in grd_getDTLS.Rows)
                 {
                     CheckBox chkSelect = G2.FindControl("chkSelect") as CheckBox;
@@ -966,6 +970,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                         string MateName = (G2.FindControl("lblproduct") as Label).Text;
                         string PrintDescription = (G2.FindControl("Lblprintdescription_grd") as Label).Text;
                         string InvoiceNo = txt_InvoiceNo.Text;
+
                         SqlCommand Cmd1 = new SqlCommand("INSERT INTO tbl_Invoice_both_Dtls (InvoiceId,JobNo,Description,Hsn,TaxPercentage,Quntity,Unit,Rate,DiscountPercentage,Total, MateName, PrintDescription, InvoiceNo) " +
                         //"VALUES ('" + Id + "','" + JobNo_GET + "','" + Discription_GET + "','" + HSN_GET + "','" + Tax_GET + "','" + Quntity_GET + "','" + Unit_GET + "','" + Rate_GET + "','" + Discount_GET + "','" + Total_Amount_GET + "')", con);
                         "VALUES ('" + Id + "','" + JobNo_GET + "','" + Discription_GET + "','" + HSN_GET + "','" + Tax_GET + "','" + Quntity_GET + "','" + Unit_GET + "','" + Rate_GET + "','" + Discount_GET + "','" + Total_Amount_GET + "'  ,'" + MateName + "', '" + PrintDescription + "','" + InvoiceNo + "' )", con);
@@ -3529,7 +3534,9 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             ddlagainstno.Enabled = false;
             ddlagainst.SelectedItem.Text = "Order";
             //ddlagainstno.SelectedItem.Text = Dt.Rows[0]["Pono"].ToString(); 
+
             txtJobNoCount.Text = Dt.Rows[0]["JobNoCount"].ToString();
+
             txtCompName.Text = Dt.Rows[0]["CustomerName"].ToString();
             txtCompName.ReadOnly = true;
 
@@ -3673,6 +3680,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             {
                grd_getDTLS.Columns[0].Visible = true;
             }
+
             grd_getDTLS.DataSource = Dt_Itemsdetails;
             grd_getDTLS.DataBind();
             grd_getDTLS.EmptyDataText = "Not Records Found";
