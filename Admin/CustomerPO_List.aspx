@@ -441,7 +441,7 @@
 
                     <%--   SortedGrid start--%>
                     <div class="table-responsive text-center" style="width: 100%; padding: 20px;">
-                        <asp:GridView ID="GvSorted" runat="server" AutoGenerateColumns="false" CssClass="grid" DataKeyNames="Quotationno" Width="100%" OnRowCommand="GvCustomerpoList_RowCommand" OnRowDataBound="GvCustomerpoList_RowDataBound" ShowFooter="True">
+                        <asp:GridView ID="GvSorted" runat="server" AutoGenerateColumns="false" CssClass="grid" DataKeyNames="Quotationno" Width="100%" OnRowCommand="GvCustomerpoList_RowCommand" OnRowDataBound="GvSorted_RowDataBound" ShowFooter="True">
                             <%--AllowPaging="true" PagerStyle-CssClass="paging" PageSize="10" OnPageIndexChanging="GvSorted_PageIndexChanging"--%>
                             <Columns>
                                 <asp:TemplateField HeaderStyle-Width="20" HeaderText="View">
@@ -451,6 +451,12 @@
                                             <asp:GridView ID="gvDetailss" runat="server" AutoGenerateColumns="false" CssClass="ChildGrid">
                                                 <Columns>
                                                     <asp:BoundField ItemStyle-Width="150px" DataField="Jobno" HeaderText="Job No." />
+                                                </Columns>
+                                                <Columns>
+                                                    <asp:BoundField ItemStyle-Width="150px" DataField="JobStatus" HeaderText="Status" />
+                                                </Columns>
+                                                <Columns>
+                                                    <asp:BoundField ItemStyle-Width="150px" DataField="JobDaysCount" HeaderText="Completed Days" />
                                                 </Columns>
                                             </asp:GridView>
                                         </asp:Panel>
@@ -488,7 +494,7 @@
 
                                 <asp:TemplateField HeaderText="Job No." Visible="false">
                                     <ItemTemplate>
-                                        <asp:Label ID="lbl_JobNo" runat="server" Text='<%# Eval("JobNo") %>'></asp:Label>
+                                        <asp:Label ID="lbl_JobNo" runat="server" Text='<%# Eval("CountDays") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="P.O. No.">
@@ -523,7 +529,7 @@
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Count days">
                                     <ItemTemplate>
-                                        <asp:Label ID="lblcountdays" runat="server" Text='<%# Eval("days") %>'></asp:Label>
+                                        <asp:Label ID="lblcountdays" runat="server" Text='<%# Eval("CountDays") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
 
@@ -645,7 +651,7 @@
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Count days">
                                     <ItemTemplate>
-                                        <asp:Label ID="lblcountdays" runat="server" Text='<%# Eval("days") %>'></asp:Label>
+                                        <asp:Label ID="lblcountdays" runat="server" Text='<%# Eval("CountDays") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
 

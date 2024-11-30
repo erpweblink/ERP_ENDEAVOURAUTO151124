@@ -150,8 +150,7 @@
 
                                 <div class="col-md-6">
                                     <asp:Label ID="Label14" runat="server" class="control-label col-sm-4">Service Type :<span class="spncls">*</span></asp:Label>
-                                    <asp:DropDownList runat="server" class="form-control" ID="ddlservicetype">
-
+                                    <asp:DropDownList runat="server" class="form-control" ID="ddlservicetype">                                       
                                         <asp:ListItem Value="Service" Text="Service"></asp:ListItem>
                                         <asp:ListItem Value="Sales" Text="Sales"></asp:ListItem>
                                         <asp:ListItem Value="Reparing" Text="Reparing"></asp:ListItem>
