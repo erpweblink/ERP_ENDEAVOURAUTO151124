@@ -1607,11 +1607,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
                     GROUP BY Quotation_no
                 ) J ON H.Quotation_no = J.Quotation_no
                 WHERE H.Againstby = 'JobNo'  AND H.Customer_Name = 'Schneider Electric India Pvt.Ltd.' AND H.IsDeleted = '0'
-<<<<<<< Updated upstream
-                AND H.CreatedOn >= @StartDate AND H.CreatedOn <= @EndDate AND H.JobNoCount != 0
-=======
-                AND H.CreatedOn >= @StartDate AND H.CreatedOn <= @EndDate
->>>>>>> Stashed changes
+                AND H.CreatedOn >= @StartDate AND H.CreatedOn <= @EndDate AND H.JobNoCount != 0 AND Status = 'Pending'
                 ORDER BY H.CreatedOn DESC;";
 
                 SqlDataAdapter Da = new SqlDataAdapter(query, con);
@@ -1638,13 +1634,9 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
                     FROM tbl_Quotation_two_Dtls
                     WHERE JobStatus ='Pending'
                     GROUP BY Quotation_no
-                ) J ON H.Quotation_no = J.Quotation_no
-                WHERE H.Againstby = 'JobNo' AND H.IsDeleted = '0'
-<<<<<<< Updated upstream
+                ) J ON H.Quotation_no = J.Quotation_no 
+                WHERE H.Againstby = 'JobNo' AND H.IsDeleted = '0' AND Status = 'Pending' 
                 AND H.CreatedOn >= @StartDate AND H.CreatedOn <= @EndDate AND H.JobNoCount != 0
-=======
-                AND H.CreatedOn >= @StartDate AND H.CreatedOn <= @EndDate
->>>>>>> Stashed changes
                 ORDER BY H.CreatedOn DESC;";
 
                 SqlDataAdapter Da = new SqlDataAdapter(query, con);

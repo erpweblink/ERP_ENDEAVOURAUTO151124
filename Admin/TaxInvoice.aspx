@@ -284,13 +284,13 @@
                                         <asp:ListItem Value="Reparing" Text="Reparing"></asp:ListItem>
                                     </asp:DropDownList>
                                 </div>
-                                <div class="col-md-3">
+                              <%--  <div class="col-md-3">
                                     <asp:Label ID="Label9" runat="server" class="control-label col-sm-4">Type :<span class="spncls">*</span></asp:Label>
                                     <asp:DropDownList runat="server" class="form-control" ID="ddltype">
                                         <asp:ListItem Value="Service" Text="Service"></asp:ListItem>
                                         <asp:ListItem Value="Regular" Text="Regular"></asp:ListItem>
                                     </asp:DropDownList>
-                                </div>
+                                </div>--%>
                                 <%--  <div class="col-md-3">
                                     <asp:Label ID="Label9" runat="server" class="control-label col-sm-6" for="cust">Status :<span class="spncls"></span></asp:Label>
                                       <asp:TextBox ID="txtstatus" runat="server" CssClass="form-control"></asp:TextBox><br />

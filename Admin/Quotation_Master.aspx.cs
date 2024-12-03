@@ -1176,15 +1176,42 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                 cmd.ExecuteNonQuery();
                 con.Close();
 
-                SqlCommand cmddelete = new SqlCommand("DELETE FROM tbl_Quotation_two_Dtls WHERE Quotation_no=@Quotation_no", con);
-                cmddelete.Parameters.AddWithValue("@Quotation_no", txt_Quo_No.Text);
-                con.Open();
-                cmddelete.ExecuteNonQuery();
-                con.Close();
+                //SqlCommand cmddelete = new SqlCommand("DELETE FROM tbl_Quotation_two_Dtls WHERE Quotation_no=@Quotation_no", con);
+                //cmddelete.Parameters.AddWithValue("@Quotation_no", txt_Quo_No.Text);
+                //con.Open();
+                //cmddelete.ExecuteNonQuery();
+                //con.Close();
 
                 foreach (GridViewRow grd1 in dgvProductDtl.Rows)
                 {
                     con.Open();
+
+                    // New status and job count code to update  by Nikhil
+                    string jobNoToGet = (grd1.FindControl("lbljobno") as Label).Text;
+                    string Jobstatus = string.Empty;
+                    int jobDaysCount = 0;
+                    SqlCommand getDtlsDetails = new SqlCommand("SELECT JobStatus, JobDaysCount from tbl_Quotation_two_Dtls WHERE " +
+                        "Quotation_no ='" + txt_Quo_No.Text + "' ANd JobNo='" + jobNoToGet + "'", con);
+                    using (SqlDataReader reader = getDtlsDetails.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            Jobstatus = reader["JobStatus"].ToString();
+                            string jobDays = reader["JobDaysCount"].ToString();
+                            if (jobDays == "")
+                            {
+                                jobDaysCount = 0;
+                            }
+                            else
+                            {
+                                jobDaysCount = Convert.ToInt32(reader["JobDaysCount"]);
+                            }
+                        }
+                    }
+                    SqlCommand cmddelete = new SqlCommand("DELETE FROM tbl_Quotation_two_Dtls WHERE Quotation_no=@PurchaseId AND JobNo = '" + (grd1.FindControl("lbljobno") as Label).Text + "'", con);
+                    cmddelete.Parameters.AddWithValue("@PurchaseId", txt_Quo_No.Text);
+                    cmddelete.ExecuteNonQuery();
+                    // End 
 
                     //07-04-23
                     string lbljobno = (grd1.FindControl("lbljobno") as Label).Text;
@@ -1201,7 +1228,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                     string Total_grd = (grd1.FindControl("lblTotalPrice") as Label).Text;
 
 
-                    SqlCommand cmdd = new SqlCommand("INSERT INTO tbl_Quotation_two_Dtls (Quotation_no,CompName,HSN,Tax,Qty,Units,total,Rate,Disc_per,FTotal,CreatedBy,CreatedOn,UpdatedBy,UpdatedOn,Description,product,JobNo,JobStatus) VALUES(@Quotation_no,@CompName,@HSN,@Tax,@Qty,@Units,@total,@Rate,@Disc_per,@FTotal,@CreatedBy,@CreatedOn,@UpdatedBy,@UpdatedOn,@Description,@product,@JobNo,@JobStatus)", con);
+                    SqlCommand cmdd = new SqlCommand("INSERT INTO tbl_Quotation_two_Dtls (Quotation_no,CompName,HSN,Tax,Qty,Units,total,Rate,Disc_per,FTotal,CreatedBy,CreatedOn,UpdatedBy,UpdatedOn,Description,product,JobNo,JobStatus,JobDaysCount) VALUES(@Quotation_no,@CompName,@HSN,@Tax,@Qty,@Units,@total,@Rate,@Disc_per,@FTotal,@CreatedBy,@CreatedOn,@UpdatedBy,@UpdatedOn,@Description,@product,@JobNo,@JobStatus,@JobDaysCount)", con);
                     cmdd.Parameters.AddWithValue("@Quotation_no", txt_Quo_No.Text);
                     cmdd.Parameters.AddWithValue("@CompName", Description_grd);
                     cmdd.Parameters.AddWithValue("@HSN", HSN_grd);
@@ -1219,7 +1246,8 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                     cmdd.Parameters.AddWithValue("@Description", AddDescription);
                     cmdd.Parameters.AddWithValue("@product", product);
                     cmdd.Parameters.AddWithValue("@JobNo", lbljobno);
-                    cmdd.Parameters.AddWithValue("@JobStatus", "Pending");
+                    cmdd.Parameters.AddWithValue("@JobStatus", Jobstatus);
+                    cmdd.Parameters.AddWithValue("@JobDaysCount", jobDaysCount);
                     cmdd.ExecuteNonQuery();
                     con.Close();
                 }

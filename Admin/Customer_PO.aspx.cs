@@ -1805,7 +1805,15 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
                     if (reader.Read())
                     {
                         Jobstatus = reader["JobStatus"].ToString();
-                        jobDaysCount = Convert.ToInt32(reader["JobDaysCount"]);
+                        string jobDays = reader["JobDaysCount"].ToString();
+                        if(jobDays == "")
+                        {
+                            jobDaysCount = 0;
+                        }
+                        else
+                        {
+                            jobDaysCount = Convert.ToInt32(reader["JobDaysCount"]);
+                        }
                     }
                 }                
                 SqlCommand cmddelete = new SqlCommand("DELETE FROM CustomerPO_Dtls_Both WHERE PurchaseId=@PurchaseId AND JobNo = '" + (g2.FindControl("lblJob") as Label).Text + "'", con);
@@ -1896,7 +1904,8 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
                 Cmd.Parameters.AddWithValue("@Term_Condition_6", txt_term_6.Text + "-" + txt_condition_6.Text);
                 Cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
                 Cmd.Parameters.AddWithValue("@AgainstBy", ddlagainstby.SelectedItem.Text);
-
+                Cmd.Parameters.AddWithValue("@Type", "JobNo");
+                                
                 if (FileUpload.HasFile)
                 {
                     var Filenamenew = FileUpload.FileName;
@@ -1934,6 +1943,8 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
 
                     Cmd1.ExecuteNonQuery();
                 }
+                int jobCount = 0;
+                int JobNoCount = Convert.ToInt32(txtJobNoCount.Text);
                 foreach (GridViewRow g1 in quatationgrid.Rows)
                 {
                     CheckBox chkSelect = g1.FindControl("chkSelect") as CheckBox;
@@ -1954,14 +1965,31 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
                         string Total_Amount = (g1.FindControl("lbl_total_amount_grd") as Label).Text;
                         Cmd.Parameters.AddWithValue("@Quotationno", ddlquotationno.SelectedItem.Text);
 
+                        
                         SqlCommand Cmd1 = new SqlCommand("INSERT INTO CustomerPO_Dtls_Both (PurchaseId,Description,Hsn_Sac,TaxPercenteage,Quantity,Unit,Rate,DiscountPercentage,Total,JobNo,MateName,PrintDescription,Quotationno,JobStatus) " +
                              "VALUES('" + id + "','" + Discription + "','" + HSN + "','" + Tax + "','" + Quntity + "','" + Unit + "','" + Rate + "','" + Discount + "','" + Total_Amount + "','" + JobNo + "' ,'" + MateName + "' ,'" + PrintDescription + "','" + ddlquotationno.SelectedItem.Text + "','Pending')", con);
-                       
+                        Cmd1.ExecuteNonQuery();
+
+                        //To update the jobNo count 
+                        ++jobCount;
+                        SqlCommand Cmd3 = new SqlCommand("UPDATE CustomerPO_Hdr_Both SET Status = 'Pending', JobNoCount = '" + jobCount + "'" +
+                            " WHERE id = '" + id + "'", con);
+                        Cmd3.ExecuteNonQuery();
+
+
                         SqlCommand Cmd2 = new SqlCommand("UPDATE tbl_Quotation_two_Dtls SET JobStatus = 'Completed', JobDaysCount = '"+ JobCreatedCount + "'" +
                             "WHERE JobNo = '"+ JobNo + "'", con);
-                       
-                        Cmd1.ExecuteNonQuery();
                         Cmd2.ExecuteNonQuery();
+
+                        // Substract the Job count for that quotation 
+                        --JobNoCount;
+                        SqlCommand cmds = new SqlCommand("UPDATE tbl_Quotation_two_Hdr SET JobNoCount = '" + JobNoCount + "' WHERE Quotation_no = '" + ddlquotationno.SelectedItem.Text + "'", con);
+                        cmds.ExecuteNonQuery();
+                        if (JobNoCount == 0)
+                        {
+                            SqlCommand cmds1 = new SqlCommand("UPDATE tbl_Quotation_two_Hdr SET Status = 'Completed' WHERE Quotation_no = '" + ddlquotationno.SelectedItem.Text + "'", con);
+                            cmds1.ExecuteNonQuery();
+                        }
 
                     }
                 }
