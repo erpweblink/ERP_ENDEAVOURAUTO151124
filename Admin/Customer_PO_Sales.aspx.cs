@@ -74,7 +74,7 @@ public partial class Admin_Customer_PO_Sales : System.Web.UI.Page
     //NEW METHODS FOR QUOTATION DATA FETCH START
     protected void ShowHeaderEdit()
     {
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT DATEDIFF(DAY, Quotation_Date, GETDATE()) AS Days_Completed,JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ID + "'", con);
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT DATEDIFF(DAY, Quotation_Date, GETDATE()) AS Days_Completed,JobNo,Quotation_no,Customer_Name,ServiceType,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ID + "'", con);
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
         if (Dt.Rows.Count > 0)
@@ -85,6 +85,7 @@ public partial class Admin_Customer_PO_Sales : System.Web.UI.Page
             ddlquotationno.SelectedItem.Text = Dt.Rows[0]["Quotation_no"].ToString();
             txt_Customer_name.Text = Dt.Rows[0]["Customer_Name"].ToString();
             txtsubcust.Text = Dt.Rows[0]["SubCustomer"].ToString();
+            ddlservicetype.SelectedItem.Text = Dt.Rows[0]["ServiceType"].ToString();
             txt_delivery_address.Text = Dt.Rows[0]["Address"].ToString();
             txt_mobile_no.Text = Dt.Rows[0]["Mobile_No"].ToString();
             txt_kind_att.Text = Dt.Rows[0]["kind_Att"].ToString();
@@ -492,7 +493,7 @@ public partial class Admin_Customer_PO_Sales : System.Web.UI.Page
     {
         DataTable Dt = new DataTable();
         //SqlDataAdapter da = new SqlDataAdapter("select CustomerPO_Dtls_Both.JobNo,CustomerPO_Dtls_Both.Quotationno,CustomerPO_Hdr_Sales.Id,CustomerPO_Hdr_Sales.JobNo,CustomerPO_Hdr_Sales.ShippingAddress,CustomerName,SubCustomer,Pono,PoDate,RefNo,Mobileno,KindAtt,DeliveryAddress,EmailId,GstNo,VehicelNo,PayTerm,Cgst,Sgst,Igst,AllTotalPrice,TotalInWord, RoundOff, GrandTotal, Term_Condition_1, Term_Condition_2, Term_Condition_3, Term_Condition_4, Description, Hsn_Sac,Rate,Unit,Quantity, TaxPercenteage, DiscountPercentage, Total,statecode from CustomerPO_Hdr_Sales INNER JOIN CustomerPO_Dtls_Both ON CustomerPO_Hdr_Sales.Id = CustomerPO_Dtls_Both.PurchaseId WHERE CustomerPO_Hdr_Sales.Id='" + ID + "'", con);
-        SqlDataAdapter da = new SqlDataAdapter("select CustomerPO_Dtls_Both.JobNo,CustomerPO_Dtls_Both.MateName,CustomerPO_Dtls_Both.PrintDescription,CustomerPO_Dtls_Both.Quotationno,CustomerPO_Hdr_Both.Id,CustomerPO_Hdr_Both.JobNo,CustomerPO_Hdr_Both.ShippingAddress,CustomerName,SubCustomer,Pono,PoDate,RefNo,Mobileno,KindAtt,DeliveryAddress,EmailId,GstNo,VehicelNo,PayTerm,Cgst,Sgst,Igst,AllTotalPrice,TotalInWord, RoundOff,AgainstBy, GrandTotal, Term_Condition_1, Term_Condition_2, Term_Condition_3, Term_Condition_4,Term_Condition_5,Term_Condition_6, Description, Hsn_Sac,Rate,Unit,Quantity, TaxPercenteage, DiscountPercentage, Total,statecode,Imagepath from CustomerPO_Hdr_Both INNER JOIN CustomerPO_Dtls_Both ON CustomerPO_Hdr_Both.Id = CustomerPO_Dtls_Both.PurchaseId WHERE CustomerPO_Hdr_Both.Id='" + ID + "'", con);
+        SqlDataAdapter da = new SqlDataAdapter("select CustomerPO_Dtls_Both.JobNo,CustomerPO_Dtls_Both.MateName,CustomerPO_Dtls_Both.PrintDescription,CustomerPO_Dtls_Both.Quotationno,CustomerPO_Hdr_Both.Id,CustomerPO_Hdr_Both.JobNo,CustomerPO_Hdr_Both.ShippingAddress,CustomerName,SubCustomer,ServiceType,Pono,PoDate,RefNo,Mobileno,KindAtt,DeliveryAddress,EmailId,GstNo,VehicelNo,PayTerm,Cgst,Sgst,Igst,AllTotalPrice,TotalInWord, RoundOff,AgainstBy, GrandTotal, Term_Condition_1, Term_Condition_2, Term_Condition_3, Term_Condition_4,Term_Condition_5,Term_Condition_6, Description, Hsn_Sac,Rate,Unit,Quantity, TaxPercenteage, DiscountPercentage, Total,statecode,Imagepath from CustomerPO_Hdr_Both INNER JOIN CustomerPO_Dtls_Both ON CustomerPO_Hdr_Both.Id = CustomerPO_Dtls_Both.PurchaseId WHERE CustomerPO_Hdr_Both.Id='" + ID + "'", con);
         da.Fill(Dt);
 
         if (Dt.Rows.Count > 0)
@@ -505,6 +506,7 @@ public partial class Admin_Customer_PO_Sales : System.Web.UI.Page
             btn_save.Text = "Update";
             txt_Customer_name.Text = Dt.Rows[0]["CustomerName"].ToString();
             txtsubcust.Text = Dt.Rows[0]["SubCustomer"].ToString();
+            ddlservicetype.SelectedItem.Text = Dt.Rows[0]["ServiceType"].ToString();
             ddlquotationno.SelectedItem.Text = Dt.Rows[0]["Quotationno"].ToString();
             ddlagainstby.SelectedItem.Text = Dt.Rows[0]["AgainstBy"].ToString();
             txt_po_no.Text = Dt.Rows[0]["Pono"].ToString();

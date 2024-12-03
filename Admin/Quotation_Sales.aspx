@@ -107,7 +107,7 @@
                     <asp:UpdatePanel ID="update" runat="server">
                         <ContentTemplate>
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <asp:Label ID="lblQuo_No" runat="server" class="control-label col-sm-6">Quotation No. :<span class="spncls">*</span></asp:Label>
                                     <asp:TextBox runat="server" class="form-control" ID="txt_Quo_No" ReadOnly="true"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" ErrorMessage="Please Select Quotation No." ControlToValidate="txt_Quo_No" ForeColor="Red"></asp:RequiredFieldValidator>
@@ -115,7 +115,7 @@
                                     <br />
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-3 d-none">
                                     <asp:Label ID="Label15" runat="server" class="control-label col-sm-6">Against By :<span class="spncls">*</span></asp:Label>
                                     <asp:DropDownList runat="server" class="form-control" AutoPostBack="true" ID="ddlagainstby">
                                         <asp:ListItem Value="Sales" Text="Sales"></asp:ListItem>

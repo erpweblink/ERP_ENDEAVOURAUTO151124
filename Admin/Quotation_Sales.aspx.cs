@@ -295,7 +295,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
     {
         try
         {
-            SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ID + "'", con);
+            SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNo,Quotation_no,Customer_Name,ServiceType,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ID + "'", con);
             DataTable Dt = new DataTable();
             Da.Fill(Dt);
             if (Dt.Rows.Count > 0)
@@ -304,6 +304,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
                 txt_Comp_name.Text = Dt.Rows[0]["Customer_Name"].ToString();
                 ddlsubcustomerbind();
                 ddlsubcustomer.SelectedItem.Text = Dt.Rows[0]["SubCustomer"].ToString();
+                ddlservicetype.SelectedItem.Text = Dt.Rows[0]["ServiceType"].ToString();
                 txt_Quo_No.Text = Dt.Rows[0]["Quotation_no"].ToString();
 
                 DateTime ffff1 = Convert.ToDateTime(Dt.Rows[0]["Quotation_Date"].ToString());
