@@ -795,7 +795,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             Cmd.Parameters.AddWithValue("@Term_Condition_5", txt_term_5.Text + "-" + txt_condition_5.Text);
             Cmd.Parameters.AddWithValue("@Term_Condition_6", txt_term_6.Text + "-" + txt_condition_6.Text);
             Cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
-            Cmd.Parameters.AddWithValue("@Type", ddltype.SelectedItem.Text);
+            Cmd.Parameters.AddWithValue("@Type","JobNo");
             Cmd.Parameters.AddWithValue("@Is_Deleted", '0');
             //Cmd.Parameters.AddWithValue("@status", txtstatus.Text);
             Cmd.Parameters.AddWithValue("@UpdatedBy", CretedBy);
@@ -911,7 +911,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 Cmd.Parameters.AddWithValue("@Term_Condition_5", txt_term_4.Text + "-" + txt_condition_5.Text);
                 Cmd.Parameters.AddWithValue("@Term_Condition_6", txt_term_4.Text + "-" + txt_condition_6.Text);
                 Cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
-                Cmd.Parameters.AddWithValue("@Type", ddltype.SelectedItem.Text);
+               // Cmd.Parameters.AddWithValue("@Type", ddltype.SelectedItem.Text);
                 Cmd.Parameters.AddWithValue("@Is_Deleted", '0');
                 Cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
                 Cmd.Parameters.AddWithValue("@CreatedBy", CretedBy);
@@ -920,7 +920,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 // Cmd.Parameters.AddWithValue("@status", txtstatus.Text);
                 Cmd.Parameters.Add("@InvoiceId", SqlDbType.Int).Direction = ParameterDirection.Output;
                 con.Open();
-                Cmd.ExecuteNonQuery();
+               Cmd.ExecuteNonQuery();
                 con.Close();
 
                 Id = Convert.ToInt32(Cmd.Parameters["@InvoiceId"].Value);
@@ -958,6 +958,8 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                     if (chkSelect != null && chkSelect.Checked)
                     {
                         string JobCreatedCount = (G2.FindControl("LblJobNoss") as Label).Text;
+
+
                         string JobNo_GET = (G2.FindControl("txt_Jobno_grdd") as Label).Text;
                         string Discription_GET = (G2.FindControl("txt_discription_GET") as Label).Text;
                         string HSN_GET = (G2.FindControl("txt_hsn_GET") as Label).Text;
@@ -975,7 +977,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                         //"VALUES ('" + Id + "','" + JobNo_GET + "','" + Discription_GET + "','" + HSN_GET + "','" + Tax_GET + "','" + Quntity_GET + "','" + Unit_GET + "','" + Rate_GET + "','" + Discount_GET + "','" + Total_Amount_GET + "')", con);
                         "VALUES ('" + Id + "','" + JobNo_GET + "','" + Discription_GET + "','" + HSN_GET + "','" + Tax_GET + "','" + Quntity_GET + "','" + Unit_GET + "','" + Rate_GET + "','" + Discount_GET + "','" + Total_Amount_GET + "'  ,'" + MateName + "', '" + PrintDescription + "','" + InvoiceNo + "' )", con);
                         con.Open();
-                        Cmd1.ExecuteNonQuery();
+                       Cmd1.ExecuteNonQuery();
 
                         SqlCommand Cmd2 = new SqlCommand("UPDATE CustomerPO_Dtls_Both SET JobStatus = 'Completed', JobDaysCount = '" + JobCreatedCount + "'" +
                         "WHERE JobNo = '" + JobNo_GET + "'", con);                                              
@@ -1082,7 +1084,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 Cmd.Parameters.AddWithValue("@Term_Condition_5", txt_term_4.Text + "-" + txt_condition_5.Text);
                 Cmd.Parameters.AddWithValue("@Term_Condition_6", txt_term_4.Text + "-" + txt_condition_6.Text);
                 Cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
-                Cmd.Parameters.AddWithValue("@Type", ddltype.SelectedItem.Text);
+                //Cmd.Parameters.AddWithValue("@Type", ddltype.SelectedItem.Text);
                 Cmd.Parameters.AddWithValue("@Is_Deleted", '0');
                 Cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
                 Cmd.Parameters.AddWithValue("@CreatedBy", CretedBy);
@@ -3536,6 +3538,10 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             //ddlagainstno.SelectedItem.Text = Dt.Rows[0]["Pono"].ToString(); 
 
             txtJobNoCount.Text = Dt.Rows[0]["JobNoCount"].ToString();
+            if(txtJobNoCount.Text == "")
+            {
+                txtJobNoCount.Text = "0";
+            }
 
             txtCompName.Text = Dt.Rows[0]["CustomerName"].ToString();
             txtCompName.ReadOnly = true;
