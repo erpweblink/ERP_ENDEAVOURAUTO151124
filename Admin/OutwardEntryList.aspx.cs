@@ -62,6 +62,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
                 con.Open();
                 SqlDataAdapter sad = new SqlDataAdapter("select * from [tblOutwardEntry] where CustName='Schneider Electric India Pvt.Ltd.' AND isdeleted='0' ORDER BY [DateOut] Desc", con);
                 sad.Fill(dt);
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+                    {
+                        row["DateReturn"] = DBNull.Value;
+                    }
+                }
 
                 gv_Outward.EmptyDataText = "Not Records Found";
                 gv_Outward.DataSource = dt;
@@ -75,6 +82,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
                 con.Open();
                 SqlDataAdapter sad = new SqlDataAdapter("select * from [tblOutwardEntry] where isdeleted='0' ORDER BY [DateOut] Desc", con);
                 sad.Fill(dt);
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+                    {
+                        row["DateReturn"] = DBNull.Value;
+                    }
+                }
 
                 gv_Outward.EmptyDataText = "Not Records Found";
                 gv_Outward.DataSource = dt;
@@ -101,6 +115,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
                 con.Open();
                 SqlDataAdapter sad = new SqlDataAdapter("select * from [tblOutwardEntry] where CustName='Schneider Electric India Pvt.Ltd.' AND isdeleted='0' ORDER BY [DateOut] Desc", con);
                 sad.Fill(dt);
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+                    {
+                        row["DateReturn"] = DBNull.Value;
+                    }
+                }
 
                 GridExportExcel.EmptyDataText = "Not Records Found";
                 GridExportExcel.DataSource = dt;
@@ -114,6 +135,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
                 con.Open();
                 SqlDataAdapter sad = new SqlDataAdapter("select * from [tblOutwardEntry] where isdeleted='0' ORDER BY [DateOut] Desc", con);
                 sad.Fill(dt);
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+                    {
+                        row["DateReturn"] = DBNull.Value;
+                    }
+                }
 
                 GridExportExcel.EmptyDataText = "Not Records Found";
                 GridExportExcel.DataSource = dt;
@@ -505,6 +533,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select * from [tblOutwardEntry] where CustName='" + txtSearch.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         Gvsorted.EmptyDataText = "Not Records Found";
         Gvsorted.DataSource = dt;
         Gvsorted.DataBind();
@@ -516,6 +551,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select * from [tblOutwardEntry] where CustName='" + txtSearch.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         Gvsorted.EmptyDataText = "Not Records Found";
         Gvsorted.DataSource = dt;
         Gvsorted.DataBind();
@@ -530,6 +572,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         txtDateSearch.Text = date.ToString("yyyy-MM-dd");
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblOutwardEntry where DateOut='" + txtDateSearch.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         Gvsorted.EmptyDataText = "Not Records Found";
         Gvsorted.DataSource = dt;
         Gvsorted.DataBind();
@@ -543,6 +592,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         txtDateSearch.Text = date.ToString("yyyy-MM-dd");
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblOutwardEntry where DateOut='" + txtDateSearch.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         Gvsorted.EmptyDataText = "Not Records Found";
         Gvsorted.DataSource = dt;
         Gvsorted.DataBind();
@@ -557,6 +613,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         //txtDateSearch.Text = date.ToString("yyyy-MM-dd");
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblOutwardEntry where repeatedNo='" + txtrepeatedno.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         Gvsorted.EmptyDataText = "Not Records Found";
         Gvsorted.DataSource = dt;
         Gvsorted.DataBind();
@@ -570,6 +633,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         //txtDateSearch.Text = date.ToString("yyyy-MM-dd");
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblOutwardEntry where repeatedNo='" + txtrepeatedno.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         Gvsorted.EmptyDataText = "Not Records Found";
         Gvsorted.DataSource = dt;
         Gvsorted.DataBind();
@@ -584,6 +654,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         txtDateSearch.Text = date.ToString("yyyy-MM-dd");
         SqlDataAdapter sad = new SqlDataAdapter("select [Id],[JobNo],[DateOut],[CustName],[MateName],[ModelNo],[SerialNo],[JobWorkby],[Dispatchdate],[DateReturn],[ReturnRepair],Courier,[CreateBy],[CreatedDate],[UpdateBy],[UpdateDate] from [tblOutwardEntry] Where DateOut='" + txtDateSearch.Text + "' AND CustName='" + txtSearch.Text + "' AND isdeleted='0' ", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         Gvsorted.EmptyDataText = "Not Records Found";
         Gvsorted.DataSource = dt;
         Gvsorted.DataBind();
@@ -597,6 +674,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         txtDateSearch.Text = date.ToString("yyyy-MM-dd");
         SqlDataAdapter sad = new SqlDataAdapter("select [Id],[JobNo],[DateOut],[CustName],[MateName],[ModelNo],[SerialNo],[JobWorkby],[Dispatchdate],[DateReturn],[ReturnRepair],Courier,[CreateBy],[CreatedDate],[UpdateBy],[UpdateDate] from [tblOutwardEntry] Where DateOut='" + txtDateSearch.Text + "' AND CustName='" + txtSearch.Text + "' AND isdeleted='0' ", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         Gvsorted.EmptyDataText = "Not Records Found";
         Gvsorted.DataSource = dt;
         Gvsorted.DataBind();
@@ -611,6 +695,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         //txtDateSearch.Text = date.ToString("yyyy-MM-dd");
         SqlDataAdapter sad = new SqlDataAdapter("select * from [tblOutwardEntry] Where repeatedNo='" + txtrepeatedno.Text + "' AND CustName='" + txtSearch.Text + "' AND isdeleted='0' ", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         Gvsorted.EmptyDataText = "Not Records Found";
         Gvsorted.DataSource = dt;
         Gvsorted.DataBind();
@@ -624,6 +715,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         //txtDateSearch.Text = date.ToString("yyyy-MM-dd");
         SqlDataAdapter sad = new SqlDataAdapter("select * from [tblOutwardEntry] Where repeatedNo='" + txtrepeatedno.Text + "' AND CustName='" + txtSearch.Text + "' AND isdeleted='0' ", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         Gvsorted.EmptyDataText = "Not Records Found";
         Gvsorted.DataSource = dt;
         Gvsorted.DataBind();
@@ -636,6 +734,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         DataTable dtt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select  *  from  [tblOutwardEntry]  where  DateOut between '" + txtDateSearchfrom.Text + "'  AND '" + txtDateSearchto.Text + "'", con);
         sad.Fill(dtt);
+        foreach (DataRow row in dtt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         Gvsorted.DataSource = dtt;
         Gvsorted.DataBind();
     }
@@ -646,6 +751,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         DataTable dtt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select  *  from  [tblOutwardEntry]  where  DateOut between '" + txtDateSearchfrom.Text + "'  AND '" + txtDateSearchto.Text + "'", con);
         sad.Fill(dtt);
+        foreach (DataRow row in dtt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         Gvsorted.DataSource = dtt;
         Gvsorted.DataBind();
     }
@@ -658,6 +770,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM [tblOutwardEntry] WHERE DateOut BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND CustName = '" + txtSearch.Text + "' AND isdeleted = '0'", con);
         //SqlDataAdapter sad = new SqlDataAdapter("select * from [tblOutwardEntry] where CustName='" + txtSearch.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         Gvsorted.EmptyDataText = "Not Records Found";
         Gvsorted.DataSource = dt;
         Gvsorted.DataBind();
@@ -669,6 +788,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM [tblOutwardEntry] WHERE DateOut BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND CustName = '" + txtSearch.Text + "' AND isdeleted = '0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         Gvsorted.EmptyDataText = "Not Records Found";
         Gvsorted.DataSource = dt;
         Gvsorted.DataBind();
@@ -683,6 +809,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         //txtDateSearch.Text = date.ToString("yyyy-MM-dd");
         SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM [tblOutwardEntry] WHERE DateOut BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND repeatedNo = '" + txtrepeatedno.Text + "' AND isdeleted = '0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         Gvsorted.EmptyDataText = "Not Records Found";
         Gvsorted.DataSource = dt;
         Gvsorted.DataBind();
@@ -694,6 +827,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM [tblOutwardEntry] WHERE DateOut BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND repeatedNo = '" + txtrepeatedno.Text + "' AND isdeleted = '0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         Gvsorted.EmptyDataText = "Not Records Found";
         Gvsorted.DataSource = dt;
         Gvsorted.DataBind();
@@ -709,6 +849,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM [tblOutwardEntry] WHERE DateOut BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND ReturnRepair = '" + Status + "' AND isdeleted = '0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         Gvsorted.EmptyDataText = "Not Records Found";
         Gvsorted.DataSource = dt;
         Gvsorted.DataBind();
@@ -720,6 +867,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM [tblOutwardEntry] WHERE DateOut BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND ReturnRepair = '" + ddlsearch.Text + "' AND isdeleted = '0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         Gvsorted.EmptyDataText = "Not Records Found";
         Gvsorted.DataSource = dt;
         Gvsorted.DataBind();
@@ -763,6 +917,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
             SqlDataAdapter Da = new SqlDataAdapter("Select * From tblOutwardEntry WHERE isdeleted='0' AND ReturnRepair='" + ddlsearch.SelectedItem.Text + "'", con);
             DataTable Dt = new DataTable();
             Da.Fill(Dt);
+            foreach (DataRow row in Dt.Rows)
+            {
+                if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+                {
+                    row["DateReturn"] = DBNull.Value;
+                }
+            }
             Gvsorted.DataSource = Dt;
             Gvsorted.DataBind();
             Gvsorted.EmptyDataText = "Not Records Found";
@@ -860,6 +1021,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select * from [tblOutwardEntry] where CustName='" + txtSearch.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         GridExportExcel.EmptyDataText = "Not Records Found";
         GridExportExcel.DataSource = dt;
         GridExportExcel.DataBind();
@@ -874,6 +1042,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         txtDateSearch.Text = date.ToString("yyyy-MM-dd");
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblOutwardEntry where DateOut='" + txtDateSearch.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         GridExportExcel.EmptyDataText = "Not Records Found";
         GridExportExcel.DataSource = dt;
         GridExportExcel.DataBind();
@@ -888,6 +1063,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         //txtDateSearch.Text = date.ToString("yyyy-MM-dd");
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblOutwardEntry where repeatedNo='" + txtrepeatedno.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         GridExportExcel.EmptyDataText = "Not Records Found";
         GridExportExcel.DataSource = dt;
         GridExportExcel.DataBind();
@@ -902,6 +1084,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         txtDateSearch.Text = date.ToString("yyyy-MM-dd");
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblOutwardEntry where DateOut='" + txtDateSearch.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         GridExportExcel.EmptyDataText = "Not Records Found";
         GridExportExcel.DataSource = dt;
         GridExportExcel.DataBind();
@@ -916,6 +1105,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         //txtDateSearch.Text = date.ToString("yyyy-MM-dd");
         SqlDataAdapter sad = new SqlDataAdapter("select * from [tblOutwardEntry] Where repeatedNo='" + txtrepeatedno.Text + "' AND CustName='" + txtSearch.Text + "' AND isdeleted='0' ", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         GridExportExcel.EmptyDataText = "Not Records Found";
         GridExportExcel.DataSource = dt;
         GridExportExcel.DataBind();
@@ -928,6 +1124,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         DataTable dtt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select  *  from  [tblOutwardEntry]  where  DateOut between '" + txtDateSearchfrom.Text + "'  AND '" + txtDateSearchto.Text + "'", con);
         sad.Fill(dtt);
+        foreach (DataRow row in dtt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         GridExportExcel.DataSource = dtt;
         GridExportExcel.DataBind();
     }
@@ -940,6 +1143,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM [tblOutwardEntry] WHERE DateOut BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND CustName = '" + txtSearch.Text + "' AND isdeleted = '0'", con);
         //SqlDataAdapter sad = new SqlDataAdapter("select * from [tblOutwardEntry] where CustName='" + txtSearch.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         GridExportExcel.EmptyDataText = "Not Records Found";
         GridExportExcel.DataSource = dt;
         GridExportExcel.DataBind();
@@ -954,6 +1164,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         //txtDateSearch.Text = date.ToString("yyyy-MM-dd");
         SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM [tblOutwardEntry] WHERE DateOut BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND repeatedNo = '" + txtrepeatedno.Text + "' AND isdeleted = '0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         GridExportExcel.EmptyDataText = "Not Records Found";
         GridExportExcel.DataSource = dt;
         GridExportExcel.DataBind();
@@ -970,6 +1187,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM [tblOutwardEntry] WHERE DateOut BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND ReturnRepair = '" + Status + "' AND isdeleted = '0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["DateReturn"] = DBNull.Value;
+            }
+        }
         GridExportExcel.EmptyDataText = "Not Records Found";
         GridExportExcel.DataSource = dt;
         GridExportExcel.DataBind();
@@ -985,6 +1209,13 @@ public partial class Reception_OutwardEntryList : System.Web.UI.Page
             SqlDataAdapter Da = new SqlDataAdapter("Select * From tblOutwardEntry WHERE isdeleted='0' AND ReturnRepair='" + ddlsearch.SelectedItem.Text + "'", con);
             DataTable Dt = new DataTable();
             Da.Fill(Dt);
+            foreach (DataRow row in Dt.Rows)
+            {
+                if (row["DateReturn"] != DBNull.Value && Convert.ToDateTime(row["DateReturn"]).ToString("yyyy-MM-dd") == "1900-01-01")
+                {
+                    row["DateReturn"] = DBNull.Value;
+                }
+            }
             GridExportExcel.DataSource = Dt;
             GridExportExcel.DataBind();
             GridExportExcel.EmptyDataText = "Not Records Found";
