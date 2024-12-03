@@ -313,8 +313,8 @@
                         <div class="col-md-6">
                             <asp:Label ID="lblkeypadtrail" class="control-label col-sm-6" runat="server">Keypad Trail :</asp:Label>
                             <asp:DropDownList ID="DropDownListkeypadtrail" runat="server" class="form-control" AutoPostBack="true">
-                                <asp:ListItem Value="1">Yes</asp:ListItem>
-                                <asp:ListItem Value="0">No</asp:ListItem>
+                                <asp:ListItem Value="Yes">Yes</asp:ListItem>
+                                <asp:ListItem Value="No">No</asp:ListItem>
                             </asp:DropDownList>
                             <br />
                         </div>
@@ -322,8 +322,8 @@
                         <div class="col-md-6">
                             <asp:Label ID="lblanologtrail" class="control-label col-sm-6" runat="server">Anolog(Terminal) Trail :</asp:Label>
                             <asp:DropDownList ID="DropDownListanologtrail" runat="server" class="form-control" AutoPostBack="true">
-                                <asp:ListItem Value="1">Yes</asp:ListItem>
-                                <asp:ListItem Value="0">No</asp:ListItem>
+                                <asp:ListItem Value="Yes">Yes</asp:ListItem>
+                                <asp:ListItem Value="No">No</asp:ListItem>
                             </asp:DropDownList>
                             <br />
                         </div>
@@ -331,8 +331,8 @@
                         <div class="col-md-6">
                             <asp:Label ID="lblfancleaning" class="control-label col-sm-6" runat="server">Drive Cleaning & Fan Cleaning :</asp:Label>
                             <asp:DropDownList ID="DropDownListfancleaning" runat="server" class="form-control" AutoPostBack="true">
-                                <asp:ListItem Value="1">Yes</asp:ListItem>
-                                <asp:ListItem Value="0">No</asp:ListItem>
+                                <asp:ListItem Value="Yes">Yes</asp:ListItem>
+                                <asp:ListItem Value="No">No</asp:ListItem>
                             </asp:DropDownList>
                             <br />
                         </div>
@@ -340,8 +340,8 @@
                         <div class="col-md-6">
                             <asp:Label ID="lblparameterorignal" class="control-label col-sm-6" runat="server">Parameter Orignal Setting :</asp:Label>
                             <asp:DropDownList ID="DropDownListparameterorignal" runat="server" class="form-control" AutoPostBack="true">
-                                <asp:ListItem Value="1">Yes</asp:ListItem>
-                                <asp:ListItem Value="0">No</asp:ListItem>
+                                <asp:ListItem Value="Yes">Yes</asp:ListItem>
+                                <asp:ListItem Value="No">No</asp:ListItem>
                             </asp:DropDownList>
                             <br />
                         </div>
@@ -349,8 +349,8 @@
                         <div class="col-md-6">
                             <asp:Label ID="lblpackingsop" class="control-label col-sm-6" runat="server">Drive Cleaned & Packing SOP :</asp:Label>
                             <asp:DropDownList ID="DropDownListpackingsop" runat="server" class="form-control" AutoPostBack="true">
-                                <asp:ListItem Value="1">Yes</asp:ListItem>
-                                <asp:ListItem Value="0">No</asp:ListItem>
+                                <asp:ListItem Value="Yes">Yes</asp:ListItem>
+                                <asp:ListItem Value="No">No</asp:ListItem>
                             </asp:DropDownList>
                             <br />
                         </div>

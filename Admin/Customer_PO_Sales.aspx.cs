@@ -1857,7 +1857,7 @@ public partial class Admin_Customer_PO_Sales : System.Web.UI.Page
                 Cmd.Parameters.Add("@purchase_id", SqlDbType.Int).Direction = ParameterDirection.Output;
                 Cmd.ExecuteNonQuery();
                 // New Code Shubham Patil
-                SqlCommand Cmds = new SqlCommand("UPDATE tbl_Quotation_two_Hdr SET Status='Completed',JobNoCount='"+ txtcountst.Text + "' WHERE Quotationno='" + ddlquotationno.SelectedItem.Text + "'", con);
+                SqlCommand Cmds = new SqlCommand("UPDATE tbl_Quotation_two_Hdr SET Status='Completed', JobNoCount='" + txtcountst.Text +"' WHERE Quotation_no='" + ddlquotationno.SelectedItem.Text + "'", con);
                 Cmds.ExecuteNonQuery();
                 // New Code End
 

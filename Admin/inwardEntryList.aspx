@@ -209,6 +209,8 @@
     </style>
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <script src="../Scripts/jquery-ui-1.11.4.js"></script>
 
     <script type="text/javascript">
@@ -368,9 +370,13 @@
                          <div class="col-md-3" style="margin-left:10px">
                         <asp:Button ID="btncreate" runat="server" class="btn btn-primary btncreate" Text="Create" OnClick="btncreate_Click"></asp:Button>                    
                     </div>   
-                    <div class="col-md-2"> 
-                        <asp:Button ID="btnexportexcel" runat="server" class="btn btn-primary btncreate btncreatee" Text="Export-Excel" OnClick="btnexportexcel_Click"></asp:Button>
-                    </div>
+                 <div class="col-md-2">
+                    <button id="btnexportexcel" runat="server" class="btn btn-primary btncreate btncreatee" onserverclick="btnexportexcel_Click">
+                        Export <i class="fa fa-file-excel"></i>
+                    </button>
+                </div>
+
+
                 </div>
 
                 <div class="row">
@@ -409,6 +415,7 @@
 
                     <div class="col-md-2">
                         <!-- Show Entries Dropdown -->
+                       <asp:Label ID="lbl_show" runat="server" Text="Show Entries" CssClass="control-label col-sm-6"></asp:Label>
                         <asp:DropDownList ID="ddlShowEntries" runat="server" CssClass="form-control" onchange="updateRecords()">
                             <asp:ListItem Text="25" Value="25"></asp:ListItem>
                             <asp:ListItem Text="50" Value="50"></asp:ListItem>

@@ -262,7 +262,7 @@ public partial class Reception_Product : System.Web.UI.Page
                     con.Open();
                     SqlCommand cmd = new SqlCommand("SP_Product", con);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@ProdName", txtProdName.Text);
+                    cmd.Parameters.AddWithValue("@ProdName", txtfullproductname.Text);
                     cmd.Parameters.AddWithValue("@Category", txtcategory.Text);
                     cmd.Parameters.AddWithValue("@Rating", txtrating.Text);
                     cmd.Parameters.AddWithValue("@Fullproductname", txtfullproductname.Text);
@@ -305,7 +305,7 @@ public partial class Reception_Product : System.Web.UI.Page
                 con.Open();
                 SqlCommand cmd = new SqlCommand("SP_Product", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@ProdName", txtProdName.Text);
+                cmd.Parameters.AddWithValue("@ProdName", txtfullproductname.Text);
                 cmd.Parameters.AddWithValue("@Category", txtcategory.Text);
                 cmd.Parameters.AddWithValue("@Rating", txtrating.Text);
                 cmd.Parameters.AddWithValue("@Fullproductname", txtfullproductname.Text);

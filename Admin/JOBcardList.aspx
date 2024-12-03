@@ -106,6 +106,27 @@
                 return false;
             }
         }
+
+        // Function to change the number of records shown based on dropdown selection
+        function updateRecords() {
+            var selectedValue = document.getElementById('<%= ddlShowEntries.ClientID %>').value;
+            var gvRows = document.querySelectorAll("#<%= gv_JOBCARD.ClientID %> tr:not(.paging)");
+
+            for (var i = 1; i < gvRows.length; i++) {
+                if (selectedValue === "All" || i <= parseInt(selectedValue)) {
+                    gvRows[i].style.display = "";
+                } else {
+                    gvRows[i].style.display = "none";
+                }
+            }
+        }
+
+        // Initial setup to show 25 records on page load
+        window.onload = function () {
+            document.getElementById('<%= ddlShowEntries.ClientID %>').value = "25";
+            updateRecords();
+        };
+
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
@@ -164,13 +185,13 @@
                 <div class="row">
                     <div class="col-md-2">
                         <asp:Label ID="lblstatus" runat="server" Text="Status"></asp:Label>
-                          <asp:DropDownList runat="server" class="form-control" ID="txtstatus">
-                                <asp:ListItem Value="Repaired" Text="--Select--"></asp:ListItem>
-                                <asp:ListItem Value="Repaired" Text="Repaired"></asp:ListItem>
-                                <asp:ListItem Value="Not Repaired" Text="Not Repaired"></asp:ListItem>
-                                <asp:ListItem Value="Tested" Text="Tested"></asp:ListItem>
-                            </asp:DropDownList>
-                       <%-- <asp:TextBox runat="server" class="form-control txtsear jobcard" ID="txtstatus" name="Search" placeholder="Status." Width="150px"></asp:TextBox>
+                        <asp:DropDownList runat="server" class="form-control" ID="txtstatus">
+                            <asp:ListItem Value="Repaired" Text="--Select--"></asp:ListItem>
+                            <asp:ListItem Value="Repaired" Text="Repaired"></asp:ListItem>
+                            <asp:ListItem Value="Not Repaired" Text="Not Repaired"></asp:ListItem>
+                            <asp:ListItem Value="Tested" Text="Tested"></asp:ListItem>
+                        </asp:DropDownList>
+                        <%-- <asp:TextBox runat="server" class="form-control txtsear jobcard" ID="txtstatus" name="Search" placeholder="Status." Width="150px"></asp:TextBox>
                         <asp:AutoCompleteExtender ID="AutoCompleteExtender5" CompletionListCssClass="completionList"
                             CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
                             CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetstatusList" TargetControlID="txtstatus" runat="server">
@@ -186,6 +207,17 @@
                         <asp:Label ID="lbl_todate" runat="server" Text="To Date" CssClass="control-label col-sm-6 lblvendorpo"></asp:Label>
                         <asp:TextBox ID="txt_to_podate_search" TextMode="Date" CssClass="form-control" runat="server"></asp:TextBox>
                     </div>
+                    <div class="col-md-2">
+                        <!-- Show Entries Dropdown -->
+                        <asp:Label ID="lbl_show" runat="server" Text="Show Entries" CssClass="control-label col-sm-6 lblvendorpo"></asp:Label>
+                        <asp:DropDownList ID="ddlShowEntries" runat="server" CssClass="form-control" onchange="updateRecords()">
+                            <asp:ListItem Text="25" Value="25"></asp:ListItem>
+                            <asp:ListItem Text="50" Value="50"></asp:ListItem>
+                            <asp:ListItem Text="100" Value="100"></asp:ListItem>
+                            <asp:ListItem Text="All" Value="All" Selected="True"></asp:ListItem>
+                        </asp:DropDownList>
+                    </div>
+
                 </div>
 
                 <br />
@@ -193,7 +225,8 @@
                 <div style="width: 100%;">
                     <div class="table-responsive">
                         <asp:GridView ID="gv_JOBCARD" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
-                            PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging" OnPageIndexChanging="gv_JOBCARD_PageIndexChanging" OnRowCommand="gv_JOBCARD_RowCommand" OnRowDataBound="gv_JOBCARD_RowDataBound">
+                            OnRowCommand="gv_JOBCARD_RowCommand" OnRowDataBound="gv_JOBCARD_RowDataBound">
+                            <%--PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging" OnPageIndexChanging="gv_JOBCARD_PageIndexChanging"--%>
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr. No.">
 
@@ -230,7 +263,7 @@
                                         <asp:Label ID="lblenginerrname" runat="server" Text='<%# Eval("EngineerName") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                                  <%--<asp:TemplateField HeaderText="Engineer Name 2">
+                                <%--<asp:TemplateField HeaderText="Engineer Name 2">
                                     <ItemTemplate>
                                         <asp:Label ID="lblenginerrname" runat="server" Text='<%# Eval("EngineerName2") %>'></asp:Label>
                                     </ItemTemplate>
@@ -251,11 +284,14 @@
                                         <%-- <asp:Label ID="lblInward" runat="server" Text='<%# Eval("InwardDate","{0:d}") %>'></asp:Label>--%>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Repairing  Date" ItemStyle-Width="98px">
+                                <%--<asp:TemplateField HeaderText="Repairing  Date" ItemStyle-Width="98px">
                                     <ItemTemplate>
                                         <%# Convert.ToDateTime(Eval("Reparingdate")).ToString("dd/MM/yyyy") %>
-                          <%--              <%# Convert.ToDateTime(Eval("outwardDate")).ToString("dd/MM/yyyy") %>--%>
-
+                                    </ItemTemplate>
+                                </asp:TemplateField>--%>
+                                <asp:TemplateField HeaderText="Repairing Date" ItemStyle-Width="98px">
+                                    <ItemTemplate>
+                                        <%# Eval("Reparingdate") == DBNull.Value ? "" : Convert.ToDateTime(Eval("Reparingdate")).ToString("dd/MM/yyyy") %>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Status" ItemStyle-Width="98px">
@@ -301,7 +337,8 @@
                 <div style="width: 100%;">
                     <div class="table-responsive">
                         <asp:GridView ID="sortedgv_JOBCARD" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
-                            PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging" OnPageIndexChanging="sortedgv_JOBCARD_PageIndexChanging" OnRowCommand="gv_JOBCARD_RowCommand" OnRowDataBound="gv_JOBCARD_RowDataBound">
+                            OnRowCommand="gv_JOBCARD_RowCommand" OnRowDataBound="gv_JOBCARD_RowDataBound">
+                             <%--PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging" OnPageIndexChanging="sortedgv_JOBCARD_PageIndexChanging"--%>
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr. No.">
 
@@ -339,7 +376,7 @@
                                     </ItemTemplate>
                                 </asp:TemplateField>
 
-                                              <asp:TemplateField HeaderText="Engineer Name 2">
+                                <%-- <asp:TemplateField HeaderText="Engineer Name 2">
                                     <ItemTemplate>
                                         <asp:Label ID="lblenginerrname" runat="server" Text='<%# Eval("EngineerName2") %>'></asp:Label>
                                     </ItemTemplate>
@@ -353,7 +390,7 @@
                                     <ItemTemplate>
                                         <asp:Label ID="lblenginerrname" runat="server" Text='<%# Eval("EngineerName4") %>'></asp:Label>
                                     </ItemTemplate>
-                                </asp:TemplateField>
+                                </asp:TemplateField>--%>
 
                                 <asp:TemplateField HeaderText="Inward Date" ItemStyle-Width="98px">
                                     <ItemTemplate>
@@ -361,13 +398,22 @@
                                         <%-- <asp:Label ID="lblInward" runat="server" Text='<%# Eval("InwardDate","{0:d}") %>'></asp:Label>--%>
                                     </ItemTemplate>
                                 </asp:TemplateField>
- 
-                                 <asp:TemplateField HeaderText="Reparing Date" ItemStyle-Width="98px">
+
+                                <%--                                 <asp:TemplateField HeaderText="Reparing Date" ItemStyle-Width="98px">
                                     <ItemTemplate>
                                         <%# Convert.ToDateTime(Eval("Reparingdate")).ToString("dd/MM/yyyy") %>
-                                        <%--<asp:Label ID="lblOutward" runat="server" Text='<%# Eval("outwardDate","{0:d}") %>'></asp:Label>--%>
+                                        <asp:Label ID="lblOutward" runat="server" Text='<%# Eval("outwardDate","{0:d}") %>'></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>--%>
+
+
+                                <asp:TemplateField HeaderText="Repairing Date" ItemStyle-Width="98px">
+                                    <ItemTemplate>
+                                        <%# Eval("Reparingdate") == DBNull.Value ? "" : Convert.ToDateTime(Eval("Reparingdate")).ToString("dd/MM/yyyy") %>
                                     </ItemTemplate>
                                 </asp:TemplateField>
+
+
                                 <asp:TemplateField HeaderText="Status" ItemStyle-Width="98px">
                                     <ItemTemplate>
                                         <asp:Label ID="lblstatus" runat="server" Text='<%# Eval("status") %>'></asp:Label>
@@ -411,111 +457,116 @@
                 <%--Export grid start--%>
 
                 <div class="table-responsive">
-                        <asp:GridView ID="GridExportExcel" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
-                           PagerStyle-CssClass="paging" >
-                            <Columns>
-                                <asp:TemplateField HeaderText="Sr. No.">
+                    <asp:GridView ID="GridExportExcel" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
+                        PagerStyle-CssClass="paging">
+                        <Columns>
+                            <asp:TemplateField HeaderText="Sr. No.">
 
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblSrNo" runat="server" Text='<%#Container.DataItemIndex +1 %>'></asp:Label>
-                                    </ItemTemplate>
+                                <ItemTemplate>
+                                    <asp:Label ID="lblSrNo" runat="server" Text='<%#Container.DataItemIndex +1 %>'></asp:Label>
+                                </ItemTemplate>
 
-                                </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Job No.">
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Job No.">
 
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblJobno" runat="server" Text='<%# Eval("JobCardNo") %>'></asp:Label>
-                                    </ItemTemplate>
+                                <ItemTemplate>
+                                    <asp:Label ID="lblJobno" runat="server" Text='<%# Eval("JobCardNo") %>'></asp:Label>
+                                </ItemTemplate>
 
-                                </asp:TemplateField>
+                            </asp:TemplateField>
 
-                                <asp:TemplateField HeaderText="Repeated No.">
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblCustname" runat="server" Text='<%# Eval("RepeatedNo") %>'></asp:Label>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Product Description">
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblitemdesc" runat="server" Text='<%# Eval("ItemDesc") %>'></asp:Label>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Model No.">
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblModelNo" runat="server" Text='<%# Eval("ModelNo") %>'></asp:Label>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Engineer Name">
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblenginerrname" runat="server" Text='<%# Eval("EngineerName") %>'></asp:Label>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Repeated No.">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblCustname" runat="server" Text='<%# Eval("RepeatedNo") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Product Description">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblitemdesc" runat="server" Text='<%# Eval("ItemDesc") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Model No.">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblModelNo" runat="server" Text='<%# Eval("ModelNo") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Engineer Name">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblenginerrname" runat="server" Text='<%# Eval("EngineerName") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
 
-                                              <asp:TemplateField HeaderText="Engineer Name 2">
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblenginerrname" runat="server" Text='<%# Eval("EngineerName2") %>'></asp:Label>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                                  <asp:TemplateField HeaderText="Engineer Name 3">
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblenginerrname" runat="server" Text='<%# Eval("EngineerName3") %>'></asp:Label>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                                  <asp:TemplateField HeaderText="Engineer Name 4">
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblenginerrname" runat="server" Text='<%# Eval("EngineerName4") %>'></asp:Label>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
+                           <%-- <asp:TemplateField HeaderText="Engineer Name 2">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblenginerrname" runat="server" Text='<%# Eval("EngineerName2") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Engineer Name 3">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblenginerrname" runat="server" Text='<%# Eval("EngineerName3") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Engineer Name 4">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblenginerrname" runat="server" Text='<%# Eval("EngineerName4") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>--%>
 
-                                <asp:TemplateField HeaderText="Inward Date" ItemStyle-Width="98px">
-                                    <ItemTemplate>
-                                        <%# Convert.ToDateTime(Eval("InwardDate")).ToString("dd/MM/yyyy") %>
-                                        <%-- <asp:Label ID="lblInward" runat="server" Text='<%# Eval("InwardDate","{0:d}") %>'></asp:Label>--%>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                
-                                 <asp:TemplateField HeaderText="Reparing Date" ItemStyle-Width="98px">
-                                    <ItemTemplate>
-                                        <%# Convert.ToDateTime(Eval("Reparingdate")).ToString("dd/MM/yyyy") %>
-                                        <%--<asp:Label ID="lblOutward" runat="server" Text='<%# Eval("outwardDate","{0:d}") %>'></asp:Label>--%>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Status" ItemStyle-Width="98px">
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblstatus" runat="server" Text='<%# Eval("status") %>'></asp:Label>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Created By" ItemStyle-Width="98px">
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblcreated" runat="server" Text='<%# Eval("CreatedBy") %>'></asp:Label>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Action" ItemStyle-Width="70px" HeaderStyle-CssClass="btnlnkgrid">
-                                    <ItemTemplate>
-                                        <asp:LinkButton runat="server" ID="lnkbtnEdit" ToolTip="Edit" CommandArgument='<%# Eval("JobCardNo") %>' CommandName="RowEdit"><i class="fa fa-edit" style="font-size:24px"></i></asp:LinkButton>
+                            <asp:TemplateField HeaderText="Inward Date" ItemStyle-Width="98px">
+                                <ItemTemplate>
+                                    <%# Convert.ToDateTime(Eval("InwardDate")).ToString("dd/MM/yyyy") %>
+                                    <%-- <asp:Label ID="lblInward" runat="server" Text='<%# Eval("InwardDate","{0:d}") %>'></asp:Label>--%>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                           <%-- <asp:TemplateField HeaderText="Reparing Date" ItemStyle-Width="98px">
+                                <ItemTemplate>
+                                    <%# Convert.ToDateTime(Eval("Reparingdate")).ToString("dd/MM/yyyy") %>
+                                    <asp:Label ID="lblOutward" runat="server" Text='<%# Eval("outwardDate","{0:d}") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>--%>
+                              <asp:TemplateField HeaderText="Repairing Date" ItemStyle-Width="98px">
+                                  <ItemTemplate>
+                                      <%# Eval("Reparingdate") == DBNull.Value ? "" : Convert.ToDateTime(Eval("Reparingdate")).ToString("dd/MM/yyyy") %>
+                                  </ItemTemplate>
+                              </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Status" ItemStyle-Width="98px">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblstatus" runat="server" Text='<%# Eval("status") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Created By" ItemStyle-Width="98px">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblcreated" runat="server" Text='<%# Eval("CreatedBy") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Action" ItemStyle-Width="70px" HeaderStyle-CssClass="btnlnkgrid">
+                                <ItemTemplate>
+                                    <asp:LinkButton runat="server" ID="lnkbtnEdit" ToolTip="Edit" CommandArgument='<%# Eval("JobCardNo") %>' CommandName="RowEdit"><i class="fa fa-edit" style="font-size:24px"></i></asp:LinkButton>
 
 
-                                        &nbsp;&nbsp;  
+                                    &nbsp;&nbsp;  
                                     <asp:LinkButton runat="server" ID="lnkbtnDelete" ToolTip="Delete" OnClientClick="Javascript:return confirm('Are you sure to Delete?')" CommandArgument='<%# Eval("Id") %>' CommandName="RowDelete"><i class="fa fa-trash-o" style="font-size:24px"></i></asp:LinkButton>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                            </Columns>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
 
 
 
-                            <FooterStyle BackColor="White" ForeColor="#000066" />
-                            <HeaderStyle BackColor="#0755a1" Font-Bold="True" ForeColor="White" />
-                            <PagerStyle BackColor="White" ForeColor="#000066" HorizontalAlign="Left" />
-                            <RowStyle ForeColor="#000066" />
-                            <SelectedRowStyle BackColor="#669999" Font-Bold="True" ForeColor="White" />
-                            <SortedAscendingCellStyle BackColor="#F1F1F1" />
-                            <SortedAscendingHeaderStyle BackColor="#007DBB" />
-                            <SortedDescendingCellStyle BackColor="#CAC9C9" />
-                            <SortedDescendingHeaderStyle BackColor="#00547E" />
+                        <FooterStyle BackColor="White" ForeColor="#000066" />
+                        <HeaderStyle BackColor="#0755a1" Font-Bold="True" ForeColor="White" />
+                        <PagerStyle BackColor="White" ForeColor="#000066" HorizontalAlign="Left" />
+                        <RowStyle ForeColor="#000066" />
+                        <SelectedRowStyle BackColor="#669999" Font-Bold="True" ForeColor="White" />
+                        <SortedAscendingCellStyle BackColor="#F1F1F1" />
+                        <SortedAscendingHeaderStyle BackColor="#007DBB" />
+                        <SortedDescendingCellStyle BackColor="#CAC9C9" />
+                        <SortedDescendingHeaderStyle BackColor="#00547E" />
 
 
 
-                        </asp:GridView>
-                    </div>
+                    </asp:GridView>
+                </div>
 
                 <%--Export Grid End--%>
             </div>
