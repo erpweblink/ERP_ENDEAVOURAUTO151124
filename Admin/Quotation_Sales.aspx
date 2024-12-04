@@ -204,7 +204,10 @@
                                 </div>
                                 <div class="col-md-6">
                                     <asp:Label ID="Lbl_mail" runat="server" class="control-label col-sm-6">Mail ID :<span class="spncls">*</span></asp:Label>
-                                    <asp:LinkButton ID="lnkbtnAdd" runat="server" Font-Bold="true" CausesValidation="false" CommandArgument='<%#Eval("Custid") %>' OnClick="lnkbtnAdd_Click">+Add Mail</asp:LinkButton>
+                                    <%--<asp:LinkButton ID="lnkbtnAdd" runat="server" Font-Bold="true" CausesValidation="false" CommandArgument='<%#Eval("Custid") %>' OnClick="lnkbtnAdd_Click">+Add Mail</asp:LinkButton>--%>
+                                     <%-- New added by Shubham Patl--%>
+                                    <asp:LinkButton ID="lnkproduct" runat="server" CssClass="lnk " CausesValidation="false" OnClick="lnkproduct_Click">+Add Mail</asp:LinkButton>
+                                    <%--End--%>
                                     <div class="row" id="maildiv" runat="server">
                                         <table class=" col-md-12">
                                             <tr>
@@ -495,11 +498,11 @@
                                         <div class="col-md-6">
                                             <br />
                                             <center>
-                                        <div class="col-md-12">
-                                            <asp:Label ID="lbl_total_amt" runat="server" class="control-label col-sm-6">Total Amount (In Words) :<span class="spncls"></span></asp:Label><br />
-                                            <asp:Label ID="lbl_total_amt_Value" class="control-label col-sm-6 font-weight-bold" runat="server" Text=""></asp:Label>
-                                             <asp:HiddenField ID="hfTotal" runat="server" />
-                                        </div>
+                                                <div class="col-md-12">
+                                                    <asp:Label ID="lbl_total_amt" runat="server" class="control-label col-sm-6">Total Amount (In Words) :<span class="spncls"></span></asp:Label><br />
+                                                    <asp:Label ID="lbl_total_amt_Value" class="control-label col-sm-6 font-weight-bold" runat="server" Text=""></asp:Label>
+                                                    <asp:HiddenField ID="hfTotal" runat="server" />
+                                                </div>
                                             </center>
                                         </div>
                                         <div class="col-md-6" style="text-align: right">
@@ -665,11 +668,11 @@
                             </div>
                             <div class="col-md-4" id="mailcheck" runat="server">
                                 <center>
-                                <asp:CheckBox ID="ChkSendQuotation" runat="server"></asp:CheckBox>
-                                &nbsp;
+                                    <asp:CheckBox ID="ChkSendQuotation" runat="server"></asp:CheckBox>
+                                    &nbsp;
                                     <asp:Label runat="server" Text="Send Quotation on Mail ID"></asp:Label>
-                                <br />
-                               </center>
+                                    <br />
+                                </center>
                             </div>
                             <div class="col-md-1">
                             </div>
@@ -677,19 +680,66 @@
                             </div>
                             `
                         </div>
-                        <center>   <div class="col-md-6">  
-                            <br />
-             <asp:Button  ID="btnSubmit" runat="server" class="btn btn-primary col-sm-3 " Text="Submit" OnClick="btnSubmit_Click"   ></asp:Button>
-                &nbsp;&nbsp;        &nbsp;&nbsp;       
-             <asp:Button  ID="btnCancel" runat="server" class="btn btn-primary col-sm-3 " OnClick="btnCancel_Click" CausesValidation="False"  Text="Cancel"   ></asp:Button>
-                &nbsp;&nbsp;        &nbsp;&nbsp; 
+                        <center>
+                            <div class="col-md-6">
+                                <br />
+                                <asp:Button ID="btnSubmit" runat="server" class="btn btn-primary col-sm-3 " Text="Submit" OnClick="btnSubmit_Click"></asp:Button>
+                                &nbsp;&nbsp;        &nbsp;&nbsp;       
+             <asp:Button ID="btnCancel" runat="server" class="btn btn-primary col-sm-3 " OnClick="btnCancel_Click" CausesValidation="False" Text="Cancel"></asp:Button>
+                                &nbsp;&nbsp;        &nbsp;&nbsp; 
 
-                               <asp:HiddenField runat="server" ID="hidden" /> 
-            </div></center>
+                               <asp:HiddenField runat="server" ID="hidden" />
+                            </div>
+                        </center>
                     </div>
                 </div>
             </div>
         </div>
+
+        <%--New Code by Shubham Patil--%>
+        <asp:Button ID="btnprof" runat="server" Style="display: none" />
+            <asp:ModalPopupExtender ID="modelprofile" runat="server" TargetControlID="btnprof"
+                PopupControlID="PopupAddDetail" OkControlID="Button2" />
+            <asp:Panel ID="PopupAddDetail" runat="server" class="w3-panel w3-white panel1" style="background-color: #f8f9fa; border: 1px solid #ccc; border-radius: 8px; padding: 30px; width: 600px;">
+
+                <h4 style="background-color: #0755A1; color: white; font-weight: 300; padding: 10px; border-radius: 5px; text-align: center;">Add Mail </h4>
+
+               <div class="row">
+                    <div class="col-md-6" style="margin-bottom: 20px;">
+                        <asp:Label ID="Label18" runat="server" class="control-label" Style="font-weight: bold; display: block;">Contact Person Name: <span class="spncls">*</span></asp:Label>
+                        <asp:TextBox runat="server" class="form-control" ID="txtcontactname" Style="width: 100%; height: 40px; border-radius: 4px; font-size: 16px;" />
+                    </div>
+
+                    <div class="col-md-6" style="margin-bottom: 20px;">
+                        <asp:Label ID="Label19" runat="server" class="control-label" Style="font-weight: bold; display: block;">Mobile No.: <span class="spncls">*</span></asp:Label>
+                        <asp:TextBox runat="server" class="form-control" ID="txtmobile" Style="width: 100%; height: 40px; border-radius: 4px; font-size: 16px;" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6" style="margin-bottom: 20px;">
+                        <asp:Label ID="Label16" runat="server" class="control-label" Style="font-weight: bold; display: block;">Email: <span class="spncls">*</span></asp:Label>
+                        <asp:TextBox runat="server" class="form-control" ID="txtemail" Style="width: 100%; height: 40px; border-radius: 4px; font-size: 16px;" />
+                    </div>
+
+                    <div class="col-md-6" style="margin-bottom: 20px;">
+                        <asp:Label ID="Label17" runat="server" class="control-label" Style="font-weight: bold; display: block;">Designation: <span class="spncls">*</span></asp:Label>
+                        <asp:TextBox runat="server" class="form-control" ID="txtdesination" Style="width: 100%; height: 40px; border-radius: 4px; font-size: 16px;" />
+                    </div>
+                </div>
+
+                <div class="col-md-12" style="text-align: center; margin-top: 15px;">
+                    <asp:Button ID="btnsave" runat="server" class="btn btn-primary" 
+                        Text="Save" OnClick="btnsave_Click" CausesValidation="False" 
+                        style="margin-right: 10px; padding: 10px 20px; font-size: 16px;" />
+                    <asp:Button ID="Button2" runat="server" class="btn btn-secondary" 
+                        Text="Close" CausesValidation="False" 
+                        style="padding: 10px 20px; font-size: 16px;" />
+                    <asp:HiddenField runat="server" ID="HiddenField1" />
+                </div>
+
+            </asp:Panel>
+            <%--End--%>
+
     </form>
 </asp:Content>
 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IdentityModel.Metadata;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
@@ -2391,4 +2392,78 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
             }
         }
     }
+
+    //New Code added by Shubham Patil
+    protected void lnkproduct_Click(object sender, EventArgs e)
+    {
+        modelprofile.Show();
+    }
+
+    protected void btnsave_Click(object sender, EventArgs e)
+    {
+        string createdby = Session["adminname"].ToString();
+        string CustomerName = txt_Comp_name.Text;
+        string email = txtemail.Text.Trim();
+        string ContactPerName = txtcontactname.Text.Trim();
+        string ContactPerNo = txtmobile.Text.Trim();
+        string designation = txtdesination.Text.Trim();
+        string customerid = null;
+
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(designation))
+        {
+            ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Please fill in all required fields.');", true);
+            return;
+        }
+
+        string query = "Insert into tblCustomerContactPerson  (CustName,cust_id, Email, designation, CreatedBy, CreatedDate, ContactPerName, ContactPerNo) " +
+            "values (@CustName,@id, @Email, @designation, @CreatedBy, @CreatedDate, @ContactPerName, @ContactPerNo)";
+
+        try
+        {
+
+            con.Open();
+            SqlCommand cmd1 = new SqlCommand("Select Custid from tblCustomer where CustomerName = '" + CustomerName + "'", con);
+
+            Object Custid = cmd1.ExecuteScalar();
+
+            if (Custid != DBNull.Value && Custid != null)
+            {
+                customerid = Convert.ToString(Custid);
+            }
+
+            SqlCommand cmd2 = new SqlCommand("Select * from tblCustomerContactPerson where CustName = '" + CustomerName + "' AND cust_id='" + customerid + "' AND Email ='" + email + "' ", con);
+
+            Object Custids = cmd2.ExecuteScalar();
+
+            if (Custids == DBNull.Value || Custids == null)
+            {
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@Email", email);
+                    cmd.Parameters.AddWithValue("@CustName", txt_Comp_name.Text);
+                    cmd.Parameters.AddWithValue("@designation", designation);
+                    cmd.Parameters.AddWithValue("@id", customerid);
+                    cmd.Parameters.AddWithValue("@CreatedDate", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@CreatedBy", createdby);
+                    cmd.Parameters.AddWithValue("@ContactPerName", ContactPerName);
+                    cmd.Parameters.AddWithValue("@ContactPerNo", ContactPerNo);
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                }
+
+                SqlDataAdapter Sda = new SqlDataAdapter("SELECT * FROM tblCustomerContactPerson WHERE CustName='" + txt_Comp_name.Text + "'", con);
+                DataTable Sdt = new DataTable();
+                Sda.Fill(Sdt);
+                Grd_MAIL.DataSource = Sdt;
+                Grd_MAIL.DataBind();
+            }
+        }
+        catch (Exception ex)
+        {
+            ClientScript.RegisterStartupScript(this.GetType(), "alert", $"alert('An error occurred: {ex.Message}');", true);
+        }
+
+    }
+    //End
+
 }
