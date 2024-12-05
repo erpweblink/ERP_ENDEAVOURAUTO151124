@@ -269,9 +269,14 @@
                                         <%# Convert.ToDateTime(Eval("Dispatchdate")).ToString("dd/MM/yyyy") %>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Return Date" ItemStyle-Width="98px">
+                                <%--<asp:TemplateField HeaderText="Return Date" ItemStyle-Width="98px">
                                     <ItemTemplate>
                                         <%# Convert.ToDateTime(Eval("DateReturn")).ToString("dd/MM/yyyy") %>
+                                    </ItemTemplate>
+                                </asp:TemplateField>--%>
+                                <asp:TemplateField HeaderText="Return Date" ItemStyle-Width="98px">
+                                    <ItemTemplate>
+                                        <%# Eval("DateReturn") == DBNull.Value ? "" : Convert.ToDateTime(Eval("DateReturn")).ToString("dd/MM/yyyy") %>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Repairing Status">
@@ -374,9 +379,14 @@
                                         <%# Convert.ToDateTime(Eval("Dispatchdate")).ToString("dd/MM/yyyy") %>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Return Date" ItemStyle-Width="98px">
+                               <%-- <asp:TemplateField HeaderText="Return Date" ItemStyle-Width="98px">
                                     <ItemTemplate>
                                         <%# Convert.ToDateTime(Eval("DateReturn")).ToString("dd/MM/yyyy") %>
+                                    </ItemTemplate>
+                                </asp:TemplateField>--%>
+                                <asp:TemplateField HeaderText="Return Date" ItemStyle-Width="98px">
+                                    <ItemTemplate>
+                                        <%# Eval("DateReturn") == DBNull.Value ? "" : Convert.ToDateTime(Eval("DateReturn")).ToString("dd/MM/yyyy") %>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Repairing Status">
@@ -482,9 +492,14 @@
                                         <%# Convert.ToDateTime(Eval("Dispatchdate")).ToString("dd/MM/yyyy") %>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Return Date" ItemStyle-Width="98px">
+                              <%--  <asp:TemplateField HeaderText="Return Date" ItemStyle-Width="98px">
                                     <ItemTemplate>
                                         <%# Convert.ToDateTime(Eval("DateReturn")).ToString("dd/MM/yyyy") %>
+                                    </ItemTemplate>
+                                </asp:TemplateField>--%>
+                                <asp:TemplateField HeaderText="Return Date" ItemStyle-Width="98px">
+                                    <ItemTemplate>
+                                        <%# Eval("DateReturn") == DBNull.Value ? "" : Convert.ToDateTime(Eval("DateReturn")).ToString("dd/MM/yyyy") %>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Repairing Status">

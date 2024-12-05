@@ -380,6 +380,12 @@ public partial class Admin_JOBCard : System.Web.UI.Page
                 txtmotortrial.Text = dt.Rows[0]["MotorTrial"].ToString();
                 txtmotorrating.Text = dt.Rows[0]["MotorRating"].ToString();
                 txtmotorcurrent.Text = dt.Rows[0]["MotorCurrent"].ToString();
+                DropDownListkeypadtrail.SelectedValue = dt.Rows[0]["KeypadTrail"].ToString();
+                DropDownListanologtrail.SelectedValue = dt.Rows[0]["AnologTrail"].ToString();
+                DropDownListfancleaning.SelectedValue = dt.Rows[0]["FanCleaning"].ToString();
+                DropDownListparameterorignal.SelectedValue = dt.Rows[0]["ParameterOrignal"].ToString();
+                DropDownListpackingsop.SelectedValue = dt.Rows[0]["PackingSOP"].ToString();
+
 
                 DateTime ffff4;
                 if (dt.Rows[0]["TrialTime"] == DBNull.Value || string.IsNullOrWhiteSpace(dt.Rows[0]["TrialTime"].ToString()))

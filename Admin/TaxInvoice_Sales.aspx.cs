@@ -2651,21 +2651,21 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             using (SqlCommand com = new SqlCommand())
             {
                 // com.CommandText = "select DISTINCT JobNo from CustomerPO_Hdr_Sales where " + "JobNo like @Search + '%' AND Is_Deleted='0'  ";
-                com.CommandText = "select DISTINCT Customer_Name from [tbl_Quotation_Hdr_Sales] where " + "Customer_Name like @Search + '%' AND IsDeleted='0'  ";
+                com.CommandText = "select DISTINCT CustomerName from [tblCustomer] where CustomerName like @Search + '%'";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
                 con.Open();
-                List<string> Customer_Name = new List<string>();
+                List<string> CustomerName = new List<string>();
                 using (SqlDataReader sdr = com.ExecuteReader())
                 {
                     while (sdr.Read())
                     {
-                        Customer_Name.Add(sdr["Customer_Name"].ToString());
+                        CustomerName.Add(sdr["CustomerName"].ToString());
                     }
                 }
                 con.Close();
-                return Customer_Name;
+                return CustomerName;
             }
         }
     }

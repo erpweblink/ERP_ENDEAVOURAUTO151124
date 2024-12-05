@@ -25,16 +25,44 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         }
     }
 
+    //protected void GridRecord()
+    //{
+    //    try
+    //    {
+    //        DataTable dt = new DataTable();
+    //        con.Open();
+    //        //SqlDataAdapter sad = new SqlDataAdapter("SELECT  [Id],[JobCardNo],[RepeatedNo],[ItemDesc],[ModelNo],[InwardDate],[outwardDate],[CreatedBy],[CreatedDate],[updatedby],[Updateddate],[isdeleted],status,EngineerName from tblJobcardHdr where isdeleted='0' ORDER BY CreatedDate", con);
+    //        SqlDataAdapter sad = new SqlDataAdapter("SELECT  [Id],[JobCardNo],[RepeatedNo],[ItemDesc],[ModelNo],[InwardDate],[outwardDate],[CreatedBy],[CreatedDate],[updatedby],[Updateddate],[isdeleted],status,EngineerName,EngineerName2,EngineerName3,EngineerName4,Reparingdate from tblJobcardHdr where isdeleted='0' ORDER BY CreatedDate Desc", con);
+    //        sad.Fill(dt);
+    //        gv_JOBCARD.EmptyDataText = "Not Records Found";
+    //        gv_JOBCARD.DataSource = dt;
+    //        gv_JOBCARD.DataBind();
+
+    //        con.Close();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        throw ex;
+    //    }
+    //}
+
     protected void GridRecord()
     {
         try
         {
             DataTable dt = new DataTable();
             con.Open();
-            //SqlDataAdapter sad = new SqlDataAdapter("SELECT  [Id],[JobCardNo],[RepeatedNo],[ItemDesc],[ModelNo],[InwardDate],[outwardDate],[CreatedBy],[CreatedDate],[updatedby],[Updateddate],[isdeleted],status,EngineerName from tblJobcardHdr where isdeleted='0' ORDER BY CreatedDate", con);
-            SqlDataAdapter sad = new SqlDataAdapter("SELECT  [Id],[JobCardNo],[RepeatedNo],[ItemDesc],[ModelNo],[InwardDate],[outwardDate],[CreatedBy],[CreatedDate],[updatedby],[Updateddate],[isdeleted],status,EngineerName,EngineerName2,EngineerName3,EngineerName4,Reparingdate from tblJobcardHdr where isdeleted='0' ORDER BY CreatedDate Desc", con);
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT [Id],[JobCardNo],[RepeatedNo],[ItemDesc],[ModelNo],[InwardDate],[outwardDate],[CreatedBy],[CreatedDate],[updatedby],[Updateddate],[isdeleted],status,EngineerName,EngineerName2,EngineerName3,EngineerName4,Reparingdate FROM tblJobcardHdr WHERE isdeleted='0' ORDER BY CreatedDate DESC", con);
             sad.Fill(dt);
-            gv_JOBCARD.EmptyDataText = "Not Records Found";
+            foreach (DataRow row in dt.Rows)
+            {
+                if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+                {
+                    row["Reparingdate"] = DBNull.Value; 
+                }
+            }
+
+            gv_JOBCARD.EmptyDataText = "No Records Found";
             gv_JOBCARD.DataSource = dt;
             gv_JOBCARD.DataBind();
 
@@ -46,14 +74,22 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         }
     }
 
+
     private void GridExport()
     {
         try
         {
             DataTable dt = new DataTable();
             con.Open();
-            SqlDataAdapter sad = new SqlDataAdapter("SELECT  [Id],[JobCardNo],[RepeatedNo],[ItemDesc],[ModelNo],[InwardDate],[outwardDate],[CreatedBy],[CreatedDate],[updatedby],[Updateddate],[isdeleted],status,EngineerName from tblJobcardHdr where isdeleted='0' ORDER BY CreatedDate", con);
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT  [Id],[JobCardNo],[RepeatedNo],[ItemDesc],[ModelNo],[InwardDate],[Reparingdate],[outwardDate],[CreatedBy],[CreatedDate],[updatedby],[Updateddate],[isdeleted],status,EngineerName from tblJobcardHdr where isdeleted='0' ORDER BY CreatedDate", con);
             sad.Fill(dt);
+            foreach (DataRow row in dt.Rows)
+            {
+                if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+                {
+                    row["Reparingdate"] = DBNull.Value;
+                }
+            }
             GridExportExcel.EmptyDataText = "Not Records Found";
             GridExportExcel.DataSource = dt;
             GridExportExcel.DataBind();
@@ -445,6 +481,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where EngineerName='" + txtengineername.Text + "'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dt;
         sortedgv_JOBCARD.DataBind();
     }
@@ -479,6 +522,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where JobCardNo='" + txtjob.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dt;
         sortedgv_JOBCARD.DataBind();
     }
@@ -493,6 +543,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
             con.Open();
             SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where JobCardNo='" + txtjob.Text + "' AND isdeleted='0'", con);
             sad.Fill(dt);
+            foreach (DataRow row in dt.Rows)
+            {
+                if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+                {
+                    row["Reparingdate"] = DBNull.Value;
+                }
+            }
             sortedgv_JOBCARD.EmptyDataText = "Not Records Found";
             sortedgv_JOBCARD.DataSource = dt;
             sortedgv_JOBCARD.DataBind();
@@ -516,6 +573,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where RepeatedNo='" + txtrepetedno.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dt;
         sortedgv_JOBCARD.DataBind();
     }
@@ -528,6 +592,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where RepeatedNo='" + txtrepetedno.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dt;
         sortedgv_JOBCARD.DataBind();
     }
@@ -541,6 +612,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where status='" + txtstatus.Text + "'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dt;
         sortedgv_JOBCARD.DataBind();
     }
@@ -551,6 +629,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where status='" + txtstatus.Text + "'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dt;
         sortedgv_JOBCARD.DataBind();
     }
@@ -564,6 +649,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
             DataTable dt = new DataTable();
             SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where ItemDesc='" + txtitemdesc.Text + "' AND isdeleted='0'", con);
             sad.Fill(dt);
+            foreach (DataRow row in dt.Rows)
+            {
+                if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+                {
+                    row["Reparingdate"] = DBNull.Value;
+                }
+            }
             sortedgv_JOBCARD.DataSource = dt;
             sortedgv_JOBCARD.DataBind();
         }
@@ -580,6 +672,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where ItemDesc='" + txtitemdesc.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dt;
         sortedgv_JOBCARD.DataBind();
     }
@@ -592,6 +691,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where ItemDesc='" + txtitemdesc.Text + "' AND JobCardNo='" + txtjob.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dt;
         sortedgv_JOBCARD.DataBind();
     }
@@ -603,6 +709,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where ItemDesc='" + txtitemdesc.Text + "' AND JobCardNo='" + txtjob.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dt;
         sortedgv_JOBCARD.DataBind();
     }
@@ -617,6 +730,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
 
         //SqlDataAdapter sad = new SqlDataAdapter("select  *  from tblJobcardHdr where  InwardDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND isdeleted='0' '", con);
         sad.Fill(dtt);
+        foreach (DataRow row in dtt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dtt;
         sortedgv_JOBCARD.DataBind();
     }
@@ -630,6 +750,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
 
         //SqlDataAdapter sad = new SqlDataAdapter("select  *  from tblJobcardHdr where  InwardDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND isdeleted='0' '", con);
         sad.Fill(dtt);
+        foreach (DataRow row in dtt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dtt;
         sortedgv_JOBCARD.DataBind();
 
@@ -643,6 +770,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dtt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM tblJobcardHdr WHERE InwardDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND JobCardNo='" + txtjob.Text + "' AND isdeleted='0' '", con);
         sad.Fill(dtt);
+        foreach (DataRow row in dtt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dtt;
         sortedgv_JOBCARD.DataBind();
 
@@ -656,6 +790,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dtt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM tblJobcardHdr WHERE InwardDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND JobCardNo='" + txtjob.Text + "' AND isdeleted='0' '", con);
         sad.Fill(dtt);
+        foreach (DataRow row in dtt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dtt;
         sortedgv_JOBCARD.DataBind();
 
@@ -669,6 +810,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM tblJobcardHdr WHERE InwardDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND RepeatedNo='" + txtrepetedno.Text + "' AND isdeleted='0' '", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dt;
         sortedgv_JOBCARD.DataBind();
     }
@@ -678,6 +826,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM tblJobcardHdr WHERE InwardDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND RepeatedNo='" + txtrepetedno.Text + "' AND isdeleted='0' '", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dt;
         sortedgv_JOBCARD.DataBind();
     }
@@ -690,8 +845,14 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM tblJobcardHdr WHERE InwardDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND EngineerName='" + txtengineername.Text + "' AND status='" + txtstatus.Text + "' AND isdeleted='0'", con);
-
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dt;
         sortedgv_JOBCARD.DataBind();
 
@@ -704,8 +865,14 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         gv_JOBCARD.Visible = false;
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM tblJobcardHdr WHERE InwardDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND EngineerName='" + txtengineername.Text + "' AND isdeleted='0'", con);
-
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dt;
         sortedgv_JOBCARD.DataBind();
 
@@ -719,8 +886,14 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
             gv_JOBCARD.Visible = false;
             DataTable dt = new DataTable();
             SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM tblJobcardHdr WHERE InwardDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND ItemDesc='" + txtitemdesc.Text + "' AND isdeleted='0'", con);
-
             sad.Fill(dt);
+            foreach (DataRow row in dt.Rows)
+            {
+                if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+                {
+                    row["Reparingdate"] = DBNull.Value;
+                }
+            }
             sortedgv_JOBCARD.DataSource = dt;
             sortedgv_JOBCARD.DataBind();
         }
@@ -739,8 +912,14 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
             gv_JOBCARD.Visible = false;
             DataTable dt = new DataTable();
             SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM tblJobcardHdr WHERE InwardDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND ItemDesc='" + txtitemdesc.Text + "' AND isdeleted='0'", con);
-
             sad.Fill(dt);
+            foreach (DataRow row in dt.Rows)
+            {
+                if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+                {
+                    row["Reparingdate"] = DBNull.Value;
+                }
+            }
             sortedgv_JOBCARD.DataSource = dt;
             sortedgv_JOBCARD.DataBind();
         }
@@ -759,6 +938,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
 
         //SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM tblJobcardHdr WHERE InwardDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND status='" + txtstatus.Text + "' AND isdeleted='0' '", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dt;
         sortedgv_JOBCARD.DataBind();
     }
@@ -771,6 +957,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
 
         //SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM tblJobcardHdr WHERE InwardDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND status='" + txtstatus.Text + "' AND isdeleted='0''", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dt;
         sortedgv_JOBCARD.DataBind();
     }
@@ -782,6 +975,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM tblJobcardHdr WHERE InwardDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND RepeatedNo='" + txtrepetedno.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dt;
         sortedgv_JOBCARD.DataBind();
     }
@@ -792,6 +992,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM tblJobcardHdr WHERE InwardDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND RepeatedNo='" + txtrepetedno.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         sortedgv_JOBCARD.DataSource = dt;
         sortedgv_JOBCARD.DataBind();
     }
@@ -972,6 +1179,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where JobCardNo='" + txtjob.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         GridExportExcel.DataSource = dt;
         GridExportExcel.DataBind();
     }
@@ -983,6 +1197,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where RepeatedNo='" + txtrepetedno.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         GridExportExcel.DataSource = dt;
         GridExportExcel.DataBind();
     }
@@ -993,6 +1214,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where EngineerName='" + txtengineername.Text + "'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         GridExportExcel.DataSource = dt;
         GridExportExcel.DataBind();
     }
@@ -1003,6 +1231,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where status='" + txtstatus.Text + "'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         GridExportExcel.DataSource = dt;
         GridExportExcel.DataBind();
     }
@@ -1015,6 +1250,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
             DataTable dt = new DataTable();
             SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where ItemDesc='" + txtitemdesc.Text + "' AND isdeleted='0'", con);
             sad.Fill(dt);
+            foreach (DataRow row in dt.Rows)
+            {
+                if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+                {
+                    row["Reparingdate"] = DBNull.Value;
+                }
+            }
             GridExportExcel.DataSource = dt;
             GridExportExcel.DataBind();
         }
@@ -1030,6 +1272,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where ItemDesc='" + txtitemdesc.Text + "' AND JobCardNo='" + txtjob.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         GridExportExcel.DataSource = dt;
         GridExportExcel.DataBind();
     }
@@ -1041,6 +1290,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where InwardDate between '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND isdeleted='0'", con);
         //SqlDataAdapter sad = new SqlDataAdapter("select  *  from tblJobcardHdr where  InwardDate between '" + txt_form_podate_search.Text + "'  AND '" + txt_to_podate_search.Text + "' AND isdeleted='0' '", con);
         sad.Fill(dtt);
+        foreach (DataRow row in dtt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         GridExportExcel.DataSource = dtt;
         GridExportExcel.DataBind();
     }
@@ -1051,6 +1307,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dtt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM tblJobcardHdr WHERE InwardDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND JobCardNo='" + txtjob.Text + "' AND isdeleted='0' '", con);
         sad.Fill(dtt);
+        foreach (DataRow row in dtt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         GridExportExcel.DataSource = dtt;
         GridExportExcel.DataBind();
 
@@ -1064,6 +1327,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM tblJobcardHdr WHERE InwardDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND EngineerName='" + txtengineername.Text + "' AND isdeleted='0'", con);
 
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         GridExportExcel.DataSource = dt;
         GridExportExcel.DataBind();
 
@@ -1078,6 +1348,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
             SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM tblJobcardHdr WHERE InwardDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND ItemDesc='" + txtitemdesc.Text + "' AND isdeleted='0'", con);
 
             sad.Fill(dt);
+            foreach (DataRow row in dt.Rows)
+            {
+                if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+                {
+                    row["Reparingdate"] = DBNull.Value;
+                }
+            }
             GridExportExcel.DataSource = dt;
             GridExportExcel.DataBind();
         }
@@ -1095,6 +1372,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
 
         //SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM tblJobcardHdr WHERE InwardDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND status='" + txtstatus.Text + "' AND isdeleted='0' '", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         GridExportExcel.DataSource = dt;
         GridExportExcel.DataBind();
     }
@@ -1105,6 +1389,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM tblJobcardHdr WHERE InwardDate BETWEEN '" + txt_form_podate_search.Text + "' AND '" + txt_to_podate_search.Text + "' AND RepeatedNo='" + txtrepetedno.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
         GridExportExcel.DataSource = dt;
         GridExportExcel.DataBind();
     }
