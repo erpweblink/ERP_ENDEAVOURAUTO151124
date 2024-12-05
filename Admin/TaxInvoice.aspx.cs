@@ -3547,8 +3547,15 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             txtCompName.ReadOnly = true;
 
             txt_CompanyAddress.Text = Dt.Rows[0]["ShippingAddress"].ToString();
-            txt_CompanyAddress.ReadOnly = true;
-
+            if (txt_CompanyAddress.Text == "")
+            {
+                txt_CompanyPanNo.ReadOnly = false;
+            }
+            else
+            {
+                txt_CompanyAddress.ReadOnly = true;
+            }
+           
             txt_PoNo.Text = Dt.Rows[0]["Pono"].ToString();
             txt_PoNo.ReadOnly = true;
 
@@ -3612,11 +3619,34 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
         if (Dtt.Rows.Count > 0)
         {
             txt_CompanyPanNo.Text = Dtt.Rows[0]["PanNo"].ToString();
-            txt_CompanyPanNo.ReadOnly = true;
+            if(txt_CompanyPanNo.Text == "")
+            {
+                txt_CompanyPanNo.ReadOnly = false;
+            }
+            else
+            {
+                txt_CompanyPanNo.ReadOnly = true;
+            }
+            
             txt_CompanyGSTno.Text = Dtt.Rows[0]["GSTNo"].ToString();
-            txt_CompanyGSTno.ReadOnly = true;
+            if (txt_CompanyGSTno.Text == "")
+            {
+                txt_CompanyGSTno.ReadOnly = false;
+            }
+            else
+            {
+                txt_CompanyGSTno.ReadOnly = true;
+            }
+            
             txt_CompanyStateCode.Text = Dtt.Rows[0]["StateCode"].ToString();
-            txt_CompanyStateCode.ReadOnly = true;
+            if (txt_CompanyStateCode.Text == "")
+            {
+                txt_CompanyStateCode.ReadOnly = false;
+            }
+            else
+            {
+                txt_CompanyStateCode.ReadOnly = true;
+            }        
         }
 
 
