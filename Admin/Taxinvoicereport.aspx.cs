@@ -25,6 +25,53 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
         }
     }
 
+    protected void gv_TaxInvoice_List_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        //Added New for Count Shubham Patil
+        if (e.Row.RowType == DataControlRowType.Footer)
+        {
+            decimal totalAmount = 0;
+
+            if (sortedgv.Rows.Count > 0)
+            {
+                foreach (GridViewRow row in sortedgv.Rows)
+                {
+
+                    Label lbl_grandtotal = row.FindControl("lbl_grandtotal") as Label;
+                    if (lbl_grandtotal != null)
+                    {
+                        if (decimal.TryParse(lbl_grandtotal.Text, out decimal rowAmount))
+                        {
+                            totalAmount += rowAmount;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (GridViewRow row in GvPurchaseOrderList.Rows)
+                {
+                    Label lbl_grandtotal = row.FindControl("lbl_grandtotal") as Label;
+                    if (lbl_grandtotal != null)
+                    {
+                        if (decimal.TryParse(lbl_grandtotal.Text, out decimal rowAmount))
+                        {
+                            totalAmount += rowAmount;
+                        }
+                    }
+                }
+            }
+
+            Label lblFooterTotalAmt = (Label)e.Row.FindControl("lblFooterTotalAmt");
+            if (lblFooterTotalAmt != null)
+            {
+                lblFooterTotalAmt.Text = "Total Amt: ₹" + totalAmount.ToString("N2");
+            }
+        }
+        //End
+    }
+
+
     private void Load_Record()
     {
         DataTable Dt = new DataTable();

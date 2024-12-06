@@ -46,7 +46,7 @@
                 if (selectedValue === "All" || i <= parseInt(selectedValue)) {
                     gvRows[i].style.display = "";
                 } else {
-                    gvRows[i].style.display = "none"; 
+                    gvRows[i].style.display = "none";
                 }
             }
         }
@@ -144,40 +144,45 @@
         <asp:ScriptManager ID="scriptmanager" runat="server"></asp:ScriptManager>
         <div class="col-lg-12">
             <div class="card shadow-sm mb-4">
-                <div class="col-lg-12 ">
-                    <h5>Site Visit List</h5>
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h5 class="m-0 font-weight-bold text-primary">Site Visit List</h5>
                 </div>
-                <br />
-
-                <br />
                 <div class="row">
-
-                    <div class="col-md-3">
+                    <div class="col-md-2">
+                        <asp:Label ID="lblsearch" runat="server" class="control-label col-sm-6">Search Site </asp:Label>
                         <asp:TextBox runat="server" class="form-control txtsear" OnTextChanged="txtSearch_TextChanged" AutoPostBack="true" ID="txtSearch" name="Search" placeholder="Search Site" />
                         <asp:AutoCompleteExtender ID="AutoCompleteExtender1" CompletionListCssClass="completionList"
                             CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
                             CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="Getsite" TargetControlID="txtSearch" runat="server">
                         </asp:AutoCompleteExtender>
                     </div>
-                    <div class="col-md-3">
-                        <%--<asp:LinkButton ID="lnkBtnsearch" runat="server" CssClass="btn btn-primary lnksearch " CausesValidation="False" OnClick="lnkBtnsearch_Click1"><i class="fa fa-search" style="font-size:24px"></i></asp:LinkButton>--%>
-                        <asp:LinkButton ID="lnkrefresh" runat="server" CssClass="btn btn-primary lnksearch" OnClick="lnkrefresh_Click" CausesValidation="false"><i class="fa fa-refresh" style="font-size:24px"></i></asp:LinkButton>
-                    </div>
-                 <%--   <div class="col-md-2">
-                        <asp:DropDownList ID="ddlStatus" runat="server" AutoPostBack="true" class="form-control active1 " Width="150px" OnTextChanged="ddlStatus_TextChanged">
-                            <asp:ListItem Value="All" Text="All"></asp:ListItem>
-                            <asp:ListItem Value="1">Active</asp:ListItem>
-                            <asp:ListItem Value="0">DeActive</asp:ListItem>
-                        </asp:DropDownList>
-                    </div>--%>
-                    <%--              <div class="col-md-2 col-xs-5 col-5"> 
-                        <asp:Button ID="btnexportexcel" runat="server" class="btn btn-primary btncreate btncreatee" OnClick="btnexportexcel_Click" Text="Export-Excel" ></asp:Button>
-                    </div>--%>
-                    <div class="col-md-4 col-xs-5 col-5">
-                        <asp:Button ID="btnceate" OnClick="btnceate_Click" runat="server" class="btn btn-primary btncreate" Text="Create"></asp:Button>
+                    <div class="col-md-2">
+                        <asp:Label ID="lblengineername" runat="server" class="control-label col-sm-6">Engineer Name </asp:Label>
+                        <asp:TextBox runat="server" class="form-control txtsear" AutoPostBack="true" ID="txtengineername" name="Search" placeholder="Engineer Name" />
+                        <asp:AutoCompleteExtender ID="AutoCompleteExtender2" CompletionListCssClass="completionList"
+                            CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
+                            CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="Getengineer" TargetControlID="txtengineername" runat="server">
+                        </asp:AutoCompleteExtender>
                     </div>
                     <div class="col-md-2">
+                        <asp:Label ID="lblfromdate" runat="server" class="control-label col-sm-6">From Date </asp:Label>
+                        <asp:TextBox runat="server" class="form-control " ID="txtDateSearchfrom" name="Search" TextMode="Date" />
+                    </div>
+                    <div class="col-md-2">
+                        <asp:Label ID="lbltodate" runat="server" class="control-label col-sm-6">To Date </asp:Label>
+                        <asp:TextBox runat="server" class="form-control " ID="txtDateSearchto" name="Search" TextMode="Date" />
+                    </div>
+                    <div class="col-md-4 col-xs-7 col-7">
+                        <asp:LinkButton ID="lnkBtnsearch" runat="server" CssClass="btn btn-primary lnksearch " CausesValidation="False" OnClick="lnkBtnsearch_Click"><i class="fa fa-search" style="font-size:24px"></i></asp:LinkButton>
+                        <asp:LinkButton ID="lnkrefresh" runat="server" CssClass="btn btn-primary lnksearch" OnClick="lnkrefresh_Click" CausesValidation="false"><i class="fa fa-refresh" style="font-size:24px"></i></asp:LinkButton>
+                        <asp:Button ID="btnexportexcel" runat="server" class="btn btn-primary btncreate btncreatee" OnClick="btnexportexcel_Click" Text="Export-Excel"></asp:Button>
+                        <asp:Button ID="btnceate" OnClick="btnceate_Click" runat="server" class="btn btn-primary btncreate" Text="Create"></asp:Button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
                         <!-- Show Entries Dropdown -->
+                        <asp:Label ID="Label3" runat="server" class="control-label col-sm-6">Show Entries </asp:Label>
                         <asp:DropDownList ID="ddlShowEntries" runat="server" CssClass="form-control" onchange="updateRecords()">
                             <asp:ListItem Text="25" Value="25"></asp:ListItem>
                             <asp:ListItem Text="50" Value="50"></asp:ListItem>
@@ -186,6 +191,7 @@
                         </asp:DropDownList>
                     </div>
                 </div>
+
                 <div style="width: 100%; padding: 20px; overflow: scroll;">
                     <asp:GridView ID="gv_Prod" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
                         DataKeyNames="ID" OnRowCommand="gv_Prod_RowCommand">
@@ -200,27 +206,27 @@
                                 <ItemTemplate>
                                     <asp:Label ID="lblProductName" runat="server" Text='<%# Eval("Custname") %>'></asp:Label>
                                 </ItemTemplate>
-                            </asp:TemplateField>   
-                            
+                            </asp:TemplateField>
+
                             <asp:TemplateField HeaderText="Site Location">
                                 <ItemTemplate>
                                     <asp:Label ID="lblModel" runat="server" Text='<%# Eval("location") %>'></asp:Label>
                                 </ItemTemplate>
                             </asp:TemplateField>
 
-                              <asp:TemplateField HeaderText="Engneer Name">
+                            <asp:TemplateField HeaderText="Engneer Name">
                                 <ItemTemplate>
                                     <asp:Label ID="lblEngineername" runat="server" Text='<%# Eval("Engineername") %>'></asp:Label>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                              <asp:TemplateField HeaderText="Product">
+                            <asp:TemplateField HeaderText="Product">
                                 <ItemTemplate>
                                     <asp:Label ID="lblProduct" runat="server" Text='<%# Eval("Product") %>'></asp:Label>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                              <asp:TemplateField HeaderText="Visit Date">
+                            <asp:TemplateField HeaderText="Visit Date">
                                 <ItemTemplate>
-                                       <asp:Label Text='<%# Eval("Date", "{0:dd-MM-yyyy}") %>' runat="server" ID="lblQuDate" />
+                                    <asp:Label Text='<%# Eval("Date", "{0:dd-MM-yyyy}") %>' runat="server" ID="lblQuDate" />
                                     <%--<asp:Label ID="lblProduct" runat="server" Text='<%# Eval("Date") %>'></asp:Label>--%>
                                 </ItemTemplate>
                             </asp:TemplateField>
