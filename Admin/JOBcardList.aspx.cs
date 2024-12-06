@@ -474,13 +474,53 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         }
     }
     //Er section
+    //public void GetsortedData()
+    //{
+    //    ViewState["Record"] = "ER";
+    //      gv_JOBCARD.Visible = false;
+    //    DataTable dt = new DataTable();
+    //    SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where EngineerName='" + txtengineername.Text + "'", con);
+    //    sad.Fill(dt);
+    //    foreach (DataRow row in dt.Rows)
+    //    {
+    //        if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+    //        {
+    //            row["Reparingdate"] = DBNull.Value;
+    //        }
+    //    }
+    //    sortedgv_JOBCARD.DataSource = dt;
+    //    sortedgv_JOBCARD.DataBind();
+    //}
+
+
+    //Method updated Shubham Patil
     public void GetsortedData()
     {
         ViewState["Record"] = "ER";
-          gv_JOBCARD.Visible = false;
+        gv_JOBCARD.Visible = false;
+
         DataTable dt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where EngineerName='" + txtengineername.Text + "'", con);
+        string filterValue = txtengineername.Text.Trim();
+
+        SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM tblJobcardHdr", con);
         sad.Fill(dt);
+
+        var filteredRows = dt.AsEnumerable().Where(row =>
+            row.Field<string>("EngineerName") != null &&
+            row.Field<string>("EngineerName")
+                .Split(',')
+                .Select(name => name.Trim().ToLower())
+                .Contains(filterValue.ToLower()));
+
+        if (filteredRows.Any())
+        {
+            dt = filteredRows.CopyToDataTable();
+        }
+        else
+        {
+            dt.Clear(); 
+        }
+
         foreach (DataRow row in dt.Rows)
         {
             if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
@@ -488,9 +528,11 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
                 row["Reparingdate"] = DBNull.Value;
             }
         }
+
         sortedgv_JOBCARD.DataSource = dt;
         sortedgv_JOBCARD.DataBind();
     }
+    //End
 
     protected void GridRecord1()
     {
@@ -1207,13 +1249,53 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         GridExportExcel.DataSource = dt;
         GridExportExcel.DataBind();
     }
+    //public void GetsortedDataForExcell()
+    //{
+    //    ViewState["Record"] = "ER";
+    //    gv_JOBCARD.Visible = false;
+    //    DataTable dt = new DataTable();
+    //    SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where EngineerName='" + txtengineername.Text + "'", con);
+    //    sad.Fill(dt);
+    //    foreach (DataRow row in dt.Rows)
+    //    {
+    //        if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+    //        {
+    //            row["Reparingdate"] = DBNull.Value;
+    //        }
+    //    }
+    //    GridExportExcel.DataSource = dt;
+    //    GridExportExcel.DataBind();
+    //}
+
+
+    //Method updated Shubham Patil
     public void GetsortedDataForExcell()
     {
         ViewState["Record"] = "ER";
         gv_JOBCARD.Visible = false;
+
         DataTable dt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where EngineerName='" + txtengineername.Text + "'", con);
+        string filterValue = txtengineername.Text.Trim();
+
+        SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM tblJobcardHdr", con);
         sad.Fill(dt);
+
+        var filteredRows = dt.AsEnumerable().Where(row =>
+            row.Field<string>("EngineerName") != null &&
+            row.Field<string>("EngineerName")
+                .Split(',')
+                .Select(name => name.Trim().ToLower())
+                .Contains(filterValue.ToLower()));
+
+        if (filteredRows.Any())
+        {
+            dt = filteredRows.CopyToDataTable();
+        }
+        else
+        {
+            dt.Clear(); 
+        }
+
         foreach (DataRow row in dt.Rows)
         {
             if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
@@ -1221,9 +1303,13 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
                 row["Reparingdate"] = DBNull.Value;
             }
         }
+
         GridExportExcel.DataSource = dt;
         GridExportExcel.DataBind();
     }
+    //End
+
+
     public void GetSortedstatusForExcell()
     {
         gv_JOBCARD.Visible = false;

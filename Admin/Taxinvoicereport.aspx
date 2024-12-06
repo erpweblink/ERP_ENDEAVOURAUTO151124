@@ -108,7 +108,7 @@
                         </div>
                    
                     <div class="table-responsive text-center">
-                        <asp:GridView ID="GvPurchaseOrderList" runat="server" AutoGenerateColumns="false" CssClass="grid" Width="100%" OnRowCommand="GvPurchaseOrderList_RowCommand">
+                        <asp:GridView ID="GvPurchaseOrderList" runat="server" AutoGenerateColumns="false" CssClass="grid" Width="100%" OnRowCommand="GvPurchaseOrderList_RowCommand" ShowFooter="True" OnRowDataBound="gv_TaxInvoice_List_RowDataBound">
                             <%--AllowPaging="true" OnPageIndexChanging="GvPurchaseOrderList_PageIndexChanging" PageSize="10" PagerStyle-CssClass="paging"--%>
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr. No.">
@@ -143,6 +143,11 @@
                                         <asp:Label ID="lbl_PayTerm" runat="server" Text='<%# Eval("PayTerm") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Total Amt.">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lbl_grandtotal" runat="server" Text='<%# Eval("GrandTotal") %>'></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Date">
                                     <ItemTemplate>
                                         <%--<asp:Label ID="lbl_Date" runat="server" Text='<%# Convert.ToDateTime( Eval("InvoiceDate","{0:d}")).ToString("dd/MM/yyyy") %>'></asp:Label>--%>
@@ -164,6 +169,9 @@
                                         <asp:LinkButton ID="lnkshow" runat="server" CommandName="ShowReport" CommandArgument='<%# Eval("InvoiceNo") %>' Visible="false"><i class="fas fa-eye" style="font-size:24px"></i></asp:LinkButton>
                                         <asp:LinkButton ID="btn_View" runat="server" CommandName="RowPrint" CommandArgument='<%# Eval("Id") %>' ToolTip="Genrate Pdf"><i class="fas fa-file-pdf"  style="font-size:26px;color:red"></i></asp:LinkButton>
                                     </ItemTemplate>
+                                     <FooterTemplate>
+                                        <asp:Label ID="lblFooterTotalAmt" runat="server" Text="Total Amt:" Font-Bold="True"></asp:Label>
+                                     </FooterTemplate>
                                 </asp:TemplateField>
                             </Columns>
                             <FooterStyle BackColor="White" ForeColor="#000066" />
@@ -179,7 +187,7 @@
 
                         <%--Exoprt to excel grid start--%>
 
-                         <asp:GridView ID="sortedgv" runat="server" AutoGenerateColumns="false" CssClass="grid" Width="100%" OnRowCommand="GvPurchaseOrderList_RowCommand" >
+                         <asp:GridView ID="sortedgv" runat="server" AutoGenerateColumns="false" CssClass="grid" Width="100%" OnRowCommand="GvPurchaseOrderList_RowCommand" ShowFooter="True" OnRowDataBound="gv_TaxInvoice_List_RowDataBound">
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr. No.">
                                     <ItemTemplate>
@@ -213,6 +221,11 @@
                                         <asp:Label ID="lbl_PayTerm" runat="server" Text='<%# Eval("PayTerm") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Total Amt.">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lbl_grandtotal" runat="server" Text='<%# Eval("GrandTotal") %>'></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Date">
                                     <ItemTemplate>
                                         <%--<asp:Label ID="lbl_Date" runat="server" Text='<%# Convert.ToDateTime( Eval("InvoiceDate","{0:d}")).ToString("dd/MM/yyyy") %>'></asp:Label>--%>
@@ -229,6 +242,9 @@
                                         <asp:LinkButton ID="lnkshow" runat="server" CommandName="ShowReport" CommandArgument='<%# Eval("InvoiceNo") %>' Visible="false"><i class="fas fa-eye" style="font-size:24px"></i></asp:LinkButton>
                                         <asp:LinkButton ID="btn_View" runat="server" CommandName="RowPrint" CommandArgument='<%# Eval("Id") %>' ToolTip="Genrate Pdf"><i class="fas fa-file-pdf"  style="font-size:26px;color:red"></i></asp:LinkButton>
                                     </ItemTemplate>
+                                    <FooterTemplate>
+                                       <asp:Label ID="lblFooterTotalAmt" runat="server" Text="Total Amt:" Font-Bold="True"></asp:Label>
+                                    </FooterTemplate>
                                 </asp:TemplateField>
                             </Columns>
                             <FooterStyle BackColor="White" ForeColor="#000066" />
