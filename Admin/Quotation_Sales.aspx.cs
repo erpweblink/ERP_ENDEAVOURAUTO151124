@@ -930,6 +930,10 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
 
     protected void Save_Record()
     {
+        if (btnSubmit.Text == "Save/Update")
+        {
+            btnSubmit.Text = "Update";
+        }
         string createdby = Session["adminname"].ToString();
         try
         {
@@ -1168,7 +1172,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
             MailMessage message = new MailMessage();
 
             string BCC = "sales.endeavourautomations@gmail.com";
-
+            PDF(txt_Quo_No.Text.Trim(), "");
             foreach (GridViewRow g1 in Grd_MAIL.Rows)
             {
                 string MAIL = (g1.FindControl("lblmultMail") as Label).Text;
@@ -1194,14 +1198,14 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
             message.Body = body;
 
             message.Subject = "Quotation PDF";// Subject of Email  
-            message.From = new MailAddress("enquiry@weblinkservices.net", "sales.endeavourautomations@gmail.com");
+            message.From = new MailAddress("testing@weblinkservices.net", "sales.endeavourautomations@gmail.com");
             message.IsBodyHtml = true;
             // Set the "Reply-To" header to indicate the desired display address
             message.ReplyToList.Add(new MailAddress("sales.endeavourautomations@gmail.com"));
             SmtpClient SmtpMail = new SmtpClient();
             SmtpMail.Host = "smtpout.secureserver.net"; // Name or IP-Address of Host used for SMTP transactions  
             SmtpMail.Port = 587; // Port for sending the mail  
-            SmtpMail.Credentials = new System.Net.NetworkCredential("enquiry@weblinkservices.net", "wlspl@123"); // Username/password of network, if apply  
+            SmtpMail.Credentials = new System.Net.NetworkCredential("testing@weblinkservices.net", "Weblink@Testing#123"); // Username/password of network, if apply  
             SmtpMail.DeliveryMethod = SmtpDeliveryMethod.Network;
             SmtpMail.EnableSsl = false;
             SmtpMail.ServicePoint.MaxIdleTime = 0;
@@ -1254,7 +1258,8 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
         }
 
         MemoryStream pdf = new MemoryStream();
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_QuotMailPdf_Sales WHERE Quotation_no='" + txt_Quo_No.Text + "' ", con);
+        //SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_QuotMailPdf_Sales WHERE Quotation_no='" + txt_Quo_No.Text + "' ", con);
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_QuotMailPdf_Sales_Both WHERE Quotation_no='" + txt_Quo_No.Text + "' ", con);
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
         StringWriter sw = new StringWriter();
@@ -2451,6 +2456,10 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
                     int rowsAffected = cmd.ExecuteNonQuery();
                 }
 
+                if (btnSubmit.Text == "Update")
+                {
+                    btnSubmit.Text = "Save/Update";
+                }
                 SqlDataAdapter Sda = new SqlDataAdapter("SELECT * FROM tblCustomerContactPerson WHERE CustName='" + txt_Comp_name.Text + "'", con);
                 DataTable Sdt = new DataTable();
                 Sda.Fill(Sdt);
