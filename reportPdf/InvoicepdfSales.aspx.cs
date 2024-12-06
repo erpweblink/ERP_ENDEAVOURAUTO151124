@@ -71,11 +71,11 @@ public partial class Invoicepdf : System.Web.UI.Page
         //string id = Session["PDFID"].ToString();
 
         DataTable Dt = new DataTable();
-        SqlDataAdapter da = new SqlDataAdapter("SELECT tbl_InvoiceHdr_Sales.Id,tbl_InvoiceHdr_Sales.InvoiceNo,InvoiceDate,PoNo,PoDate,CustName,ChallanNo,ChallanDate,PayTerm," +
+        SqlDataAdapter da = new SqlDataAdapter("SELECT tbl_Invoice_both_hdr.Id,tbl_Invoice_both_hdr.InvoiceNo,InvoiceDate,PoNo,PoDate,CustName,ChallanNo,ChallanDate,PayTerm," +
             "Delivery,KindAtt,CompanyAddress,CompanyGstNo,CompanyPanNo, ComapyRegType, CompanyStateCode, " +
             "CustomerShippingAddress, CustomerGstNo, CustomerPanNo, CustomerRegType,CustomerStateCode, CGST, SGST,IGST," +
             " AllTotalAmount, GrandTotal, TotalInWord, Description,PrintDescription, Hsn, TaxPercentage, Quntity, Unit, Rate, DiscountPercentage," +
-            " Total,CreatedOn FROM tbl_InvoiceHdr_Sales INNER JOIN tblInvoice_Dtls_Sales ON tblInvoice_Dtls_Sales.InvoiceId = tbl_InvoiceHdr_Sales.Id WHERE tbl_InvoiceHdr_Sales.Id='" + id + "'", Conn);
+            " Total,CreatedOn FROM tbl_Invoice_both_hdr INNER JOIN tbl_Invoice_both_Dtls ON tbl_Invoice_both_Dtls.InvoiceId = tbl_Invoice_both_hdr.Id WHERE tbl_Invoice_both_hdr.Id='" + id + "'", Conn);
         da.Fill(Dt);
         //GvPurchaseOrderList.DataSource = Dt;
         // GvPurchaseOrderList.DataBind();
@@ -706,11 +706,11 @@ public partial class Invoicepdf : System.Web.UI.Page
         {
             id = Decrypt(Request.QueryString["Id"].ToString());
             DataTable Dt = new DataTable();
-            SqlDataAdapter da = new SqlDataAdapter("SELECT tbl_InvoiceHdr_Sales.Id,tbl_InvoiceHdr_Sales.InvoiceNo,InvoiceDate,PoNo,PoDate,CustName,ChallanNo,ChallanDate,PayTerm," +
+            SqlDataAdapter da = new SqlDataAdapter("SELECT tbl_Invoice_both_hdr.Id,tbl_Invoice_both_hdr.InvoiceNo,InvoiceDate,PoNo,PoDate,CustName,ChallanNo,ChallanDate,PayTerm," +
                 "Delivery,KindAtt,CompanyAddress,CompanyGstNo,CompanyPanNo, ComapyRegType, CompanyStateCode, " +
                 "CustomerShippingAddress, CustomerGstNo, CustomerPanNo, CustomerRegType,CustomerStateCode, CGST, SGST,IGST," +
                 " AllTotalAmount, GrandTotal, TotalInWord, Description,PrintDescription, Hsn, TaxPercentage, Quntity, Unit, Rate, DiscountPercentage," +
-                " Total,Term_Condition_1,Term_Condition_2,Term_Condition_3,Term_Condition_4,Term_Condition_5,Term_Condition_6,CreatedOn FROM tbl_InvoiceHdr_Sales INNER JOIN tblInvoice_Dtls_Sales ON tblInvoice_Dtls_Sales.InvoiceId = tbl_InvoiceHdr_Sales.Id WHERE tbl_InvoiceHdr_Sales.Id='" + id + "'", Conn);
+                " Total,Term_Condition_1,Term_Condition_2,Term_Condition_3,Term_Condition_4,Term_Condition_5,Term_Condition_6,CreatedOn FROM tbl_Invoice_both_hdr INNER JOIN tbl_Invoice_both_Dtls ON tbl_Invoice_both_Dtls.InvoiceId = tbl_Invoice_both_hdr.Id WHERE tbl_Invoice_both_hdr.Id='" + id + "'", Conn);
             da.Fill(Dt);
             StringWriter sw = new StringWriter();
             StringReader sr = new StringReader(sw.ToString());

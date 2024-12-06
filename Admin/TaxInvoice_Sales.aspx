@@ -162,12 +162,16 @@
                                     <%--<asp:TextBox ID="txt_Delivery" runat="server" CssClass="form-control"></asp:TextBox>--%><br />
                                 </div>
                                 <div class="col-md-3">
-                                    <asp:Label ID="lbl_CompanyPanNo" runat="server" class="control-label col-sm-6" for="cust"> Company Pan No. :<span class="spncls"></span></asp:Label>
-                                    <asp:TextBox ID="txt_CompanyPanNo" runat="server" CssClass="form-control"></asp:TextBox><br />
+                                    <asp:Label ID="lbl_CompanyPanNo" runat="server" class="control-label col-sm-6" for="cust"> Company Pan No. :<span class="spncls">*</span></asp:Label>
+                                    <asp:TextBox ID="txt_CompanyPanNo" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" ErrorMessage="Please Enter PAN No." ControlToValidate="txt_CompanyPanNo" ForeColor="Red" SetFocusOnError="true"></asp:RequiredFieldValidator>
+                                    <br />
                                 </div>
                                 <div class="col-md-3">
-                                    <asp:Label ID="lbl_CompanyGstNo" runat="server" class="control-label col-sm-6" for="cust"> Company GST No. :<span class="spncls"></span></asp:Label>
-                                    <asp:TextBox ID="txt_CompanyGSTno" runat="server" CssClass="form-control"></asp:TextBox><br />
+                                    <asp:Label ID="lbl_CompanyGstNo" runat="server" class="control-label col-sm-6" for="cust"> Company GST No. :<span class="spncls">*</span></asp:Label>
+                                    <asp:TextBox ID="txt_CompanyGSTno" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator7" runat="server" ErrorMessage="Please Enter GST No." ControlToValidate="txt_CompanyGSTno" ForeColor="Red" SetFocusOnError="true"></asp:RequiredFieldValidator>
+                                    <br />
                                 </div>
                             </div>
                             <div class="row">
@@ -210,10 +214,10 @@
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" ErrorMessage="Please Enter Company Address" ControlToValidate="txt_CompanyAddress" ForeColor="Red" SetFocusOnError="true"></asp:RequiredFieldValidator>
                                 </div>
                                 <div class="col-md-3">
-                                    <asp:Label ID="lbl_CompanyStateCode" runat="server" class="control-label col-sm-6" for="cust"> Company State Code :<span class="spncls"></span></asp:Label>
+                                    <asp:Label ID="lbl_CompanyStateCode" runat="server" class="control-label col-sm-6" for="cust"> Company State Code :<span class="spncls">*</span></asp:Label>
                                     <asp:TextBox ID="txt_CompanyStateCode" runat="server" CssClass="form-control">
-                                       
                                     </asp:TextBox>
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" ErrorMessage="Please Enter State Code" ControlToValidate="txt_CompanyStateCode" ForeColor="Red" SetFocusOnError="true"></asp:RequiredFieldValidator>
                                 </div>
                                 <div class="col-md-3">
                                     <asp:Label ID="lbl_CompanyRegType" runat="server" class="control-label col-sm-6" for="cust"> Company Regester Type :<span class="spncls"></span></asp:Label>
@@ -241,12 +245,14 @@
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator10" runat="server" ErrorMessage="Please Enter Customer Name" ControlToValidate="txtCustName" ForeColor="Red" SetFocusOnError="true"></asp:RequiredFieldValidator>
                                 </div>
                                 <div class="col-md-3">
-                                    <asp:Label ID="lbl_CustomerPanNo" runat="server" class="control-label col-sm-6" for="cust">Customer Pan No. :<span class="spncls"></span></asp:Label>
+                                    <asp:Label ID="lbl_CustomerPanNo" runat="server" class="control-label col-sm-6" for="cust">Customer Pan No. :<span class="spncls">*</span></asp:Label>
                                     <asp:TextBox ID="txt_CustomerPanNo" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator11" runat="server" ErrorMessage="Please Enter PAN No." ControlToValidate="txt_CustomerPanNo" ForeColor="Red" SetFocusOnError="true"></asp:RequiredFieldValidator>
                                 </div>
                                 <div class="col-md-3">
-                                    <asp:Label ID="lbl_CustomerGstNo" runat="server" class="control-label col-sm-6" for="cust">Customer Gst No. :<span class="spncls"></span></asp:Label>
+                                    <asp:Label ID="lbl_CustomerGstNo" runat="server" class="control-label col-sm-6" for="cust">Customer Gst No. :<span class="spncls">*</span></asp:Label>
                                     <asp:TextBox ID="txt_CustomerGstNo" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator12" runat="server" ErrorMessage="Please Enter GST No." ControlToValidate="txt_CustomerGstNo" ForeColor="Red" SetFocusOnError="true"></asp:RequiredFieldValidator>
                                 </div>
                             </div>
                             <div class="row">
@@ -255,8 +261,9 @@
                                     <asp:TextBox ID="txt_ShipingAdddesss" TextMode="MultiLine" runat="server" CssClass="form-control"></asp:TextBox><br />
                                 </div>
                                 <div class="col-md-3">
-                                    <asp:Label ID="lbl_CustomerStateCode" runat="server" class="control-label col-sm-6" for="cust">Customer State Code :<span class="spncls"></span></asp:Label>
+                                    <asp:Label ID="lbl_CustomerStateCode" runat="server" class="control-label col-sm-6" for="cust">Customer State Code :<span class="spncls">*</span></asp:Label>
                                     <asp:TextBox ID="txt_CustomerStateCode" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator13" runat="server" ErrorMessage="Please Enter State Code" ControlToValidate="txt_CustomerStateCode" ForeColor="Red" SetFocusOnError="true"></asp:RequiredFieldValidator>
                                 </div>
                                 <div class="col-md-3">
                                     <asp:Label ID="lbl_CustomerRegType" runat="server" class="control-label col-sm-6" for="cust">Customer Regester Type :<span class="spncls"></span></asp:Label>

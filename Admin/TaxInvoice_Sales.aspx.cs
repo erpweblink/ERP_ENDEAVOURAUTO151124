@@ -142,10 +142,20 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
 
 
             txtCompName.Text = Dt.Rows[0]["CustomerName"].ToString();
+            txtCompName.ReadOnly = true;
             // ddlagainstno.SelectedValue = Dt.Rows[0]["Pono"].ToString();
             txt_CompanyAddress.Text = Dt.Rows[0]["ShippingAddress"].ToString();
+            if (txt_CompanyAddress.Text == "")
+            {
+                txt_CompanyPanNo.ReadOnly = false;
+            }
+            else
+            {
+                txt_CompanyAddress.ReadOnly = true;
+            }
             txt_PoNo.Text = Dt.Rows[0]["Pono"].ToString();
-          
+            txt_PoNo.ReadOnly = true;
+
 
             DateTime ffff18 = Convert.ToDateTime(Dt.Rows[0]["PoDate"].ToString());
             txt_poDate.Text = ffff18.ToString("yyyy-MM-dd");
@@ -202,8 +212,32 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
         if (Dtt.Rows.Count > 0)
         {
             txt_CompanyPanNo.Text = Dtt.Rows[0]["PanNo"].ToString();
+            if (txt_CompanyPanNo.Text == "")
+            {
+                txt_CompanyPanNo.ReadOnly = false;
+            }
+            else
+            {
+                txt_CompanyPanNo.ReadOnly = true;
+            }
             txt_CompanyGSTno.Text = Dtt.Rows[0]["GSTNo"].ToString();
+            if (txt_CompanyGSTno.Text == "")
+            {
+                txt_CompanyGSTno.ReadOnly = false;
+            }
+            else
+            {
+                txt_CompanyGSTno.ReadOnly = true;
+            }
             txt_CompanyStateCode.Text = Dtt.Rows[0]["StateCode"].ToString();
+            if (txt_CompanyStateCode.Text == "")
+            {
+                txt_CompanyStateCode.ReadOnly = false;
+            }
+            else
+            {
+                txt_CompanyStateCode.ReadOnly = true;
+            }
         }
 
         SqlDataAdapter Sda = new SqlDataAdapter("SELECT * FROM tblCustomerContactPerson WHERE CustName='" + txtCompName.Text + "'", con);
@@ -792,7 +826,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             Cmd.Parameters.AddWithValue("@UpdatedOn", DateTime.Now);
             con.Open();
             Cmd.ExecuteNonQuery();
-           
+
 
             DataTable Dt = new DataTable();
             SqlDataAdapter daa = new SqlDataAdapter("SELECT JobNo,Description,Hsn,TaxPercentage,Quntity,Unit,Rate," +
@@ -845,7 +879,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 cmdtable.Parameters.AddWithValue("@UpdatedOn", Date);
                 con.Open();
                 cmdtable.ExecuteNonQuery();
-                con.Close();   
+                con.Close();
             }
 
             ScriptManager.RegisterStartupScript(this, this.GetType(), "Message", "alert('Data Updated Sucessfully.');window.location ='/Admin/TaxInvoiceList_Sales.aspx';", true);
@@ -871,7 +905,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 }
                 if (ddlagainst.Text == "Order")
                 {
-                   // Cmd.Parameters.AddWithValue("@AgainstNo", ddlagainstno.SelectedItem.Text);
+                    // Cmd.Parameters.AddWithValue("@AgainstNo", ddlagainstno.SelectedItem.Text);
                 }
                 Cmd.Parameters.AddWithValue("@PoNo", txt_PoNo.Text);
                 Cmd.Parameters.AddWithValue("@PoDate", txt_poDate.Text);
@@ -910,11 +944,94 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 Cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
                 Cmd.Parameters.AddWithValue("@CreatedBy", CretedBy);
                 //Cmd.Parameters.AddWithValue("@JobNo", );
-                // Cmd.Parameters.AddWithValue("@status", txtstatus.Text);
+                //Cmd.Parameters.AddWithValue("@status", txtstatus.Text);
                 Cmd.Parameters.Add("@InvoiceId", SqlDbType.Int).Direction = ParameterDirection.Output;
                 con.Open();
-                Cmd.ExecuteNonQuery();
+                //Cmd.ExecuteNonQuery();
                 con.Close();
+
+                //New Code Shubham Patil
+                con.Open();
+                SqlCommand Cmdss = new SqlCommand("Select * from tblCustomer where CustomerName='" + txtCompName.Text + "'", con);
+             
+                SqlDataReader dataReader = Cmdss.ExecuteReader();
+                if (dataReader.Read())
+                {
+
+                    string addressLine2 = dataReader["AddresLine2"].ToString();
+                    string addressLine3 = dataReader["AddresLine3"].ToString();
+                    string email = dataReader["Email"].ToString();
+                    string city = dataReader["City"].ToString();
+                    string country = dataReader["Country"].ToString();
+                    string mobNo = dataReader["MobNo"].ToString();
+                    string postalCode = dataReader["PostalCode"].ToString();
+                    string contactPerName1 = dataReader["ContactPerName1"].ToString();
+                    string contactPerNo1 = dataReader["ContactPerNo1"].ToString();
+                    string contactPerName2 = dataReader["ContactPerName2"].ToString();
+                    string contactPerNo2 = dataReader["ContactPerNo2"].ToString();
+                    string isStatus = dataReader["IsStatus"].ToString();
+                    string createdBy = dataReader["CreatedBy"].ToString();
+                    string createdDate = dataReader["Createddate"].ToString();
+                    string updatedBy = dataReader["UpdatedBy"].ToString();
+                    string updatedDate = dataReader["UpdatedDate"].ToString();
+                    string custId = dataReader["CustId"].ToString();
+                    dataReader.Close();
+
+                    // Update the record
+                    SqlCommand updateCmd = new SqlCommand(
+                        @"UPDATE [dbo].[tblCustomer] 
+                          SET [CustomerName] = @CustomerName,
+                              [GSTNo] = @GSTNo,
+                              [StateCode] = @StateCode,
+                              [PanNo] = @PanNo,
+                              [AddresLine1] = @AddressLine1,
+                              [AddresLine2] = @AddressLine2,
+                              [AddresLine3] = @AddressLine3,
+                              [Email] = @Email,
+                              [City] = @City,
+                              [Country] = @Country,
+                              [MobNo] = @MobNo,
+                              [PostalCode] = @PostalCode,
+                              [ContactPerName1] = @ContactPerName1,
+                              [ContactPerNo1] = @ContactPerNo1,
+                              [ContactPerName2] = @ContactPerName2,
+                              [ContactPerNo2] = @ContactPerNo2,
+                              [IsStatus] = @IsStatus,
+                              [CreatedBy] = @CreatedBy,
+                              [Createddate] = @CreatedDate,
+                              [UpdatedBy] = @UpdatedBy,
+                              [UpdatedDate] = @UpdatedDate
+                          WHERE CustId = @CustId", con);
+
+                    // Add parameters for the update command
+                    updateCmd.Parameters.AddWithValue("@CustomerName", txtCompName.Text);
+                    updateCmd.Parameters.AddWithValue("@GSTNo", txt_CompanyGSTno.Text);
+                    updateCmd.Parameters.AddWithValue("@StateCode", txt_CustomerStateCode.Text);
+                    updateCmd.Parameters.AddWithValue("@PanNo", txt_CustomerPanNo.Text);
+                    updateCmd.Parameters.AddWithValue("@AddressLine1", txt_ShipingAdddesss.Text);
+                    updateCmd.Parameters.AddWithValue("@AddressLine2", addressLine2);
+                    updateCmd.Parameters.AddWithValue("@AddressLine3", addressLine3);
+                    updateCmd.Parameters.AddWithValue("@Email", email);
+                    updateCmd.Parameters.AddWithValue("@City", city);
+                    updateCmd.Parameters.AddWithValue("@Country", country);
+                    updateCmd.Parameters.AddWithValue("@MobNo", mobNo);
+                    updateCmd.Parameters.AddWithValue("@PostalCode", postalCode);
+                    updateCmd.Parameters.AddWithValue("@ContactPerName1", contactPerName1);
+                    updateCmd.Parameters.AddWithValue("@ContactPerNo1", contactPerNo1);
+                    updateCmd.Parameters.AddWithValue("@ContactPerName2", contactPerName2);
+                    updateCmd.Parameters.AddWithValue("@ContactPerNo2", contactPerNo2);
+                    updateCmd.Parameters.AddWithValue("@IsStatus", isStatus);
+                    updateCmd.Parameters.AddWithValue("@CreatedBy", createdBy);
+                    updateCmd.Parameters.AddWithValue("@CreatedDate", createdDate);
+                    updateCmd.Parameters.AddWithValue("@UpdatedBy", updatedBy);
+                    updateCmd.Parameters.AddWithValue("@UpdatedDate", updatedDate);
+                    updateCmd.Parameters.AddWithValue("@CustId", custId);
+
+                    // Execute the update
+                    int rowsAffected = updateCmd.ExecuteNonQuery();     
+                }
+                con.Close();
+                //New Code End
 
                 // New Code Shubham Patil
                 int id = Convert.ToInt32(textquotationid.Value);
@@ -1806,7 +1923,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
         //msgenaccount.Subject = "Tax Invoice";// Subject of Email  
         //msgenaccount.Body = strMessage;
 
-        message.From = new MailAddress("enquiry@weblinkservices.net", "info@endeavours.in");
+        message.From = new MailAddress("testing@weblinkservices.net", "info@endeavours.in");
         //message.From = new System.Net.Mail.MailAddress("info@endeavours.in");// Email-ID of Sender  
         // message.From = new System.Net.Mail.MailAddress("enquiry@weblinkservices.net");// Email-ID of Sender  
         message.IsBodyHtml = true;
@@ -1832,7 +1949,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
         SmtpClient SmtpMail = new SmtpClient();
         SmtpMail.Host = "smtpout.secureserver.net"; // Name or IP-Address of Host used for SMTP transactions  
         SmtpMail.Port = 587; // Port for sending the mail  
-        SmtpMail.Credentials = new System.Net.NetworkCredential("enquiry@weblinkservices.net", "wlspl@123"); // Username/password of network, if apply  
+        SmtpMail.Credentials = new System.Net.NetworkCredential("testing@weblinkservices.net", "Weblink@Testing#123"); // Username/password of network, if apply  
         SmtpMail.DeliveryMethod = SmtpDeliveryMethod.Network;
         SmtpMail.EnableSsl = false;
 
@@ -1858,7 +1975,8 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
         //SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Taxinvoice_pdf WHERE InvoiceNo='" + txt_InvoiceNo.Text + "' AND Email='" + MAIL + "'   ", con);
 
         //Changes for Temparay
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Tax_Invoice_PDF_SALE_Mail As TP Inner join CustomerPO_Dtls_Both As TD on TP.Id= TD.InvoiceId WHERE TP.InvoiceNo='" + txt_InvoiceNo.Text + "' ", con);
+        //SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Tax_Invoice_PDF_SALE_Mail As TP Inner join CustomerPO_Dtls_Both As TD on TP.Id= TD.InvoiceId WHERE TP.InvoiceNo='" + txt_InvoiceNo.Text + "' ", con);
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Tax_Invoice_PDF_SALE_Mail_Both As TP Inner join CustomerPO_Dtls_Both As TD on TP.Id= TD.PurchaseId WHERE TP.InvoiceNo='" + txt_InvoiceNo.Text + "' ", con);
         // SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Taxinvoice_pdf WHERE InvoiceNo='" + txt_InvoiceNo.Text + "' ", con);
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
@@ -1868,7 +1986,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
         Document doc = new Document(PageSize.A4, 10f, 10f, 55f, 0f);
         PdfWriter pdfWriter = PdfWriter.GetInstance(doc, pdf);
 
-        PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(Server.MapPath("~/Files/") + "TaxInvoice.pdf", FileMode.Create));
+        PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(Server.MapPath("~/files/") + "TaxInvoice.pdf", FileMode.Create));
         //PdfWriter writer = PdfWriter.GetInstance(doc, Response.OutputStream);
         XMLWorkerHelper.GetInstance().ParseXHtml(writer, doc, sr);
 
@@ -2114,17 +2232,17 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                     table.AddCell(new Phrase(rowid.ToString(), FontFactory.GetFont("Arial", 9)));
                     table.AddCell(new Phrase(dr["PrintDescription"].ToString(), FontFactory.GetFont("Arial", 9)));
                     //table.AddCell(new Phrase(dr["Description1"].ToString(), FontFactory.GetFont("Arial", 9)));
-                    table.AddCell(new Phrase(dr["Hsn1"].ToString(), FontFactory.GetFont("Arial", 9)));
-                    table.AddCell(new Phrase(dr["TaxPercentage1"].ToString(), FontFactory.GetFont("Arial", 9)));
-                    table.AddCell(new Phrase(dr["Quntity1"].ToString(), FontFactory.GetFont("Arial", 9)));
-                    table.AddCell(new Phrase(dr["Unit1"].ToString(), FontFactory.GetFont("Arial", 9)));
-                    table.AddCell(new Phrase(dr["Rate1"].ToString(), FontFactory.GetFont("Arial", 9)));
-                    table.AddCell(new Phrase(dr["DiscountPercentage1"].ToString(), FontFactory.GetFont("Arial", 9)));
+                    table.AddCell(new Phrase(dr["Hsn"].ToString(), FontFactory.GetFont("Arial", 9)));
+                    table.AddCell(new Phrase(dr["TaxPercentage"].ToString(), FontFactory.GetFont("Arial", 9)));
+                    table.AddCell(new Phrase(dr["Quntity"].ToString(), FontFactory.GetFont("Arial", 9)));
+                    table.AddCell(new Phrase(dr["Unit"].ToString(), FontFactory.GetFont("Arial", 9)));
+                    table.AddCell(new Phrase(dr["Rate"].ToString(), FontFactory.GetFont("Arial", 9)));
+                    table.AddCell(new Phrase(dr["DiscountPercentage"].ToString(), FontFactory.GetFont("Arial", 9)));
                     table.AddCell(new Phrase(_ftotal, FontFactory.GetFont("Arial", 9)));
                     rowid++;
 
                     //Ttotal_price += Convert.ToDouble(dr["Total"].ToString());
-                    Ttotal_price += Convert.ToDouble(dr["Total1"].ToString());
+                    Ttotal_price += Convert.ToDouble(dr["GrandTotal"].ToString());
                     //Ttotal_price += Convert.ToDouble(dr["AllTotalAmount"].ToString());
                 }
             }
@@ -2358,87 +2476,87 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
 
             //Grand total Row STart
             Paragraph paragraphTable17 = new Paragraph();
-                paragraphTable5.SpacingAfter = 10f;
+            paragraphTable5.SpacingAfter = 10f;
 
-                //paragraphTable5.SpacingAfter = 10f;
+            //paragraphTable5.SpacingAfter = 10f;
 
-                string[] itemm = { "Goods once sold will not be taken back or exchange. \b",
+            string[] itemm = { "Goods once sold will not be taken back or exchange. \b",
                         "Interest at the rate of 18% will be charged if bill is'nt paid within 30 days.\b",
                         "Our risk and responsibility ceases the moment goods leaves out godown. \n",
                         };
 
-                Font font16 = FontFactory.GetFont("Arial", 12, Font.BOLD);
-                Font font17 = FontFactory.GetFont("Arial", 10, Font.BOLD);
-                Paragraph paragraphhhhh = new Paragraph("", font12);
+            Font font16 = FontFactory.GetFont("Arial", 12, Font.BOLD);
+            Font font17 = FontFactory.GetFont("Arial", 10, Font.BOLD);
+            Paragraph paragraphhhhh = new Paragraph("", font12);
 
-                //paragraphh.SpacingAfter = 10f;
+            //paragraphh.SpacingAfter = 10f;
 
-                for (int i = 0; i < items.Length; i++)
-                {
-                    paragraph.Add(new Phrase("", font10));
-                }
+            for (int i = 0; i < items.Length; i++)
+            {
+                paragraph.Add(new Phrase("", font10));
+            }
 
-                table = new PdfPTable(3);
-                table.TotalWidth = 560f;
-                table.LockedWidth = true;
+            table = new PdfPTable(3);
+            table.TotalWidth = 560f;
+            table.LockedWidth = true;
 
-                //var Grndttl = Convert.ToDecimal(Ttotal_price) + Convert.ToDecimal(Cgst_9) + Convert.ToDecimal(Sgst_9);
+            //var Grndttl = Convert.ToDecimal(Ttotal_price) + Convert.ToDecimal(Cgst_9) + Convert.ToDecimal(Sgst_9);
 
-                table.SetWidths(new float[] { 0f, 76f, 12f });
-                table.AddCell(paragraph);
-                PdfPCell cell44 = new PdfPCell(new Phrase("Grand Total", FontFactory.GetFont("Arial", 10, Font.BOLD)));
-                cell44.HorizontalAlignment = Element.ALIGN_RIGHT;
-                table.AddCell(cell44);
-                PdfPCell cell55 = new PdfPCell(new Phrase(GrandTotal, FontFactory.GetFont("Arial", 10, Font.BOLD)));
-                cell55.HorizontalAlignment = Element.ALIGN_RIGHT;
-                table.AddCell(cell55);
-
-
-                doc.Add(table);
-                //Grand total Row End
+            table.SetWidths(new float[] { 0f, 76f, 12f });
+            table.AddCell(paragraph);
+            PdfPCell cell44 = new PdfPCell(new Phrase("Grand Total", FontFactory.GetFont("Arial", 10, Font.BOLD)));
+            cell44.HorizontalAlignment = Element.ALIGN_RIGHT;
+            table.AddCell(cell44);
+            PdfPCell cell55 = new PdfPCell(new Phrase(GrandTotal, FontFactory.GetFont("Arial", 10, Font.BOLD)));
+            cell55.HorizontalAlignment = Element.ALIGN_RIGHT;
+            table.AddCell(cell55);
 
 
+            doc.Add(table);
+            //Grand total Row End
 
 
 
-                //Grand total in word Row STart
-                Paragraph paragraphTable18 = new Paragraph();
-                paragraphTable18.SpacingAfter = 50f;
 
-                //paragraphTable5.SpacingAfter = 10f;
 
-                string[] itemmm = { "Goods once sold will not be taken back or exchange. \b",
+            //Grand total in word Row STart
+            Paragraph paragraphTable18 = new Paragraph();
+            paragraphTable18.SpacingAfter = 50f;
+
+            //paragraphTable5.SpacingAfter = 10f;
+
+            string[] itemmm = { "Goods once sold will not be taken back or exchange. \b",
                         "Interest at the rate of 18% will be charged if bill is'nt paid within 30 days.\b",
                         "Our risk and responsibility ceases the moment goods leaves out godown. \n",
                         };
 
-                Font font18 = FontFactory.GetFont("Arial", 12, Font.BOLD);
-                Font font19 = FontFactory.GetFont("Arial", 10, Font.BOLD);
-                Paragraph paragraphhmhhh = new Paragraph("", font12);
+            Font font18 = FontFactory.GetFont("Arial", 12, Font.BOLD);
+            Font font19 = FontFactory.GetFont("Arial", 10, Font.BOLD);
+            Paragraph paragraphhmhhh = new Paragraph("", font12);
 
 
 
-                for (int i = 0; i < items.Length; i++)
-                {
-                    paragraph.Add(new Phrase("", font10));
-                }
+            for (int i = 0; i < items.Length; i++)
+            {
+                paragraph.Add(new Phrase("", font10));
+            }
 
-                table = new PdfPTable(3);
-                table.TotalWidth = 560f;
-                table.LockedWidth = true;
+            table = new PdfPTable(3);
+            table.TotalWidth = 560f;
+            table.LockedWidth = true;
 
 
 
-                table.SetWidths(new float[] { 0f, 25f, 63f });
-                table.AddCell(paragraph);
-                PdfPCell cell66 = new PdfPCell(new Phrase("Amount In Words Rs. ", FontFactory.GetFont("Arial", 10, Font.BOLD)));
-                cell66.HorizontalAlignment = Element.ALIGN_CENTER;
-                table.AddCell(cell66);
-                PdfPCell cell77 = new PdfPCell(new Phrase(TotalInWord, FontFactory.GetFont("Arial", 10, Font.BOLD)));
-                cell77.HorizontalAlignment = Element.ALIGN_CENTER;
-                table.AddCell(cell77);
+            table.SetWidths(new float[] { 0f, 25f, 63f });
+            table.AddCell(paragraph);
+            PdfPCell cell66 = new PdfPCell(new Phrase("Amount In Words Rs. ", FontFactory.GetFont("Arial", 10, Font.BOLD)));
+            cell66.HorizontalAlignment = Element.ALIGN_CENTER;
+            table.AddCell(cell66);
+            PdfPCell cell77 = new PdfPCell(new Phrase(TotalInWord, FontFactory.GetFont("Arial", 10, Font.BOLD)));
+            cell77.HorizontalAlignment = Element.ALIGN_CENTER;
+            table.AddCell(cell77);
 
-                doc.Add(table);
+            doc.Add(table);
             //Grand total in word Row End
 
 
@@ -2570,38 +2688,38 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             doc.Add(table);
             doc.Close();
             Byte[] FileBuffer = File.ReadAllBytes(Server.MapPath("~/Files/") + "TaxInvoice.pdf");
-            }
-            //    }
-            //}
-            return pdf;
         }
+        //    }
+        //}
+        return pdf;
+    }
 
-        protected void check_address_CheckedChanged(object sender, EventArgs e)
+    protected void check_address_CheckedChanged(object sender, EventArgs e)
+    {
+        if (check_address.Checked == true)
         {
-            if (check_address.Checked == true)
-            {
-                txtCustName.Text = txtCompName.Text;
-                txt_ShipingAdddesss.Text = txt_CompanyAddress.Text;
-                txt_CustomerGstNo.Text = txt_CompanyGSTno.Text;
-                txt_CustomerPanNo.Text = txt_CompanyPanNo.Text;
-                txt_CustomerStateCode.Text = txt_CompanyStateCode.Text;
-                drop_CustomerRagisterType.Text = drop_CustomerRagisterType.Text;
-            }
+            txtCustName.Text = txtCompName.Text;
+            txt_ShipingAdddesss.Text = txt_CompanyAddress.Text;
+            txt_CustomerGstNo.Text = txt_CompanyGSTno.Text;
+            txt_CustomerPanNo.Text = txt_CompanyPanNo.Text;
+            txt_CustomerStateCode.Text = txt_CompanyStateCode.Text;
+            drop_CustomerRagisterType.Text = drop_CustomerRagisterType.Text;
         }
+    }
 
-        protected void btn_Cancel_Click(object sender, EventArgs e)
+    protected void btn_Cancel_Click(object sender, EventArgs e)
+    {
+        if (Request.QueryString["InvoiceNo"] != null)
         {
-            if (Request.QueryString["InvoiceNo"] != null)
-            {
-                Response.Redirect("Taxinvoicereport.aspx");
-            }
-            else
-            {
+            Response.Redirect("Taxinvoicereport.aspx");
+        }
+        else
+        {
             //Response.Redirect("TaxInvoiceList.aspx");
             Response.Redirect("TaxInvoiceList_Sales.aspx");
-            }
-
         }
+
+    }
 
     [System.Web.Script.Services.ScriptMethod()]
     [System.Web.Services.WebMethod]

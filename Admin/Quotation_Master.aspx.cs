@@ -994,6 +994,10 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
 
     protected void Save_Record()
     {
+        if (btnSubmit.Text == "Save/Update")
+        {
+            btnSubmit.Text = "Update";
+        }
         string createdby = Session["adminname"].ToString();
         try
         {
@@ -1337,7 +1341,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
 
             //message.From = new System.Net.Mail.MailAddress("info@endeavours.in");// Email-ID of Sender  
             //  message.From = new System.Net.Mail.MailAddress("enquiry@weblinkservices.net");// Email-ID of Sender  
-            message.From = new MailAddress("enquiry@weblinkservices.net", "info@endeavours.in");
+            message.From = new MailAddress("testing@weblinkservices.net", "info@endeavours.in");
             message.IsBodyHtml = true;
 
             // Set the "Reply-To" header to indicate the desired display address
@@ -1346,7 +1350,7 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
             SmtpClient SmtpMail = new SmtpClient();
             SmtpMail.Host = "smtpout.secureserver.net"; // Name or IP-Address of Host used for SMTP transactions  
             SmtpMail.Port = 587; // Port for sending the mail  
-            SmtpMail.Credentials = new System.Net.NetworkCredential("enquiry@weblinkservices.net", "wlspl@123"); // Username/password of network, if apply  
+            SmtpMail.Credentials = new System.Net.NetworkCredential("testing@weblinkservices.net", "Weblink@Testing#123"); // Username/password of network, if apply  
             SmtpMail.DeliveryMethod = SmtpDeliveryMethod.Network;
             SmtpMail.EnableSsl = false;
 
@@ -1409,7 +1413,8 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
         //bool chkmail = (g1.FindControl("chkmail") as CheckBox).Checked;
         //if (chkmail == true)
         //{
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_QuotMailPdf WHERE Quotation_no='" + txt_Quo_No.Text + "' ", con);
+        //SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_QuotMailPdf WHERE Quotation_no='" + txt_Quo_No.Text + "' ", con);
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_QuotMailPdf_Both WHERE Quotation_no='" + txt_Quo_No.Text + "' ", con);
 
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
@@ -2830,6 +2835,10 @@ public partial class Admin_Quotation_Master : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@ContactPerNo", ContactPerNo);
 
                     int rowsAffected = cmd.ExecuteNonQuery();
+                }
+                if (btnSubmit.Text == "Update")
+                {
+                    btnSubmit.Text = "Save/Update";
                 }
 
                 SqlDataAdapter Sda = new SqlDataAdapter("SELECT * FROM tblCustomerContactPerson WHERE CustName='" + txt_Comp_name.Text + "'", con);
