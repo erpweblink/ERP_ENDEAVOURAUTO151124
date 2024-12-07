@@ -239,7 +239,7 @@
                             <asp:TemplateField HeaderText="Entry Date">
 
                                 <ItemTemplate>
-                                    <%--                                     <asp:Label ID="lblEntryDate" runat="server" Text='<%# Convert.ToDateTime( Eval("EntryDate","{0:d}")).ToString("dd/MM/yyyy") %>'></asp:Label>--%>
+                                    <%--<asp:Label ID="lblEntryDate" runat="server" Text='<%# Convert.ToDateTime( Eval("EntryDate","{0:d}")).ToString("dd/MM/yyyy") %>'></asp:Label>--%>
                                     <asp:Label ID="lblEntryDate" runat="server" Text='<%# Eval("EntryDate","{0:d}") %>'></asp:Label>
                                 </ItemTemplate>
 
