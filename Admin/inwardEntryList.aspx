@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/AdminMaster.master" AutoEventWireup="true" CodeFile="inwardEntryList.aspx.cs" Inherits="Reception_inwardEntryList"  EnableEventValidation="false" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/AdminMaster.master" AutoEventWireup="true" CodeFile="inwardEntryList.aspx.cs" Inherits="Reception_inwardEntryList" EnableEventValidation="false" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
@@ -24,8 +24,8 @@
             margin-right: -641px;
         }
 
-         .btncreatee {           
-            margin-right: -591px;          
+        .btncreatee {
+            margin-right: -591px;
         }
 
         .completionList {
@@ -231,7 +231,7 @@
                 if (selectedValue === "All" || i <= parseInt(selectedValue)) {
                     gvRows[i].style.display = "";
                 } else {
-                    gvRows[i].style.display = "none"; 
+                    gvRows[i].style.display = "none";
                 }
             }
         }
@@ -364,19 +364,22 @@
                     <div class="col-md-1 col-xs-3 col-3">
                         <asp:LinkButton ID="lnkBtnsearch" runat="server" CssClass="btn btn-primary txtsear" OnClick="lnkBtnsearch_Click"><i class="fa fa-search" style="font-size:24px"></i></asp:LinkButton>
                     </div>
-                    <div class="col-md-1 col-xs-3 col-3" style=" margin-left: -31px;">
+                    <div class="col-md-1 col-xs-3 col-3" style="margin-left: -31px;">
                         <asp:LinkButton ID="lnkrefresh" runat="server" CssClass="btn btn-primary txtsear mt-top" OnClick="lnkrefresh_Click"><i class="fa fa-refresh" style="font-size:24px"></i></asp:LinkButton>
                     </div>
-                         <div class="col-md-3" style="margin-left:10px">
-                        <asp:Button ID="btncreate" runat="server" class="btn btn-primary btncreate" Text="Create" OnClick="btncreate_Click"></asp:Button>                    
-                    </div>   
-                 <div class="col-md-2">
-                    <button id="btnexportexcel" runat="server" class="btn btn-primary btncreate btncreatee" onserverclick="btnexportexcel_Click">
-                        Export <i class="fa fa-file-excel"></i>
-                    </button>
+
                 </div>
+                <div class="row" style="margin-left:121px;">
+                    <div class="col-md-2">
+                        <asp:Button ID="btncreate" runat="server" class="btn btn-primary btncreate" Text="Create" OnClick="btncreate_Click"></asp:Button>
+                    </div>
 
-
+                    <div class="col-md-2">
+                        <button id="btnexportexcel" runat="server" class="btn btn-primary btncreate btncreatee" onserverclick="btnexportexcel_Click">
+                            Export <i class="fa fa-file-excel"></i>
+                        </button>
+                    </div>
+               
                 </div>
 
                 <div class="row">
@@ -415,7 +418,7 @@
 
                     <div class="col-md-2">
                         <!-- Show Entries Dropdown -->
-                       <asp:Label ID="lbl_show" runat="server" Text="Show Entries" CssClass="control-label col-sm-6"></asp:Label>
+                        <asp:Label ID="lbl_show" runat="server" Text="Show Entries" CssClass="control-label col-sm-6"></asp:Label>
                         <asp:DropDownList ID="ddlShowEntries" runat="server" CssClass="form-control" onchange="updateRecords()">
                             <asp:ListItem Text="25" Value="25"></asp:ListItem>
                             <asp:ListItem Text="50" Value="50"></asp:ListItem>
@@ -542,8 +545,8 @@
 
                         <%-- Sorted Grid started--%>
                         <asp:GridView ID="sortedgv" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
-                            OnRowCommand="gv_Inward_RowCommand"  OnPageIndexChanging="sortedgv_PageIndexChanging" PageSize="10" AllowPaging="true"
-                            PagerStyle-CssClass="paging" OnRowDataBound="gv_Inward_RowDataBound1">
+                            OnRowCommand="gv_Inward_RowCommand" OnRowDataBound="gv_Inward_RowDataBound1">
+                            <%--OnPageIndexChanging="sortedgv_PageIndexChanging" PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging"--%>
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr. No.">
                                     <ItemTemplate>
@@ -656,10 +659,9 @@
                         </asp:GridView>
                         <%--Sorted Grid End--%>
 
-                          <%--Export To Excel Grid Start--%>
-                          <asp:GridView ID="GridEporttoexcel" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
-                              
-                            PagerStyle-CssClass="paging" >
+                        <%--Export To Excel Grid Start--%>
+                        <asp:GridView ID="GridEporttoexcel" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
+                            PagerStyle-CssClass="paging">
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr. No.">
                                     <ItemTemplate>
@@ -747,13 +749,13 @@
                                     </ItemTemplate>
                                 </asp:TemplateField>
 
-                              <%--  <asp:TemplateField HeaderText="Image" HeaderStyle-CssClass="gvhead">
+                                <%--  <asp:TemplateField HeaderText="Image" HeaderStyle-CssClass="gvhead">
                                     <ItemTemplate>
                                         <asp:Image ID="Image1" runat="server" ImageUrl='<%# Eval("Imagepath") %>' Width="100px" Height="100px" Style="border: 1px solid #acacac;" />
                                     </ItemTemplate>
                                 </asp:TemplateField>--%>
 
-                         <%--       <asp:TemplateField HeaderText="Action" ItemStyle-Width="100px">
+                                <%--       <asp:TemplateField HeaderText="Action" ItemStyle-Width="100px">
                                     <ItemTemplate>
                                         <asp:LinkButton runat="server" ID="lnkbtnEdit" ToolTip="Edit" CommandArgument='<%# Eval("JobNo") %>' CommandName="RowEdit"><i class="fa fa-edit" style="font-size:24px"></i></asp:LinkButton>
                                         <asp:LinkButton runat="server" ID="lnkbtnDelete" ToolTip="Delete" OnClientClick="Javascript:return confirm('Are you sure to Delete?')" CommandArgument='<%# Eval("JobNo") %>' CommandName="RowDelete"><i class="fa fa-trash-o" style="font-size:24px"></i></asp:LinkButton>
