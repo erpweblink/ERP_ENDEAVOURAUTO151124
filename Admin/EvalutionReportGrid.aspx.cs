@@ -153,7 +153,7 @@ public partial class Admin_EvalutionReportGrid : System.Web.UI.Page
             DataTable dt = new DataTable();
             con.Open();
             SqlDataAdapter sad = new SqlDataAdapter("select [id],[JobNo],[CustomerName],[ModelNo],[SerialNo]," +
-                "[EngiName],[TestingDate],[Status],[Remark],[EntryDate],[isCompleted],[isdeleted],[isCancel]," +
+                "[EngiName],[TestingDate],[Status],[Remark],[EntryDate],[ProductName],[isCompleted],[isdeleted],[isCancel]," +
                 "[CreatedBy],[CreatedDate],[UpdateBy],[UpdatedDate] FROM [tblTestingProduct] where JobNo='" + txtjob.Text + "' AND CustomerName='" + txtSearchCust.Text + "'  AND isCompleted='1' AND isdeleted='0' ", con);
             sad.Fill(dt);
 
@@ -169,7 +169,7 @@ public partial class Admin_EvalutionReportGrid : System.Web.UI.Page
 
             con.Open();
             SqlDataAdapter sad = new SqlDataAdapter("select [id],[JobNo],[CustomerName],[ModelNo],[SerialNo]," +
-                "[EngiName],[TestingDate],[Status],[Remark],[EntryDate],[isCompleted],[isdeleted],[isCancel]," +
+                "[EngiName],[TestingDate],[Status],[Remark],[EntryDate],[ProductName],[isCompleted],[isdeleted],[isCancel]," +
                 "[CreatedBy],[CreatedDate],[UpdateBy],[UpdatedDate] FROM [tblTestingProduct] where JobNo='" + txtjob.Text + "' AND EngiName='" + txtsearchEngi.Text + "'  AND isCompleted='1' AND isdeleted='0' ", con);
             sad.Fill(dt);
 

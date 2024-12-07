@@ -60,7 +60,7 @@ public partial class Admin_SalesProformaList : System.Web.UI.Page
         {
             string UserCompany = Session["Admin"].ToString();
             DataTable dt = new DataTable();
-            SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM [tbl_Proforma_Hdr] WHERE isdeleted='0' AND CompanyName='" + UserCompany + "' ", Conn);
+            SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM [tbl_Proforma_Hdr] WHERE Is_Deleted='0' AND CompName='" + UserCompany + "' ", Conn);
             da.Fill(dt);
             GvPurchaseOrderList.EmptyDataText = "Not Records Found";
             GvPurchaseOrderList.DataSource = dt;
@@ -102,7 +102,7 @@ public partial class Admin_SalesProformaList : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT JobNo from [tbl_Proforma_Hdr] where " + "JobNo like @Search + '%' AND isdeleted='0'";
+                com.CommandText = "select DISTINCT JobNo from [tbl_Proforma_Hdr] where " + "JobNo like @Search + '%' AND Is_Deleted='0'";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -137,7 +137,7 @@ public partial class Admin_SalesProformaList : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT InvNo from [tbl_Proforma_Hdr] where " + "InvNo like @Search + '%' AND isdeleted='0' ";
+                com.CommandText = "select DISTINCT InvNo from [tbl_Proforma_Hdr] where " + "InvNo like @Search + '%' AND Is_Deleted='0' ";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -171,21 +171,21 @@ public partial class Admin_SalesProformaList : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT CompanyName from [tbl_Proforma_Hdr] where " + "CompanyName like @Search + '%' AND isdeleted='0' ";
+                com.CommandText = "select DISTINCT CompName from [tbl_Proforma_Hdr] where " + "CompName like @Search + '%' AND Is_Deleted='0' ";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
                 con.Open();
-                List<string> CompanyName = new List<string>();
+                List<string> CompName = new List<string>();
                 using (SqlDataReader sdr = com.ExecuteReader())
                 {
                     while (sdr.Read())
                     {
-                        CompanyName.Add(sdr["CompanyName"].ToString());
+                        CompName.Add(sdr["CompName"].ToString());
                     }
                 }
                 con.Close();
-                return CompanyName;
+                return CompName;
             }
 
         }
@@ -204,10 +204,10 @@ public partial class Admin_SalesProformaList : System.Web.UI.Page
         if (e.CommandName == "RowDelete")
         {
             Conn.Open();
-            SqlCommand Cmd = new SqlCommand("UPDATE [tbl_Proforma_Hdr] SET isdeleted='1' WHERE Id=@Id", Conn);
+            SqlCommand Cmd = new SqlCommand("UPDATE [tbl_Proforma_Hdr] SET Is_Deleted='1' WHERE Id=@Id", Conn);
 
             Cmd.Parameters.AddWithValue("Id", Convert.ToInt32(e.CommandArgument.ToString()));
-            Cmd.Parameters.AddWithValue("isdeleted", '1');
+            Cmd.Parameters.AddWithValue("Is_Deleted", '1');
 
             Cmd.ExecuteNonQuery();
 
@@ -253,7 +253,7 @@ public partial class Admin_SalesProformaList : System.Web.UI.Page
             if(!string.IsNullOrEmpty(txt_Invoice_search.Text) && !string.IsNullOrEmpty(txtcompany.Text))
             {
                 DataTable dt = new DataTable();
-                SqlDataAdapter sad = new SqlDataAdapter("select * from [tbl_Proforma_Hdr] where InvNo='"+txt_Invoice_search.Text+ "' AND CompanyName='"+txtcompany.Text+ "' AND isdeleted='0'", Conn);
+                SqlDataAdapter sad = new SqlDataAdapter("select * from [tbl_Proforma_Hdr] where InvNo='"+txt_Invoice_search.Text+ "' AND CompName='"+txtcompany.Text+ "' AND Is_Deleted='0'", Conn);
                 sad.Fill(dt);
                 GvPurchaseOrderList.DataSource = dt;
                 GvPurchaseOrderList.DataBind();
@@ -262,7 +262,7 @@ public partial class Admin_SalesProformaList : System.Web.UI.Page
            else if (!string.IsNullOrEmpty(txtJobno.Text) && !string.IsNullOrEmpty(txtcompany.Text))
             {
                 DataTable dt = new DataTable();
-                SqlDataAdapter sad = new SqlDataAdapter("select * from [tbl_Proforma_Hdr] where JobNo='" + txtJobno.Text + "' AND CompanyName='" + txtcompany.Text + "'  AND isdeleted='0'", Conn);
+                SqlDataAdapter sad = new SqlDataAdapter("select * from [tbl_Proforma_Hdr] where JobNo='" + txtJobno.Text + "' AND CompName='" + txtcompany.Text + "'  AND Is_Deleted='0'", Conn);
                 sad.Fill(dt);
                 GvPurchaseOrderList.DataSource = dt;
                 GvPurchaseOrderList.DataBind();
@@ -271,7 +271,7 @@ public partial class Admin_SalesProformaList : System.Web.UI.Page
           else  if (!string.IsNullOrEmpty(txt_Invoice_search.Text) && !string.IsNullOrEmpty(txt_to_podate_search.Text))
             {
                 DataTable dt = new DataTable();
-                SqlDataAdapter sad = new SqlDataAdapter("select * from [tbl_Proforma_Hdr] where InvNo='" + txt_Invoice_search.Text + "' AND invoiceDate='" + txt_Invoice_search.Text + "'  AND isdeleted='0'", Conn);
+                SqlDataAdapter sad = new SqlDataAdapter("select * from [tbl_Proforma_Hdr] where InvNo='" + txt_Invoice_search.Text + "' AND invoiceDate='" + txt_Invoice_search.Text + "'  AND Is_Deleted='0'", Conn);
                 sad.Fill(dt);
                 GvPurchaseOrderList.DataSource = dt;
                 GvPurchaseOrderList.DataBind();
@@ -280,7 +280,7 @@ public partial class Admin_SalesProformaList : System.Web.UI.Page
             else if (!string.IsNullOrEmpty(txtJobno.Text) && !string.IsNullOrEmpty(txt_to_podate_search.Text))
             {
                 DataTable dt = new DataTable();
-                SqlDataAdapter sad = new SqlDataAdapter("select * from [tbl_Proforma_Hdr] where JobNo='" + txtJobno.Text + "' AND invoiceDate='" + txt_Invoice_search.Text + "'  AND isdeleted='0'", Conn);
+                SqlDataAdapter sad = new SqlDataAdapter("select * from [tbl_Proforma_Hdr] where JobNo='" + txtJobno.Text + "' AND invoiceDate='" + txt_Invoice_search.Text + "'  AND Is_Deleted='0'", Conn);
                 sad.Fill(dt);
                 GvPurchaseOrderList.DataSource = dt;
                 GvPurchaseOrderList.DataBind();
@@ -289,7 +289,7 @@ public partial class Admin_SalesProformaList : System.Web.UI.Page
             else if (!string.IsNullOrEmpty(txtJobno.Text) )
             {
                 DataTable dt = new DataTable();
-                SqlDataAdapter sad = new SqlDataAdapter("select * from [tbl_Proforma_Hdr] where JobNo='" + txtJobno.Text + "'  AND isdeleted='0' ", Conn);
+                SqlDataAdapter sad = new SqlDataAdapter("select * from [tbl_Proforma_Hdr] where JobNo='" + txtJobno.Text + "'  AND Is_Deleted='0' ", Conn);
                 sad.Fill(dt);
                 GvPurchaseOrderList.DataSource = dt;
                 GvPurchaseOrderList.DataBind();
@@ -298,7 +298,7 @@ public partial class Admin_SalesProformaList : System.Web.UI.Page
             else if (!string.IsNullOrEmpty(txt_Invoice_search.Text))
             {
                 DataTable dt = new DataTable();
-                SqlDataAdapter sad = new SqlDataAdapter("select * from [tbl_Proforma_Hdr] where InvNo='" + txt_Invoice_search.Text + "'  AND isdeleted='0'", Conn);
+                SqlDataAdapter sad = new SqlDataAdapter("select * from [tbl_Proforma_Hdr] where InvNo='" + txt_Invoice_search.Text + "'  AND Is_Deleted='0'", Conn);
                 sad.Fill(dt);
                 GvPurchaseOrderList.DataSource = dt;
                 GvPurchaseOrderList.DataBind();
@@ -307,16 +307,17 @@ public partial class Admin_SalesProformaList : System.Web.UI.Page
             else if (!string.IsNullOrEmpty(txtcompany.Text))
             {
                 DataTable dt = new DataTable();
-                SqlDataAdapter sad = new SqlDataAdapter("select * from [tbl_Proforma_Hdr] where CompanyName='" + txtcompany.Text + "'  AND isdeleted='0' ", Conn);
+                SqlDataAdapter sad = new SqlDataAdapter("select * from [tbl_Proforma_Hdr] where CompName='" + txtcompany.Text + "'  AND Is_Deleted='0' ", Conn);
                 sad.Fill(dt);
                 GvPurchaseOrderList.DataSource = dt;
                 GvPurchaseOrderList.DataBind();
                 GvPurchaseOrderList.EmptyDataText = "Record Not Found";
             }
-            else if (!string.IsNullOrEmpty(txtJobno.Text))
+            //else if (!string.IsNullOrEmpty(txtJobno.Text))
+            else 
             {
                 DataTable dt = new DataTable();
-                SqlDataAdapter sad = new SqlDataAdapter("select * from [tbl_Proforma_Hdr] where invoiceDate='" + txt_to_podate_search.Text + "'  AND isdeleted='0'", Conn);
+                SqlDataAdapter sad = new SqlDataAdapter("select * from [tbl_Proforma_Hdr] where invoiceDate='" + txt_to_podate_search.Text + "'  AND Is_Deleted='0'", Conn);
                 sad.Fill(dt);
                 GvPurchaseOrderList.DataSource = dt;
                 GvPurchaseOrderList.DataBind();

@@ -223,7 +223,7 @@ public partial class Admin_RatingList : System.Web.UI.Page
 
     [System.Web.Script.Services.ScriptMethod()]
     [System.Web.Services.WebMethod]
-    public static List<string> GetCompList(string prefixText, int count)
+    public static List<string> GetRatingList(string prefixText, int count)
     {
         return AutoFillComplist(prefixText);
     }
@@ -344,9 +344,9 @@ public partial class Admin_RatingList : System.Web.UI.Page
         Response.Cache.SetCacheability(HttpCacheability.NoCache);
         Response.ContentType = "application/vnd.ms-excel";
         Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
-        //Sortedcomponetgrid.GridLines = GridLines.Both;
-        //Sortedcomponetgrid.HeaderStyle.Font.Bold = true;
-        //Sortedcomponetgrid.RenderControl(htmltextwrtter);
+        Sortedcomponetgrid.GridLines = GridLines.Both;
+        Sortedcomponetgrid.HeaderStyle.Font.Bold = true;
+        Sortedcomponetgrid.RenderControl(htmltextwrtter);
         Response.Write(strwritter.ToString());
         Response.End();
     }
@@ -359,9 +359,9 @@ public partial class Admin_RatingList : System.Web.UI.Page
 
             SqlDataAdapter sad = new SqlDataAdapter("SELECT [ID],[RatingName],[CreateBy],[CreateDate],[UpdateBy],[UpdateDate],[IsStatus] FROM [tbl_Rating] where isdeleted = '0'  ", con);
             sad.Fill(dt);
-            //Sortedcomponetgrid.EmptyDataText = "Not Records Found";
-            //Sortedcomponetgrid.DataSource = dt;
-            //Sortedcomponetgrid.DataBind();
+            Sortedcomponetgrid.EmptyDataText = "Not Records Found";
+            Sortedcomponetgrid.DataSource = dt;
+            Sortedcomponetgrid.DataBind();
         }
         catch (Exception ex)
         {
@@ -377,9 +377,9 @@ public partial class Admin_RatingList : System.Web.UI.Page
 
         SqlDataAdapter sad = new SqlDataAdapter("SELECT [ID],[RatingName],[CreateBy],[CreateDate],[UpdateBy],[UpdateDate],[IsStatus] FROM [tbl_Rating] where RatingName='" + txtSearch.Text + "' AND [isdeleted] = '0'  ", con);
         sad.Fill(dt);
-        //Sortedcomponetgrid.EmptyDataText = "Not Records Found";
-        //Sortedcomponetgrid.DataSource = dt;
-        //Sortedcomponetgrid.DataBind();
+        Sortedcomponetgrid.EmptyDataText = "Not Records Found";
+        Sortedcomponetgrid.DataSource = dt;
+        Sortedcomponetgrid.DataBind();
     }
 
     public void GetsortedproductActice()
@@ -400,9 +400,9 @@ public partial class Admin_RatingList : System.Web.UI.Page
                 sad = new SqlDataAdapter("SELECT [ID],[RatingName],[CreateBy],[CreateDate],[UpdateBy],[UpdateDate],[IsStatus] FROM [tbl_Rating] where IsStatus='" + ddlStatus.SelectedValue + "' AND isdeleted='0' ", con);
             }
             sad.Fill(dt);
-            //Sortedcomponetgrid.EmptyDataText = "Not Records Found";
-            //Sortedcomponetgrid.DataSource = dt;
-            //Sortedcomponetgrid.DataBind();
+            Sortedcomponetgrid.EmptyDataText = "Not Records Found";
+            Sortedcomponetgrid.DataSource = dt;
+            Sortedcomponetgrid.DataBind();
         }
         catch (Exception)
         {

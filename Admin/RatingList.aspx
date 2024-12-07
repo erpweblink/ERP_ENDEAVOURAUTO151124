@@ -106,141 +106,140 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <form runat="server">
         <asp:ScriptManager ID="scriptmanager" runat="server"></asp:ScriptManager>
-     
-         <div class="col-lg-12">
+
+        <div class="col-lg-12">
             <div class="card shadow-sm mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h5 class="m-0 font-weight-bold text-primary">Rating List</h5>
                 </div>
                 <div class="row">
                     <div class="col-md-3">
-                       <asp:TextBox runat="server" class="form-control txtsear" ID="txtSearch" name="Search" placeholder="Rating" />
-                            <asp:AutoCompleteExtender ID="AutoCompleteExtender1" CompletionListCssClass="completionList"
-                                CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
-                                CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetRatingList" TargetControlID="txtSearch" runat="server">
-                            </asp:AutoCompleteExtender>
+                        <asp:TextBox runat="server" class="form-control txtsear" ID="txtSearch" name="Search" placeholder="Rating" />
+                        <asp:AutoCompleteExtender ID="AutoCompleteExtender1" CompletionListCssClass="completionList"
+                            CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
+                            CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetRatingList" TargetControlID="txtSearch" runat="server">
+                        </asp:AutoCompleteExtender>
                     </div>
                     <div class="col-md-2">
-                         <asp:LinkButton ID="lnkBtnsearch" runat="server" CssClass="btn btn-primary lnksearch " CausesValidation="False" OnClick="lnkBtnsearch_Click"><i class="fa fa-search" style="font-size:24px"></i></asp:LinkButton>
-                            <asp:LinkButton ID="lnkrefresh" runat="server" CssClass="btn btn-primary lnksearch " OnClick="lnkrefresh_Click" CausesValidation="false"><i class="fa fa-refresh" style="font-size:24px"></i></asp:LinkButton>
+                        <asp:LinkButton ID="lnkBtnsearch" runat="server" CssClass="btn btn-primary lnksearch " CausesValidation="False" OnClick="lnkBtnsearch_Click"><i class="fa fa-search" style="font-size:24px"></i></asp:LinkButton>
+                        <asp:LinkButton ID="lnkrefresh" runat="server" CssClass="btn btn-primary lnksearch " OnClick="lnkrefresh_Click" CausesValidation="false"><i class="fa fa-refresh" style="font-size:24px"></i></asp:LinkButton>
                     </div>
-                   <div class="col-md-3">
-                            <asp:DropDownList ID="ddlStatus" runat="server" AutoPostBack="true" class="form-control active1 " OnSelectedIndexChanged="ddlStatus_SelectedIndexChanged" Width="150px">
-                                <asp:ListItem Value="All" Text="All"></asp:ListItem>
-                                <asp:ListItem Value="1">Active</asp:ListItem>
-                                <asp:ListItem Value="0">DeActive</asp:ListItem>
-                            </asp:DropDownList>
+                    <div class="col-md-3">
+                        <asp:DropDownList ID="ddlStatus" runat="server" AutoPostBack="true" class="form-control active1 " OnSelectedIndexChanged="ddlStatus_SelectedIndexChanged" Width="150px">
+                            <asp:ListItem Value="All" Text="All"></asp:ListItem>
+                            <asp:ListItem Value="1">Active</asp:ListItem>
+                            <asp:ListItem Value="0">DeActive</asp:ListItem>
+                        </asp:DropDownList>
 
-                        </div>
-                        <%--<div class="col-md-2 col-xs-5 col-5"> 
+                    </div>
+                    <%--<div class="col-md-2 col-xs-5 col-5"> 
                         <asp:Button ID="btnexportexcel" runat="server" class="btn btn-primary btncreate btncreatee" OnClick="btnexportexcel_Click"  Text="Export-Excel" ></asp:Button>
                     </div>--%>
                     <div class="col-md-2 col-xs-5 col-5">
                         <asp:Button ID="btncreate" runat="server" class="btn btn-primary btncreate" Text="Create" OnClick="btncreate_Click"></asp:Button>
                     </div>
                 </div>
+                <br />
 
-        <div style="width: 100%; padding: 20px; overflow: scroll;" class="table-responsive">
-                        <asp:GridView ID="gv_Comp" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
-                            OnRowCommand="gv_Comp_RowCommand2" OnRowDataBound="gv_Comp_RowDataBound" PageSize="10" AllowPaging="true" OnPageIndexChanging="gv_Comp_PageIndexChanging" PagerStyle-CssClass="paging">
-                            <Columns>
-                                <asp:TemplateField HeaderText="Sr. No.">
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblSrNo" runat="server" Text='<%#Container.DataItemIndex +1 %>'></asp:Label>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Rating">
+                <%-- <div style="width: 100%; padding: 20px; overflow: scroll;" class="table-responsive">--%>
+                <asp:GridView ID="gv_Comp" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
+                    OnRowCommand="gv_Comp_RowCommand2" OnRowDataBound="gv_Comp_RowDataBound" PageSize="10" AllowPaging="true" OnPageIndexChanging="gv_Comp_PageIndexChanging" PagerStyle-CssClass="paging">
+                    <Columns>
+                        <asp:TemplateField HeaderText="Sr. No.">
+                            <ItemTemplate>
+                                <asp:Label ID="lblSrNo" runat="server" Text='<%#Container.DataItemIndex +1 %>'></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Rating">
 
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblRatingName" runat="server" Text='<%# Eval("RatingName") %>'></asp:Label>
-                                    </ItemTemplate>
+                            <ItemTemplate>
+                                <asp:Label ID="lblRatingName" runat="server" Text='<%# Eval("RatingName") %>'></asp:Label>
+                            </ItemTemplate>
 
-                                </asp:TemplateField>
-                                
-                                <asp:TemplateField HeaderText="Is Active">
+                        </asp:TemplateField>
 
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblIsStatus" runat="server" Text='<%# Eval("IsStatus") %>'></asp:Label>
-                                    </ItemTemplate>
+                        <asp:TemplateField HeaderText="Is Active">
 
-                                </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Action">
-                                    <ItemTemplate>
-                                        <asp:LinkButton runat="server" ID="lnkbtnEdit" ToolTip="Edit" CommandArgument='<%# Eval("ID") %>' CommandName="RowEdit" CausesValidation="False"><i class="fa fa-edit" style="font-size:24px"></i></asp:LinkButton>
+                            <ItemTemplate>
+                                <asp:Label ID="lblIsStatus" runat="server" Text='<%# Eval("IsStatus") %>'></asp:Label>
+                            </ItemTemplate>
+
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Action">
+                            <ItemTemplate>
+                                <asp:LinkButton runat="server" ID="lnkbtnEdit" ToolTip="Edit" CommandArgument='<%# Eval("ID") %>' CommandName="RowEdit" CausesValidation="False"><i class="fa fa-edit" style="font-size:24px"></i></asp:LinkButton>
 
 
-                                        &nbsp;&nbsp;  
+                                &nbsp;&nbsp;  
                                     <asp:LinkButton runat="server" ID="lnkbtnDelete" ToolTip="Delete" OnClientClick="Javascript:return confirm('Are you sure to Delete?')" CommandArgument='<%# Eval("ID") %>' CommandName="RowDelete" CausesValidation="False"><i class="fa fa-trash-o" style="font-size:24px"></i></asp:LinkButton>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                            </Columns>
-                            <FooterStyle BackColor="White" ForeColor="#000066" />
-                            <HeaderStyle BackColor="#0755a1" Font-Bold="True" ForeColor="White" />
-                            <PagerStyle BackColor="White" ForeColor="#000066" HorizontalAlign="Left" />
-                             <PagerSettings PageButtonCount="4" LastPageText="Last" />
-                            <RowStyle ForeColor="#000066" />
-                            <SelectedRowStyle BackColor="#669999" Font-Bold="True" ForeColor="White" />
-                            <SortedAscendingCellStyle BackColor="#F1F1F1" />
-                            <SortedAscendingHeaderStyle BackColor="#007DBB" />
-                            <SortedDescendingCellStyle BackColor="#CAC9C9" />
-                            <SortedDescendingHeaderStyle BackColor="#00547E" />
-                        </asp:GridView>
-                    </div>
-
-                <%--Sorted grid start--%>
-
-                       <%-- <div style="width: 100%; padding: 20px; overflow: scroll;" class="table-responsive">
-                        <asp:GridView ID="Sortedcomponetgrid" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
-                            PagerStyle-CssClass="paging">
-                            <Columns>
-                                <asp:TemplateField HeaderText="Sr. No.">
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblSrNo" runat="server" Text='<%#Container.DataItemIndex +1 %>'></asp:Label>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Rating">
-
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblRatingName" runat="server" Text='<%# Eval("RatingName") %>'></asp:Label>
-                                    </ItemTemplate>
-
-                                </asp:TemplateField>
-
-                                <asp:TemplateField HeaderText="Is Active">
-
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblIsStatus" runat="server" Text='<%# Eval("IsStatus") %>'></asp:Label>
-                                    </ItemTemplate>
-
-                                </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Action">
-                                    <ItemTemplate>
-                                        <asp:LinkButton runat="server" ID="lnkbtnEdit" ToolTip="Edit" CommandArgument='<%# Eval("ID") %>' CommandName="RowEdit" CausesValidation="False"><i class="fa fa-edit" style="font-size:24px"></i></asp:LinkButton>
-
-
-                                        &nbsp;&nbsp;  
-                                    <asp:LinkButton runat="server" ID="lnkbtnDelete" ToolTip="Delete" OnClientClick="Javascript:return confirm('Are you sure to Delete?')" CommandArgument='<%# Eval("ID") %>' CommandName="RowDelete" CausesValidation="False"><i class="fa fa-trash-o" style="font-size:24px"></i></asp:LinkButton>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                            </Columns>
-                            <FooterStyle BackColor="White" ForeColor="#000066" />
-                            <HeaderStyle BackColor="#0755a1" Font-Bold="True" ForeColor="White" />
-                            <PagerStyle BackColor="White" ForeColor="#000066" HorizontalAlign="Left" />
-                             <PagerSettings PageButtonCount="4" LastPageText="Last" />
-                            <RowStyle ForeColor="#000066" />
-                            <SelectedRowStyle BackColor="#669999" Font-Bold="True" ForeColor="White" />
-                            <SortedAscendingCellStyle BackColor="#F1F1F1" />
-                            <SortedAscendingHeaderStyle BackColor="#007DBB" />
-                            <SortedDescendingCellStyle BackColor="#CAC9C9" />
-                            <SortedDescendingHeaderStyle BackColor="#00547E" />
-                        </asp:GridView>
-                    </div>--%>
-
-                <%--sorted grid end--%>
-
-
-                 </div>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                    <FooterStyle BackColor="White" ForeColor="#000066" />
+                    <HeaderStyle BackColor="#0755a1" Font-Bold="True" ForeColor="White" />
+                    <PagerStyle BackColor="White" ForeColor="#000066" HorizontalAlign="Left" />
+                    <PagerSettings PageButtonCount="4" LastPageText="Last" />
+                    <RowStyle ForeColor="#000066" />
+                    <SelectedRowStyle BackColor="#669999" Font-Bold="True" ForeColor="White" />
+                    <SortedAscendingCellStyle BackColor="#F1F1F1" />
+                    <SortedAscendingHeaderStyle BackColor="#007DBB" />
+                    <SortedDescendingCellStyle BackColor="#CAC9C9" />
+                    <SortedDescendingHeaderStyle BackColor="#00547E" />
+                </asp:GridView>
             </div>
+
+            <%--Sorted grid start--%>
+
+            <%--<div style="width: 100%; padding: 20px; overflow: scroll;" class="table-responsive">--%>
+            <asp:GridView ID="Sortedcomponetgrid" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
+                PagerStyle-CssClass="paging">
+                <Columns>
+                    <asp:TemplateField HeaderText="Sr. No.">
+                        <ItemTemplate>
+                            <asp:Label ID="lblSrNo" runat="server" Text='<%#Container.DataItemIndex +1 %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Rating">
+
+                        <ItemTemplate>
+                            <asp:Label ID="lblRatingName" runat="server" Text='<%# Eval("RatingName") %>'></asp:Label>
+                        </ItemTemplate>
+
+                    </asp:TemplateField>
+
+                    <asp:TemplateField HeaderText="Is Active">
+
+                        <ItemTemplate>
+                            <asp:Label ID="lblIsStatus" runat="server" Text='<%# Eval("IsStatus") %>'></asp:Label>
+                        </ItemTemplate>
+
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Action">
+                        <ItemTemplate>
+                            <asp:LinkButton runat="server" ID="lnkbtnEdit" ToolTip="Edit" CommandArgument='<%# Eval("ID") %>' CommandName="RowEdit" CausesValidation="False"><i class="fa fa-edit" style="font-size:24px"></i></asp:LinkButton>
+
+
+                            &nbsp;&nbsp;  
+                                    <asp:LinkButton runat="server" ID="lnkbtnDelete" ToolTip="Delete" OnClientClick="Javascript:return confirm('Are you sure to Delete?')" CommandArgument='<%# Eval("ID") %>' CommandName="RowDelete" CausesValidation="False"><i class="fa fa-trash-o" style="font-size:24px"></i></asp:LinkButton>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+                <FooterStyle BackColor="White" ForeColor="#000066" />
+                <HeaderStyle BackColor="#0755a1" Font-Bold="True" ForeColor="White" />
+                <PagerStyle BackColor="White" ForeColor="#000066" HorizontalAlign="Left" />
+                <PagerSettings PageButtonCount="4" LastPageText="Last" />
+                <RowStyle ForeColor="#000066" />
+                <SelectedRowStyle BackColor="#669999" Font-Bold="True" ForeColor="White" />
+                <SortedAscendingCellStyle BackColor="#F1F1F1" />
+                <SortedAscendingHeaderStyle BackColor="#007DBB" />
+                <SortedDescendingCellStyle BackColor="#CAC9C9" />
+                <SortedDescendingHeaderStyle BackColor="#00547E" />
+            </asp:GridView>
+        </div>
+
+        <%--sorted grid end--%>
+            </div>
+        </div>
 
     </form>
 </asp:Content>
