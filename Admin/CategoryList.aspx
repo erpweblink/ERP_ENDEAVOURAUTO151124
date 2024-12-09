@@ -192,7 +192,7 @@
 
             <%-- <div style="width: 100%; padding: 20px; overflow: scroll;" class="table-responsive">--%>
             <asp:GridView ID="Sortedcomponetgrid" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
-                PagerStyle-CssClass="paging">
+                PagerStyle-CssClass="paging" OnRowCommand="gv_Comp_RowCommand2" >
                 <Columns>
                     <asp:TemplateField HeaderText="Sr. No.">
                         <ItemTemplate>
@@ -220,7 +220,7 @@
 
 
                             &nbsp;&nbsp;  
-                                    <asp:LinkButton runat="server" ID="lnkbtnDelete" ToolTip="Delete" OnClientClick="Javascript:return confirm('Are you sure to Delete?')" CommandArgument='<%# Eval("ID") %>' CommandName="RowDelete" CausesValidation="False"><i class="fa fa-trash-o" style="font-size:24px"></i></asp:LinkButton>
+                            <asp:LinkButton runat="server" ID="lnkbtnDelete" ToolTip="Delete" OnClientClick="Javascript:return confirm('Are you sure to Delete?')" CommandArgument='<%# Eval("ID") %>' CommandName="RowDelete" CausesValidation="False"><i class="fa fa-trash-o" style="font-size:24px"></i></asp:LinkButton>
                         </ItemTemplate>
                     </asp:TemplateField>
                 </Columns>

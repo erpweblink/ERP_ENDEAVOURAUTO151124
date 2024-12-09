@@ -149,7 +149,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2">
-                        <asp:Label ID="lblsearch" runat="server" class="control-label col-sm-6">Search Site </asp:Label>
+                        <asp:Label ID="lblsearch" runat="server" class="control-label col-sm-6">Customer Name </asp:Label>
                         <asp:TextBox runat="server" class="form-control txtsear" OnTextChanged="txtSearch_TextChanged" AutoPostBack="true" ID="txtSearch" name="Search" placeholder="Search Site" />
                         <asp:AutoCompleteExtender ID="AutoCompleteExtender1" CompletionListCssClass="completionList"
                             CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
