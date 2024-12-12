@@ -299,6 +299,11 @@
                                             <asp:Label ID="lblcreatedby" runat="server" Text='<%# Eval("CreatedBy") %>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Agains By">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblagainsby" runat="server" Text='<%# Eval("Type") %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Created Date">
                                         <ItemTemplate>
                                             <%--<asp:Label ID="lblcreateddate" runat="server" Text='<%# Convert.ToDateTime( Eval("CreatedOn","{0:d}")).ToString("dd/MM/yyyy") %>'></asp:Label>--%>

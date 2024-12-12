@@ -1047,22 +1047,41 @@ public partial class Admin_QuatationReport : System.Web.UI.Page
                 GedatwisecustomerExcel();
             }
 
-            Response.Clear();
-            Response.Buffer = true;
-            Response.ClearContent();
-            Response.ClearHeaders();
-            Response.Charset = "";
-            string FileName = "Inward_Entry_List_" + DateTime.Now + ".xls";
-            StringWriter strwritter = new StringWriter();
-            HtmlTextWriter htmltextwrtter = new HtmlTextWriter(strwritter);
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            Response.ContentType = "application/vnd.ms-excel";
-            Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
-            sortedgv.GridLines = GridLines.Both;
-            sortedgv.HeaderStyle.Font.Bold = true;
-            sortedgv.RenderControl(htmltextwrtter);
-            Response.Write(strwritter.ToString());
-            Response.End();
         }
+        else
+        {
+            GridExportExcel();
+        }
+
+        Response.Clear();
+        Response.Buffer = true;
+        Response.ClearContent();
+        Response.ClearHeaders();
+        Response.Charset = "";
+        string FileName = "Quatation_Report_List_" + DateTime.Now + ".xls";
+        StringWriter strwritter = new StringWriter();
+        HtmlTextWriter htmltextwrtter = new HtmlTextWriter(strwritter);
+        Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        Response.ContentType = "application/vnd.ms-excel";
+        Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
+        sortedgv.GridLines = GridLines.Both;
+        sortedgv.HeaderStyle.Font.Bold = true;
+        sortedgv.RenderControl(htmltextwrtter);
+        Response.Write(strwritter.ToString());
+        Response.End();
+    }
+
+    public void GridExportExcel()
+    {
+        DataTable dt = new DataTable();
+
+        con.Open();
+        SqlDataAdapter sad = new SqlDataAdapter("SELECT [ID],[JobNo],[Quotation_no],[Customer_Name],[kind_Att],[Mobile_No],[AllTotal_price],[Quotation_Date],[CreatedBy],[Againstby] from tbl_Quotation_two_Hdr where IsDeleted='0'", con);
+        sad.Fill(dt);
+        sortedgv.EmptyDataText = "Not Records Found";
+        sortedgv.DataSource = dt;
+        sortedgv.DataBind();
+
+        con.Close();
     }
 }

@@ -1083,10 +1083,27 @@ public partial class Admin_PurchaseOrderReport : System.Web.UI.Page
             {
                 GetdatewisevendorExcel();
             }
+            Response.Clear();
+            Response.Buffer = true;
+            Response.ClearContent();
+            Response.ClearHeaders();
+            Response.Charset = "";
+            string FileName = "Purchase_Order_Report_List_" + DateTime.Now + ".xls";
+            StringWriter strwritter = new StringWriter();
+            HtmlTextWriter htmltextwrtter = new HtmlTextWriter(strwritter);
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.ContentType = "application/vnd.ms-excel";
+            Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
+            sortedgv.GridLines = GridLines.Both;
+            sortedgv.HeaderStyle.Font.Bold = true;
+            sortedgv.RenderControl(htmltextwrtter);
+            Response.Write(strwritter.ToString());
+            Response.End();
 
-            
-
-
+        }
+        else
+        {
+            GridExportExcel();
             Response.Clear();
             Response.Buffer = true;
             Response.ClearContent();
@@ -1098,11 +1115,26 @@ public partial class Admin_PurchaseOrderReport : System.Web.UI.Page
             Response.Cache.SetCacheability(HttpCacheability.NoCache);
             Response.ContentType = "application/vnd.ms-excel";
             Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
-            sortedgv.GridLines = GridLines.Both;
-            sortedgv.HeaderStyle.Font.Bold = true;
-            sortedgv.RenderControl(htmltextwrtter);
+            GvPurchaseOrderList.GridLines = GridLines.Both;
+            GvPurchaseOrderList.HeaderStyle.Font.Bold = true;
+            GvPurchaseOrderList.RenderControl(htmltextwrtter);
             Response.Write(strwritter.ToString());
             Response.End();
         }
+        
+    }
+
+    public void GridExportExcel()
+    {
+        DataTable dt = new DataTable();
+
+        Conn.Open();
+        SqlDataAdapter sad = new SqlDataAdapter("select * from tblPurchaseOrderHdr where Is_Deleted='0'", Conn);
+        sad.Fill(dt);
+        GvPurchaseOrderList.EmptyDataText = "Not Records Found";
+        GvPurchaseOrderList.DataSource = dt;
+        GvPurchaseOrderList.DataBind();
+
+        Conn.Close();
     }
 }

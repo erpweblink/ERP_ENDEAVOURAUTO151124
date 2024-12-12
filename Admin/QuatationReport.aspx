@@ -335,6 +335,11 @@
                                         <asp:Label ID="lblCreateuser" runat="server" Text='<%# Eval("CreatedBy") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
+                                 <asp:TemplateField HeaderText="Against By">
+                                     <ItemTemplate>
+                                         <asp:Label ID="lblagainstby" runat="server" Text='<%# Eval("Againstby") %>'></asp:Label>
+                                     </ItemTemplate>
+                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Action">
                                     <ItemTemplate>
                                         <asp:LinkButton ID="lnkshow" runat="server" CommandName="ShowReport" CommandArgument='<%# Eval("ID") %>' Visible="false"><i class="fas fa-eye" style="font-size:24px"></i></asp:LinkButton>

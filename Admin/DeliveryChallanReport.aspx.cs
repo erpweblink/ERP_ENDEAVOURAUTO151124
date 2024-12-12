@@ -1086,23 +1086,41 @@ public partial class Admin_DeliveryChallanReport : System.Web.UI.Page
                 Gedatwisecustomer1Excel();
             }
             
-
-            Response.Clear();
-            Response.Buffer = true;
-            Response.ClearContent();
-            Response.ClearHeaders();
-            Response.Charset = "";
-            string FileName = "Inward_Entry_List_" + DateTime.Now + ".xls";
-            StringWriter strwritter = new StringWriter();
-            HtmlTextWriter htmltextwrtter = new HtmlTextWriter(strwritter);
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            Response.ContentType = "application/vnd.ms-excel";
-            Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
-            sortedgv.GridLines = GridLines.Both;
-            sortedgv.HeaderStyle.Font.Bold = true;
-            sortedgv.RenderControl(htmltextwrtter);
-            Response.Write(strwritter.ToString());
-            Response.End();
         }
+        else
+        {
+            GridExportExcel();
+        }
+
+        Response.Clear();
+        Response.Buffer = true;
+        Response.ClearContent();
+        Response.ClearHeaders();
+        Response.Charset = "";
+        string FileName = "Delivery_Challan_Report_List_" + DateTime.Now + ".xls";
+        StringWriter strwritter = new StringWriter();
+        HtmlTextWriter htmltextwrtter = new HtmlTextWriter(strwritter);
+        Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        Response.ContentType = "application/vnd.ms-excel";
+        Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
+        sortedgv.GridLines = GridLines.Both;
+        sortedgv.HeaderStyle.Font.Bold = true;
+        sortedgv.RenderControl(htmltextwrtter);
+        Response.Write(strwritter.ToString());
+        Response.End();
+    }
+
+    public void GridExportExcel()
+    {
+        DataTable dt = new DataTable();
+
+        con.Open();
+        SqlDataAdapter sad = new SqlDataAdapter("select * from tblChallanHdr where isdeleted='0'", con);
+        sad.Fill(dt);
+        sortedgv.EmptyDataText = "Not Records Found";
+        sortedgv.DataSource = dt;
+        sortedgv.DataBind();
+
+        con.Close();
     }
 }

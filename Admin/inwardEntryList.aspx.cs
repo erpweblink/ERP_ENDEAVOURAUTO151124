@@ -10,6 +10,8 @@ using System.Configuration;
 using System.Text;
 using System.Security.Cryptography;
 using System.IO;
+using System.Activities.Statements;
+using System.Web.Script.Serialization;
 
 public partial class Reception_inwardEntryList : System.Web.UI.Page
 {
@@ -139,40 +141,6 @@ public partial class Reception_inwardEntryList : System.Web.UI.Page
         catch (Exception ex)
         {
             throw ex;
-        }
-    }
-
-    [System.Web.Script.Services.ScriptMethod()]
-    [System.Web.Services.WebMethod]
-    public static List<string> GetJOBNOList(string prefixText, int count)
-    {
-        return AutoFillJOBNOlist(prefixText);
-    }
-
-    public static List<string> AutoFillJOBNOlist(string prefixText)
-    {
-        using (SqlConnection con = new SqlConnection())
-        {
-            con.ConnectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
-
-            using (SqlCommand com = new SqlCommand())
-            {
-                com.CommandText = "select DISTINCT JobNo from tblInwardEntry where " + "JobNo like @Search + '%' ";
-
-                com.Parameters.AddWithValue("@Search", prefixText);
-                com.Connection = con;
-                con.Open();
-                List<string> JobNo = new List<string>();
-                using (SqlDataReader sdr = com.ExecuteReader())
-                {
-                    while (sdr.Read())
-                    {
-                        JobNo.Add(sdr["JobNo"].ToString());
-                    }
-                }
-                con.Close();
-                return JobNo;
-            }
         }
     }
 
@@ -312,8 +280,7 @@ public partial class Reception_inwardEntryList : System.Web.UI.Page
                     //gv_Inward.DataSource = dt;
                     //gv_Inward.DataBind();
                 }
-
-
+               
                 else if (string.IsNullOrEmpty(txtSearch.Text) && !string.IsNullOrEmpty(txtDateSearch.Text) && string.IsNullOrEmpty(txtreatedNo.Text) && string.IsNullOrEmpty(txtDateSearchfrom.Text))
                 {
                     ViewState["Excell"] = "Getsorteddatwise";
@@ -423,8 +390,18 @@ public partial class Reception_inwardEntryList : System.Web.UI.Page
                     GetdatewiseReptedNo();
 
                 }
+                if (!string.IsNullOrEmpty(txtSearch.Text) && !string.IsNullOrEmpty(txtSearchProduct.Text) && !string.IsNullOrEmpty(txtJobNo.Text))
+                {
+                    ViewState["Excell"] = "GetsortedAllData";
+                    GetsortedAllData();
 
+                }
+                //if (!string.IsNullOrEmpty(txtSearch.Text) && !string.IsNullOrEmpty(txtSearchProduct.Text) && !string.IsNullOrEmpty(txtJobNo.Text))
+                //{
+                //    ViewState["Excell"] = "GetsortedAllData";
+                //    GetsortedAllData();
 
+                //}
 
 
 
@@ -505,15 +482,22 @@ public partial class Reception_inwardEntryList : System.Web.UI.Page
         }
     }
 
-    // ----------------------
+
+
     [System.Web.Script.Services.ScriptMethod()]
     [System.Web.Services.WebMethod]
-    public static List<string> GetProductList(string prefixText, int count)
+    public static List<string> GetProductList(string prefixText, string contextKey)
     {
-        return AutoFillProductlist(prefixText);
+        if (string.IsNullOrWhiteSpace(contextKey) && string.IsNullOrWhiteSpace(prefixText))
+        {
+            return new List<string>();
+        }
+
+        return AutoFillProductlist(prefixText, contextKey);
     }
 
-    public static List<string> AutoFillProductlist(string prefixText)
+
+    public static List<string> AutoFillProductlist(string prefixText, string customerName)
     {
         using (SqlConnection con = new SqlConnection())
         {
@@ -521,9 +505,25 @@ public partial class Reception_inwardEntryList : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT MateName from tblInwardEntry where " + "MateName like @Search + '%' AND isdeleted='0'";
+                if (customerName == "")
+                {
+                    com.CommandText = "select DISTINCT MateName from tblInwardEntry where " + "MateName like @Search + '%' AND isdeleted='0'";
 
+                }
+                else
+                {
+                    com.CommandText = @"
+                    SELECT MateName
+                    FROM tblInwardEntry
+                    WHERE JobNo LIKE @Search + '%' 
+                    OR CustName = @CustomerName
+                    AND isdeleted = '0'";
+                }
+
+
+                // Add parameters for prefixText and customerName
                 com.Parameters.AddWithValue("@Search", prefixText);
+                com.Parameters.AddWithValue("@CustomerName", customerName);
                 com.Connection = con;
                 con.Open();
                 List<string> MateName = new List<string>();
@@ -541,14 +541,21 @@ public partial class Reception_inwardEntryList : System.Web.UI.Page
         }
     }
 
+
     [System.Web.Script.Services.ScriptMethod()]
     [System.Web.Services.WebMethod]
-    public static List<string> GetStatusList(string prefixText, int count)
+    public static List<string> GetStatusList(string prefixText, string contextKey)
     {
-        return AutoFillStatuslist(prefixText);
+        if (string.IsNullOrWhiteSpace(contextKey) && string.IsNullOrWhiteSpace(prefixText))
+        {
+            return new List<string>();
+        }
+
+        return AutoFillStatuslist(prefixText, contextKey);
+
     }
 
-    public static List<string> AutoFillStatuslist(string prefixText)
+    public static List<string> AutoFillStatuslist(string prefixText, string customerName)
     {
         using (SqlConnection con = new SqlConnection())
         {
@@ -556,9 +563,22 @@ public partial class Reception_inwardEntryList : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT MateStatus from tblInwardEntry where " + "MateStatus like @Search + '%' AND isdeleted='0'";
+                if (customerName == "")
+                {
+                    com.CommandText = "select DISTINCT MateStatus from tblInwardEntry where " + "MateStatus like @Search + '%' AND isdeleted='0'";
 
+                }
+                else
+                {
+                    com.CommandText = @"
+                    SELECT MateStatus
+                    FROM tblInwardEntry
+                    WHERE JobNo LIKE @Search + '%' 
+                    OR CustName = @CustomerName
+                    AND isdeleted = '0'";
+                }
                 com.Parameters.AddWithValue("@Search", prefixText);
+                com.Parameters.AddWithValue("@CustomerName", customerName);
                 com.Connection = con;
                 con.Open();
                 List<string> MateStatus = new List<string>();
@@ -575,8 +595,138 @@ public partial class Reception_inwardEntryList : System.Web.UI.Page
 
         }
     }
-    //---------------------
 
+
+
+    [System.Web.Script.Services.ScriptMethod()]
+    [System.Web.Services.WebMethod]
+    public static List<string> GetreapeatedList(string prefixText, string contextKey)
+ {
+        if (string.IsNullOrWhiteSpace(contextKey) && string.IsNullOrWhiteSpace(prefixText))
+        {
+            return new List<string>();
+        }
+
+        return AutoFillreatedlist(prefixText, contextKey);
+    }
+    public static List<string> AutoFillreatedlist(string prefixText, string customerName)
+    {
+        using (SqlConnection con = new SqlConnection())
+        {
+            con.ConnectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+
+            using (SqlCommand com = new SqlCommand())
+            {
+                if (customerName == "")
+                {
+                    com.CommandText = "select DISTINCT RepeatedNo from tblInwardEntry where " + "RepeatedNo like @Search + '%' AND isdeleted='0'";
+                }
+                else
+                {
+                    com.CommandText = @"
+                    SELECT RepeatedNo
+                    FROM tblInwardEntry
+                    WHERE JobNo LIKE @Search + '%' 
+                    OR CustName = @CustomerName
+                    AND isdeleted = '0'";
+                }
+                com.Parameters.AddWithValue("@Search", prefixText);
+                com.Parameters.AddWithValue("@CustomerName", customerName);
+                com.Connection = con;
+                con.Open();
+                List<string> RepeatedNo = new List<string>();
+                using (SqlDataReader sdr = com.ExecuteReader())
+                {
+                    while (sdr.Read())
+                    {
+                        RepeatedNo.Add(sdr["RepeatedNo"].ToString());
+                    }
+                }
+                con.Close();
+                return RepeatedNo;
+            }
+
+        }
+    }
+
+    //[System.Web.Script.Services.ScriptMethod()]
+    //[System.Web.Services.WebMethod]
+    //public static List<string> GetJOBNOList(string prefixText, string contextKey)
+    //{
+    //    if (string.IsNullOrWhiteSpace(contextKey) && string.IsNullOrWhiteSpace(prefixText))
+    //    {
+    //        return new List<string>();
+    //    }
+    //    string ProductName = null;
+    //    return AutoFillJOBNOlist(prefixText, contextKey, ProductName);
+    //}
+
+    [System.Web.Script.Services.ScriptMethod()]
+    [System.Web.Services.WebMethod]
+    public static List<string> GetJOBNOList(string prefixText, string contextKey)
+    {
+        if (string.IsNullOrWhiteSpace(contextKey) && string.IsNullOrWhiteSpace(prefixText))
+        {
+            return new List<string>();
+        }
+
+        try
+        {
+            var serializer = new JavaScriptSerializer();
+            var contextData = serializer.Deserialize<Dictionary<string, string>>(contextKey);
+
+            string customerName = contextData.ContainsKey("customerName") ? contextData["customerName"] : null;
+            string productName = contextData.ContainsKey("productName") ? contextData["productName"] : null;
+
+            return AutoFillJOBNOlist(prefixText, customerName, productName);
+        }
+        catch (Exception ex)
+        {
+            return new List<string> { $"Error parsing contextKey: {ex.Message}" };
+        }
+    }
+
+
+    public static List<string> AutoFillJOBNOlist(string prefixText, string customerName, string productName)
+    {
+        using (SqlConnection con = new SqlConnection())
+        {
+            con.ConnectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+
+            using (SqlCommand com = new SqlCommand())
+            {
+                if (customerName == "")
+                {
+                    com.CommandText = "select DISTINCT JobNo from tblInwardEntry where " + "JobNo like @Search + '%' ";
+                }
+                else
+                {
+                    com.CommandText = @"
+                    SELECT JobNo
+                    FROM tblInwardEntry
+                    WHERE JobNo LIKE @Search + '%'
+                    AND CustName = @CustomerName
+                    AND MateName =@MateName
+                    AND isdeleted = '0'";
+                }
+                com.Parameters.AddWithValue("@Search", prefixText);
+                com.Parameters.AddWithValue("@CustomerName", customerName);
+                com.Parameters.AddWithValue("@MateName", productName);
+                com.Connection = con;
+                con.Open();
+                List<string> JobNo = new List<string>();
+                using (SqlDataReader sdr = com.ExecuteReader())
+                {
+                    while (sdr.Read())
+                    {
+                        JobNo.Add(sdr["JobNo"].ToString());
+                    }
+                }
+                con.Close();
+                return JobNo;
+            }
+        }
+    }
 
 
     [System.Web.Script.Services.ScriptMethod()]
@@ -614,40 +764,6 @@ public partial class Reception_inwardEntryList : System.Web.UI.Page
     }
 
 
-
-    [System.Web.Script.Services.ScriptMethod()]
-    [System.Web.Services.WebMethod]
-    public static List<string> GetreapeatedList(string prefixText, int count)
-    {
-        return AutoFillreatedlist(prefixText);
-    }
-    public static List<string> AutoFillreatedlist(string prefixText)
-    {
-        using (SqlConnection con = new SqlConnection())
-        {
-            con.ConnectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
-
-            using (SqlCommand com = new SqlCommand())
-            {
-                com.CommandText = "select DISTINCT RepeatedNo from tblInwardEntry where " + "RepeatedNo like @Search + '%' AND isdeleted='0'";
-
-                com.Parameters.AddWithValue("@Search", prefixText);
-                com.Connection = con;
-                con.Open();
-                List<string> RepeatedNo = new List<string>();
-                using (SqlDataReader sdr = com.ExecuteReader())
-                {
-                    while (sdr.Read())
-                    {
-                        RepeatedNo.Add(sdr["RepeatedNo"].ToString());
-                    }
-                }
-                con.Close();
-                return RepeatedNo;
-            }
-
-        }
-    }
     protected void gv_Inward_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
         gv_Inward.PageIndex = e.NewPageIndex;
@@ -716,7 +832,7 @@ public partial class Reception_inwardEntryList : System.Web.UI.Page
             {
                 btncreate.Visible = false;
                 gv_Inward.Columns[15].Visible = false;
-				 gv_Inward.Columns[4].Visible = false;
+                gv_Inward.Columns[4].Visible = false;
                 gv_Inward.Columns[5].Visible = false;
                 lnkbtnEdit.Visible = false;
                 lnkbtnDelete.Visible = false;
@@ -784,6 +900,11 @@ public partial class Reception_inwardEntryList : System.Web.UI.Page
         {
             sortedgv.PageIndex = e.NewPageIndex;
             GetsortedDatafromdateToDategrid();
+        }
+        if (ViewState["Record"].ToString() == "AllData")
+        {
+            sortedgv.PageIndex = e.NewPageIndex;
+            GetsortedAllData();
         }
         if (ViewState["Record"].ToString() == "DatewiseJob")
         {
@@ -1010,11 +1131,47 @@ public partial class Reception_inwardEntryList : System.Web.UI.Page
         sortedgv.DataSource = dt;
         sortedgv.DataBind();
     }
+
     public void GetsortedDatafromdateToDategrid()
     {
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter(" select [Id],[JobNo],[DateIn],[CustName],[Subcustomer],[Branch],[MateName],[SrNo],[MateStatus],FinalStatus,[TestBy],[ModelNo],[otherinfo],[Imagepath],[CreatedBy],[CreatedDate],[UpdateBy],[UpdateDate] ,ProductFault,RepeatedNo,DATEDIFF(DAY, DateIn, getdate()) AS days FROM [tblInwardEntry] Where DateIn between'" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' ", con);
         //SqlDataAdapter sad = new SqlDataAdapter("select * from tblInwardEntry where DateIn between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
+        sad.Fill(dt);
+        sortedgv.EmptyDataText = "Not Records Found";
+        sortedgv.DataSource = dt;
+        sortedgv.DataBind();
+    }
+
+    public void GetsortedAllData()
+    {
+        gv_Inward.Visible = false;
+        ViewState["Record"] = "AllData";
+        DataTable dt = new DataTable();
+        SqlDataAdapter sad = new SqlDataAdapter(" select [Id],[CustName],[MateName],[MateStatus],[RepeatedNo],[JobNo]," +
+            "[DateIn],[Subcustomer],[Branch],[SrNo],[MateStatus],[TestBy],[ModelNo],[otherinfo]," +
+            "[Imagepath],[CreatedBy],[CreatedDate],[UpdateBy],[UpdateDate],[ProductFault],DATEDIFF(DAY, DateIn, getdate()) AS days " +
+            " FROM [tblInwardEntry] Where " +
+            "CustName ='" + txtSearch.Text + "' AND MateName= '" + txtSearchProduct.Text + "' " +
+            //"AND MateStatus='" + txtSearchStatus.Text + "' AND RepeatedNo='" + txtreatedNo.Text + "'" +
+            "AND JobNo='" + txtJobNo.Text + "' ", con);
+        sad.Fill(dt);
+        sortedgv.EmptyDataText = "Not Records Found";
+        sortedgv.DataSource = dt;
+        sortedgv.DataBind();
+    }
+
+    public void GetsortedAllDatagrid()
+    {
+        gv_Inward.Visible = false;
+        ViewState["Record"] = "AllData";
+        DataTable dt = new DataTable();
+        SqlDataAdapter sad = new SqlDataAdapter(" select [Id],[CustName],[MateName],[MateStatus],[RepeatedNo],[JobNo]," +
+            "[DateIn],[Subcustomer],[Branch],[SrNo],[MateStatus],[TestBy],[ModelNo],[otherinfo]," +
+            "[Imagepath],[CreatedBy],[CreatedDate],[UpdateBy],[UpdateDate],[ProductFault] FROM [tblInwardEntry] Where " +
+            "CustName ='" + txtSearch.Text + "' AND MateName= '" + txtSearchProduct.Text + "' " +
+            //"AND MateStatus='" + txtSearchStatus.Text + "' AND RepeatedNo='" + txtreatedNo.Text + "'" +
+            "AND JobNo='" + txtJobNo.Text + "' ", con);
         sad.Fill(dt);
         sortedgv.EmptyDataText = "Not Records Found";
         sortedgv.DataSource = dt;
@@ -1190,6 +1347,11 @@ public partial class Reception_inwardEntryList : System.Web.UI.Page
                 GetsortedDatafromdateToDateForExcell();
 
             }
+            if (Method == "GetsortedAllData")
+            {
+                GetsortedAllDataForExcell();
+
+            }
             if (Method == "Getsortedcustomerwiserepeatedno")
             {
                 GetsortedcustomerwiserepeatednoForEXcell();
@@ -1313,6 +1475,24 @@ public partial class Reception_inwardEntryList : System.Web.UI.Page
         GridEporttoexcel.EmptyDataText = "Not Records Found";
         GridEporttoexcel.DataSource = dt;
         GridEporttoexcel.DataBind();
+    }
+
+    public void GetsortedAllDataForExcell()
+    {
+        gv_Inward.Visible = false;
+        ViewState["Record"] = "AllData";
+        DataTable dt = new DataTable();
+        SqlDataAdapter sad = new SqlDataAdapter(" select [Id],[CustName],[MateName],[MateStatus],[RepeatedNo],[JobNo]," +
+            "[DateIn],[Subcustomer],[Branch],[SrNo],[MateStatus],[TestBy],[ModelNo],[otherinfo]," +
+            "[Imagepath],[CreatedBy],[CreatedDate],[UpdateBy],[UpdateDate],ProductFault, DATEDIFF(DAY, DateIn, getdate()) AS days " +
+            "FROM [tblInwardEntry] Where " +
+            "CustName ='" + txtSearch.Text + "' AND MateName= '" + txtSearchProduct.Text + "' " +
+            //"AND MateStatus='" + txtSearchStatus.Text + "' AND RepeatedNo='" + txtreatedNo.Text + "'" +
+            "AND JobNo='" + txtJobNo.Text + "' ", con);
+        sad.Fill(dt);
+        sortedgv.EmptyDataText = "Not Records Found";
+        sortedgv.DataSource = dt;
+        sortedgv.DataBind();
     }
     public void GetsortedcustomerwiserepeatednoForEXcell()
     {

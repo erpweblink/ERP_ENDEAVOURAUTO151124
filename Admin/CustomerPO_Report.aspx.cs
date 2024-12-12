@@ -1107,24 +1107,42 @@ public partial class Admin_CustomerPO_Report : System.Web.UI.Page
             {
                 GetsortedcustomerwisepodateExcel();
             }
-
-
-            Response.Clear();
-            Response.Buffer = true;
-            Response.ClearContent();
-            Response.ClearHeaders();
-            Response.Charset = "";
-            string FileName = "Cust_PO_Report" + DateTime.Now + ".xls";
-            StringWriter strwritter = new StringWriter();
-            HtmlTextWriter htmltextwrtter = new HtmlTextWriter(strwritter);
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            Response.ContentType = "application/vnd.ms-excel";
-            Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
-            sortedgv.GridLines = GridLines.Both;
-            sortedgv.HeaderStyle.Font.Bold = true;
-            sortedgv.RenderControl(htmltextwrtter);
-            Response.Write(strwritter.ToString());
-            Response.End();
+            
         }
+        else
+        {
+            GridExportExcel();
+        }
+
+        Response.Clear();
+        Response.Buffer = true;
+        Response.ClearContent();
+        Response.ClearHeaders();
+        Response.Charset = "";
+        string FileName = "Cust_PO_Report_List_" + DateTime.Now + ".xls";
+        StringWriter strwritter = new StringWriter();
+        HtmlTextWriter htmltextwrtter = new HtmlTextWriter(strwritter);
+        Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        Response.ContentType = "application/vnd.ms-excel";
+        Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
+        sortedgv.GridLines = GridLines.Both;
+        sortedgv.HeaderStyle.Font.Bold = true;
+        sortedgv.RenderControl(htmltextwrtter);
+        Response.Write(strwritter.ToString());
+        Response.End();
+    }
+
+    public void GridExportExcel()
+    {
+        DataTable dt = new DataTable();
+
+        con.Open();
+        SqlDataAdapter sad = new SqlDataAdapter("SELECT [Id], [JobNo], [CustomerName], [Pono], [PoDate], [RefNo], [Mobileno], [CreatedBy], [Type], [CreatedOn] FROM CustomerPO_Hdr_Both WHERE Is_Deleted='0'", con);
+        sad.Fill(dt);
+        sortedgv.EmptyDataText = "Not Records Found";
+        sortedgv.DataSource = dt;
+        sortedgv.DataBind();
+
+        con.Close();
     }
 }

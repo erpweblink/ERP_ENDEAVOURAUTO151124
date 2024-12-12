@@ -241,6 +241,7 @@
             document.getElementById('<%= ddlShowEntries.ClientID %>').value = "25";
             updateRecords();
         };
+
     </script>
     <style type="text/css">
         .img1 {
@@ -316,6 +317,47 @@
                 return false;
             }
         }
+
+        (function () {
+            $(document).ready(function () {
+                $("#<%= txtSearchProduct.ClientID %>").on("focus", function () {
+                    var customerName = $("#<%= txtSearch.ClientID %>").val();
+                    var extender = $find("<%= AutoCompleteExtender3.ClientID %>");
+                    if (extender) {
+                        extender.set_contextKey(customerName);
+                    }
+                });
+
+                $("#<%= txtSearchStatus.ClientID %>").on("focus", function () {
+                    var customerName = $("#<%= txtSearch.ClientID %>").val();
+                     var extender = $find("<%= AutoCompleteExtender4.ClientID %>");
+                     if (extender) {
+                         extender.set_contextKey(customerName);
+                     }
+                });
+
+                $("#<%= txtreatedNo.ClientID %>").on("focus", function () {
+                    var customerName = $("#<%= txtSearch.ClientID %>").val();
+                    var extender = $find("<%= AutoCompleteExtender2.ClientID %>");
+                    if (extender) {
+                        extender.set_contextKey(customerName);
+                    }
+                });
+
+                $("#<%= txtJobNo.ClientID %>").on("focus", function () {
+                    var customerName = $("#<%= txtSearch.ClientID %>").val();
+                    var productName = $("#<%= txtSearchProduct.ClientID %>").val();
+                                   var extender = $find("<%= AutoCompleteExtender5.ClientID %>");
+                                   if (extender) {
+                                       // Serialize parameters as a JSON string
+                                       extender.set_contextKey(JSON.stringify({ customerName: customerName, productName: productName }));
+                                   }
+                               });
+
+
+            });
+        })();
+
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
@@ -346,13 +388,12 @@
                             CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetProductList" TargetControlID="txtSearchProduct" runat="server">
                         </asp:AutoCompleteExtender>
                     </div>
-
                     <div class="col-md-2">
-                        <asp:Label ID="Label3" runat="server" Text="Status :"></asp:Label>
-                        <asp:TextBox runat="server" class="form-control txtsear mt-top" ID="txtSearchStatus" name="Search" placeholder="Search Status" onkeypress="return character(event)" />
-                        <asp:AutoCompleteExtender ID="AutoCompleteExtender4" CompletionListCssClass="completionList"
+                       <asp:Label ID="lbljobno" runat="server" Text="Job No. :"></asp:Label>
+                        <asp:TextBox ID="txtJobNo" class="form-control txtjob " placeholder="Job No." runat="server"></asp:TextBox>
+                        <asp:AutoCompleteExtender ID="AutoCompleteExtender5" CompletionListCssClass="completionList"
                             CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
-                            CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetStatusList" TargetControlID="txtSearchStatus" runat="server">
+                            CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetJOBNOList" TargetControlID="txtJobNo" runat="server">
                         </asp:AutoCompleteExtender>
                     </div>
 
@@ -369,7 +410,7 @@
                     </div>
 
                 </div>
-                <div class="row" style="margin-left:121px;">
+                <div class="row" style="margin-left: 121px;">
                     <div class="col-md-2">
                         <asp:Button ID="btncreate" runat="server" class="btn btn-primary btncreate" Text="Create" OnClick="btncreate_Click"></asp:Button>
                     </div>
@@ -379,7 +420,7 @@
                             Export <i class="fa fa-file-excel"></i>
                         </button>
                     </div>
-               
+
                 </div>
 
                 <div class="row">
@@ -393,14 +434,12 @@
                     </div>
 
                     <div class="col-2">
-
-
-                        <asp:Label ID="lbljobno" runat="server" Text="Job No. :"></asp:Label>
-                        <asp:TextBox ID="txtJobNo" class="form-control txtjob " placeholder="Job No." runat="server"></asp:TextBox>
-                        <asp:AutoCompleteExtender ID="AutoCompleteExtender5" CompletionListCssClass="completionList"
-                            CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
-                            CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetJOBNOList" TargetControlID="txtJobNo" runat="server">
-                        </asp:AutoCompleteExtender>
+                        <asp:Label ID="Label3" runat="server" Text="Status :"></asp:Label>
+                         <asp:TextBox runat="server" class="form-control txtsear mt-top" ID="txtSearchStatus" name="Search" placeholder="Search Status" onkeypress="return character(event)" />
+                         <asp:AutoCompleteExtender ID="AutoCompleteExtender4" CompletionListCssClass="completionList"
+                             CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
+                             CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetStatusList" TargetControlID="txtSearchStatus" runat="server">
+                         </asp:AutoCompleteExtender>
                     </div>
 
                     <%-- -----------------date filter------------------%>
@@ -430,8 +469,8 @@
                 <div style="width: 100%; padding: 20px;">
                     <div class="table-responsive">
                         <asp:GridView ID="gv_Inward" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
-                            OnRowCommand="gv_Inward_RowCommand" OnRowDataBound="gv_Inward_RowDataBound1">
-                            <%--OnPageIndexChanging="gv_Inward_PageIndexChanging" PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging"--%>
+                            OnRowCommand="gv_Inward_RowCommand" OnRowDataBound="gv_Inward_RowDataBound1"
+                            OnPageIndexChanging="gv_Inward_PageIndexChanging" PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging">
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr. No.">
                                     <ItemTemplate>
@@ -545,8 +584,8 @@
 
                         <%-- Sorted Grid started--%>
                         <asp:GridView ID="sortedgv" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
-                            OnRowCommand="gv_Inward_RowCommand" OnRowDataBound="gv_Inward_RowDataBound1">
-                            <%--OnPageIndexChanging="sortedgv_PageIndexChanging" PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging"--%>
+                            OnRowCommand="gv_Inward_RowCommand" OnRowDataBound="gv_Inward_RowDataBound1"
+                            OnPageIndexChanging="sortedgv_PageIndexChanging" PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging">
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr. No.">
                                     <ItemTemplate>
@@ -614,7 +653,7 @@
 
                                 <asp:TemplateField HeaderText="Final Status">
                                     <ItemTemplate>
-                                        <asp:Label ID="lblfinalStatus" runat="server" Text='<%# Eval("FinalStatus") %>'></asp:Label>
+                                        <asp:Label ID="lblfinalStatus" runat="server" Text='<%# Eval("MateStatus") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
 

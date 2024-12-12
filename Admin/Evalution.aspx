@@ -128,7 +128,7 @@
                 if (selectedValue === "All" || i <= parseInt(selectedValue)) {
                     gvRows[i].style.display = "";
                 } else {
-                    gvRows[i].style.display = "none"; 
+                    gvRows[i].style.display = "none";
                 }
             }
         }
@@ -138,6 +138,30 @@
             document.getElementById('<%= ddlShowEntries.ClientID %>').value = "25";
             updateRecords();
         };
+
+        (function () {
+            $(document).ready(function () {
+                $("#<%= txtproduct.ClientID %>").on("focus", function () {
+                    var customerName = $("#<%= txtcustomername.ClientID %>").val();
+                    var extender = $find("<%= AutoCompleteExtender3.ClientID %>");
+                    if (extender) {
+                        extender.set_contextKey(customerName);
+                    }
+                });
+
+                $("#<%= txtJobNo.ClientID %>").on("focus", function () {
+                    var customerName = $("#<%= txtcustomername.ClientID %>").val();
+                    var productName = $("#<%= txtproduct.ClientID %>").val();
+                    var extender = $find("<%= AutoCompleteExtender1.ClientID %>");
+                    if (extender) {
+                        // Serialize parameters as a JSON string
+                        extender.set_contextKey(JSON.stringify({ customerName: customerName, productName: productName }));
+                    }
+                });
+
+
+            });
+        })();
     </script>
 </asp:Content>
 
@@ -155,17 +179,6 @@
                       
                     </div>--%>
                     <div class="col-md-2">
-                        <asp:Label ID="Label1" runat="server" Text="Job No. :"></asp:Label>
-                        <asp:TextBox ID="txtJobNo" class="form-control txtjob " placeholder="Search Job No." runat="server"></asp:TextBox>
-                        <asp:AutoCompleteExtender ID="AutoCompleteExtender1" CompletionListCssClass="completionList"
-                            CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
-                            CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetJOBNOList" TargetControlID="txtJobNo" runat="server">
-                        </asp:AutoCompleteExtender>
-                    </div>
-                    <%-- <div class="col-md-2 mt-top">
-                       
-                    </div>--%>
-                    <div class="col-md-2">
                         <asp:Label ID="lblCustomer" runat="server" Text="Customer Name :"></asp:Label>
                         <asp:TextBox ID="txtcustomername" class="form-control txtcustomer" placeholder="Customer Name" runat="server"></asp:TextBox>
                         <asp:AutoCompleteExtender ID="AutoCompleteExtender2" CompletionListCssClass="completionList"
@@ -173,14 +186,25 @@
                             CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetCustomerList" TargetControlID="txtcustomername" runat="server">
                         </asp:AutoCompleteExtender>
                     </div>
-
-
+                    <%-- <div class="col-md-2 mt-top">
+                       
+                    </div>--%>
                     <div class="col-md-2">
                         <asp:Label ID="lblproduct" runat="server" Text="Product :"></asp:Label>
                         <asp:TextBox ID="txtproduct" class="form-control txtcustomer" placeholder="Product" runat="server"></asp:TextBox>
                         <asp:AutoCompleteExtender ID="AutoCompleteExtender3" CompletionListCssClass="completionList"
                             CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
                             CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetProductList" TargetControlID="txtproduct" runat="server">
+                        </asp:AutoCompleteExtender>
+                    </div>
+
+
+                    <div class="col-md-2">
+                        <asp:Label ID="Label1" runat="server" Text="Job No. :"></asp:Label>
+                        <asp:TextBox ID="txtJobNo" class="form-control txtjob " placeholder="Search Job No." runat="server"></asp:TextBox>
+                        <asp:AutoCompleteExtender ID="AutoCompleteExtender1" CompletionListCssClass="completionList"
+                            CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
+                            CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetJOBNOList" TargetControlID="txtJobNo" runat="server">
                         </asp:AutoCompleteExtender>
                     </div>
 
@@ -235,15 +259,15 @@
                     <div class="col-md-2 mt-top">
                         <asp:TextBox runat="server" BackColor="green" Width="20px" Height="20px" Enabled="false"></asp:TextBox><asp:Label runat="server" Text="Testing Completed."></asp:Label>
                     </div>
-                     <div class="col-md-2">
-                         <!-- Show Entries Dropdown -->
-                         <asp:DropDownList ID="ddlShowEntries" runat="server" CssClass="form-control" onchange="updateRecords()">
-                             <asp:ListItem Text="25" Value="25"></asp:ListItem>
-                             <asp:ListItem Text="50" Value="50"></asp:ListItem>
-                             <asp:ListItem Text="100" Value="100"></asp:ListItem>
-                             <asp:ListItem Text="All" Value="All" Selected="True"></asp:ListItem>
-                         </asp:DropDownList>
-                     </div>
+                    <div class="col-md-2">
+                        <!-- Show Entries Dropdown -->
+                        <asp:DropDownList ID="ddlShowEntries" runat="server" CssClass="form-control" onchange="updateRecords()">
+                            <asp:ListItem Text="25" Value="25"></asp:ListItem>
+                            <asp:ListItem Text="50" Value="50"></asp:ListItem>
+                            <asp:ListItem Text="100" Value="100"></asp:ListItem>
+                            <asp:ListItem Text="All" Value="All" Selected="True"></asp:ListItem>
+                        </asp:DropDownList>
+                    </div>
                 </div>
 
                 </br>
@@ -254,8 +278,8 @@
                         <div class="table-responsive">
                             <asp:GridView ID="gv_Evalution" runat="server" CellPadding="3" Width="100%" AutoGenerateColumns="false"
                                 BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center"
-                                RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Evalution_RowCommand" OnRowDataBound="gv_Evalution_RowDataBound">
-                                <%--PageSize="5" PagerStyle-CssClass="paging" AllowPaging="true" OnPageIndexChanging="gv_Evalution_PageIndexChanging"--%>
+                                RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Evalution_RowCommand" OnRowDataBound="gv_Evalution_RowDataBound"
+                                PageSize="5" PagerStyle-CssClass="paging" AllowPaging="true" OnPageIndexChanging="gv_Evalution_PageIndexChanging">
                                 <Columns>
                                     <asp:TemplateField HeaderText="Sr. No.">
                                         <ItemTemplate>
@@ -456,8 +480,8 @@
                         <div class="table-responsive">
                             <asp:GridView ID="Grid_Filter" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%"
                                 BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center"
-                                RowStyle-HorizontalAlign="Center" OnRowCommand="Grid_Filter_RowCommand" OnPageIndexChanging="Grid_Filter_PageIndexChanging"
-                                OnRowDataBound="gv_Evalution_RowDataBound" PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging">
+                                RowStyle-HorizontalAlign="Center" OnRowCommand="Grid_Filter_RowCommand" OnPageIndexChanging="Grid_Filter_PageIndexChanging">
+                                <%--OnRowDataBound="gv_Evalution_RowDataBound" PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging"--%>
                                 <Columns>
                                     <asp:TemplateField HeaderText="Sr. No.">
                                         <ItemTemplate>
