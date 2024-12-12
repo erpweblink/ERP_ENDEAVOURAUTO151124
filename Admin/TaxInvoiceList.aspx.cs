@@ -165,39 +165,39 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
             IH.AllTotalAmount,
             IH.GrandTotal,
             IH.Type
-        FROM
-            tbl_Invoice_both_hdr AS IH
-        WHERE
-            IH.Is_Deleted = '0'
-    )
-    SELECT
-        DI.Id,
-        DI.InvoiceNo,
-        DI.PoNo,
-        DI.CompName,
-        DI.ChallanNo,
-        DI.PayTerm,
-        DI.InvoiceDate,
-        DI.CreatedBy,
-        DI.CreatedOn,
-        DI.CGST,
-        DI.SGST,
-        DI.IGST,
-        DI.AllTotalAmount,
-        DI.GrandTotal,
-        DI.Type
-        (
-            SELECT STUFF((
-                SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
-                FROM tbl_Invoice_both_Dtls AS dtls
-                WHERE dtls.InvoiceNo = DI.InvoiceNo
-                FOR XML PATH(''), TYPE
-            ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
-        ) AS JobNo
-    FROM
-        DistinctInvoices AS DI
-    ORDER BY
-        DI.CreatedOn DESC;", Conn);
+            FROM
+                tbl_Invoice_both_hdr AS IH
+            WHERE
+                IH.Is_Deleted = '0'
+            )
+            SELECT
+                DI.Id,
+                DI.InvoiceNo,
+                DI.PoNo,
+                DI.CompName,
+                DI.ChallanNo,
+                DI.PayTerm,
+                DI.InvoiceDate,
+                DI.CreatedBy,
+                DI.CreatedOn,
+                DI.CGST,
+                DI.SGST,
+                DI.IGST,
+                DI.AllTotalAmount,
+                DI.GrandTotal,
+                DI.Type,
+                (
+                    SELECT STUFF((
+                        SELECT ',' + CAST(dtls.JobNo AS VARCHAR(10))
+                        FROM tbl_Invoice_both_Dtls AS dtls
+                        WHERE dtls.InvoiceNo = DI.InvoiceNo
+                        FOR XML PATH(''), TYPE
+                    ).value('.', 'VARCHAR(MAX)'), 1, 1, '')
+                ) AS JobNo
+            FROM
+                DistinctInvoices AS DI
+            ORDER BY
+                DI.CreatedOn DESC;", Conn);
 
         da.Fill(Dt);
         GridExportExcel.EmptyDataText = "Records Not Found";
@@ -221,7 +221,7 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
                     Label lblIGST = row.FindControl("lblIGST") as Label;
                     if (lblIGST != null)
                     {
-                        if (decimal.TryParse(lblIGST.Text, out decimal rowAmount)) 
+                        if (decimal.TryParse(lblIGST.Text, out decimal rowAmount))
                         {
                             totalAmount += rowAmount;
                         }
@@ -3561,7 +3561,7 @@ FROM
             Label lbl_Quo_no = (Label)e.Row.FindControl("lblQuNo");
             Label lblcompanyname = (Label)e.Row.FindControl("lblCompName");
             Label lblsubcustomer = (Label)e.Row.FindControl("lblsubcustomer");
-        
+
             string Id = gv_Quot_List.DataKeys[e.Row.RowIndex].Value.ToString();
             GridView gvDetails = e.Row.FindControl("gvDetails") as GridView;
 
@@ -3570,28 +3570,28 @@ FROM
             Daaa.Fill(Dttt);
             foreach (DataRow row in Dttt.Rows)
             {
-                
+
                 SqlDataAdapter Da = new SqlDataAdapter("SELECT CreatedOn FROM CustomerPO_Hdr_Both WHERE id ='" + row["PurchaseId"] + "'", Conn);
                 DataTable Dt = new DataTable();
                 Da.Fill(Dt);
 
-               
+
                 if (Dt.Rows.Count > 0)
                 {
                     DateTime createdOn = Convert.ToDateTime(Dt.Rows[0]["CreatedOn"]);
 
                     if (!Dttt.Columns.Contains("CreatedOn"))
                     {
-                        Dttt.Columns.Add("CreatedOn", typeof(DateTime)); 
+                        Dttt.Columns.Add("CreatedOn", typeof(DateTime));
                     }
 
-                    row["CreatedOn"] = createdOn;  
+                    row["CreatedOn"] = createdOn;
 
                     if (row["JobDaysCount"] == DBNull.Value || Convert.ToInt32(row["JobDaysCount"]) == 0)
                     {
                         DateTime createdOnDateOnly = createdOn.Date;
                         int jobDaysCount = (DateTime.Now.Date - createdOnDateOnly).Days;
-                        row["JobDaysCount"] = jobDaysCount; 
+                        row["JobDaysCount"] = jobDaysCount;
                     }
                 }
             }
@@ -3695,9 +3695,9 @@ FROM
             foreach (DataRow row in Dt.Rows)
             {
                 string purchaseId = row["Id"].ToString();
-                
+
                 SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM CustomerPO_Dtls_Both WHERE JobNo IS NOT NULL AND JobStatus = 'Pending' AND PurchaseId = @PurchaseId", con);
-                cmd.Parameters.AddWithValue("@PurchaseId", purchaseId); 
+                cmd.Parameters.AddWithValue("@PurchaseId", purchaseId);
 
                 con.Open();
                 jobCount += (int)cmd.ExecuteScalar();
@@ -3727,12 +3727,12 @@ FROM
             {
                 string connString = System.Configuration.ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
                 using (SqlConnection con = new SqlConnection(connString))
-                {                    
-                        SqlCommand cmd = new SqlCommand("UPDATE CustomerPO_Dtls_Both SET JobStatus = 'Closed'," +
-                        " JobDaysCount = DATEDIFF(DAY, CreatedOn, GETDATE())" +
-                        "  WHERE JobNo = '" + jobNo + "'", con);
-                        con.Open();
-                        //cmd.ExecuteScalar();                   
+                {
+                    SqlCommand cmd = new SqlCommand("UPDATE CustomerPO_Dtls_Both SET JobStatus = 'Closed'," +
+                    " JobDaysCount = DATEDIFF(DAY, CreatedOn, GETDATE())" +
+                    "  WHERE JobNo = '" + jobNo + "'", con);
+                    con.Open();
+                    //cmd.ExecuteScalar();                   
                 }
             }
             return true;

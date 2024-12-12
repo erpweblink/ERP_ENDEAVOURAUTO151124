@@ -10,6 +10,7 @@ using System.Configuration;
 using System.Text;
 using System.Security.Cryptography;
 using System.IO;
+using System.Web.Script.Serialization;
 
 public partial class Reception_Evalution : System.Web.UI.Page
 {
@@ -149,12 +150,30 @@ public partial class Reception_Evalution : System.Web.UI.Page
 
     [System.Web.Script.Services.ScriptMethod()]
     [System.Web.Services.WebMethod]
-    public static List<string> GetJOBNOList(string prefixText, int count)
+    public static List<string> GetJOBNOList(string prefixText, string contextKey)
     {
-        return AutoFillJOBNOlist(prefixText);
+        if (string.IsNullOrWhiteSpace(contextKey) && string.IsNullOrWhiteSpace(prefixText))
+        {
+            return new List<string>();
+        }
+
+        try
+        {
+            var serializer = new JavaScriptSerializer();
+            var contextData = serializer.Deserialize<Dictionary<string, string>>(contextKey);
+
+            string customerName = contextData.ContainsKey("customerName") ? contextData["customerName"] : null;
+            string productName = contextData.ContainsKey("productName") ? contextData["productName"] : null;
+
+            return AutoFillJOBNOlist(prefixText, customerName, productName);
+        }
+        catch (Exception ex)
+        {
+            return new List<string> { $"Error parsing contextKey: {ex.Message}" };
+        }
     }
 
-    public static List<string> AutoFillJOBNOlist(string prefixText)
+    public static List<string> AutoFillJOBNOlist(string prefixText, string customerName, string productName)
     {
         using (SqlConnection con = new SqlConnection())
         {
@@ -162,9 +181,24 @@ public partial class Reception_Evalution : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT JobNo from tblTestingProduct where " + "JobNo like @Search + '%' ";
+                if (customerName == "")
+                {
+                    com.CommandText = "select DISTINCT JobNo from tblTestingProduct where " + "JobNo like @Search + '%' ";
 
+                }
+                else
+                {
+                    com.CommandText = @"
+                    SELECT JobNo
+                    FROM tblTestingProduct
+                    WHERE JobNo LIKE @Search + '%'
+                    AND CustomerName = @CustomerName
+                    AND ProductName =@ProductName
+                    AND isdeleted = '0'";
+                }
                 com.Parameters.AddWithValue("@Search", prefixText);
+                com.Parameters.AddWithValue("@CustomerName", customerName);
+                com.Parameters.AddWithValue("@ProductName", productName);
                 com.Connection = con;
                 con.Open();
                 List<string> JobNo = new List<string>();
@@ -335,6 +369,18 @@ public partial class Reception_Evalution : System.Web.UI.Page
                     GetListwisesearch();
                 }
             }
+            if (!string.IsNullOrEmpty(txtcustomername.Text) && !string.IsNullOrEmpty(txtproduct.Text))
+            {
+                ViewState["Excell"] = "GetsortedTwo";
+                GetsortedTwo();
+
+            }
+            if (!string.IsNullOrEmpty(txtcustomername.Text) && !string.IsNullOrEmpty(txtproduct.Text) && !string.IsNullOrEmpty(txtJobNo.Text))
+            {
+                ViewState["Excell"] = "GetsortedAllData";
+                GetsortedAllData();
+
+            }
 
         }
     }
@@ -461,12 +507,16 @@ public partial class Reception_Evalution : System.Web.UI.Page
     //----product 
     [System.Web.Script.Services.ScriptMethod()]
     [System.Web.Services.WebMethod]
-    public static List<string> GetProductList(string prefixText, int count)
+    public static List<string> GetProductList(string prefixText, string contextKey)
     {
-        return AutoFillGetProductList(prefixText);
+        if (string.IsNullOrWhiteSpace(contextKey) && string.IsNullOrWhiteSpace(prefixText))
+        {
+            return new List<string>();
+        }
+        return AutoFillGetProductList(prefixText, contextKey);
     }
 
-    public static List<string> AutoFillGetProductList(string prefixText)
+    public static List<string> AutoFillGetProductList(string prefixText, string customerName)
     {
         using (SqlConnection con = new SqlConnection())
         {
@@ -474,11 +524,23 @@ public partial class Reception_Evalution : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
+                if (customerName == "")
+                {
+                    com.CommandText = "select DISTINCT ProductName from tblTestingProduct where " + "ProductName like @Search + '%' AND isdeleted = '0'";
 
+                }
                 //com.CommandText = "select DISTINCT ProductName from tblTestingProduct where " + "ProductName like @Search + '%' AND isCompleted IS NULL AND isdeleted='0'";
-                com.CommandText = "select DISTINCT ProductName from tblTestingProduct where " + "ProductName like @Search + '%' AND isdeleted = '0'";
-
+                else
+                {
+                    com.CommandText = @"
+                    SELECT ProductName
+                    FROM tblTestingProduct
+                    WHERE JobNo LIKE @Search + '%' 
+                    OR CustomerName = @CustomerName
+                    AND isdeleted = '0'";
+                }
                 com.Parameters.AddWithValue("@Search", prefixText);
+                com.Parameters.AddWithValue("@CustomerName", customerName);
                 com.Connection = con;
                 con.Open();
                 List<string> ProductName = new List<string>();
@@ -816,6 +878,16 @@ public partial class Reception_Evalution : System.Web.UI.Page
             SortGvEvaluations.PageIndex = e.NewPageIndex;
             Getsortedlist();
         }
+        if (ViewState["Record"].ToString() == "AllData")
+        {
+            SortGvEvaluations.PageIndex = e.NewPageIndex;
+            GetsortedAllData();
+        }
+        if (ViewState["Record"].ToString() == "AllDataTwo")
+        {
+            SortGvEvaluations.PageIndex = e.NewPageIndex;
+            GetsortedTwo();
+        }
 
 
         //if (ViewState["Record"].ToString() == "List")
@@ -836,6 +908,80 @@ public partial class Reception_Evalution : System.Web.UI.Page
         }
 
     }
+
+    //public void GetsortedAllData()
+    //{
+    //    gv_Evalution.Visible = false;
+    //    ViewState["Record"] = "Job";
+    //    string jobno = txtJobNo.Text;
+    //    DataTable dt = new DataTable();
+    //    sad = new SqlDataAdapter("select id,JobNo,CustomerName,ProductName,Subcustomer,ModelNo,SerialNo,EngiName," +
+    //        "TestingDate,Status,Remark,EntryDate,isCompleted,CreatedDate,CreatedBy,Quotation_no,inwardEntrystatus," +
+    //        "ReportedTO, DATEDIFF(DAY, CreatedDate, getdate()) AS days " +
+    //        "from tblTestingProduct where" +
+    //        "CustomerName= '" + txtcustomername.Text + "' AND ProductName= '" + txtproduct.Text + "' AND JobNo= '" + txtJobNo.Text + "' ", con);
+    //    sad.Fill(dt);
+    //    ExportToExcelGrid.EmptyDataText = "Not Records Found";
+    //    ExportToExcelGrid.DataSource = dt;
+    //    ExportToExcelGrid.DataBind();
+
+    //}
+
+    public void GetsortedTwo()
+    {
+        gv_Evalution.Visible = false;
+        ViewState["Record"] = "Job";
+        string jobno = txtJobNo.Text;
+
+        string query = "SELECT id, JobNo, CustomerName, ProductName, Subcustomer, ModelNo, SerialNo, EngiName, " +
+                       "TestingDate, Status, Remark, EntryDate, isCompleted, CreatedDate, CreatedBy, Quotation_no, inwardEntrystatus, " +
+                       "ReportedTO, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days " +
+                       "FROM tblTestingProduct " +
+                       "WHERE CustomerName = @CustomerName AND ProductName = @ProductName";
+
+        DataTable dt = new DataTable();
+        using (SqlCommand cmd = new SqlCommand(query, con))
+        {
+            cmd.Parameters.AddWithValue("@CustomerName", txtcustomername.Text.Trim());
+            cmd.Parameters.AddWithValue("@ProductName", txtproduct.Text.Trim());
+
+            sad = new SqlDataAdapter(cmd);
+            sad.Fill(dt);
+        }
+
+        SortGvEvaluations.EmptyDataText = "No Records Found";
+        SortGvEvaluations.DataSource = dt;
+        SortGvEvaluations.DataBind();
+    }
+
+    public void GetsortedAllData()
+    {
+        gv_Evalution.Visible = false;
+        ViewState["Record"] = "Job";
+        string jobno = txtJobNo.Text;
+
+        string query = "SELECT id, JobNo, CustomerName, ProductName, Subcustomer, ModelNo, SerialNo, EngiName, " +
+                       "TestingDate, Status, Remark, EntryDate, isCompleted, CreatedDate, CreatedBy, Quotation_no, inwardEntrystatus, " +
+                       "ReportedTO, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days " +
+                       "FROM tblTestingProduct " +
+                       "WHERE CustomerName = @CustomerName AND ProductName = @ProductName AND JobNo = @JobNo";
+
+        DataTable dt = new DataTable();
+        using (SqlCommand cmd = new SqlCommand(query, con))
+        {
+            cmd.Parameters.AddWithValue("@CustomerName", txtcustomername.Text.Trim());
+            cmd.Parameters.AddWithValue("@ProductName", txtproduct.Text.Trim());
+            cmd.Parameters.AddWithValue("@JobNo", txtJobNo.Text.Trim());
+
+            sad = new SqlDataAdapter(cmd);
+            sad.Fill(dt);
+        }
+
+        SortGvEvaluations.EmptyDataText = "No Records Found";
+        SortGvEvaluations.DataSource = dt;
+        SortGvEvaluations.DataBind();
+    }
+
     public void getsortedjobno()
     {
         gv_Evalution.Visible = false;
@@ -1307,6 +1453,15 @@ public partial class Reception_Evalution : System.Web.UI.Page
             {
                 GetdatewisestatusForExcell();
             }
+            if (Method == "GetsortedTwo")
+            {
+                GetsortedTwoForExcell();
+            }
+            if (Method == "GetsortedAllData")
+            {
+                GetsortedAllDataForExcell();
+
+            }
             if (Method == "DatewiseList")
             {
                 GetdatewisesortedlistForExcell();
@@ -1338,8 +1493,45 @@ public partial class Reception_Evalution : System.Web.UI.Page
         ExportToExcelGrid.HeaderStyle.Font.Bold = true;
         ExportToExcelGrid.RenderControl(htmltextwrtter);
         Response.Write(strwritter.ToString());
-        Response.End();
+        Response.End(); 
     }
+
+    public void GetsortedTwoForExcell()
+    {
+        gv_Evalution.Visible = false;
+        ViewState["Record"] = "Job";
+        string jobno = txtJobNo.Text;
+        DataTable dt = new DataTable();
+        sad = new SqlDataAdapter("select id,JobNo,CustomerName,ProductName,Subcustomer,ModelNo,SerialNo,EngiName," +
+            "TestingDate,Status,Remark,EntryDate,isCompleted,CreatedDate,CreatedBy,Quotation_no,inwardEntrystatus," +
+            "ReportedTO, DATEDIFF(DAY, CreatedDate, getdate()) AS days " +
+            "from tblTestingProduct where" +
+            "CustomerName= '" + txtcustomername.Text + "' AND ProductName= '" + txtproduct.Text + "' ", con);
+        sad.Fill(dt);
+        ExportToExcelGrid.EmptyDataText = "Not Records Found";
+        ExportToExcelGrid.DataSource = dt;
+        ExportToExcelGrid.DataBind();
+
+    }
+
+    public void GetsortedAllDataForExcell()
+    {
+        gv_Evalution.Visible = false;
+        ViewState["Record"] = "Job";
+        string jobno = txtJobNo.Text;
+        DataTable dt = new DataTable();
+        sad = new SqlDataAdapter("select id,JobNo,CustomerName,ProductName,Subcustomer,ModelNo,SerialNo,EngiName," +
+            "TestingDate,Status,Remark,EntryDate,isCompleted,CreatedDate,CreatedBy,Quotation_no,inwardEntrystatus," +
+            "ReportedTO, DATEDIFF(DAY, CreatedDate, getdate()) AS days " +
+            "from tblTestingProduct where" +
+            "CustomerName= '" + txtcustomername.Text + "' AND ProductName= '" + txtproduct.Text + "' AND JobNo= '" + txtJobNo.Text + "' ", con);
+        sad.Fill(dt);
+        ExportToExcelGrid.EmptyDataText = "Not Records Found";
+        ExportToExcelGrid.DataSource = dt;
+        ExportToExcelGrid.DataBind();
+
+    }
+
     public void getsortedjobnoForExcell()
     {
         gv_Evalution.Visible = false;

@@ -102,6 +102,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
             ddlagainstby.Enabled = false;  
             ddlagainstby.SelectedItem.Text = "Order";
             ddlquotationno.SelectedItem.Text = Dt.Rows[0]["Quotation_no"].ToString();
+            ddlservicetype.SelectedValue = Dt.Rows[0]["ServiceType"].ToString();
             txt_Customer_name.Text = Dt.Rows[0]["Customer_Name"].ToString();
             txtsubcust.Text = Dt.Rows[0]["SubCustomer"].ToString();
             txt_delivery_address.Text = Dt.Rows[0]["Address"].ToString();
@@ -2468,11 +2469,12 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
 
     protected void ddlquotationno_TextChanged(object sender, EventArgs e)
     {
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM tbl_Quotation_two_Hdr WHERE Customer_Name ='" + txt_Customer_name.Text + "' AND isCompleted='1'  AND IsDeleted='0'", con);
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM tbl_Quotation_two_Hdr WHERE Quotation_no ='" + ddlquotationno.SelectedItem.Text + "' AND isCompleted='1'  AND IsDeleted='0'", con);
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
         if (Dt.Rows.Count > 0)
         {
+            ddlservicetype.SelectedValue = Dt.Rows[0]["ServiceType"].ToString();
             txt_Customer_name.Text = Dt.Rows[0]["Customer_Name"].ToString();
             txtsubcust.Text = Dt.Rows[0]["SubCustomer"].ToString();
             //txtsubcust.Text = Dt.Rows[0]["Term_Condition_1"].ToString();
@@ -2795,7 +2797,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
     protected void ShowQuotationsHeader()
     {
 
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNoCount,JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ID + "'", con);
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT JobNoCount,JobNo,Quotation_no,Customer_Name,SubCustomer,Quotation_Date,ExpiryDate,ServiceType,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,[Term_Condition_1],[Term_Condition_2],[Term_Condition_3],[Term_Condition_4],[Term_Condition_5],[Term_Condition_6],IGST FROM tbl_Quotation_two_Hdr WHERE Quotation_no='" + ID + "'", con);
         DataTable Dt = new DataTable();
         Da.Fill(Dt);
         if (Dt.Rows.Count > 0)
@@ -2803,6 +2805,7 @@ public partial class Admin_Customer_PO : System.Web.UI.Page
             txtJobNoCount.Text = Dt.Rows[0]["JobNoCount"].ToString();
             ddlquotationno.SelectedItem.Text = Dt.Rows[0]["Quotation_no"].ToString();
             txt_Customer_name.Text = Dt.Rows[0]["Customer_Name"].ToString();
+            ddlservicetype.SelectedValue = Dt.Rows[0]["ServiceType"].ToString();
             txtsubcust.Text = Dt.Rows[0]["SubCustomer"].ToString();
             txt_delivery_address.Text = Dt.Rows[0]["Address"].ToString();
             txt_mobile_no.Text = Dt.Rows[0]["Mobile_No"].ToString();

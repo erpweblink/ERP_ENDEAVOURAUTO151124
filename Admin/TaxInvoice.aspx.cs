@@ -3536,7 +3536,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             ddlagainstno.Enabled = false;
             ddlagainst.SelectedItem.Text = "Order";
             //ddlagainstno.SelectedItem.Text = Dt.Rows[0]["Pono"].ToString(); 
-
+            ddlservicetype.SelectedValue = Dt.Rows[0]["ServiceType"].ToString();
             txtJobNoCount.Text = Dt.Rows[0]["JobNoCount"].ToString();
             if(txtJobNoCount.Text == "")
             {

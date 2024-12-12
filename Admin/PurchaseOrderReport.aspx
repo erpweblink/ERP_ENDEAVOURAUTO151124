@@ -251,7 +251,8 @@
 
                         <%--Export grid start--%>
 
-                        <asp:GridView ID="sortedgv" runat="server" AutoGenerateColumns="false" CssClass="grid" AllowPaging="true" Width="100%" OnPageIndexChanging="GvPurchaseOrderList_PageIndexChanging" OnRowCommand="GvPurchaseOrderList_RowCommand" PageSize="10" PagerStyle-CssClass="paging">
+                        <asp:GridView ID="sortedgv" runat="server" AutoGenerateColumns="false" CssClass="grid" AllowPaging="true" Width="100%" OnPageIndexChanging="GvPurchaseOrderList_PageIndexChanging" OnRowCommand="GvPurchaseOrderList_RowCommand">
+                            <%--PageSize="10" PagerStyle-CssClass="paging"--%>
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr. No.">
                                     <ItemTemplate>

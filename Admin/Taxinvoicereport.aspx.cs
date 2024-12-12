@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+//using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -1220,22 +1221,42 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
             {
                 GetsortedcustomerdatewiseExcel();
             }
-            Response.Clear();
-            Response.Buffer = true;
-            Response.ClearContent();
-            Response.ClearHeaders();
-            Response.Charset = "";
-            string FileName = "Inward_Entry_List_" + DateTime.Now + ".xls";
-            StringWriter strwritter = new StringWriter();
-            HtmlTextWriter htmltextwrtter = new HtmlTextWriter(strwritter);
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            Response.ContentType = "application/vnd.ms-excel";
-            Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
-            sortedgv.GridLines = GridLines.Both;
-            sortedgv.HeaderStyle.Font.Bold = true;
-            sortedgv.RenderControl(htmltextwrtter);
-            Response.Write(strwritter.ToString());
-            Response.End();
+           
         }
+        else
+        {
+            GridExportExcel();
+        }
+
+        Response.Clear();
+        Response.Buffer = true;
+        Response.ClearContent();
+        Response.ClearHeaders();
+        Response.Charset = "";
+        string FileName = "TaxInvoice_Report_List_" + DateTime.Now + ".xls";
+        StringWriter strwritter = new StringWriter();
+        HtmlTextWriter htmltextwrtter = new HtmlTextWriter(strwritter);
+        Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        Response.ContentType = "application/vnd.ms-excel";
+        Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
+        sortedgv.GridLines = GridLines.Both;
+        sortedgv.HeaderStyle.Font.Bold = true;
+        sortedgv.RenderControl(htmltextwrtter);
+        Response.Write(strwritter.ToString());
+        Response.End();
+    }
+
+    public void GridExportExcel()
+    {
+        DataTable dt = new DataTable();
+
+        Conn.Open();
+        SqlDataAdapter sad = new SqlDataAdapter("SELECT [Id], [InvoiceNo], [PoNo], [CompName], [InvoiceDate],[ChallanNo], [PayTerm], [GrandTotal], [ChallanDate], [CreatedBy], [Type] FROM tbl_Invoice_both_hdr WHERE Is_Deleted='0'", Conn);
+        sad.Fill(dt);
+        sortedgv.EmptyDataText = "Not Records Found";
+        sortedgv.DataSource = dt;
+        sortedgv.DataBind();
+
+        Conn.Close();
     }
 }
