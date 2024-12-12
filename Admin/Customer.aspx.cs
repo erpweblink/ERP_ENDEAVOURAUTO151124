@@ -281,7 +281,8 @@ public partial class Reception_Customer : System.Web.UI.Page
                     string designation = (g1.FindControl("lbldesignation") as Label).Text;
 
                     con.Open();
-                    SqlCommand cmdtable = new SqlCommand("insert into tblCustomerContactPerson(CustName,ContactPerName,ContactPerNo,cust_id,CreatedBy,Email,designation)values('" + txtCustName.Text + "','" + personname + "','" + personno + "','" + Convert.ToInt32(hidden.Value) + "','" + createdby + "','" + email + "','" + designation + "')", con);
+                   // SqlCommand cmdtable = new SqlCommand("insert into tblCustomerContactPerson(CustName,ContactPerName,ContactPerNo,cust_id,CreatedBy,Email,designation)values('" + txtCustName.Text + "','" + personname + "','" + personno + "','" + Convert.ToInt32(hidden.Value) + "','" + createdby + "','" + email + "','" + designation + "')", con);
+                    SqlCommand cmdtable = new SqlCommand("insert into tblCustomerContactPerson(CustName,ContactPerName,ContactPerNo,cust_id,CreatedBy,Email,designation)values('" + txtCustName.Text + "','" + personname + "','" + personno + "','" + primaryId + "','" + createdby + "','" + email + "','" + designation + "')", con);
                     cmdtable.ExecuteNonQuery();
                     con.Close();
                 }
