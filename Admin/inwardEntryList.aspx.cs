@@ -1161,23 +1161,6 @@ public partial class Reception_inwardEntryList : System.Web.UI.Page
         sortedgv.DataBind();
     }
 
-    public void GetsortedAllDatagrid()
-    {
-        gv_Inward.Visible = false;
-        ViewState["Record"] = "AllData";
-        DataTable dt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter(" select [Id],[CustName],[MateName],[MateStatus],[RepeatedNo],[JobNo]," +
-            "[DateIn],[Subcustomer],[Branch],[SrNo],[MateStatus],[TestBy],[ModelNo],[otherinfo]," +
-            "[Imagepath],[CreatedBy],[CreatedDate],[UpdateBy],[UpdateDate],[ProductFault] FROM [tblInwardEntry] Where " +
-            "CustName ='" + txtSearch.Text + "' AND MateName= '" + txtSearchProduct.Text + "' " +
-            //"AND MateStatus='" + txtSearchStatus.Text + "' AND RepeatedNo='" + txtreatedNo.Text + "'" +
-            "AND JobNo='" + txtJobNo.Text + "' ", con);
-        sad.Fill(dt);
-        sortedgv.EmptyDataText = "Not Records Found";
-        sortedgv.DataSource = dt;
-        sortedgv.DataBind();
-    }
-
     public void GetDatewiseJobNo()
     {
         gv_Inward.Visible = false;
@@ -1401,9 +1384,12 @@ public partial class Reception_inwardEntryList : System.Web.UI.Page
         Response.Cache.SetCacheability(HttpCacheability.NoCache);
         Response.ContentType = "application/vnd.ms-excel";
         Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
-        GridEporttoexcel.GridLines = GridLines.Both;
-        GridEporttoexcel.HeaderStyle.Font.Bold = true;
-        GridEporttoexcel.RenderControl(htmltextwrtter);
+        //GridEporttoexcel.GridLines = GridLines.Both;
+        //GridEporttoexcel.HeaderStyle.Font.Bold = true;
+        //GridEporttoexcel.RenderControl(htmltextwrtter);
+        sortedgv.GridLines = GridLines.Both;
+        sortedgv.HeaderStyle.Font.Bold = true;
+        sortedgv.RenderControl(htmltextwrtter);
         Response.Write(strwritter.ToString());
         Response.End();
     }

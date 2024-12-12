@@ -164,6 +164,12 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
             {
                 GridRecord();
             }
+            if (!string.IsNullOrEmpty(txtitemdesc.Text))
+            {
+                ViewState["Excell"] = "GetsortedItemDesc";
+                GetsortedItemDesc();
+
+            }
             //Job No
             else if (!string.IsNullOrEmpty(txtjob.Text) && (string.IsNullOrEmpty(txtitemdesc.Text)))
             {
@@ -614,6 +620,25 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         gv_JOBCARD.Visible = false;
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where RepeatedNo='" + txtrepetedno.Text + "' AND isdeleted='0'", con);
+        sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
+        sortedgv_JOBCARD.DataSource = dt;
+        sortedgv_JOBCARD.DataBind();
+    }
+
+    public void GetsortedItemDesc()
+    {
+        ViewState["Record"] = "itemdesc";
+
+        gv_JOBCARD.Visible = false;
+        DataTable dt = new DataTable();
+        SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where ItemDesc='" + txtitemdesc.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
         foreach (DataRow row in dt.Rows)
         {
@@ -1147,6 +1172,10 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
             {
                 GetsorepetednoForExcell();
             }
+            if (Method == "GetsortedItemDesc")
+            {
+                GetsortedItemDescForExcell();
+            }
             if (Method == "GetsortedData")
             {
                 GetsortedDataForExcell();
@@ -1238,6 +1267,25 @@ public partial class Admin_JOBcardList : System.Web.UI.Page
         gv_JOBCARD.Visible = false;
         DataTable dt = new DataTable();
         SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where RepeatedNo='" + txtrepetedno.Text + "' AND isdeleted='0'", con);
+        sad.Fill(dt);
+        foreach (DataRow row in dt.Rows)
+        {
+            if (row["Reparingdate"] != DBNull.Value && Convert.ToDateTime(row["Reparingdate"]).ToString("yyyy-MM-dd") == "1900-01-01")
+            {
+                row["Reparingdate"] = DBNull.Value;
+            }
+        }
+        GridExportExcel.DataSource = dt;
+        GridExportExcel.DataBind();
+    }
+
+    public void GetsortedItemDescForExcell()
+    {
+        ViewState["Record"] = "itemdesc";
+
+        gv_JOBCARD.Visible = false;
+        DataTable dt = new DataTable();
+        SqlDataAdapter sad = new SqlDataAdapter("select * from tblJobcardHdr where ItemDesc='" + txtitemdesc.Text + "' AND isdeleted='0'", con);
         sad.Fill(dt);
         foreach (DataRow row in dt.Rows)
         {

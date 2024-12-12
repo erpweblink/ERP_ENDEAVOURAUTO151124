@@ -1489,9 +1489,12 @@ public partial class Reception_Evalution : System.Web.UI.Page
         Response.Cache.SetCacheability(HttpCacheability.NoCache);
         Response.ContentType = "application/vnd.ms-excel";
         Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
-        ExportToExcelGrid.GridLines = GridLines.Both;
-        ExportToExcelGrid.HeaderStyle.Font.Bold = true;
-        ExportToExcelGrid.RenderControl(htmltextwrtter);
+        //ExportToExcelGrid.GridLines = GridLines.Both;
+        //ExportToExcelGrid.HeaderStyle.Font.Bold = true;
+        //ExportToExcelGrid.RenderControl(htmltextwrtter);
+        SortGvEvaluations.GridLines = GridLines.Both;
+        SortGvEvaluations.HeaderStyle.Font.Bold = true;
+        SortGvEvaluations.RenderControl(htmltextwrtter);
         Response.Write(strwritter.ToString());
         Response.End(); 
     }
@@ -1501,34 +1504,57 @@ public partial class Reception_Evalution : System.Web.UI.Page
         gv_Evalution.Visible = false;
         ViewState["Record"] = "Job";
         string jobno = txtJobNo.Text;
+
+        string query = "SELECT id, JobNo, CustomerName, ProductName, Subcustomer, ModelNo, SerialNo, EngiName, " +
+                       "TestingDate, Status, Remark, EntryDate, isCompleted, CreatedDate, CreatedBy, Quotation_no, inwardEntrystatus, " +
+                       "ReportedTO, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days " +
+                       "FROM tblTestingProduct " +
+                       "WHERE CustomerName = @CustomerName AND ProductName = @ProductName";
+
         DataTable dt = new DataTable();
-        sad = new SqlDataAdapter("select id,JobNo,CustomerName,ProductName,Subcustomer,ModelNo,SerialNo,EngiName," +
-            "TestingDate,Status,Remark,EntryDate,isCompleted,CreatedDate,CreatedBy,Quotation_no,inwardEntrystatus," +
-            "ReportedTO, DATEDIFF(DAY, CreatedDate, getdate()) AS days " +
-            "from tblTestingProduct where" +
-            "CustomerName= '" + txtcustomername.Text + "' AND ProductName= '" + txtproduct.Text + "' ", con);
-        sad.Fill(dt);
-        ExportToExcelGrid.EmptyDataText = "Not Records Found";
-        ExportToExcelGrid.DataSource = dt;
-        ExportToExcelGrid.DataBind();
+        using (SqlCommand cmd = new SqlCommand(query, con))
+        {
+            cmd.Parameters.AddWithValue("@CustomerName", txtcustomername.Text.Trim());
+            cmd.Parameters.AddWithValue("@ProductName", txtproduct.Text.Trim());
+
+            sad = new SqlDataAdapter(cmd);
+            sad.Fill(dt);
+        }
+
+        SortGvEvaluations.EmptyDataText = "No Records Found";
+        SortGvEvaluations.DataSource = dt;
+        SortGvEvaluations.DataBind();
 
     }
 
     public void GetsortedAllDataForExcell()
     {
+        
+
         gv_Evalution.Visible = false;
         ViewState["Record"] = "Job";
         string jobno = txtJobNo.Text;
+
+        string query = "SELECT id, JobNo, CustomerName, ProductName, Subcustomer, ModelNo, SerialNo, EngiName, " +
+                       "TestingDate, Status, Remark, EntryDate, isCompleted, CreatedDate, CreatedBy, Quotation_no, inwardEntrystatus, " +
+                       "ReportedTO, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days " +
+                       "FROM tblTestingProduct " +
+                       "WHERE CustomerName = @CustomerName AND ProductName = @ProductName AND JobNo = @JobNo";
+
         DataTable dt = new DataTable();
-        sad = new SqlDataAdapter("select id,JobNo,CustomerName,ProductName,Subcustomer,ModelNo,SerialNo,EngiName," +
-            "TestingDate,Status,Remark,EntryDate,isCompleted,CreatedDate,CreatedBy,Quotation_no,inwardEntrystatus," +
-            "ReportedTO, DATEDIFF(DAY, CreatedDate, getdate()) AS days " +
-            "from tblTestingProduct where" +
-            "CustomerName= '" + txtcustomername.Text + "' AND ProductName= '" + txtproduct.Text + "' AND JobNo= '" + txtJobNo.Text + "' ", con);
-        sad.Fill(dt);
-        ExportToExcelGrid.EmptyDataText = "Not Records Found";
-        ExportToExcelGrid.DataSource = dt;
-        ExportToExcelGrid.DataBind();
+        using (SqlCommand cmd = new SqlCommand(query, con))
+        {
+            cmd.Parameters.AddWithValue("@CustomerName", txtcustomername.Text.Trim());
+            cmd.Parameters.AddWithValue("@ProductName", txtproduct.Text.Trim());
+            cmd.Parameters.AddWithValue("@JobNo", txtJobNo.Text.Trim());
+
+            sad = new SqlDataAdapter(cmd);
+            sad.Fill(dt);
+        }
+
+        SortGvEvaluations.EmptyDataText = "No Records Found";
+        SortGvEvaluations.DataSource = dt;
+        SortGvEvaluations.DataBind();
 
     }
 
