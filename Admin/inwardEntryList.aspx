@@ -366,7 +366,7 @@
         <div class="col-lg-12">
             <div class="card shadow-sm mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h5 class="m-0 font-weight-bold text-primary">Inward Entry List</h5>
+                    <h5 class="m-0 font-weight-bold text-primary">Inward Entry List</h5>     
                 </div>
 
                 <div class="row">
@@ -469,8 +469,8 @@
                 <div style="width: 100%; padding: 20px;">
                     <div class="table-responsive">
                         <asp:GridView ID="gv_Inward" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
-                            OnRowCommand="gv_Inward_RowCommand" OnRowDataBound="gv_Inward_RowDataBound1">
-                            <%--OnPageIndexChanging="gv_Inward_PageIndexChanging" PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging"--%>
+                            OnRowCommand="gv_Inward_RowCommand" OnRowDataBound="gv_Inward_RowDataBound1"
+                            OnPageIndexChanging="gv_Inward_PageIndexChanging" PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging">
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr. No.">
                                     <ItemTemplate>
@@ -584,8 +584,8 @@
 
                         <%-- Sorted Grid started--%>
                         <asp:GridView ID="sortedgv" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
-                            OnRowCommand="gv_Inward_RowCommand" OnRowDataBound="gv_Inward_RowDataBound1">
-                            <%--OnPageIndexChanging="sortedgv_PageIndexChanging" PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging"--%>
+                            OnRowCommand="gv_Inward_RowCommand" OnRowDataBound="gv_Inward_RowDataBound1"
+                            OnPageIndexChanging="sortedgv_PageIndexChanging" PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging">
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr. No.">
                                     <ItemTemplate>

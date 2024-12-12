@@ -138,6 +138,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             ddlagainst.SelectedItem.Text = "Order";
             txtcountst.Text = Dt.Rows[0]["Days_Completed"].ToString(); //New added by Shubham Patil
             textquotationid.Value = Dt.Rows[0]["ID"].ToString();
+            ddlservicetype.SelectedValue = Dt.Rows[0]["ServiceType"].ToString();
 
 
 
@@ -276,7 +277,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
         }
 
 
-        SqlDataAdapter Sda = new SqlDataAdapter("SELECT * FROM tbl_Quotation_Hdr_Sales WHERE Quotation_no='" + ID + "'", con);
+        SqlDataAdapter Sda = new SqlDataAdapter("SELECT * FROM CustomerPO_Hdr_Both WHERE Quotationno='" + ID + "'", con);
         DataTable Sdt = new DataTable();
         Sda.Fill(Sdt);
         if (Sdt.Rows.Count > 0)
@@ -284,7 +285,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
             txt_cgst_amt.Text = Sdt.Rows[0]["CGST"].ToString();
             txt_sgst_amt.Text = Sdt.Rows[0]["SGST"].ToString();
             // txt_igst_amt.Text = Sdt.Rows[0]["IGST"].ToString();
-            txt_grand_total.Text = Sdt.Rows[0]["AllTotal_price"].ToString();
+            txt_grand_total.Text = Sdt.Rows[0]["AllTotalPrice"].ToString();
         }
     }
 
