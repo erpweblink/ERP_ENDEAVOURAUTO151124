@@ -358,9 +358,9 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
         if (e.CommandName == "RowDelete")
         {
             con.Open();
-            SqlCommand Cmd = new SqlCommand("UPDATE CustomerPO_Hdr_Both SET Is_Deleted='1' WHERE Id=@Id", con);
+            SqlCommand Cmd = new SqlCommand("UPDATE CustomerPO_Hdr_Both SET IsDeleted='1' WHERE Id=@Id", con);
             Cmd.Parameters.AddWithValue("@Id", Convert.ToInt32(e.CommandArgument.ToString()));
-            Cmd.Parameters.AddWithValue("@Is_Deleted", '1');
+            Cmd.Parameters.AddWithValue("@IsDeleted", '1');
 
             Cmd.ExecuteNonQuery();
 

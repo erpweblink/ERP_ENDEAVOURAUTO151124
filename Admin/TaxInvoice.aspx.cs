@@ -756,8 +756,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 "CustomerPanNo=@CustomerPanNo,CustomerRegType=@CustomerRegType,CustomerStateCode=@CustomerStateCode,CGST=@CGST,SGST=@SGST," +
                 "AllTotalAmount=@AllTotalAmount,GrandTotal=@GrandTotal,TotalInWord=@TotalInWord,Term_Condition_1=@Term_Condition_1," +
                 "Term_Condition_2=@Term_Condition_2,Term_Condition_3=@Term_Condition_3,Term_Condition_4=@Term_Condition_4,Term_Condition_5=@Term_Condition_5,Term_Condition_6=@Term_Condition_6," +
-                "ServiceType=@ServiceType,IGST=@IGST,Is_Deleted=@Is_Deleted,UpdatedOn=@UpdatedOn,UpdatedBy=@UpdatedBy,Type ='JobNo'" +
-                "Term_Condition_2=@Term_Condition_2,Term_Condition_3=@Term_Condition_3,Term_Condition_4=@Term_Condition_4,Term_Condition_5=@Term_Condition_5,Term_Condition_6=@Term_Condition_6,ServiceType=@ServiceType,Type=@Type,IGST=@IGST,Is_Deleted=@Is_Deleted,UpdatedOn=@UpdatedOn,UpdatedBy=@UpdatedBy " +
+                "ServiceType=@ServiceType,IGST=@IGST,Is_Deleted=@Is_Deleted,UpdatedOn=@UpdatedOn,UpdatedBy=@UpdatedBy,Type ='JobNo'" +               
                 "WHERE Id='" + hdnID.Value + "' ", con);  //Remove Delivery Col....
 
             Cmd.Parameters.AddWithValue("@InvoiceNo", txt_InvoiceNo.Text);
@@ -805,7 +804,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
 
             DataTable Dt = new DataTable();
             SqlDataAdapter daa = new SqlDataAdapter("SELECT JobNo,Description,Hsn,TaxPercentage,Quntity,Unit,Rate," +
-                "DiscountPercentage,Total FROM tbl_Invoice_both_Dtls WHERE Id='" + hdnID.Value + "'", con);
+                "DiscountPercentage,Total FROM tbl_Invoice_both_Dtls WHERE InvoiceId='" + hdnID.Value + "'", con);
             daa.Fill(Dt);
 
             SqlCommand CmdDelete = new SqlCommand("DELETE FROM tbl_Invoice_both_Dtls WHERE InvoiceId=@InvoiceId", con);
@@ -2016,7 +2015,8 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
         //msgenaccount.Subject = "Tax Invoice";// Subject of Email  
         //msgenaccount.Body = strMessage;
 
-        message.From = new MailAddress("enquiry@weblinkservices.net", "info@endeavours.in");
+        //message.From = new MailAddress("enquiry@weblinkservices.net", "info@endeavours.in");
+        message.From = new MailAddress("testing@weblinkservices.net", "info@endeavours.in");
         //message.From = new System.Net.Mail.MailAddress("info@endeavours.in");// Email-ID of Sender  
         // message.From = new System.Net.Mail.MailAddress("enquiry@weblinkservices.net");// Email-ID of Sender  
         message.IsBodyHtml = true;
@@ -2042,7 +2042,8 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
         SmtpClient SmtpMail = new SmtpClient();
         SmtpMail.Host = "smtpout.secureserver.net"; // Name or IP-Address of Host used for SMTP transactions  
         SmtpMail.Port = 587; // Port for sending the mail  
-        SmtpMail.Credentials = new System.Net.NetworkCredential("enquiry@weblinkservices.net", "wlspl@123"); // Username/password of network, if apply  
+        //SmtpMail.Credentials = new System.Net.NetworkCredential("enquiry@weblinkservices.net", "wlspl@123"); // Username/password of network, if apply  
+        SmtpMail.Credentials = new System.Net.NetworkCredential("testing@weblinkservices.net", "Weblink@Testing#123");
         SmtpMail.DeliveryMethod = SmtpDeliveryMethod.Network;
         SmtpMail.EnableSsl = false;
 
