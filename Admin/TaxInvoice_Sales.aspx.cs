@@ -948,7 +948,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 //Cmd.Parameters.AddWithValue("@status", txtstatus.Text);
                 Cmd.Parameters.Add("@InvoiceId", SqlDbType.Int).Direction = ParameterDirection.Output;
                 con.Open();
-                //Cmd.ExecuteNonQuery();
+                Cmd.ExecuteNonQuery();
                 con.Close();
 
                 //New Code Shubham Patil
@@ -972,9 +972,9 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                     string contactPerNo2 = dataReader["ContactPerNo2"].ToString();
                     string isStatus = dataReader["IsStatus"].ToString();
                     string createdBy = dataReader["CreatedBy"].ToString();
-                    string createdDate = dataReader["Createddate"].ToString();
+                   // string createdDate = dataReader["Createddate"].ToString();
                     string updatedBy = dataReader["UpdatedBy"].ToString();
-                    string updatedDate = dataReader["UpdatedDate"].ToString();
+                   // string updatedDate = dataReader["UpdatedDate"].ToString();
                     string custId = dataReader["CustId"].ToString();
                     dataReader.Close();
 
@@ -998,10 +998,8 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                               [ContactPerName2] = @ContactPerName2,
                               [ContactPerNo2] = @ContactPerNo2,
                               [IsStatus] = @IsStatus,
-                              [CreatedBy] = @CreatedBy,
-                              [Createddate] = @CreatedDate,
-                              [UpdatedBy] = @UpdatedBy,
-                              [UpdatedDate] = @UpdatedDate
+                              [CreatedBy] = @CreatedBy,                             
+                              [UpdatedBy] = @UpdatedBy                             
                           WHERE CustId = @CustId", con);
 
                     // Add parameters for the update command
@@ -1023,9 +1021,9 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                     updateCmd.Parameters.AddWithValue("@ContactPerNo2", contactPerNo2);
                     updateCmd.Parameters.AddWithValue("@IsStatus", isStatus);
                     updateCmd.Parameters.AddWithValue("@CreatedBy", createdBy);
-                    updateCmd.Parameters.AddWithValue("@CreatedDate", createdDate);
+                   // updateCmd.Parameters.AddWithValue("@CreatedDate", createdDate);
                     updateCmd.Parameters.AddWithValue("@UpdatedBy", updatedBy);
-                    updateCmd.Parameters.AddWithValue("@UpdatedDate", updatedDate);
+                    //updateCmd.Parameters.AddWithValue("@UpdatedDate", updatedDate);
                     updateCmd.Parameters.AddWithValue("@CustId", custId);
 
                     // Execute the update
