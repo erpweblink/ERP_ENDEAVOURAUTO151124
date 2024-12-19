@@ -2052,7 +2052,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
         message.BodyEncoding = Encoding.Default;
         message.Priority = MailPriority.High;
         SmtpMail.Send(message);
-        ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Mail Send Successfully !!');", true);
+        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Mail Send Successfully !!');", true);
         Response.Write("Email has been sent");
     }
 

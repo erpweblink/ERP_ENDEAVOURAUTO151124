@@ -3628,7 +3628,7 @@ FROM
               WHERE JobNo IS NOT NULL AND JobStatus ='Pending' 
               GROUP BY Quotationno
           ) J ON H.Quotationno = J.Quotationno 
-          WHERE H.Status = 'Pending' AND H.Is_deleted = '0' AND H.CreatedOn >= @StartDate AND H.CreatedOn <= @EndDate 
+          WHERE H.Status = 'Pending' AND H.Isdeleted = '0' AND H.CreatedOn >= @StartDate AND H.CreatedOn <= @EndDate 
           AND H.Customer_Name = 'Schneider Electric India Pvt.Ltd.' AND (J.JobCount > 0)
           ORDER BY H.CreatedOn DESC;";
 
@@ -3656,7 +3656,7 @@ FROM
               WHERE JobNo IS NOT NULL AND JobStatus ='Pending' 
               GROUP BY Quotationno
           ) J ON H.Quotationno = J.Quotationno
-          WHERE H.Status = 'Pending' AND H.Is_deleted = '0' AND H.CreatedOn >= @StartDate AND H.CreatedOn <= @EndDate AND (J.JobCount > 0)
+          WHERE H.Status = 'Pending' AND H.Isdeleted = '0' AND H.CreatedOn >= @StartDate AND H.CreatedOn <= @EndDate AND (J.JobCount > 0)
           ORDER BY H.CreatedOn DESC;";
 
                 SqlDataAdapter Da = new SqlDataAdapter(query, Conn);
@@ -3688,7 +3688,7 @@ FROM
 
         using (SqlConnection con = new SqlConnection(connString))
         {
-            SqlDataAdapter Da = new SqlDataAdapter("SELECT Id FROM CustomerPO_Hdr_Both WHERE Is_deleted = '0' AND CreatedOn >= '" + formattedStartDate + "' AND CreatedOn <= '" + formattedEndDate + "'", con);
+            SqlDataAdapter Da = new SqlDataAdapter("SELECT Id FROM CustomerPO_Hdr_Both WHERE Isdeleted = '0' AND CreatedOn >= '" + formattedStartDate + "' AND CreatedOn <= '" + formattedEndDate + "'", con);
             DataTable Dt = new DataTable();
             Da.Fill(Dt);
 
