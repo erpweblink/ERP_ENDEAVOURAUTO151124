@@ -1975,7 +1975,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
 
         //Changes for Temparay
         //SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Tax_Invoice_PDF_SALE_Mail As TP Inner join CustomerPO_Dtls_Both As TD on TP.Id= TD.InvoiceId WHERE TP.InvoiceNo='" + txt_InvoiceNo.Text + "' ", con);
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Tax_Invoice_PDF_SALE_Mail_Both As TP Inner join CustomerPO_Dtls_Both As TD on TP.Id= TD.PurchaseId WHERE TP.InvoiceNo='" + txt_InvoiceNo.Text + "' ", con);
+        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Tax_Invoice_PDF_SALE_Mail_Both As TP Inner join tbl_Invoice_both_Dtls As TD on TP.Id= TD.InvoiceId WHERE TP.InvoiceNo='" + txt_InvoiceNo.Text + "' ", con);
         // SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM vw_Taxinvoice_pdf WHERE InvoiceNo='" + txt_InvoiceNo.Text + "' ", con);
         DataTable Dt = new DataTable();
         Da.Fill(Dt);

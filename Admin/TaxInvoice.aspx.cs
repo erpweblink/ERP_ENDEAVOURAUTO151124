@@ -2279,7 +2279,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 table.TotalWidth = 560f;
                 table.LockedWidth = true;
                 table.AddCell(new Phrase("SN.", FontFactory.GetFont("Arial", 10, Font.BOLD)));
-                table.AddCell(new Phrase("Description", FontFactory.GetFont("Arial", 10, Font.BOLD)));
+                table.AddCell(new Phrase("PrintDescription", FontFactory.GetFont("Arial", 10, Font.BOLD)));
                 table.AddCell(new Phrase("Hsn / Sac", FontFactory.GetFont("Arial", 10, Font.BOLD)));
                 table.AddCell(new Phrase("Tax %", FontFactory.GetFont("Arial", 10, Font.BOLD)));
                 table.AddCell(new Phrase("Quantity", FontFactory.GetFont("Arial", 10, Font.BOLD)));
@@ -2321,7 +2321,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                     //double Ftotal = Convert.ToDouble(dr["AllTotalAmount"].ToString());
                     string _ftotal = Ftotal.ToString("##.00");
                     table.AddCell(new Phrase(rowid.ToString(), FontFactory.GetFont("Arial", 9)));
-                    table.AddCell(new Phrase(dr["Description1"].ToString(), FontFactory.GetFont("Arial", 9)));
+                    table.AddCell(new Phrase(dr["PrintDescription"].ToString(), FontFactory.GetFont("Arial", 9)));
                     table.AddCell(new Phrase(dr["Hsn1"].ToString(), FontFactory.GetFont("Arial", 9)));
                     table.AddCell(new Phrase(dr["TaxPercentage1"].ToString(), FontFactory.GetFont("Arial", 9)));
                     table.AddCell(new Phrase(dr["Quntity1"].ToString(), FontFactory.GetFont("Arial", 9)));

@@ -169,93 +169,159 @@ public partial class Admin_JOBCard : System.Web.UI.Page
         {
             if (btnSubmit.Text == "Submit")
             {
-
+                SqlCommand cmdss = new SqlCommand("Select JobCardNo from tblJobcardHdr where JobCardNo='" + txtjobno.Text + "'", con);
                 con.Open();
-                SqlCommand cmd2 = new SqlCommand("SELECT  * FROM [tblInwardEntry] where JobNo='" + txtjobno.Text + "' AND isdeleted='0'", con);
-                SqlDataReader reader1 = cmd2.ExecuteReader();
-
-                if (reader1.Read())
+                object result = cmdss.ExecuteScalar();
+                con.Close();
+                if (result == DBNull.Value || result == null)
                 {
-                    con.Close();
                     con.Open();
-                    SqlCommand cmd1 = new SqlCommand("SELECT  [Id],[JobCardNo],[RepeatedNo],[ItemDesc],[ModelNo],[InwardDate],[outwardDate],[CreatedBy],[CreatedDate],[updatedby],[Updateddate],isdeleted FROM [tblJobcardHdr] where JobCardNo='" + txtjobno.Text + "' AND isdeleted='0'", con);
-                    SqlDataReader reader = cmd1.ExecuteReader();
+                    SqlCommand cmd2 = new SqlCommand("SELECT  * FROM [tblInwardEntry] where JobNo='" + txtjobno.Text + "' AND isdeleted='0'", con);
+                    SqlDataReader reader1 = cmd2.ExecuteReader();
 
-                    if (reader.Read())
+                    if (reader1.Read())
                     {
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Data Already Exist.');window.location ='JOBCard.aspx';", true);
+                        con.Close();
+                        con.Open();
+                        SqlCommand cmd1 = new SqlCommand("SELECT  [Id],[JobCardNo],[RepeatedNo],[ItemDesc],[ModelNo],[InwardDate],[outwardDate],[CreatedBy],[CreatedDate],[updatedby],[Updateddate],isdeleted FROM [tblJobcardHdr] where JobCardNo='" + txtjobno.Text + "' AND isdeleted='0'", con);
+                        SqlDataReader reader = cmd1.ExecuteReader();
+
+                        if (reader.Read())
+                        {
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Data Already Exist.');window.location ='JOBCard.aspx';", true);
+                        }
+                        else
+                        {
+                            con.Close();
+                            DateTime Date = DateTime.Now;
+                            string selectedEngineers = hiddenSelectedEngineers.Value;
+
+                            SqlCommand cmd = new SqlCommand("SP_JobcardHdr", con);
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@JobCardNo", txtjobno.Text);
+                            cmd.Parameters.AddWithValue("@RepeatedNo", txtrepeatedNo.Text);
+                            cmd.Parameters.AddWithValue("@ItemDesc", txtitemdescription.Text);
+                            cmd.Parameters.AddWithValue("@ModelNo", txtmodelno.Text);
+                            cmd.Parameters.AddWithValue("@InwardDate", txtinwarddate.Text);
+                            cmd.Parameters.AddWithValue("@outwardDate", txtoutwardate.Text);
+                            cmd.Parameters.AddWithValue("@CreatedBy", createdby);
+                            cmd.Parameters.AddWithValue("@status", txtstatus.SelectedItem.Text);
+                            // cmd.Parameters.AddWithValue("@EngineerName", txtengineername.Text);
+                            cmd.Parameters.AddWithValue("@EngineerName", selectedEngineers);
+                            //cmd.Parameters.AddWithValue("@EngineerName2", txtengineername2.Text);
+                            //cmd.Parameters.AddWithValue("@EngineerName3", txtengineername3.Text);
+                            //cmd.Parameters.AddWithValue("@EngineerName4", txtengineername4.Text);
+                            cmd.Parameters.AddWithValue("@Reparingdate", txtreparingdate.Text);
+
+                            cmd.Parameters.AddWithValue("@MotorTrial", txtmotortrial.Text);
+                            cmd.Parameters.AddWithValue("@MotorRating", txtmotorrating.Text);
+                            cmd.Parameters.AddWithValue("@MotorCurrent", txtmotorcurrent.Text);
+                            cmd.Parameters.AddWithValue("@TrialTime", txttrialtimedate.Text);
+                            cmd.Parameters.AddWithValue("@KeypadTrail", DropDownListkeypadtrail.SelectedValue);
+                            cmd.Parameters.AddWithValue("@AnologTrail", DropDownListanologtrail.SelectedValue);
+                            cmd.Parameters.AddWithValue("@FanCleaning", DropDownListfancleaning.SelectedValue);
+                            cmd.Parameters.AddWithValue("@ParameterOrignal", DropDownListparameterorignal.SelectedValue);
+                            cmd.Parameters.AddWithValue("@PackingSOP", DropDownListpackingsop.SelectedValue);
+
+                            cmd.Parameters.AddWithValue("@CreatedDate", Date);
+                            cmd.Parameters.AddWithValue("@isdeleted", '0');
+                            cmd.Parameters.AddWithValue("@Action", "Insert");
+                            con.Open();
+                            cmd.ExecuteNonQuery();
+                            con.Close();
+
+                            foreach (GridViewRow g1 in gvparticular.Rows)
+                            {
+
+                                string Particular = (g1.FindControl("lblparticular1") as Label).Text;
+                                string status = (g1.FindControl("txtstatus1") as TextBox).Text;
+                                SqlCommand cmd4 = new SqlCommand("INSERT INTO tbljobCardDtls(JobCardNo,Particular,Statusjob)values('" + txtjobno.Text + "','" + Particular + "','" + status + "')", con);
+                                con.Open();
+                                cmd4.ExecuteNonQuery();
+                                con.Close();
+
+                            }
+                            foreach (GridViewRow g2 in gv_jobcardgrid2.Rows)
+                            {
+                                string status = (g2.FindControl("txtstatus2") as TextBox).Text;
+                                string Particular = (g2.FindControl("lblparticular2") as Label).Text;
+
+                                SqlCommand cmd3 = new SqlCommand("INSERT INTO tblJobcardDtl2(JobCardNo,Particular,Status)values('" + txtjobno.Text + "','" + Particular + "','" + status + "')", con);
+                                con.Open();
+                                cmd3.ExecuteNonQuery();
+                                con.Close();
+                            }
+
+                            ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Saved Successfully');", true);
+                        }
                     }
                     else
                     {
                         con.Close();
-                        DateTime Date = DateTime.Now;
-                        string selectedEngineers = hiddenSelectedEngineers.Value;
-
-                        SqlCommand cmd = new SqlCommand("SP_JobcardHdr", con);
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@JobCardNo", txtjobno.Text);
-                        cmd.Parameters.AddWithValue("@RepeatedNo", txtrepeatedNo.Text);
-                        cmd.Parameters.AddWithValue("@ItemDesc", txtitemdescription.Text);
-                        cmd.Parameters.AddWithValue("@ModelNo", txtmodelno.Text);
-                        cmd.Parameters.AddWithValue("@InwardDate", txtinwarddate.Text);
-                        cmd.Parameters.AddWithValue("@outwardDate", txtoutwardate.Text);
-                        cmd.Parameters.AddWithValue("@CreatedBy", createdby);
-                        cmd.Parameters.AddWithValue("@status", txtstatus.SelectedItem.Text);
-                       // cmd.Parameters.AddWithValue("@EngineerName", txtengineername.Text);
-                        cmd.Parameters.AddWithValue("@EngineerName", selectedEngineers);
-                        //cmd.Parameters.AddWithValue("@EngineerName2", txtengineername2.Text);
-                        //cmd.Parameters.AddWithValue("@EngineerName3", txtengineername3.Text);
-                        //cmd.Parameters.AddWithValue("@EngineerName4", txtengineername4.Text);
-                        cmd.Parameters.AddWithValue("@Reparingdate", txtreparingdate.Text);
-
-                        cmd.Parameters.AddWithValue("@MotorTrial", txtmotortrial.Text);
-                        cmd.Parameters.AddWithValue("@MotorRating", txtmotorrating.Text);
-                        cmd.Parameters.AddWithValue("@MotorCurrent", txtmotorcurrent.Text);
-                        cmd.Parameters.AddWithValue("@TrialTime", txttrialtimedate.Text);
-                        cmd.Parameters.AddWithValue("@KeypadTrail", DropDownListkeypadtrail.SelectedValue);
-                        cmd.Parameters.AddWithValue("@AnologTrail", DropDownListanologtrail.SelectedValue);
-                        cmd.Parameters.AddWithValue("@FanCleaning", DropDownListfancleaning.SelectedValue);
-                        cmd.Parameters.AddWithValue("@ParameterOrignal", DropDownListparameterorignal.SelectedValue);
-                        cmd.Parameters.AddWithValue("@PackingSOP", DropDownListpackingsop.SelectedValue);
-
-                        cmd.Parameters.AddWithValue("@CreatedDate", Date);
-                        cmd.Parameters.AddWithValue("@isdeleted", '0');
-                        cmd.Parameters.AddWithValue("@Action", "Insert");
-                        con.Open();
-                        cmd.ExecuteNonQuery();
-                        con.Close();
-
-                        foreach (GridViewRow g1 in gvparticular.Rows)
-                        {
-
-                            string Particular = (g1.FindControl("lblparticular1") as Label).Text;
-                            string status = (g1.FindControl("txtstatus1") as TextBox).Text;
-                            SqlCommand cmd4 = new SqlCommand("INSERT INTO tbljobCardDtls(JobCardNo,Particular,Statusjob)values('" + txtjobno.Text + "','" + Particular + "','" + status + "')", con);
-                            con.Open();
-                            cmd4.ExecuteNonQuery();
-                            con.Close();
-
-                        }
-                        foreach (GridViewRow g2 in gv_jobcardgrid2.Rows)
-                        {
-                            string status = (g2.FindControl("txtstatus2") as TextBox).Text;
-                            string Particular = (g2.FindControl("lblparticular2") as Label).Text;
-
-                            SqlCommand cmd3 = new SqlCommand("INSERT INTO tblJobcardDtl2(JobCardNo,Particular,Status)values('" + txtjobno.Text + "','" + Particular + "','" + status + "')", con);
-                            con.Open();
-                            cmd3.ExecuteNonQuery();
-                            con.Close();
-                        }
-
-                        ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Saved Successfully');", true);
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Job No. Not Exist !!');window.location ='JOBCard.aspx';", true);
                     }
                 }
                 else
                 {
                     con.Close();
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Job No. Not Exist !!');window.location ='JOBCard.aspx';", true);
+                    DateTime Date = DateTime.Now;
+
+                    SqlCommand cmd = new SqlCommand("SP_JobcardHdr", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@JobCardNo", txtjobno.Text);
+                    cmd.Parameters.AddWithValue("@RepeatedNo", txtrepeatedNo.Text);
+                    cmd.Parameters.AddWithValue("@ItemDesc", txtitemdescription.Text);
+                    cmd.Parameters.AddWithValue("@ModelNo", txtmodelno.Text);
+                    cmd.Parameters.AddWithValue("@InwardDate", txtinwarddate.Text);
+                    cmd.Parameters.AddWithValue("@outwardDate", txtoutwardate.Text);
+                    cmd.Parameters.AddWithValue("@updatedby", createdby);
+                    cmd.Parameters.AddWithValue("@status", txtstatus.SelectedItem.Text);
+                    cmd.Parameters.AddWithValue("@EngineerName", hiddenSelectedEngineers.Value);
+                    //cmd.Parameters.AddWithValue("@EngineerName2", txtengineername2.Text);
+                    //cmd.Parameters.AddWithValue("@EngineerName3", txtengineername3.Text);
+                    //cmd.Parameters.AddWithValue("@EngineerName4", txtengineername4.Text);
+                    cmd.Parameters.AddWithValue("@Reparingdate", txtreparingdate.Text);
+
+                    cmd.Parameters.AddWithValue("@MotorTrial", txtmotortrial.Text);
+                    cmd.Parameters.AddWithValue("@MotorRating", txtmotorrating.Text);
+                    cmd.Parameters.AddWithValue("@MotorCurrent", txtmotorcurrent.Text);
+                    cmd.Parameters.AddWithValue("@TrialTime", txttrialtimedate.Text);
+                    cmd.Parameters.AddWithValue("@KeypadTrail", DropDownListkeypadtrail.SelectedValue);
+                    cmd.Parameters.AddWithValue("@AnologTrail", DropDownListanologtrail.SelectedValue);
+                    cmd.Parameters.AddWithValue("@FanCleaning", DropDownListfancleaning.SelectedValue);
+                    cmd.Parameters.AddWithValue("@ParameterOrignal", DropDownListparameterorignal.SelectedValue);
+                    cmd.Parameters.AddWithValue("@PackingSOP", DropDownListpackingsop.SelectedValue);
+
+                    cmd.Parameters.AddWithValue("@Updateddate", Date);
+                    cmd.Parameters.AddWithValue("@isdeleted", '0');
+                    cmd.Parameters.AddWithValue("@Action", "Update");
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                    foreach (GridViewRow g1 in gvparticular.Rows)
+                    {
+
+                        string Particular = (g1.FindControl("lblparticular1") as Label).Text;
+                        string status = (g1.FindControl("txtstatus1") as TextBox).Text;
+                        SqlCommand cmd4 = new SqlCommand("update tbljobCardDtls set Particular='" + Particular + "',Statusjob='" + status + "' where JobCardNo='" + txtjobno.Text + "' AND Particular='" + Particular + "'", con);
+                        con.Open();
+                        cmd4.ExecuteNonQuery();
+                        con.Close();
+                    }
+
+                    foreach (GridViewRow g2 in gv_jobcardgrid2.Rows)
+                    {
+                        string status = (g2.FindControl("txtstatus2") as TextBox).Text;
+                        string Particular = (g2.FindControl("lblparticular2") as Label).Text;
+                        SqlCommand cmd3 = new SqlCommand("update tblJobcardDtl2 set Particular='" + Particular + "',Status='" + status + "' where JobCardNo='" + txtjobno.Text + "' AND Particular='" + Particular + "'", con);
+                        con.Open();
+                        cmd3.ExecuteNonQuery();
+                        con.Close();
+                    }
                 }
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Updated Successfully');", true);
             }
+
             else if (btnSubmit.Text == "Update")
             {
 
@@ -404,7 +470,7 @@ public partial class Admin_JOBCard : System.Web.UI.Page
 
             /////1st particulas gridview
             DataTable dt1 = new DataTable();
-             
+
             SqlDataAdapter sad1 = new SqlDataAdapter("SELECT [Id],[JobCardNo],[Particular],[Statusjob] from tbljobCardDtls where JobCardNo='" + id + "'", con);
             sad1.Fill(dt1);
 
@@ -443,6 +509,32 @@ public partial class Admin_JOBCard : System.Web.UI.Page
             DateTime ffff2 = Convert.ToDateTime(dt.Rows[0]["DateIn"].ToString());
             txtinwarddate.Text = ffff2.ToString("yyyy-MM-dd");
         }
+        SqlCommand cmd1 = new SqlCommand("Select JobCardNo from tblJobcardHdr where JobCardNo='" + txtjobno.Text + "'", con);
+        con.Open();
+        object result1 = cmd1.ExecuteScalar();
+        con.Close();
+        string engineersName1 = "";
+        if (result1 != DBNull.Value && result1 != null)
+        {
+            engineersName1 = result1.ToString();
+        }
+        if(engineersName1 != "")
+        {
+            loadData(engineersName1);                     
+        }
+        else
+        {
+            SqlCommand cmd2 = new SqlCommand("Select EngiName from tblTestingProduct where JobNo='" + txtjobno.Text + "'", con);
+            con.Open();
+            object result = cmd2.ExecuteScalar();
+            string engineersName = "";
+            if (result != DBNull.Value && result != null)
+            {
+                engineersName = result.ToString();
+            }
+            hiddenSelectedEngineers.Value = engineersName;
+            con.Close();
+        }        
     }
     [System.Web.Script.Services.ScriptMethod()]
     [System.Web.Services.WebMethod]

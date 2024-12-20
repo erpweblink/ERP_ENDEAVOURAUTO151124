@@ -16,60 +16,56 @@ public partial class Admin_Enquiry : System.Web.UI.Page
     string Customername;
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
+        if (Session["adminname"] == null)
         {
-
-            ViewState["RowNo"] = 0;
-            dtpers.Columns.AddRange(new DataColumn[5] { new DataColumn("colid"), new DataColumn("colFirst"), new DataColumn("colsecond"), new DataColumn("colemail"), new DataColumn("coldesignation") });
-
-            ViewState["TableContact"] = dtpers;
-
-            if (Request.QueryString["EnquiryId"] != null)
+            Response.Redirect("../LoginPage.aspx");
+        }
+        else
+        {
+           
+            if (!IsPostBack)
             {
-                string id = Decrypt(Request.QueryString["EnquiryId"].ToString());
-                loadData(id);
+                Session["OneTimeFlag"] = "";
+                ViewState["RowNo"] = 0;
+                dtpers.Columns.AddRange(new DataColumn[5] { new DataColumn("colid"), new DataColumn("colFirst"), new DataColumn("colsecond"), new DataColumn("colemail"), new DataColumn("coldesignation") });
 
-                btnSubmit.Text = "Update";
-                imgProduct.Visible = true;
-                hidden.Value = id;
+                ViewState["TableContact"] = dtpers;
+
+                if (Request.QueryString["EnquiryId"] != null)
+                {
+                    string id = Decrypt(Request.QueryString["EnquiryId"].ToString());
+                    loadData(id);
+
+                    btnSubmit.Text = "Update";
+                    imgProduct.Visible = true;
+                    hidden.Value = id;
+                }
+                if (Request.QueryString["CUID"] != null)
+                {
+                    string id = Decrypt(Request.QueryString["CUID"].ToString());
+                    loadCustomer(id);
+
+                    btnSubmit.Text = "Save";
+                }
+
             }
-            if (Request.QueryString["CUID"] != null)
-            {
-                string id = Decrypt(Request.QueryString["CUID"].ToString());
-                loadCustomer(id);
-
-                btnSubmit.Text = "Save";
-            }
-
         }
     }
 
     protected void btnSubmit_Click(object sender, EventArgs e)
     {
-        //string createdby = "Admin";
-        string createdby = Session["adminname"].ToString();
-        int id;
-        string oldName = "", oldMobNo = "", oldEmail = "", oldProductImage = "", oldProductName = "";
-        try
+        if (Session["OneTimeFlag"] == null || Session["OneTimeFlag"].ToString() == "")
         {
-            string Path = null;
-            if (btnSubmit.Text == "Save")
+            Session["OneTimeFlag"] = "Inserted";
+            //string createdby = "Admin";
+            string createdby = Session["adminname"].ToString();
+            int id;
+            string oldName = "", oldMobNo = "", oldEmail = "", oldProductImage = "", oldProductName = "";
+            try
             {
-                //con.Open();
-                //SqlCommand cmd1 = new SqlCommand(
-                //    "SELECT [EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [Email], [IsStatus] " +
-                //    "FROM [tbl_EnquiryMaster] " +
-                //    "WHERE [CustomerName] ='" + txtCustName.Text + "'  AND [MobNo]='" + txtMobileNo.Text + "'",
-                //    con);
-
-                //SqlDataReader reader = cmd1.ExecuteReader();
-                //if (reader.Read())
-                //{
-                //    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Data Already Exist.');", true);
-                //}
-                //else
-                //{
-                    //con.Close();
+                string Path = null;
+                if (btnSubmit.Text == "Save")
+                {
                     DateTime Date = DateTime.Now;
                     con.Open();
                     SqlCommand cmd = new SqlCommand("SP_Enquiry", con);
@@ -139,106 +135,111 @@ public partial class Admin_Enquiry : System.Web.UI.Page
                     else
                     {
                         ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Saved Successfully','1');", true);
-                    }                
-            }
-            else if (btnSubmit.Text == "Update")
-            {
-                int Eqid = Convert.ToInt32(hidden.Value);
-                con.Open();
-                SqlCommand cmd2 = new SqlCommand(
-                    "SELECT [CustomerName], [MobNo], [Email], [ProductImage], [ProdName]" +
-                    "FROM [tbl_EnquiryMaster] " +
-                    "WHERE [EnquiryId] ='" + Eqid + "'",
-                    con);
-
-                SqlDataReader reader = cmd2.ExecuteReader();
-                if (reader.Read())
-                {
-                    oldName = reader["CustomerName"].ToString();
-                    oldMobNo = reader["MobNo"].ToString();
-                    oldEmail = reader["Email"].ToString();
-                    oldProductImage = reader["ProductImage"].ToString();
-                    oldProductName = reader["ProdName"].ToString();
+                    }
                 }
-                reader.Close();
-                con.Close();
+                else if (btnSubmit.Text == "Update")
+                {
+                    int Eqid = Convert.ToInt32(hidden.Value);
+                    con.Open();
+                    SqlCommand cmd2 = new SqlCommand(
+                        "SELECT [CustomerName], [MobNo], [Email], [ProductImage], [ProdName]" +
+                        "FROM [tbl_EnquiryMaster] " +
+                        "WHERE [EnquiryId] ='" + Eqid + "'",
+                        con);
 
-                DateTime Date = DateTime.Now;
-                con.Open();
-                SqlCommand cmd = new SqlCommand("SP_Enquiry", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@CustomerName", txtCustName.Text);
-                cmd.Parameters.AddWithValue("@StateCode", DropDownListcustomer.Text);
-                cmd.Parameters.AddWithValue("@AddresLine1", txtAddresline1.Text);
-                cmd.Parameters.AddWithValue("@Area", txtarea.Text);
-                cmd.Parameters.AddWithValue("@City", txtcity.Text);
-                cmd.Parameters.AddWithValue("@Country", txtcountry.Text);
-                cmd.Parameters.AddWithValue("@Email", txttemail.Text);
-                cmd.Parameters.AddWithValue("@MobNo", txtMobileNo.Text);
-                cmd.Parameters.AddWithValue("@PostalCode", txtPostalCode.Text);
-                cmd.Parameters.AddWithValue("@createdBy", createdby);
-                cmd.Parameters.AddWithValue("@createddate", Date);
-                cmd.Parameters.AddWithValue("@UpdatedBy", createdby);
-                cmd.Parameters.AddWithValue("@UpdatedDate", Date);
-                cmd.Parameters.AddWithValue("@isdeleted", '0');
-                // Product Information
-                cmd.Parameters.AddWithValue("@ProductName", txtproductname.Text);
-                cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
-                cmd.Parameters.AddWithValue("@otherinfo", txtotherinfo.Text);
-                if (FileUpload.HasFile)
-                {
-                    var Filenamenew = FileUpload.FileName;
-                    string codenew = Guid.NewGuid().ToString();
-                    Path = Server.MapPath("~/ProductImg/") + codenew + "_" + Filenamenew;
-                    FileUpload.SaveAs(Path);
-                    cmd.Parameters.AddWithValue("@Imagepath", "~/ProductImg/" + codenew + "_" + Filenamenew);
-                }
-                else
-                {
-                    if (oldProductName == txtproductname.Text)
+                    SqlDataReader reader = cmd2.ExecuteReader();
+                    if (reader.Read())
                     {
-                        cmd.Parameters.AddWithValue("@Imagepath", oldProductImage);
+                        oldName = reader["CustomerName"].ToString();
+                        oldMobNo = reader["MobNo"].ToString();
+                        oldEmail = reader["Email"].ToString();
+                        oldProductImage = reader["ProductImage"].ToString();
+                        oldProductName = reader["ProdName"].ToString();
+                    }
+                    reader.Close();
+                    con.Close();
+
+                    DateTime Date = DateTime.Now;
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("SP_Enquiry", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@CustomerName", txtCustName.Text);
+                    cmd.Parameters.AddWithValue("@StateCode", DropDownListcustomer.Text);
+                    cmd.Parameters.AddWithValue("@AddresLine1", txtAddresline1.Text);
+                    cmd.Parameters.AddWithValue("@Area", txtarea.Text);
+                    cmd.Parameters.AddWithValue("@City", txtcity.Text);
+                    cmd.Parameters.AddWithValue("@Country", txtcountry.Text);
+                    cmd.Parameters.AddWithValue("@Email", txttemail.Text);
+                    cmd.Parameters.AddWithValue("@MobNo", txtMobileNo.Text);
+                    cmd.Parameters.AddWithValue("@PostalCode", txtPostalCode.Text);
+                    cmd.Parameters.AddWithValue("@createdBy", createdby);
+                    cmd.Parameters.AddWithValue("@createddate", Date);
+                    cmd.Parameters.AddWithValue("@UpdatedBy", createdby);
+                    cmd.Parameters.AddWithValue("@UpdatedDate", Date);
+                    cmd.Parameters.AddWithValue("@isdeleted", '0');
+                    // Product Information
+                    cmd.Parameters.AddWithValue("@ProductName", txtproductname.Text);
+                    cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
+                    cmd.Parameters.AddWithValue("@otherinfo", txtotherinfo.Text);
+                    if (FileUpload.HasFile)
+                    {
+                        var Filenamenew = FileUpload.FileName;
+                        string codenew = Guid.NewGuid().ToString();
+                        Path = Server.MapPath("~/ProductImg/") + codenew + "_" + Filenamenew;
+                        FileUpload.SaveAs(Path);
+                        cmd.Parameters.AddWithValue("@Imagepath", "~/ProductImg/" + codenew + "_" + Filenamenew);
                     }
                     else
                     {
-                        cmd.Parameters.AddWithValue("@Imagepath", lblPath.Text);
+                        if (oldProductName == txtproductname.Text)
+                        {
+                            cmd.Parameters.AddWithValue("@Imagepath", oldProductImage);
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@Imagepath", lblPath.Text);
+                        }
+                    }
+                    // Customer table search values
+                    cmd.Parameters.AddWithValue("@OLDCustomerName", oldName);
+                    cmd.Parameters.AddWithValue("@OLDCustomerMobile", oldMobNo);
+                    cmd.Parameters.AddWithValue("@OLdCustomerMail", oldEmail);
+
+                    cmd.Parameters.AddWithValue("@EnquiryId", Convert.ToInt32(hidden.Value));
+                    cmd.Parameters.Add("@enquiry_id", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    id = Convert.ToInt32(cmd.Parameters["@enquiry_id"].Value);
+                    bool isactive = true;
+                    if (DropDownListisActive.Text == "Yes")
+                    {
+                        isactive = true;
+                    }
+                    else
+                    {
+                        isactive = false;
+                    }
+                    cmd.Parameters.AddWithValue("@IsStatus", isactive);
+                    cmd.Parameters.AddWithValue("@Action", "update");
+                    cmd.Parameters.AddWithValue("@Code", "NewCustomer");
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                    if (Request.QueryString["Name"] != null)
+                    {
+                        ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Updated Successfully','0');", true);
+                    }
+                    else
+                    {
+                        ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Updated Successfully','1');", true);
                     }
                 }
-                // Customer table search values
-                cmd.Parameters.AddWithValue("@OLDCustomerName", oldName);
-                cmd.Parameters.AddWithValue("@OLDCustomerMobile", oldMobNo);
-                cmd.Parameters.AddWithValue("@OLdCustomerMail", oldEmail);
-
-                cmd.Parameters.AddWithValue("@EnquiryId", Convert.ToInt32(hidden.Value));
-                cmd.Parameters.Add("@enquiry_id", SqlDbType.Int).Direction = ParameterDirection.Output;
-                id = Convert.ToInt32(cmd.Parameters["@enquiry_id"].Value);
-                bool isactive = true;
-                if (DropDownListisActive.Text == "Yes")
-                {
-                    isactive = true;
-                }
-                else
-                {
-                    isactive = false;
-                }
-                cmd.Parameters.AddWithValue("@IsStatus", isactive);
-                cmd.Parameters.AddWithValue("@Action", "update");
-                cmd.Parameters.AddWithValue("@Code", "NewCustomer");
-                cmd.ExecuteNonQuery();
-                con.Close();
-                if (Request.QueryString["Name"] != null)
-                {
-                    ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Updated Successfully','0');", true);
-                }
-                else
-                {
-                    ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Updated Successfully','1');", true);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
-        catch (Exception ex)
+        else
         {
-            throw ex;
+            ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Please wait... Thanks','1');", true);
         }
     }
 

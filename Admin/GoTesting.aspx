@@ -84,6 +84,66 @@
             $("#MyPopup").modal("show");
         }
     </script>
+
+    <%-- Script to add engineers by Nikhil  --%>
+    <script>
+
+        let selectedEngineers = [];
+
+        // Function to initialize saved engineers on page load
+        window.onload = function () {
+            const hiddenField = document.getElementById('<%= hiddenSelectedEngineers.ClientID %>');
+            if (hiddenField.value) {
+                selectedEngineers = hiddenField.value.split(", ");
+                updateEngineerDisplay();  // Display saved engineers immediately on load
+            }
+        };
+
+        function addEngineerToList() {
+            const dropdown = document.getElementById('<%= txtEngiName.ClientID %>');
+            const selectedEngineer = dropdown.options[dropdown.selectedIndex].text;
+
+            if (!selectedEngineers.includes(selectedEngineer) && selectedEngineer !== "Select Engineer") {
+                selectedEngineers.push(selectedEngineer);
+                updateEngineerDisplay();
+                updateHiddenField();
+            }
+        }
+
+        function updateEngineerDisplay() {
+            const container = document.getElementById('<%= selectedEngineersContainer.ClientID %>');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            selectedEngineers.forEach((engineer, index) => {
+                const engineerElement = document.createElement('span');
+                engineerElement.innerText = engineer;
+                engineerElement.classList.add('badge', 'badge-primary', 'm-1', 'p-2');
+                engineerElement.style.cursor = 'pointer';
+                engineerElement.onclick = () => removeEngineer(index);
+
+                const closeIcon = document.createElement('span');
+                closeIcon.innerHTML = '&times;';
+                closeIcon.style.marginLeft = '8px';
+                closeIcon.style.cursor = 'pointer';
+
+                engineerElement.appendChild(closeIcon);
+                container.appendChild(engineerElement);
+            });
+        }
+
+        function removeEngineer(index) {
+            selectedEngineers.splice(index, 1);
+            updateEngineerDisplay();
+            updateHiddenField();
+        }
+
+        function updateHiddenField() {
+            const hiddenField = document.getElementById('<%= hiddenSelectedEngineers.ClientID %>');
+            hiddenField.value = selectedEngineers.join(", ");
+        }
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <form runat="server">
@@ -115,16 +175,44 @@
                             <br />
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <asp:Label ID="lblEngiName" runat="server" class="control-label col-sm-6">Engineer Name :</asp:Label>
-                            <%--<asp:TextBox runat="server" class="form-control" ID="txtEngiName" />--%>
+                    <%-- <div class="col-md-6">
+                                     <%--<asp:Label ID="lblEngiName" runat="server" class="control-label col-sm-6">Engineer Name :</asp:Label>--%>
+                              <%--<asp:TextBox runat="server" class="form-control" ID="txtEngiName" />--%>
 
-                            <asp:DropDownList ID="txtEngiName" runat="server" class="form-control" AppendDataBoundItems="true">
+                                            <%-- <asp:DropDownList ID="txtEngiName" runat="server" class="form-control" AppendDataBoundItems="true">
+                                   <asp:ListItem Value="" Text="Select Engineer"></asp:ListItem>
+                               </asp:DropDownList>
+                           </div>--%>
+                    <div class="row">
+
+                        <%-- New code Added by Nikhil to fetch multiple engineers --%>
+                        <div class="col-md-6">
+                            <asp:Label ID="lblEngiName" runat="server" class="control-label col-sm-6">
+                             Select Engineer <span class="spncls"></span>:
+                            </asp:Label>
+
+                            <!-- Container for Displaying Selected Engineers -->
+                            <div id="selectedEngineersContainer" runat="server" class="form-control"
+                                style="height: auto; min-height: 38px; padding: 5px; border: 1px solid #ced4da; background-color: #e9ecef;">
+                            </div>
+
+                            <asp:HiddenField ID="hiddenSelectedEngineers" runat="server" />
+
+                            <!-- Dropdown for Selecting Engineers -->
+                            <asp:DropDownList ID="txtEngiName" runat="server" class="form-control" AppendDataBoundItems="true"
+                                onchange="addEngineerToList()">
                                 <asp:ListItem Value="" Text="Select Engineer"></asp:ListItem>
                             </asp:DropDownList>
+
+                            <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" ErrorMessage="Please enter Engineer Name"
+                                ControlToValidate="txtEngiName" ForeColor="Red">
+                            </asp:RequiredFieldValidator><br />
+                            <br />
                         </div>
-                        <div class="col-md-3">
+                        <%-- End --%>
+
+
+                        <div class="col-md-3" style="margin-top:47px">
                             <asp:Label ID="lblCompList" runat="server" class="control-label col-sm-6 lblcomp">Component List :</asp:Label>
                             <asp:TextBox runat="server" class="form-control txtsear mt-top" ID="txtcomponent" name="Search" placeholder="Search Component" onkeypress="return character(event)" />
                             <asp:AutoCompleteExtender ID="AutoCompleteExtender2" CompletionListCssClass="completionList"
@@ -135,12 +223,12 @@
                                 <asp:ListItem Value="" Text="Select Component"></asp:ListItem>
                             </asp:DropDownList>--%>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2" style="margin-top:47px">
                             <asp:Label ID="lblQuantityComp" runat="server" class="control-label col-sm-6 lblcomp">Quantity :</asp:Label>
                             <asp:TextBox runat="server" class="form-control" ID="txtQuantityComp" />
                             <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" ErrorMessage="Please fill Quantity" ControlToValidate="txtQuantityComp" ForeColor="Red"></asp:RequiredFieldValidator>--%>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-1" style="margin-top:47px">
                             <br />
                             <asp:LinkButton ID="lnkbtnAdd" runat="server" Font-Bold="true" OnClick="lnkbtnAdd_Click" CommandArgument='<%# Eval("JobNo") %>'>+ADD</asp:LinkButton>
                         </div>
@@ -244,12 +332,14 @@
                         </div>
                     </div>
 
-                    <center>   <div class="col-md-6">  
-              <asp:Button  ID="btnSubmit" runat="server" class="btn btn-primary col-sm-3 " Text="Submit" OnClick="btnSubmit_Click"></asp:Button>
-                &nbsp;&nbsp;        &nbsp;&nbsp;     &nbsp;&nbsp;     &nbsp;&nbsp; 
-             <asp:Button  ID="btnCancel" runat="server" class="btn btn-primary col-sm-3 " Text="Cancel"  CausesValidation="False"  OnClick="btnCancel_Click" ></asp:Button>
-                 <asp:HiddenField runat="server" ID="hidden" /> 
-            </div></center>
+                    <center>
+                        <div class="col-md-6">
+                            <asp:Button ID="btnSubmit" runat="server" class="btn btn-primary col-sm-3 " Text="Submit" OnClick="btnSubmit_Click"></asp:Button>
+                            &nbsp;&nbsp;        &nbsp;&nbsp;     &nbsp;&nbsp;     &nbsp;&nbsp; 
+             <asp:Button ID="btnCancel" runat="server" class="btn btn-primary col-sm-3 " Text="Cancel" CausesValidation="False" OnClick="btnCancel_Click"></asp:Button>
+                            <asp:HiddenField runat="server" ID="hidden" />
+                        </div>
+                    </center>
 
                 </div>
 

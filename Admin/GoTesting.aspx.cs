@@ -117,7 +117,8 @@ public partial class Reception_PoPupTesting : System.Web.UI.Page
             {
                 txttagno.Text = dt.Rows[0]["JobNo"].ToString();
                 txtproductname.Text = dt.Rows[0]["ProductName"].ToString();
-                txtEngiName.Text = dt.Rows[0]["EngiName"].ToString();
+                //txtEngiName.Text = dt.Rows[0]["EngiName"].ToString();
+                hiddenSelectedEngineers.Value = dt.Rows[0]["EngiName"].ToString();
                 txtStatus.Text = dt.Rows[0]["Status"].ToString();
                 txtRemark.Text = dt.Rows[0]["Remark"].ToString();
                 txtreportedto.Text = dt.Rows[0]["ReportedTO"].ToString();
@@ -404,8 +405,9 @@ public partial class Reception_PoPupTesting : System.Web.UI.Page
                 con.Open();
                 string complete = "1";
 
+                string selectedEngineers = hiddenSelectedEngineers.Value;
 
-                SqlCommand cmd1 = new SqlCommand("update tblTestingProduct set ProductName='" + txtproductname.Text + "', EngiName='" + txtEngiName.Text + "', ReportedTO='"+ txtreportedto.Text +"', TestingDate='" + txttestingdate.Text + "',Status='" + txtStatus.SelectedItem.Text + "',Remark='" + txtRemark.Text + "' ,isCompleted='" + complete + "',UpdateBy='" + createdby + "',UpdatedDate=getdate() where JobNo='" + txttagno.Text + "'", con);
+                SqlCommand cmd1 = new SqlCommand("update tblTestingProduct set ProductName='" + txtproductname.Text + "', EngiName='" + selectedEngineers + "', ReportedTO='"+ txtreportedto.Text +"', TestingDate='" + txttestingdate.Text + "',Status='" + txtStatus.SelectedItem.Text + "',Remark='" + txtRemark.Text + "' ,isCompleted='" + complete + "',UpdateBy='" + createdby + "',UpdatedDate=getdate() where JobNo='" + txttagno.Text + "'", con);
                 cmd1.ExecuteNonQuery();
                 con.Close();
                 ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Updated Successfully');", true);

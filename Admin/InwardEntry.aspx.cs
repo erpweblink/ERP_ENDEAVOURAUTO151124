@@ -21,12 +21,13 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
     {
         if (Session["adminname"] == null)
         {
-            Response.Redirect("../Login.aspx");
+            Response.Redirect("../LoginPage.aspx");
         }
         else
-        {
+        {           
             if (!IsPostBack)
             {
+                Session["OneTimeFlag"] = "";
                 this.txtDateIn.Text = DateTime.Now.ToString("yyyy-MM-dd");
                 this.txtDateIn.TextMode = TextBoxMode.Date;
                 // this.txtrepeateddate.Text = DateTime.Now.ToString("yyyy-MM-dd");
@@ -55,16 +56,15 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                     string code = Decrypt(Request.QueryString["CODE"].ToString());
                     btncreate1.Visible = true;
                     imgProduct.Visible = true;
-                    Load_Company_Details(code, true, "CODE", null);                  
+                    Load_Company_Details(code, true, "CODE", null);
                 }
                 if (Request.QueryString["CUID"] != null)
                 {
                     string bothValues = Decrypt(Request.QueryString["CUID"].ToString());
                     btncreate1.Visible = true;
                     imgProduct.Visible = true;
-                    Load_Company_Details(null, true, "CUID", bothValues);                   
+                    Load_Company_Details(null, true, "CUID", bothValues);
                 }
-
             }
         }
 
@@ -196,7 +196,7 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
 
 
                     SqlDataAdapter customerAdapter = new SqlDataAdapter(
-                       // "SELECT * FROM [tblCustomer] WHERE [CustomerName] = @Name AND [Email] = @Email AND [MobNo] = @Mobile", con);
+                        // "SELECT * FROM [tblCustomer] WHERE [CustomerName] = @Name AND [Email] = @Email AND [MobNo] = @Mobile", con);
                         "SELECT * FROM [tblCustomer] WHERE [CustomerName] = @Name", con);
                     customerAdapter.SelectCommand.Parameters.AddWithValue("@Name", customerName);
                     //customerAdapter.SelectCommand.Parameters.AddWithValue("@Email", email);
@@ -342,6 +342,7 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
 
     protected void btnSubmit_Click(object sender, EventArgs e)
     {
+
         string EnquID = hidden.Value, CustId = "", imgPath = "";
         if (EnquID != "")
         {
@@ -371,84 +372,93 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
         string Path = null;
         if (btnSubmit.Text == "Submit")
         {
+            if (Session["OneTimeFlag"] == null || Session["OneTimeFlag"].ToString() == "")
+            {
+                Session["OneTimeFlag"] = "Inserted";
 
-            if (txtcustomername.Text == "Select Customer")
-            {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Please Select Customer Name');", true);
-            }
-            else if (txtproductname.Text == "Select Product")
-            {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Please Select Product Name');", true);
-            }
-            else
-            {
-                string QuatationNo;
-                SqlDataAdapter ad = new SqlDataAdapter("SELECT max([id]) as maxid FROM [tblInwardEntry]", con);
-                DataTable dt = new DataTable();
-                ad.Fill(dt);
-                if (dt.Rows.Count > 0)
+
+                if (txtcustomername.Text == "Select Customer")
                 {
-                    int maxid = dt.Rows[0]["maxid"].ToString() == "" ? 0 : Convert.ToInt32(dt.Rows[0]["maxid"].ToString());
-                    QuatationNo = "QN" + (maxid + 1).ToString();
-
-                    DateTime Date = DateTime.Now;
-
-                    con.Open();
-                    SqlCommand cmd = new SqlCommand("SP_InwardEntry", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@JobNo", txtJobNo.Text);
-                    cmd.Parameters.AddWithValue("@DateIn", txtDateIn.Text);
-                    cmd.Parameters.AddWithValue("@CustName", txtcustomername.Text);
-                    cmd.Parameters.AddWithValue("@MateName", txtproductname.Text);
-                    cmd.Parameters.AddWithValue("@SrNo", txtSrNo.Text);
-                    cmd.Parameters.AddWithValue("@Subcustomer", txtsubcust.Text);
-                    cmd.Parameters.AddWithValue("@MateStatus", txtMateriStatus.Text);
-                    cmd.Parameters.AddWithValue("@FinalStatus", txtfinalstatus.Text);
-                    //cmd.Parameters.AddWithValue("@TestBy", DropDownListtest.SelectedItem.Text);
-                    cmd.Parameters.AddWithValue("@ModelNo", txtModelNo.Text);
-                    cmd.Parameters.AddWithValue("@CreatedBy", Session["adminname"].ToString());
-                    cmd.Parameters.AddWithValue("@CreatedDate", Date);
-                    cmd.Parameters.AddWithValue("@UpdateBy", Session["adminname"].ToString());
-                    cmd.Parameters.AddWithValue("@UpdateDate", Date);
-                    cmd.Parameters.AddWithValue("@Quotation_no", QuatationNo);
-                    cmd.Parameters.AddWithValue("@isdeleted", '0');
-                    cmd.Parameters.AddWithValue("@ProductFault", txtproductfaulty.Text);
-                    cmd.Parameters.AddWithValue("@RepeatedNo", txtrepeatedno.Text);
-                    cmd.Parameters.AddWithValue("@RepeatedDate", txtrepeateddate.Text);
-                    cmd.Parameters.AddWithValue("@RepeatedJobNo", txtrepetedjob.Text);
-                    cmd.Parameters.AddWithValue("@Date", txtdate.Text);
-                    cmd.Parameters.AddWithValue("@Branch", txtbranch.Text);
-                    cmd.Parameters.AddWithValue("@otherinfo", txtotherinfo.Text);
-                    cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
-                    cmd.Parameters.AddWithValue("@Services", txtservices.Text);
-                    cmd.Parameters.AddWithValue("@CustChallnno", txtcustomerno.Text);
-                   
-                    if (FileUpload.HasFile)
-                    {
-                        var Filenamenew = FileUpload.FileName;
-                        string codenew = Guid.NewGuid().ToString();
-                        Path = Server.MapPath("~/ProductImg/") + codenew + "_" + Filenamenew;
-                        FileUpload.SaveAs(Path);
-                        cmd.Parameters.AddWithValue("@Imagepath", "~/ProductImg/" + codenew + "_" + Filenamenew);
-                    }
-                    else
-                    {
-                        cmd.Parameters.AddWithValue("@Imagepath", imgPath);
-                    }
-                    // cmd.Parameters.AddWithValue("@Imagepath", "~/ProductImg/" + FileUpload.FileName);
-                    cmd.Parameters.AddWithValue("@Action", "Insert");
-                    cmd.ExecuteNonQuery();
-                    SqlCommand cmdss = new SqlCommand("UPDATE tbl_EnquiryMaster SET IsStatus = '0' WHERE EnquiryId = '" + EnquID + "'", con);
-                    //con.Open();
-                    cmdss.ExecuteScalar();
-                    con.Close();
-                    ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Saved Successfully');", true);
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Please Select Customer Name');", true);
+                }
+                else if (txtproductname.Text == "Select Product")
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Please Select Product Name');", true);
                 }
                 else
                 {
-                    QuatationNo = string.Empty;
+                    string QuatationNo;
+                    SqlDataAdapter ad = new SqlDataAdapter("SELECT max([id]) as maxid FROM [tblInwardEntry]", con);
+                    DataTable dt = new DataTable();
+                    ad.Fill(dt);
+                    if (dt.Rows.Count > 0)
+                    {
+                        int maxid = dt.Rows[0]["maxid"].ToString() == "" ? 0 : Convert.ToInt32(dt.Rows[0]["maxid"].ToString());
+                        QuatationNo = "QN" + (maxid + 1).ToString();
+
+                        DateTime Date = DateTime.Now;
+
+                        con.Open();
+                        SqlCommand cmd = new SqlCommand("SP_InwardEntry", con);
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@JobNo", txtJobNo.Text);
+                        cmd.Parameters.AddWithValue("@DateIn", txtDateIn.Text);
+                        cmd.Parameters.AddWithValue("@CustName", txtcustomername.Text);
+                        cmd.Parameters.AddWithValue("@MateName", txtproductname.Text);
+                        cmd.Parameters.AddWithValue("@SrNo", txtSrNo.Text);
+                        cmd.Parameters.AddWithValue("@Subcustomer", txtsubcust.Text);
+                        cmd.Parameters.AddWithValue("@MateStatus", txtMateriStatus.Text);
+                        cmd.Parameters.AddWithValue("@FinalStatus", txtfinalstatus.Text);
+                        //cmd.Parameters.AddWithValue("@TestBy", DropDownListtest.SelectedItem.Text);
+                        cmd.Parameters.AddWithValue("@ModelNo", txtModelNo.Text);
+                        cmd.Parameters.AddWithValue("@CreatedBy", Session["adminname"].ToString());
+                        cmd.Parameters.AddWithValue("@CreatedDate", Date);
+                        cmd.Parameters.AddWithValue("@UpdateBy", Session["adminname"].ToString());
+                        cmd.Parameters.AddWithValue("@UpdateDate", Date);
+                        cmd.Parameters.AddWithValue("@Quotation_no", QuatationNo);
+                        cmd.Parameters.AddWithValue("@isdeleted", '0');
+                        cmd.Parameters.AddWithValue("@ProductFault", txtproductfaulty.Text);
+                        cmd.Parameters.AddWithValue("@RepeatedNo", txtrepeatedno.Text);
+                        cmd.Parameters.AddWithValue("@RepeatedDate", txtrepeateddate.Text);
+                        cmd.Parameters.AddWithValue("@RepeatedJobNo", txtrepetedjob.Text);
+                        cmd.Parameters.AddWithValue("@Date", txtdate.Text);
+                        cmd.Parameters.AddWithValue("@Branch", txtbranch.Text);
+                        cmd.Parameters.AddWithValue("@otherinfo", txtotherinfo.Text);
+                        cmd.Parameters.AddWithValue("@ServiceType", ddlservicetype.SelectedItem.Text);
+                        cmd.Parameters.AddWithValue("@Services", txtservices.Text);
+                        cmd.Parameters.AddWithValue("@CustChallnno", txtcustomerno.Text);
+
+                        if (FileUpload.HasFile)
+                        {
+                            var Filenamenew = FileUpload.FileName;
+                            string codenew = Guid.NewGuid().ToString();
+                            Path = Server.MapPath("~/ProductImg/") + codenew + "_" + Filenamenew;
+                            FileUpload.SaveAs(Path);
+                            cmd.Parameters.AddWithValue("@Imagepath", "~/ProductImg/" + codenew + "_" + Filenamenew);
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@Imagepath", imgPath);
+                        }
+                        // cmd.Parameters.AddWithValue("@Imagepath", "~/ProductImg/" + FileUpload.FileName);
+                        cmd.Parameters.AddWithValue("@Action", "Insert");
+                        cmd.ExecuteNonQuery();
+                        SqlCommand cmdss = new SqlCommand("UPDATE tbl_EnquiryMaster SET IsStatus = '0' WHERE EnquiryId = '" + EnquID + "'", con);
+                        //con.Open();
+                        cmdss.ExecuteScalar();
+                        con.Close();
+                        ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Saved Successfully');", true);
+                    }
+                    else
+                    {
+                        QuatationNo = string.Empty;
+                    }
                 }
+            }
+            else
+            {
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Saved Successfully');", true);
             }
         }
         else if (btnSubmit.Text == "Update")
@@ -503,6 +513,7 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
             con.Close();
             ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Updated Successfully');", true);
         }
+
 
     }
 
@@ -633,14 +644,14 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
         if (dt.Rows.Count > 0)
         {
             int maxid = Convert.ToInt32(dt.Rows[0]["maxid"].ToString());
-            if (maxid == 0)  
+            if (maxid == 0)
             {
                 txtJobNo.Text = (maxid).ToString();
             }
             else
             {
                 txtJobNo.Text = (maxid + 1).ToString();
-            }        
+            }
         }
         else
         {
