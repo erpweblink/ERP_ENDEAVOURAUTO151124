@@ -187,7 +187,7 @@
                 <div style="width: 100%; padding: 20px;">
                     <div class="table-responsive">
                         <asp:GridView ID="gv_Customer" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
-                            OnRowCommand="gv_Customer_RowCommand" OnPageIndexChanging="gv_Customer_PageIndexChanging" OnRowDataBound="gv_Customer_RowDataBound" PageSize="10" AllowPaging="true" PagerStyle-CssClass="paging">
+                            OnRowCommand="gv_Customer_RowCommand" OnPageIndexChanging="gv_Customer_PageIndexChanging" OnRowDataBound="gv_Customer_RowDataBound" PageSize="15" AllowPaging="true" PagerStyle-CssClass="paging">
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr.No.">
                                     <ItemTemplate>
@@ -204,9 +204,14 @@
                                         <%# Convert.ToDateTime(Eval("Createddate")).ToString("dd/MM/yyyy") %>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Customer Name">
+                                <asp:TemplateField HeaderText="Customer Name/ Product Name">
                                     <ItemTemplate>
                                         <asp:Label ID="lblCustName" runat="server" Text='<%# Eval("CustomerName") %>'></asp:Label>
+                                        <br/>
+                                        <br/>
+                                        <label id ="lblHeading" ><b>Product Name</b></label> 
+                                        <br />
+                                        <asp:Label ID="lblProductName" runat="server" Text='<%# Eval("ProdName") %>' BackColor="Yellow"></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Area">

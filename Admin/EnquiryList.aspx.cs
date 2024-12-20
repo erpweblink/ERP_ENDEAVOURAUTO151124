@@ -16,9 +16,17 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
+        if (Session["adminname"] == null)
         {
-            GridView();
+            Response.Redirect("../LoginPage.aspx");
+        }
+        else
+        {            
+            if (!IsPostBack)
+            {
+                Session["OneTimeFlag"] = "";
+                GridView();
+            }
         }
     }
 
@@ -142,7 +150,7 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
 
                 DataTable dt = new DataTable();
                 SqlDataAdapter sad = new SqlDataAdapter(
-    "SELECT [EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo],[Email],[IsStatus] " +
+    "SELECT *,[EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo],[Email],[IsStatus] " +
                 "FROM [tbl_EnquiryMaster] " +
     "WHERE [CustomerName]='" + txtSearch.Text + "'AND isdeleted = '0'", con);
                 sad.Fill(dt);
@@ -234,7 +242,7 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
             if (ddlStatus.Text == "1")
             {
                 sad = new SqlDataAdapter(
-    "SELECT [EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [IsStatus], " +
+    "SELECT *,[EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [IsStatus], " +
     "[Email], [CreatedBy], [Createddate], [UpdatedBy], [UpdatedDate] " +
     "FROM [tbl_EnquiryMaster] " +
     "WHERE [IsStatus]='" + ddlStatus.Text + "' AND [isdeleted] = '0'",
@@ -244,7 +252,7 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
             {
 
                 sad = new SqlDataAdapter(
-    "SELECT [EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [IsStatus], " +
+    "SELECT *,[EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [IsStatus], " +
     "[Email], [CreatedBy], [Createddate], [UpdatedBy], [UpdatedDate] " +
     "FROM [tbl_EnquiryMaster] " +
     " where [IsStatus]='" + ddlStatus.Text + "' AND isdeleted='0'",
