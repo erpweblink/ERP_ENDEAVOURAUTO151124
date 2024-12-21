@@ -21,6 +21,7 @@ public partial class Reception_inwardEntryList : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
+            Session["OneTimeFlag"] = "";
             if (Session["adminname"] == null)
             {
                 Response.Redirect("../LoginPage.aspx");
@@ -280,7 +281,7 @@ public partial class Reception_inwardEntryList : System.Web.UI.Page
                     //gv_Inward.DataSource = dt;
                     //gv_Inward.DataBind();
                 }
-               
+
                 else if (string.IsNullOrEmpty(txtSearch.Text) && !string.IsNullOrEmpty(txtDateSearch.Text) && string.IsNullOrEmpty(txtreatedNo.Text) && string.IsNullOrEmpty(txtDateSearchfrom.Text))
                 {
                     ViewState["Excell"] = "Getsorteddatwise";
@@ -601,7 +602,7 @@ public partial class Reception_inwardEntryList : System.Web.UI.Page
     [System.Web.Script.Services.ScriptMethod()]
     [System.Web.Services.WebMethod]
     public static List<string> GetreapeatedList(string prefixText, string contextKey)
- {
+    {
         if (string.IsNullOrWhiteSpace(contextKey) && string.IsNullOrWhiteSpace(prefixText))
         {
             return new List<string>();

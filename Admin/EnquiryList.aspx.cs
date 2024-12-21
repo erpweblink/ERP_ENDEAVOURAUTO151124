@@ -9,6 +9,7 @@ using System.Text;
 using System.Web.UI.WebControls;
 using System.Web.UI;
 using System.Activities.Expressions;
+using System.ServiceModel.Activities;
 
 public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
 {
@@ -21,7 +22,7 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
             Response.Redirect("../LoginPage.aspx");
         }
         else
-        {            
+        {
             if (!IsPostBack)
             {
                 Session["OneTimeFlag"] = "";
@@ -306,11 +307,22 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
             LinkButton linkButton = sender as LinkButton;
             int rowIndex = Convert.ToInt32(linkButton.CommandArgument);
 
+            //SqlDataAdapter sad = new SqlDataAdapter(
+            //    "SELECT [EnquiryId], [ProdName], [ProductImage], [OtherInformation], [ServiceType] " +
+            //    "FROM [tbl_EnquiryMaster] " +
+            //    "WHERE [EnquiryId] = @EnquiryId",
+            //    con);
             SqlDataAdapter sad = new SqlDataAdapter(
-                "SELECT [EnquiryId], [ProdName], [ProductImage], [OtherInformation], [ServiceType] " +
-                "FROM [tbl_EnquiryMaster] " +
-                "WHERE [EnquiryId] = @EnquiryId",
-                con);
+             "SELECT TP.[JobNo], TP.[Status], " +
+             "CASE " +
+             "WHEN TP.[isCompleted] = 1 THEN 'Completed' " +
+             "ELSE 'Pending' " +
+             "END AS [CompletionStatus], EM.[EnquiryId], EM.[ProdName], " +
+             "EM.[ProductImage], EM.[OtherInformation], EM.[ServiceType] " +
+             "FROM [tbl_EnquiryMaster] AS EM " +
+             "LEFT JOIN [tblTestingProduct] AS TP " +
+             "ON TP.CustomerName = EM.CustomerName AND TP.ProductName = EM.ProdName " +
+             "WHERE EM.[EnquiryId] = @EnquiryId", con);
 
 
             sad.SelectCommand.Parameters.AddWithValue("@EnquiryId", rowIndex);
@@ -320,7 +332,28 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
 
             if (dt.Rows.Count > 0)
             {
-
+                if (dt.Rows[0]["JobNo"].ToString() == "")
+                {
+                    lblJobNo.Visible = false;
+                    lblJNum.Visible = false;
+                    lblIscomp.Visible = false;
+                    lblIsCompleted.Visible = false;
+                    lblStat.Visible = false;
+                    lblStatus.Visible = false;                    
+                }
+                else
+                {
+                    lblJobNo.Visible = true;
+                    lblJNum.Visible = true;
+                    lblIscomp.Visible = true;
+                    lblIsCompleted.Visible = true;
+                    lblStat.Visible = true;
+                    lblStatus.Visible = true;
+                    lblJNum.Text = dt.Rows[0]["JobNo"].ToString();
+                    lblIsCompleted.Text = dt.Rows[0]["CompletionStatus"].ToString();
+                    lblStatus.Text = dt.Rows[0]["Status"].ToString();
+                    br1.Visible = true;
+                }
                 lblproductNa.Text = dt.Rows[0]["ProdName"].ToString();
                 lblServiceType.Text = dt.Rows[0]["ServiceType"].ToString();
                 lblOtherInfo.Text = dt.Rows[0]["OtherInformation"].ToString();

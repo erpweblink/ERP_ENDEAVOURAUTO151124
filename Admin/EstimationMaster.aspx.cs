@@ -448,7 +448,25 @@ public partial class Admin_EstimationMaster : System.Web.UI.Page
         }
         else if (btnSubmit.Text == "Update")
         {
-            con.Close();
+            string Id="";
+            decimal FinalCost= 0;
+            string QuotationStatus = "";
+            string JobDaysCount="";
+
+            con.Open();
+            SqlCommand cmdupdate1 = new SqlCommand("select [id],[FinalCost],[QuotationStatus],[JobDaysCount] from tblEstimationHdr WHERE JobNo='" + txtJobNo.Text + "'", con);
+            SqlDataReader reader = cmdupdate1.ExecuteReader();
+            if (reader.HasRows)
+            {
+                reader.Read();
+                 Id = reader["id"].ToString();
+                 FinalCost = Convert.ToDecimal(reader["FinalCost"].ToString());
+                 QuotationStatus = reader["QuotationStatus"].ToString();
+                 JobDaysCount = reader["JobDaysCount"].ToString();
+                reader.Close();
+            }
+
+                con.Close();
             SqlCommand cmd1 = new SqlCommand("SP_EstimastionHdr", con);
             cmd1.CommandType = CommandType.StoredProcedure;
             cmd1.Parameters.AddWithValue("@JobNo", txtJobNo.Text);
@@ -502,6 +520,26 @@ public partial class Admin_EstimationMaster : System.Web.UI.Page
                 cmd2.ExecuteNonQuery();
                 con.Close();
             }
+
+            if(FinalCost != Convert.ToDecimal(txtfinalcost.Text))
+            {
+                con.Close();
+                SqlCommand cmdds = new SqlCommand("UPDATE tblEstimationHdr SET QuotationStatus = 'Pending', JobDaysCount = 0  WHERE id = '" + Id + "'", con);
+
+                con.Open();
+                cmdds.ExecuteNonQuery();
+                con.Close();
+            }
+            else
+            {
+                con.Close();
+                SqlCommand cmdds = new SqlCommand("UPDATE tblEstimationHdr SET QuotationStatus = '"+QuotationStatus+"', JobDaysCount = '" + JobDaysCount + "' WHERE id = '" + Id + "'", con);
+
+                con.Open();
+                cmdds.ExecuteNonQuery();
+                con.Close();
+            }
+
             ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel('Data Updated Successfully');", true);
 
         }

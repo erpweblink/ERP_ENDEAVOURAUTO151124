@@ -207,9 +207,9 @@
                                 <asp:TemplateField HeaderText="Customer Name/ Product Name">
                                     <ItemTemplate>
                                         <asp:Label ID="lblCustName" runat="server" Text='<%# Eval("CustomerName") %>'></asp:Label>
-                                        <br/>
-                                        <br/>
-                                        <label id ="lblHeading" ><b>Product Name</b></label> 
+                                        <br />
+                                        <br />
+                                        <label id="lblHeading"><b>Product Name</b></label>
                                         <br />
                                         <asp:Label ID="lblProductName" runat="server" Text='<%# Eval("ProdName") %>' BackColor="Yellow"></asp:Label>
                                     </ItemTemplate>
@@ -224,7 +224,7 @@
                                         <asp:Label ID="lblCity" runat="server" Text='<%# Eval("City") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                               <%-- <asp:TemplateField HeaderText="Email ID">
+                                <%-- <asp:TemplateField HeaderText="Email ID">
                                     <ItemTemplate>
                                         <asp:Label ID="txttemail" runat="server" Text='<%# Eval("Email") %>'></asp:Label>
                                     </ItemTemplate>
@@ -273,9 +273,29 @@
                                     <asp:LinkButton ID="Closepopdetail" runat="server"><i class="fa fa-close" style="font-size:24px;color:red;"></i></asp:LinkButton>
                                 </div>
                             </div>
-
                             <div class="row">
                             </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <asp:Label ID="lblJobNo" runat="server" class="control-label lbl">Job No:</asp:Label>
+                                </div>
+                                <div class="col-md-2">
+                                    <asp:Label ID="lblJNum" runat="server" class="control-label "></asp:Label>
+                                </div>
+                                <div class="col-md-2">
+                                    <asp:Label ID="lblStat" runat="server" class="control-label lbl">Status :</asp:Label>
+                                </div>
+                                <div class="col-md-2">
+                                    <asp:Label ID="lblStatus" runat="server" class="control-label "></asp:Label>
+                                </div>
+                                <div class="col-md-2">
+                                    <asp:Label ID="lblIscomp" runat="server" class="control-label lbl">Completion :</asp:Label>
+                                </div>
+                                <div class="col-md-2">
+                                    <asp:Label ID="lblIsCompleted" runat="server" class="control-label "></asp:Label>
+                                </div>
+                            </div>
+                            <br ID ="br1" runat="server" Visible="false"/>
                             <div class="row">
                                 <div class="col-md-3">
                                     <asp:Label ID="lblproName" runat="server" class="control-label lbl">Product Name :</asp:Label>
@@ -288,7 +308,6 @@
                                 </div>
                                 <div class="col-md-3">
                                     <asp:Label ID="lblServiceType" runat="server" class="control-label "></asp:Label>
-
                                 </div>
                             </div>
                             <br />
