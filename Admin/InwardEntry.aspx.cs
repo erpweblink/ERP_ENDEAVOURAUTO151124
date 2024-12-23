@@ -395,7 +395,7 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                     {
                         int maxid = dt.Rows[0]["maxid"].ToString() == "" ? 0 : Convert.ToInt32(dt.Rows[0]["maxid"].ToString());
                         QuatationNo = "QN" + (maxid + 1).ToString();
-
+                        int NewInwardId = maxid + 1;
                         DateTime Date = DateTime.Now;
 
                         con.Open();
@@ -444,7 +444,7 @@ public partial class Reception_InwardEntry : System.Web.UI.Page
                         // cmd.Parameters.AddWithValue("@Imagepath", "~/ProductImg/" + FileUpload.FileName);
                         cmd.Parameters.AddWithValue("@Action", "Insert");
                         cmd.ExecuteNonQuery();
-                        SqlCommand cmdss = new SqlCommand("UPDATE tbl_EnquiryMaster SET IsStatus = '0' WHERE EnquiryId = '" + EnquID + "'", con);
+                        SqlCommand cmdss = new SqlCommand("UPDATE tbl_EnquiryMaster SET InwardEntryId = '"+NewInwardId+"' , IsStatus = '0' WHERE EnquiryId = '" + EnquID + "'", con);
                         //con.Open();
                         cmdss.ExecuteScalar();
                         con.Close();

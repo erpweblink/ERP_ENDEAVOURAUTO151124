@@ -8,6 +8,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 
 public partial class Admin_Enquiry : System.Web.UI.Page
 {
@@ -22,7 +23,7 @@ public partial class Admin_Enquiry : System.Web.UI.Page
         }
         else
         {
-           
+            lblProduct1.Visible = false;
             if (!IsPostBack)
             {
                 Session["OneTimeFlag"] = "";
@@ -594,4 +595,59 @@ public partial class Admin_Enquiry : System.Web.UI.Page
         }
         return encryptString;
     }
+
+    protected void txtproductname_TextChanged(object sender, EventArgs e)
+    {
+        lblproduct.Text = "";
+         string productName = txtproductname.Text.Trim();
+
+       
+        if (string.IsNullOrEmpty(productName))
+        {
+
+            lblProduct1.Text = "Product name cannot be empty!";
+            lblProduct1.ForeColor = System.Drawing.Color.Red;
+        }
+        else
+        {
+         
+            bool productExists = CheckIfProductExists(productName);
+
+            if (!productExists)
+            {
+                lblProduct1.Visible = true;
+                txtproductname.Text = "";
+                lblProduct1.Text = "Product Not Present";
+                lblProduct1.ForeColor = System.Drawing.Color.Red;
+                lblProduct1.Font.Bold = true;
+            }            
+        }
+    }
+
+   
+    private bool CheckIfProductExists(string productName)
+    {
+        using (SqlCommand com = new SqlCommand())
+        {            
+            com.CommandText = "SELECT COUNT(*) FROM [tblProduct] WHERE ProdName = @Search AND isdeleted = '0'";           
+            com.Parameters.AddWithValue("@Search", productName);
+            com.Connection = con;
+
+            try
+            {
+                con.Open();                
+                int productCount = (int)com.ExecuteScalar();               
+                return productCount > 0;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                con.Close(); 
+            }
+        }
+    }
+
 }

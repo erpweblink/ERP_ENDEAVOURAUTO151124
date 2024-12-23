@@ -459,10 +459,10 @@
                         <!-- Show Entries Dropdown -->
                         <asp:Label ID="lbl_show" runat="server" Text="Show Entries" CssClass="control-label col-sm-6"></asp:Label>
                         <asp:DropDownList ID="ddlShowEntries" runat="server" CssClass="form-control" onchange="updateRecords()">
-                            <asp:ListItem Text="25" Value="25"></asp:ListItem>
+                            <asp:ListItem Text="25" Value="25" Selected="True"></asp:ListItem>
                             <asp:ListItem Text="50" Value="50"></asp:ListItem>
                             <asp:ListItem Text="100" Value="100"></asp:ListItem>
-                            <asp:ListItem Text="All" Value="All" Selected="True"></asp:ListItem>
+                            <asp:ListItem Text="All" Value="All" ></asp:ListItem>
                         </asp:DropDownList>
                     </div>
                 </div>

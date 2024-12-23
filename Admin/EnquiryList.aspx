@@ -187,7 +187,7 @@
                 <div style="width: 100%; padding: 20px;">
                     <div class="table-responsive">
                         <asp:GridView ID="gv_Customer" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
-                            OnRowCommand="gv_Customer_RowCommand" OnPageIndexChanging="gv_Customer_PageIndexChanging" OnRowDataBound="gv_Customer_RowDataBound" PageSize="15" AllowPaging="true" PagerStyle-CssClass="paging">
+                            OnRowCommand="gv_Customer_RowCommand" OnPageIndexChanging="gv_Customer_PageIndexChanging" OnRowDataBound="gv_Customer_RowDataBound" PageSize="15" AllowPaging="false" PagerStyle-CssClass="paging">
                             <Columns>
                                 <asp:TemplateField HeaderText="Sr.No.">
                                     <ItemTemplate>

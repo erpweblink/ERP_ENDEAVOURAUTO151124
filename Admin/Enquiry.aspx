@@ -213,13 +213,13 @@
                     <div class="row m-2" id="divdtls">
                         <div class="col-md-5">
                             <asp:Label ID="lblproduct" runat="server" class="control-label col-sm-6 custlbl">Product Name :<span class="spncls">*</span></asp:Label>
-                            <asp:TextBox runat="server" class="form-control txtsear mt-top" ID="txtproductname" name="Search" placeholder="Search Product" AutoPostBack="true" onkeypress="return character(event)" />
+                            <asp:TextBox runat="server" class="form-control txtsear mt-top" ID="txtproductname" name="Search" placeholder="Search Product" AutoPostBack="true" onkeypress="return character(event)" OnTextChanged="txtproductname_TextChanged" />
                             <asp:AutoCompleteExtender ID="AutoCompleteExtender2" CompletionListCssClass="completionList"
                                 CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
                                 CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetProductList" TargetControlID="txtproductname" runat="server">
                             </asp:AutoCompleteExtender>
                             <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ErrorMessage="Please fill Product Name" ControlToValidate="txtproductname" ForeColor="Red"></asp:RequiredFieldValidator>
-
+                             <asp:Label ID="lblProduct1" runat="server" class="control-label col-sm-6 custlbl" Visible="false"></asp:Label>
                         </div>
                         <div class="col-md-4">
                             <asp:Label ID="Label3" class="control-label " runat="server">Product Image :<span class="spncls"></span></asp:Label>
