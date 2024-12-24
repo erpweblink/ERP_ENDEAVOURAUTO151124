@@ -142,12 +142,12 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
         {
             if (string.IsNullOrEmpty(txtSearch.Text))
             {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Please Search Customer Name');", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Please Search Customer Name');window.location.href='EnquiryList.aspx';", true);
             }
-            if (string.IsNullOrEmpty(txtSearch.Text))
-            {
-                GridView();
-            }
+            //if (string.IsNullOrEmpty(txtSearch.Text))
+            //{
+            //    GridView();
+            //}
             else
             {
                 if (ddlStatus.Text == "0")
@@ -339,7 +339,48 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
 
     protected void lnkrefresh_Click(object sender, EventArgs e)
     {
-        Response.Redirect("EnquiryList.aspx");
+        if (ddlStatus.Text == "0")
+        {
+            txtSearch.Text = "";
+            DataTable dt = new DataTable();
+            con.Open();
+            SqlDataAdapter sad = new SqlDataAdapter(
+             "SELECT [EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [Email], [IsStatus], " +
+             "[CreatedBy], [Createddate]," +
+             "[ProdName], [ServiceType], [OtherInformation] , [ProductImage]" +
+             "FROM [tbl_EnquiryMaster] where IsStatus = '0' AND  isdeleted='0' ORDER BY Createddate Desc ", con);
+            sad.Fill(dt);
+            gv_Customer.EmptyDataText = "Not Records Found";
+            gv_Customer.DataSource = dt;
+            gv_Customer.DataBind();
+
+            foreach (GridViewRow row in gv_Customer.Rows)
+            {
+                LinkButton linkButton = (LinkButton)row.FindControl("LinkButton1");
+                LinkButton linkButton1 = (LinkButton)row.FindControl("lnkbtnDelete");
+                LinkButton linkButton2 = (LinkButton)row.FindControl("lnkbtnEdit");
+                LinkButton linkButton3 = (LinkButton)row.FindControl("ActInfo");
+
+                if (linkButton != null)
+                {
+                    linkButton.Visible = false;
+                    linkButton1.Visible = false;
+                    linkButton2.Visible = false;
+                }
+                int actionColumnIndex = gv_Customer.Columns.Count - 1;
+                row.Cells[actionColumnIndex].Visible = false;
+            }
+            if (gv_Customer.HeaderRow != null)
+            {
+                TableCell headerCell = gv_Customer.HeaderRow.Cells[gv_Customer.Columns.Count - 1];
+                headerCell.Visible = false;
+            }
+            con.Close();
+        }
+        else
+        {
+            Response.Redirect("EnquiryList.aspx");
+        }
     }
 
     protected void lnkshow_Click(object sender, EventArgs e)

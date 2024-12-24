@@ -173,8 +173,8 @@
                     <div class="col-md-3 col-xs-7 col-7">
                         <asp:DropDownList ID="ddlStatus" runat="server" AutoPostBack="true" class="form-control active2 " Width="150px" OnSelectedIndexChanged="ddlStatus_SelectedIndexChanged">
                             <%--<asp:ListItem Value="All" Text="All"></asp:ListItem>--%>
-                            <asp:ListItem Value="1" Text="Pending"></asp:ListItem>
-                            <asp:ListItem Value="0">Completed</asp:ListItem>
+                            <asp:ListItem Value="1" Text="Pending" Selected="True"></asp:ListItem>
+                            <asp:ListItem Value="0" Text="Completed"></asp:ListItem>
                         </asp:DropDownList>
                     </div>
                     <div class="col-md-4 col-xs-5 col-5">
