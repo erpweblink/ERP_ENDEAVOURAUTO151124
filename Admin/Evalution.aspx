@@ -278,8 +278,8 @@
                         <div class="table-responsive">
                             <asp:GridView ID="gv_Evalution" runat="server" CellPadding="3" Width="100%" AutoGenerateColumns="false"
                                 BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center"
-                                RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Evalution_RowCommand" OnRowDataBound="gv_Evalution_RowDataBound"
-                                PageSize="5" PagerStyle-CssClass="paging" AllowPaging="true" OnPageIndexChanging="gv_Evalution_PageIndexChanging">
+                                RowStyle-HorizontalAlign="Center" OnRowCommand="gv_Evalution_RowCommand" OnRowDataBound="gv_Evalution_RowDataBound">
+                                <%--PageSize="5" PagerStyle-CssClass="paging" AllowPaging="true" OnPageIndexChanging="gv_Evalution_PageIndexChanging"--%>
                                 <Columns>
                                     <asp:TemplateField HeaderText="Sr. No.">
                                         <ItemTemplate>
@@ -585,8 +585,9 @@
                         <div class="table-responsive">
                             <asp:GridView ID="SortGvEvaluations" runat="server" AutoGenerateColumns="False" CellPadding="3" Width="100%"
                                 BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" HeaderStyle-HorizontalAlign="Center"
-                                RowStyle-HorizontalAlign="Center" OnRowCommand="Grid_Filter_RowCommand" OnPageIndexChanging="SortGvEvaluations_PageIndexChanging"
-                                OnRowDataBound="gv_Evalution_RowDataBound" PageSize="5" AllowPaging="true" PagerStyle-CssClass="paging">
+                                RowStyle-HorizontalAlign="Center" OnRowCommand="Grid_Filter_RowCommand" 
+                                OnRowDataBound="gv_Evalution_RowDataBound">
+                                <%--PageSize="5" AllowPaging="true" PagerStyle-CssClass="paging" OnPageIndexChanging="SortGvEvaluations_PageIndexChanging"--%>
                                 <Columns>
                                     <asp:TemplateField HeaderText="Sr. No.">
                                         <ItemTemplate>

@@ -54,6 +54,7 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
             }
             else
             {
+
                 DataTable dt = new DataTable();
                 con.Open();
                 SqlDataAdapter sad = new SqlDataAdapter(
@@ -66,6 +67,7 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
                 gv_Customer.DataSource = dt;
                 gv_Customer.DataBind();
                 con.Close();
+
             }
 
         }
@@ -140,24 +142,64 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
         {
             if (string.IsNullOrEmpty(txtSearch.Text))
             {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Please Search Customer Name');", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Please Search Customer Name');window.location.href='EnquiryList.aspx';", true);
             }
-            if (string.IsNullOrEmpty(txtSearch.Text))
-            {
-                GridView();
-            }
+            //if (string.IsNullOrEmpty(txtSearch.Text))
+            //{
+            //    GridView();
+            //}
             else
             {
+                if (ddlStatus.Text == "0")
+                {
+                    DataTable dt = new DataTable();
+                    SqlDataAdapter sad = new SqlDataAdapter(
+        "SELECT *,[EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo],[Email],[IsStatus] " +
+                    "FROM [tbl_EnquiryMaster] " +
+        "WHERE [CustomerName]='" + txtSearch.Text + "'AND isdeleted = '0' AND IsStatus = '0' ", con);
+                    sad.Fill(dt);
+                    gv_Customer.EmptyDataText = "Not Records Found";
+                    gv_Customer.DataSource = dt;
+                    gv_Customer.DataBind();
+                    if (ddlStatus.Text == "0")
+                    {
+                        foreach (GridViewRow row in gv_Customer.Rows)
+                        {
+                            LinkButton linkButton = (LinkButton)row.FindControl("LinkButton1");
+                            LinkButton linkButton1 = (LinkButton)row.FindControl("lnkbtnDelete");
+                            LinkButton linkButton2 = (LinkButton)row.FindControl("lnkbtnEdit");
+                            LinkButton linkButton3 = (LinkButton)row.FindControl("ActInfo");
 
-                DataTable dt = new DataTable();
-                SqlDataAdapter sad = new SqlDataAdapter(
-    "SELECT *,[EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo],[Email],[IsStatus] " +
-                "FROM [tbl_EnquiryMaster] " +
-    "WHERE [CustomerName]='" + txtSearch.Text + "'AND isdeleted = '0'", con);
-                sad.Fill(dt);
-                gv_Customer.EmptyDataText = "Not Records Found";
-                gv_Customer.DataSource = dt;
-                gv_Customer.DataBind();
+                            if (linkButton != null)
+                            {
+                                linkButton.Visible = false;
+                                linkButton1.Visible = false;
+                                linkButton2.Visible = false;
+                            }
+                            int actionColumnIndex = gv_Customer.Columns.Count - 1;
+                            row.Cells[actionColumnIndex].Visible = false;
+                        }
+                        if (gv_Customer.HeaderRow != null)
+                        {
+                            TableCell headerCell = gv_Customer.HeaderRow.Cells[gv_Customer.Columns.Count - 1];
+                            headerCell.Visible = false;
+                        }
+                    }
+                }
+                else
+                {
+                    DataTable dt = new DataTable();
+                    SqlDataAdapter sad = new SqlDataAdapter(
+        "SELECT *,[EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo],[Email],[IsStatus] " +
+                    "FROM [tbl_EnquiryMaster] " +
+        "WHERE [CustomerName]='" + txtSearch.Text + "'AND isdeleted = '0' AND IsStatus = '1' ", con);
+                    sad.Fill(dt);
+                    gv_Customer.EmptyDataText = "Not Records Found";
+                    gv_Customer.DataSource = dt;
+                    gv_Customer.DataBind();
+                }
+
+
             }
 
 
@@ -243,20 +285,20 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
             if (ddlStatus.Text == "1")
             {
                 sad = new SqlDataAdapter(
-    "SELECT *,[EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [IsStatus], " +
+    "SELECT *, [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [IsStatus], " +
     "[Email], [CreatedBy], [Createddate], [UpdatedBy], [UpdatedDate] " +
     "FROM [tbl_EnquiryMaster] " +
-    "WHERE [IsStatus]='" + ddlStatus.Text + "' AND [isdeleted] = '0'",
+    "WHERE [IsStatus]='" + ddlStatus.Text + "' AND [isdeleted] = '0' ORDER By EnquiryId desc",
     con);
             }
             else
             {
 
                 sad = new SqlDataAdapter(
-    "SELECT *,[EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [IsStatus], " +
+    "SELECT *, [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [IsStatus], " +
     "[Email], [CreatedBy], [Createddate], [UpdatedBy], [UpdatedDate] " +
     "FROM [tbl_EnquiryMaster] " +
-    " where [IsStatus]='" + ddlStatus.Text + "' AND isdeleted='0'",
+    " where [IsStatus]='" + ddlStatus.Text + "' AND isdeleted='0' ORDER By EnquiryId desc ",
     con);
             }
             sad.Fill(dt);
@@ -297,7 +339,48 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
 
     protected void lnkrefresh_Click(object sender, EventArgs e)
     {
-        Response.Redirect("EnquiryList.aspx");
+        if (ddlStatus.Text == "0")
+        {
+            txtSearch.Text = "";
+            DataTable dt = new DataTable();
+            con.Open();
+            SqlDataAdapter sad = new SqlDataAdapter(
+             "SELECT [EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo], [Email], [IsStatus], " +
+             "[CreatedBy], [Createddate]," +
+             "[ProdName], [ServiceType], [OtherInformation] , [ProductImage]" +
+             "FROM [tbl_EnquiryMaster] where IsStatus = '0' AND  isdeleted='0' ORDER BY Createddate Desc ", con);
+            sad.Fill(dt);
+            gv_Customer.EmptyDataText = "Not Records Found";
+            gv_Customer.DataSource = dt;
+            gv_Customer.DataBind();
+
+            foreach (GridViewRow row in gv_Customer.Rows)
+            {
+                LinkButton linkButton = (LinkButton)row.FindControl("LinkButton1");
+                LinkButton linkButton1 = (LinkButton)row.FindControl("lnkbtnDelete");
+                LinkButton linkButton2 = (LinkButton)row.FindControl("lnkbtnEdit");
+                LinkButton linkButton3 = (LinkButton)row.FindControl("ActInfo");
+
+                if (linkButton != null)
+                {
+                    linkButton.Visible = false;
+                    linkButton1.Visible = false;
+                    linkButton2.Visible = false;
+                }
+                int actionColumnIndex = gv_Customer.Columns.Count - 1;
+                row.Cells[actionColumnIndex].Visible = false;
+            }
+            if (gv_Customer.HeaderRow != null)
+            {
+                TableCell headerCell = gv_Customer.HeaderRow.Cells[gv_Customer.Columns.Count - 1];
+                headerCell.Visible = false;
+            }
+            con.Close();
+        }
+        else
+        {
+            Response.Redirect("EnquiryList.aspx");
+        }
     }
 
     protected void lnkshow_Click(object sender, EventArgs e)
@@ -307,11 +390,6 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
             LinkButton linkButton = sender as LinkButton;
             int rowIndex = Convert.ToInt32(linkButton.CommandArgument);
 
-            //SqlDataAdapter sad = new SqlDataAdapter(
-            //    "SELECT [EnquiryId], [ProdName], [ProductImage], [OtherInformation], [ServiceType] " +
-            //    "FROM [tbl_EnquiryMaster] " +
-            //    "WHERE [EnquiryId] = @EnquiryId",
-            //    con);
             SqlDataAdapter sad = new SqlDataAdapter(
              "SELECT TP.[JobNo], TP.[Status], " +
              "CASE " +
@@ -321,7 +399,7 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
              "EM.[ProductImage], EM.[OtherInformation], EM.[ServiceType] " +
              "FROM [tbl_EnquiryMaster] AS EM " +
              "LEFT JOIN [tblTestingProduct] AS TP " +
-             "ON TP.CustomerName = EM.CustomerName AND TP.ProductName = EM.ProdName " +
+             "ON TP.CustomerName = EM.CustomerName AND TP.ProductName = EM.ProdName AND TP.Id = EM.InwardEntryId " +
              "WHERE EM.[EnquiryId] = @EnquiryId", con);
 
 
@@ -339,7 +417,7 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
                     lblIscomp.Visible = false;
                     lblIsCompleted.Visible = false;
                     lblStat.Visible = false;
-                    lblStatus.Visible = false;                    
+                    lblStatus.Visible = false;
                 }
                 else
                 {
@@ -379,4 +457,17 @@ public partial class Admin_EnquirPage_EnquiryPage : System.Web.UI.Page
         }
     }
 
+
+    protected void txtSearch_DataBinding()
+    {
+        DataTable dt = new DataTable();
+        SqlDataAdapter sad = new SqlDataAdapter(
+"SELECT *,[EnquiryId], [CustomerName], [StateCode], [AddresLine1], [Area], [City], [Country], [PostalCode], [MobNo],[Email],[IsStatus] " +
+        "FROM [tbl_EnquiryMaster] " +
+"WHERE [CustomerName]='" + txtSearch.Text + "'AND isdeleted = '0'", con);
+        sad.Fill(dt);
+        gv_Customer.EmptyDataText = "Not Records Found";
+        gv_Customer.DataSource = dt;
+        gv_Customer.DataBind();
+    }
 }

@@ -77,7 +77,8 @@ public partial class Admin_Taxinvoicereport : System.Web.UI.Page
     {
         DataTable Dt = new DataTable();
        // SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblInvoiceHdr WHERE Is_Deleted='0'  ", Conn);
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE Is_Deleted='0' ORDER BY PoDate DESC  ", Conn);
+        //SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE Is_Deleted='0' ORDER BY PoDate DESC  ", Conn);
+        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tbl_Invoice_both_hdr WHERE Is_Deleted='0' ORDER BY InvoiceNo DESC", Conn);
         da.Fill(Dt);
         GvPurchaseOrderList.EmptyDataText = "Records Not Found";
         GvPurchaseOrderList.DataSource = Dt;

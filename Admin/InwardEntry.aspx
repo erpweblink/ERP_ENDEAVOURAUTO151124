@@ -173,13 +173,13 @@
                     <div class="col-md-6">
                         <asp:Label ID="lblSerialNo" runat="server" class="control-label col-sm-6" for="cust">Serial No. :<span class="spncls">*</span></asp:Label>
                         <asp:TextBox runat="server" class="form-control" ID="txtSrNo" />
-                        <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" ErrorMessage="Please fill Serial No" ControlToValidate="txtSrNo" ForeColor="Red"></asp:RequiredFieldValidator>--%>
+                        <asp:RequiredFieldValidator ID="RequiredFieldValidator" runat="server" ErrorMessage="Please fill Serial No" ControlToValidate="txtSrNo" ForeColor="Red"></asp:RequiredFieldValidator>
                         <br />
                     </div>
                     <div class="col-md-6">
                         <asp:Label ID="lblModelNo" runat="server" class="control-label col-sm-6" for="cust">Model No. :<span class="spncls">*</span></asp:Label>
                         <asp:TextBox runat="server" class="form-control" ID="txtModelNo" />
-                        <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="Please fill Model No" ControlToValidate="txtModelNo" ForeColor="Red"></asp:RequiredFieldValidator>--%>
+                        <asp:RequiredFieldValidator ID="RequiredFieldValidatorss" runat="server" ErrorMessage="Please fill Model No" ControlToValidate="txtModelNo" ForeColor="Red"></asp:RequiredFieldValidator>
                         <br />
                     </div>
                     <div class="col-md-6">
