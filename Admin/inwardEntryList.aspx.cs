@@ -1368,31 +1368,45 @@ public partial class Reception_inwardEntryList : System.Web.UI.Page
             {
                 GetsortedJobNoForExcell();
             }
+
+            Response.Clear();
+            Response.Buffer = true;
+            Response.ClearContent();
+            Response.ClearHeaders();
+            Response.Charset = "";
+            string FileName = "Inward_Entry_List_" + DateTime.Now + ".xls";
+            StringWriter strwritter = new StringWriter();
+            HtmlTextWriter htmltextwrtter = new HtmlTextWriter(strwritter);
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.ContentType = "application/vnd.ms-excel";
+            Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);           
+            sortedgv.GridLines = GridLines.Both;
+            sortedgv.HeaderStyle.Font.Bold = true;
+            sortedgv.RenderControl(htmltextwrtter);
+            Response.Write(strwritter.ToString());
+            Response.End();
         }
         else
         {
             GridExportExcel();
+            Response.Clear();
+            Response.Buffer = true;
+            Response.ClearContent();
+            Response.ClearHeaders();
+            Response.Charset = "";
+            string FileName = "Inward_Entry_List_" + DateTime.Now + ".xls";
+            StringWriter strwritter = new StringWriter();
+            HtmlTextWriter htmltextwrtter = new HtmlTextWriter(strwritter);
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.ContentType = "application/vnd.ms-excel";
+            Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
+            GridEporttoexcel.GridLines = GridLines.Both;
+            GridEporttoexcel.HeaderStyle.Font.Bold = true;
+            GridEporttoexcel.RenderControl(htmltextwrtter);           
+            Response.Write(strwritter.ToString());
+            Response.End();
         }
 
-        Response.Clear();
-        Response.Buffer = true;
-        Response.ClearContent();
-        Response.ClearHeaders();
-        Response.Charset = "";
-        string FileName = "Inward_Entry_List_" + DateTime.Now + ".xls";
-        StringWriter strwritter = new StringWriter();
-        HtmlTextWriter htmltextwrtter = new HtmlTextWriter(strwritter);
-        Response.Cache.SetCacheability(HttpCacheability.NoCache);
-        Response.ContentType = "application/vnd.ms-excel";
-        Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
-        //GridEporttoexcel.GridLines = GridLines.Both;
-        //GridEporttoexcel.HeaderStyle.Font.Bold = true;
-        //GridEporttoexcel.RenderControl(htmltextwrtter);
-        sortedgv.GridLines = GridLines.Both;
-        sortedgv.HeaderStyle.Font.Bold = true;
-        sortedgv.RenderControl(htmltextwrtter);
-        Response.Write(strwritter.ToString());
-        Response.End();
     }
 
     public void GetDatewiseCustomerforexcell()
