@@ -35,7 +35,7 @@ public partial class Reception_Evalution : System.Web.UI.Page
                 string UserCompany = Session["adminname"].ToString();
                 if (UserCompany != "Admin")
                 {
-                   
+                    txtcustomername.ReadOnly = true;
                     gv_Evalution.DataSource = dt11;
                     gv_Evalution.DataBind();
                     this.gv_Evalution.Columns[9].Visible = true;
@@ -984,174 +984,419 @@ public partial class Reception_Evalution : System.Web.UI.Page
 
     public void getsortedjobno()
     {
-        gv_Evalution.Visible = false;
-        ViewState["Record"] = "Job";
-        string jobno = txtJobNo.Text;
-        DataTable dt = new DataTable();
-        sad = new SqlDataAdapter("select id,JobNo,CustomerName,ProductName,Subcustomer,ModelNo,SerialNo,EngiName,TestingDate,Status,Remark,EntryDate,isCompleted,CreatedDate,CreatedBy,Quotation_no,inwardEntrystatus,ReportedTO, DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where JobNo= '" + jobno + "'", con);
-        sad.Fill(dt);
-        SortGvEvaluations.DataSource = dt;
-        SortGvEvaluations.DataBind();
+        if(Session["adminname"].ToString() != "Admin")
+        {
+            gv_Evalution.Visible = false;
+            ViewState["Record"] = "Job";
+            string jobno = txtJobNo.Text;
+            DataTable dt = new DataTable();
+            sad = new SqlDataAdapter("select id,JobNo,CustomerName,ProductName,Subcustomer,ModelNo,SerialNo,EngiName,TestingDate,Status,Remark,EntryDate,isCompleted,CreatedDate,CreatedBy,Quotation_no,inwardEntrystatus,ReportedTO, DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where JobNo= '" + jobno + "'", con);
+            sad.Fill(dt);
+
+            this.SortGvEvaluations.Columns[9].Visible = true;
+            SortGvEvaluations.Columns[2].Visible = false;
+            SortGvEvaluations.Columns[3].Visible = false;
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
+        else
+        {
+            gv_Evalution.Visible = false;
+            ViewState["Record"] = "Job";
+            string jobno = txtJobNo.Text;
+            DataTable dt = new DataTable();
+            sad = new SqlDataAdapter("select id,JobNo,CustomerName,ProductName,Subcustomer,ModelNo,SerialNo,EngiName,TestingDate,Status,Remark,EntryDate,isCompleted,CreatedDate,CreatedBy,Quotation_no,inwardEntrystatus,ReportedTO, DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where JobNo= '" + jobno + "'", con);
+            sad.Fill(dt);
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
+       
 
     }
     public void getsortedjobnoGrid()
     {
         string jobno = txtJobNo.Text;
 
-        DataTable dt = new DataTable();
-        sad = new SqlDataAdapter("select id,JobNo,CustomerName,ProductName,Subcustomer,ModelNo,SerialNo,EngiName,TestingDate,Status,Remark,EntryDate,isCompleted,CreatedDate,CreatedBy,Quotation_no,inwardEntrystatus,ReportedTO, DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where JobNo= '" + jobno + "'", con);
-        sad.Fill(dt);
-        SortGvEvaluations.DataSource = dt;
-        SortGvEvaluations.DataBind();
+        if (Session["adminname"].ToString() != "Admin")
+        {
+            DataTable dt = new DataTable();
+            sad = new SqlDataAdapter("select id,JobNo,CustomerName,ProductName,Subcustomer,ModelNo,SerialNo,EngiName,TestingDate,Status,Remark,EntryDate,isCompleted,CreatedDate,CreatedBy,Quotation_no,inwardEntrystatus,ReportedTO, DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where JobNo= '" + jobno + "'", con);
+            sad.Fill(dt);
+            this.SortGvEvaluations.Columns[9].Visible = true;
+            SortGvEvaluations.Columns[2].Visible = false;
+            SortGvEvaluations.Columns[3].Visible = false;
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
+        else
+        {
+            DataTable dt = new DataTable();
+            sad = new SqlDataAdapter("select id,JobNo,CustomerName,ProductName,Subcustomer,ModelNo,SerialNo,EngiName,TestingDate,Status,Remark,EntryDate,isCompleted,CreatedDate,CreatedBy,Quotation_no,inwardEntrystatus,ReportedTO, DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where JobNo= '" + jobno + "'", con);
+            sad.Fill(dt);
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+
+        }
 
     }
     public void Getsortedstatus()
     {
         gv_Evalution.Visible = false;
         ViewState["Record"] = "status";
-        DataTable dt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter(" select [id],[JobNo],[CustomerName],Subcustomer,[ProductName],[ModelNo],[SerialNo],[EngiName],[TestingDate],[Status],[Remark],[EntryDate],[isCompleted],[isdeleted],[isCancel],[CreatedBy],[CreatedDate] ,UpdateBy,UpdatedDate,Quotation_no,inwardEntrystatus,ReportedTO,DATEDIFF(DAY, CreatedDate, getdate()) AS days FROM tblTestingProduct Where Status = '" + txtstatus.Text + "' ", con);
-        sad.Fill(dt);
-        SortGvEvaluations.EmptyDataText = "Not Records Found";
-        SortGvEvaluations.DataSource = dt;
-        SortGvEvaluations.DataBind();
+        if (Session["adminname"].ToString() != "Admin")
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter(" select [id],[JobNo],[CustomerName],Subcustomer,[ProductName],[ModelNo],[SerialNo],[EngiName],[TestingDate],[Status],[Remark],[EntryDate],[isCompleted],[isdeleted],[isCancel],[CreatedBy],[CreatedDate] ,UpdateBy,UpdatedDate,Quotation_no,inwardEntrystatus,ReportedTO,DATEDIFF(DAY, CreatedDate, getdate()) AS days FROM tblTestingProduct Where Status = '" + txtstatus.Text + "' ", con);
+            sad.Fill(dt);
+            this.SortGvEvaluations.Columns[9].Visible = true;
+            SortGvEvaluations.Columns[2].Visible = false;
+            SortGvEvaluations.Columns[3].Visible = false;
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
+        else
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter(" select [id],[JobNo],[CustomerName],Subcustomer,[ProductName],[ModelNo],[SerialNo],[EngiName],[TestingDate],[Status],[Remark],[EntryDate],[isCompleted],[isdeleted],[isCancel],[CreatedBy],[CreatedDate] ,UpdateBy,UpdatedDate,Quotation_no,inwardEntrystatus,ReportedTO,DATEDIFF(DAY, CreatedDate, getdate()) AS days FROM tblTestingProduct Where Status = '" + txtstatus.Text + "' ", con);
+            sad.Fill(dt);
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
     }
     public void GetsortedstatusGrid()
     {
         gv_Evalution.Visible = false;
-        DataTable dt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter(" select [id],[JobNo],[CustomerName],Subcustomer,[ProductName],[ModelNo],[SerialNo],[EngiName],[TestingDate],[Status],[Remark],[EntryDate],[isCompleted],[isdeleted],[isCancel],[CreatedBy],[CreatedDate] ,UpdateBy,UpdatedDate,Quotation_no,inwardEntrystatus,ReportedTO,DATEDIFF(DAY, CreatedDate, getdate()) AS days FROM tblTestingProduct Where Status = '" + txtstatus.Text + "' ", con);
-        sad.Fill(dt);
-        SortGvEvaluations.EmptyDataText = "Not Records Found";
-        SortGvEvaluations.DataSource = dt;
-        SortGvEvaluations.DataBind();
+        if (Session["adminname"].ToString() != "Admin")
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter(" select [id],[JobNo],[CustomerName],Subcustomer,[ProductName],[ModelNo],[SerialNo],[EngiName],[TestingDate],[Status],[Remark],[EntryDate],[isCompleted],[isdeleted],[isCancel],[CreatedBy],[CreatedDate] ,UpdateBy,UpdatedDate,Quotation_no,inwardEntrystatus,ReportedTO,DATEDIFF(DAY, CreatedDate, getdate()) AS days FROM tblTestingProduct Where Status = '" + txtstatus.Text + "' ", con);
+            sad.Fill(dt);
+            this.SortGvEvaluations.Columns[9].Visible = true;
+            SortGvEvaluations.Columns[2].Visible = false;
+            SortGvEvaluations.Columns[3].Visible = false;
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
+        else
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter(" select [id],[JobNo],[CustomerName],Subcustomer,[ProductName],[ModelNo],[SerialNo],[EngiName],[TestingDate],[Status],[Remark],[EntryDate],[isCompleted],[isdeleted],[isCancel],[CreatedBy],[CreatedDate] ,UpdateBy,UpdatedDate,Quotation_no,inwardEntrystatus,ReportedTO,DATEDIFF(DAY, CreatedDate, getdate()) AS days FROM tblTestingProduct Where Status = '" + txtstatus.Text + "' ", con);
+            sad.Fill(dt);
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
     }
     public void Getsortedproduct()
     {
         gv_Evalution.Visible = false;
         ViewState["Record"] = "Product";
-        DataTable dt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where  ProductName LIKE '%" + txtproduct.Text + "%'", con);
-        sad.Fill(dt);
-        SortGvEvaluations.EmptyDataText = "Not Records Found";
-        SortGvEvaluations.DataSource = dt;
-        SortGvEvaluations.DataBind();
+        if (Session["adminname"].ToString() != "Admin")
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where  ProductName LIKE '%" + txtproduct.Text + "%'", con);
+            sad.Fill(dt);
+            this.SortGvEvaluations.Columns[9].Visible = true;
+            SortGvEvaluations.Columns[2].Visible = false;
+            SortGvEvaluations.Columns[3].Visible = false;
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }else
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where  ProductName LIKE '%" + txtproduct.Text + "%'", con);
+            sad.Fill(dt);
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
     }
     public void GetsortedproductGrid()
     {
         gv_Evalution.Visible = false;
-        DataTable dt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where  ProductName LIKE '%" + txtproduct.Text + "%'", con);
-        sad.Fill(dt);
-        SortGvEvaluations.EmptyDataText = "Not Records Found";
-        SortGvEvaluations.DataSource = dt;
-        SortGvEvaluations.DataBind();
+        if (Session["adminname"].ToString() != "Admin")
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where  ProductName LIKE '%" + txtproduct.Text + "%'", con);
+            sad.Fill(dt);
+            this.SortGvEvaluations.Columns[9].Visible = true;
+            SortGvEvaluations.Columns[2].Visible = false;
+            SortGvEvaluations.Columns[3].Visible = false;
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
+        else
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where  ProductName LIKE '%" + txtproduct.Text + "%'", con);
+            sad.Fill(dt);
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
     }
     public void GetsortedDatewise()
     {
         gv_Evalution.Visible = false;
         ViewState["Record"] = "Date";
-        DataTable dt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where  EntryDate between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
-        sad.Fill(dt);
-        SortGvEvaluations.EmptyDataText = "Not Records Found";
-        SortGvEvaluations.DataSource = dt;
-        SortGvEvaluations.DataBind();
+        if (Session["adminname"].ToString() != "Admin")
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where  EntryDate between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
+            sad.Fill(dt);
+            this.SortGvEvaluations.Columns[9].Visible = true;
+            SortGvEvaluations.Columns[2].Visible = false;
+            SortGvEvaluations.Columns[3].Visible = false;
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
+        else
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where  EntryDate between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
+            sad.Fill(dt);
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
     }
     public void GetsortedDatewiseGrid()
     {
         gv_Evalution.Visible = false;
-        DataTable dt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where  EntryDate between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
-        sad.Fill(dt);
-        SortGvEvaluations.EmptyDataText = "Not Records Found";
-        SortGvEvaluations.DataSource = dt;
-        SortGvEvaluations.DataBind();
+        if (Session["adminname"].ToString() != "Admin")
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where  EntryDate between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
+            sad.Fill(dt);
+            this.SortGvEvaluations.Columns[9].Visible = true;
+            SortGvEvaluations.Columns[2].Visible = false;
+            SortGvEvaluations.Columns[3].Visible = false;
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
+        else
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where  EntryDate between '" + txtDateSearchfrom.Text + "' AND  '" + txtDateSearchto.Text + "' ", con);
+            sad.Fill(dt);
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
     }
     public void Getsortedcustomer()
     {
         gv_Evalution.Visible = false;
         ViewState["Record"] = "Customer";
-        DataTable dt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where  CustomerName LIKE '%" + txtcustomername.Text + "%'", con);
-        sad.Fill(dt);
-        SortGvEvaluations.EmptyDataText = "Not Records Found";
-        SortGvEvaluations.DataSource = dt;
-        SortGvEvaluations.DataBind();
+        if (Session["adminname"].ToString() != "Admin")
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where  CustomerName LIKE '%" + txtcustomername.Text + "%'", con);
+            sad.Fill(dt);
+            this.SortGvEvaluations.Columns[9].Visible = true;
+            SortGvEvaluations.Columns[2].Visible = false;
+            SortGvEvaluations.Columns[3].Visible = false;
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
+        else
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where  CustomerName LIKE '%" + txtcustomername.Text + "%'", con);
+            sad.Fill(dt);
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+
+        }
     }
     public void GetsortedcustomerGrid()
     {
         gv_Evalution.Visible = false;
-        DataTable dt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where  CustomerName LIKE '%" + txtcustomername.Text + "%'", con);
-        sad.Fill(dt);
-        SortGvEvaluations.EmptyDataText = "Not Records Found";
-        SortGvEvaluations.DataSource = dt;
-        SortGvEvaluations.DataBind();
+        if (Session["adminname"].ToString() != "Admin")
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where  CustomerName LIKE '%" + txtcustomername.Text + "%'", con);
+            sad.Fill(dt);
+            this.SortGvEvaluations.Columns[9].Visible = true;
+            SortGvEvaluations.Columns[2].Visible = false;
+            SortGvEvaluations.Columns[3].Visible = false;
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
+        else
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where  CustomerName LIKE '%" + txtcustomername.Text + "%'", con);
+            sad.Fill(dt);
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
     }
     public void GetDatewisecustomergrid()
     {
         gv_Evalution.Visible = false;
         ViewState["Record"] = "datewiseCustomer";
-        DataTable dt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("SELECT id, JobNo, CustomerName, Subcustomer, EntryDate, ProductName, EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days FROM tblTestingProduct WHERE EntryDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND CustomerName LIKE '%" + txtcustomername.Text + "%'", con);
-        sad.Fill(dt);
-        SortGvEvaluations.EmptyDataText = "Not Records Found";
-        SortGvEvaluations.DataSource = dt;
-        SortGvEvaluations.DataBind();
+        if (Session["adminname"].ToString() != "Admin")
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT id, JobNo, CustomerName, Subcustomer, EntryDate, ProductName, EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days FROM tblTestingProduct WHERE EntryDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND CustomerName LIKE '%" + txtcustomername.Text + "%'", con);
+            sad.Fill(dt);
+            this.SortGvEvaluations.Columns[9].Visible = true;
+            SortGvEvaluations.Columns[2].Visible = false;
+            SortGvEvaluations.Columns[3].Visible = false;
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
+        else
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT id, JobNo, CustomerName, Subcustomer, EntryDate, ProductName, EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days FROM tblTestingProduct WHERE EntryDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND CustomerName LIKE '%" + txtcustomername.Text + "%'", con);
+            sad.Fill(dt);
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
     }
     public void Getdatwisecustomer()
     {
         gv_Evalution.Visible = false;
-        DataTable dt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("SELECT id, JobNo, CustomerName, Subcustomer, EntryDate, ProductName, EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days FROM tblTestingProduct WHERE EntryDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND CustomerName LIKE '%" + txtcustomername.Text + "%'", con);
-        sad.Fill(dt);
-        SortGvEvaluations.EmptyDataText = "Not Records Found";
-        SortGvEvaluations.DataSource = dt;
-        SortGvEvaluations.DataBind();
+        if (Session["adminname"].ToString() != "Admin")
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT id, JobNo, CustomerName, Subcustomer, EntryDate, ProductName, EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days FROM tblTestingProduct WHERE EntryDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND CustomerName LIKE '%" + txtcustomername.Text + "%'", con);
+            sad.Fill(dt);
+            this.SortGvEvaluations.Columns[9].Visible = true;
+            SortGvEvaluations.Columns[2].Visible = false;
+            SortGvEvaluations.Columns[3].Visible = false;
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
+        else
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT id, JobNo, CustomerName, Subcustomer, EntryDate, ProductName, EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days FROM tblTestingProduct WHERE EntryDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND CustomerName LIKE '%" + txtcustomername.Text + "%'", con);
+            sad.Fill(dt);
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
     }
     public void Getdatewiseproduct()
     {
         gv_Evalution.Visible = false;
         ViewState["Record"] = "datewiseproduct";
-        DataTable dt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("SELECT id, JobNo, CustomerName, Subcustomer, EntryDate, ProductName, EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days FROM tblTestingProduct WHERE EntryDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND ProductName LIKE '%" + txtproduct.Text + "%'", con);
-        sad.Fill(dt);
-        SortGvEvaluations.EmptyDataText = "Not Records Found";
-        SortGvEvaluations.DataSource = dt;
-        SortGvEvaluations.DataBind();
+        if (Session["adminname"].ToString() != "Admin")
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT id, JobNo, CustomerName, Subcustomer, EntryDate, ProductName, EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days FROM tblTestingProduct WHERE EntryDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND ProductName LIKE '%" + txtproduct.Text + "%'", con);
+            sad.Fill(dt);
+            this.SortGvEvaluations.Columns[9].Visible = true;
+            SortGvEvaluations.Columns[2].Visible = false;
+            SortGvEvaluations.Columns[3].Visible = false;
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
+        else
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT id, JobNo, CustomerName, Subcustomer, EntryDate, ProductName, EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days FROM tblTestingProduct WHERE EntryDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND ProductName LIKE '%" + txtproduct.Text + "%'", con);
+            sad.Fill(dt);
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
     }
     public void Getdatewiseproductgrid()
     {
         gv_Evalution.Visible = false;
         ViewState["Record"] = "datewiseproduct";
-        DataTable dt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("SELECT id, JobNo, CustomerName, Subcustomer, EntryDate, ProductName, EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days FROM tblTestingProduct WHERE EntryDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND ProductName LIKE '%" + txtproduct.Text + "%'", con);
-        sad.Fill(dt);
-        SortGvEvaluations.EmptyDataText = "Not Records Found";
-        SortGvEvaluations.DataSource = dt;
-        SortGvEvaluations.DataBind();
+        if (Session["adminname"].ToString() != "Admin")
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT id, JobNo, CustomerName, Subcustomer, EntryDate, ProductName, EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days FROM tblTestingProduct WHERE EntryDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND ProductName LIKE '%" + txtproduct.Text + "%'", con);
+            sad.Fill(dt);
+            this.SortGvEvaluations.Columns[9].Visible = true;
+            SortGvEvaluations.Columns[2].Visible = false;
+            SortGvEvaluations.Columns[3].Visible = false;
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
+        else
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT id, JobNo, CustomerName, Subcustomer, EntryDate, ProductName, EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days FROM tblTestingProduct WHERE EntryDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND ProductName LIKE '%" + txtproduct.Text + "%'", con);
+            sad.Fill(dt);
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
     }
     public void Getdatewisestatus()
     {
         gv_Evalution.Visible = false;
         ViewState["Record"] = "Datewisestatus";
-        DataTable dt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("SELECT id, JobNo, CustomerName, Subcustomer, EntryDate, ProductName, EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days FROM tblTestingProduct WHERE EntryDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND Status = '" + txtstatus.Text + "'", con);
-        sad.Fill(dt);
-        SortGvEvaluations.EmptyDataText = "Not Records Found";
-        SortGvEvaluations.DataSource = dt;
-        SortGvEvaluations.DataBind();
+        if (Session["adminname"].ToString() != "Admin")
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT id, JobNo, CustomerName, Subcustomer, EntryDate, ProductName, EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days FROM tblTestingProduct WHERE EntryDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND Status = '" + txtstatus.Text + "'", con);
+            sad.Fill(dt);
+            this.SortGvEvaluations.Columns[9].Visible = true;
+            SortGvEvaluations.Columns[2].Visible = false;
+            SortGvEvaluations.Columns[3].Visible = false;
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
+        else
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT id, JobNo, CustomerName, Subcustomer, EntryDate, ProductName, EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days FROM tblTestingProduct WHERE EntryDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND Status = '" + txtstatus.Text + "'", con);
+            sad.Fill(dt);
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
     }
     public void Getdatewisestatusgrid()
     {
         gv_Evalution.Visible = false;
-        DataTable dt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("SELECT id, JobNo, CustomerName, Subcustomer, EntryDate, ProductName, EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days FROM tblTestingProduct WHERE EntryDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND Status = '" + txtstatus.Text + "'", con);
-        sad.Fill(dt);
-        SortGvEvaluations.EmptyDataText = "Not Records Found";
-        SortGvEvaluations.DataSource = dt;
-        SortGvEvaluations.DataBind();
+        if (Session["adminname"].ToString() != "Admin")
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT id, JobNo, CustomerName, Subcustomer, EntryDate, ProductName, EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days FROM tblTestingProduct WHERE EntryDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND Status = '" + txtstatus.Text + "'", con);
+            sad.Fill(dt);
+            this.SortGvEvaluations.Columns[9].Visible = true;
+            SortGvEvaluations.Columns[2].Visible = false;
+            SortGvEvaluations.Columns[3].Visible = false;
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+        }
+        else
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT id, JobNo, CustomerName, Subcustomer, EntryDate, ProductName, EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, GETDATE()) AS days FROM tblTestingProduct WHERE EntryDate BETWEEN '" + txtDateSearchfrom.Text + "' AND '" + txtDateSearchto.Text + "' AND Status = '" + txtstatus.Text + "'", con);
+            sad.Fill(dt);
+            SortGvEvaluations.EmptyDataText = "Not Records Found";
+            SortGvEvaluations.DataSource = dt;
+            SortGvEvaluations.DataBind();
+
+        }
     }
     public void Getsortedlist()
     {
@@ -1322,81 +1567,170 @@ public partial class Reception_Evalution : System.Web.UI.Page
             dgvgridview.Visible = false;
             DataTable dt = new DataTable();
 
-            if (ddlEvalution.SelectedItem.Text == "All")
+            if (Session["adminname"].ToString() != "Admin")
             {
-                foreach (GridViewRow g1 in SortGvEvaluations.Rows)
+                if (ddlEvalution.SelectedItem.Text == "All")
                 {
-                    con.Open();
-                    Label jobnono = (Label)g1.FindControl("lblJobno");
-                    string jobno = jobnono.Text;
-                    Label lbldaycount = (Label)g1.FindControl("lbldaycount");
-                    SqlCommand cmdquatationreader = new SqlCommand("select q.isCreateQuata, q.CreatedOn from tblTestingProduct t inner join tbl_Quotation_Hdr q on t.JobNo=q.JobNo where t.JobNo='" + jobno + "'", con);
-                    SqlDataReader reader = cmdquatationreader.ExecuteReader();
-
-                    if (reader.HasRows)
+                    foreach (GridViewRow g1 in SortGvEvaluations.Rows)
                     {
-                        if (reader.Read())
+                        con.Open();
+                        Label jobnono = (Label)g1.FindControl("lblJobno");
+                        string jobno = jobnono.Text;
+                        Label lbldaycount = (Label)g1.FindControl("lbldaycount");
+                        SqlCommand cmdquatationreader = new SqlCommand("select q.isCreateQuata, q.CreatedOn from tblTestingProduct t inner join tbl_Quotation_Hdr q on t.JobNo=q.JobNo where t.JobNo='" + jobno + "'", con);
+                        SqlDataReader reader = cmdquatationreader.ExecuteReader();
+
+                        if (reader.HasRows)
                         {
-                            status = reader["isCreateQuata"].ToString();
-
-                            if (status == "True")
+                            if (reader.Read())
                             {
-                                DateTime quattiondate = Convert.ToDateTime(reader["CreatedOn"].ToString());
-                                update = quattiondate.ToString("yyyy-MM-dd");
-                                con.Close();
-                                sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,CreatedDate,DATEDIFF(DAY, CreatedDate, '" + update + "') AS days from tblTestingProduct where JobNo='" + jobno + "'", con);
-                                sad.Fill(dt);
+                                status = reader["isCreateQuata"].ToString();
 
-                            }
-                            else
-                            {
-                                con.Close();
-                                sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where JobNo='" + jobno + "'", con);
-                                sad.Fill(dt);
-                                lbldaycount.ForeColor = System.Drawing.Color.Red;
+                                if (status == "True")
+                                {
+                                    DateTime quattiondate = Convert.ToDateTime(reader["CreatedOn"].ToString());
+                                    update = quattiondate.ToString("yyyy-MM-dd");
+                                    con.Close();
+                                    sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,CreatedDate,DATEDIFF(DAY, CreatedDate, '" + update + "') AS days from tblTestingProduct where JobNo='" + jobno + "'", con);
+                                    sad.Fill(dt);
+
+                                }
+                                else
+                                {
+                                    con.Close();
+                                    sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where JobNo='" + jobno + "'", con);
+                                    sad.Fill(dt);
+                                    lbldaycount.ForeColor = System.Drawing.Color.Red;
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        con.Close();
-                        sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where JobNo='" + jobno + "'", con);
-                        sad.Fill(dt);
-                        lbldaycount.ForeColor = System.Drawing.Color.Red;
+                        else
+                        {
+                            con.Close();
+                            sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where JobNo='" + jobno + "'", con);
+                            sad.Fill(dt);
+                            lbldaycount.ForeColor = System.Drawing.Color.Red;
+                        }
                     }
                 }
-            }
-            else if (ddlEvalution.SelectedItem.Text == "Tested List")
-            {
+                else if (ddlEvalution.SelectedItem.Text == "Tested List")
+                {
 
-                sad = new SqlDataAdapter("select id, JobNo, CustomerName,Subcustomer, EntryDate, ProductName,EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where isCompleted = '1'", con);
-                //sad = new SqlDataAdapter("select id,JobNo,CustomerName,ProductName,ModelNo,SerialNo,EngiName,TestingDate,Status,Remark,EntryDate,isCompleted,CreatedDate,CreatedBy,Quotation_no,inwardEntrystatus,ReportedTO, DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where JobNo= '" + jobno + "'", con);
+                    sad = new SqlDataAdapter("select id, JobNo, CustomerName,Subcustomer, EntryDate, ProductName,EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where isCompleted = '1'", con);
+                    //sad = new SqlDataAdapter("select id,JobNo,CustomerName,ProductName,ModelNo,SerialNo,EngiName,TestingDate,Status,Remark,EntryDate,isCompleted,CreatedDate,CreatedBy,Quotation_no,inwardEntrystatus,ReportedTO, DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where JobNo= '" + jobno + "'", con);
+                    sad.Fill(dt);
+                    this.SortGvEvaluations.Columns[9].Visible = true;
+                    SortGvEvaluations.Columns[2].Visible = false;
+                    SortGvEvaluations.Columns[3].Visible = false;
+                    SortGvEvaluations.EmptyDataText = "Not Records Found";
+                    SortGvEvaluations.DataSource = dt;
+                    SortGvEvaluations.DataBind();
+
+
+                }
+                else if (ddlEvalution.SelectedItem.Text == "Pending List")
+                {
+
+                    //sad = new SqlDataAdapter("select id, JobNo, CustomerName, EntryDate, ProductName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where isCompleted = '1'", con);
+                    sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where isCompleted is Null", con);
+
+                    sad.Fill(dt);
+                    this.SortGvEvaluations.Columns[9].Visible = true;
+                    SortGvEvaluations.Columns[2].Visible = false;
+                    SortGvEvaluations.Columns[3].Visible = false;
+                    SortGvEvaluations.EmptyDataText = "Not Records Found";
+                    SortGvEvaluations.DataSource = dt;
+                    SortGvEvaluations.DataBind();
+
+
+                }
+
+                sad.Fill(dt);
+                this.SortGvEvaluations.Columns[9].Visible = true;
+                SortGvEvaluations.Columns[2].Visible = false;
+                SortGvEvaluations.Columns[3].Visible = false;
+                SortGvEvaluations.EmptyDataText = "Not Records Found";
+                SortGvEvaluations.DataSource = dt;
+                SortGvEvaluations.DataBind();
+            }
+            else
+            {
+                if (ddlEvalution.SelectedItem.Text == "All")
+                {
+                    foreach (GridViewRow g1 in SortGvEvaluations.Rows)
+                    {
+                        con.Open();
+                        Label jobnono = (Label)g1.FindControl("lblJobno");
+                        string jobno = jobnono.Text;
+                        Label lbldaycount = (Label)g1.FindControl("lbldaycount");
+                        SqlCommand cmdquatationreader = new SqlCommand("select q.isCreateQuata, q.CreatedOn from tblTestingProduct t inner join tbl_Quotation_Hdr q on t.JobNo=q.JobNo where t.JobNo='" + jobno + "'", con);
+                        SqlDataReader reader = cmdquatationreader.ExecuteReader();
+
+                        if (reader.HasRows)
+                        {
+                            if (reader.Read())
+                            {
+                                status = reader["isCreateQuata"].ToString();
+
+                                if (status == "True")
+                                {
+                                    DateTime quattiondate = Convert.ToDateTime(reader["CreatedOn"].ToString());
+                                    update = quattiondate.ToString("yyyy-MM-dd");
+                                    con.Close();
+                                    sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,CreatedDate,DATEDIFF(DAY, CreatedDate, '" + update + "') AS days from tblTestingProduct where JobNo='" + jobno + "'", con);
+                                    sad.Fill(dt);
+
+                                }
+                                else
+                                {
+                                    con.Close();
+                                    sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where JobNo='" + jobno + "'", con);
+                                    sad.Fill(dt);
+                                    lbldaycount.ForeColor = System.Drawing.Color.Red;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            con.Close();
+                            sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where JobNo='" + jobno + "'", con);
+                            sad.Fill(dt);
+                            lbldaycount.ForeColor = System.Drawing.Color.Red;
+                        }
+                    }
+                }
+                else if (ddlEvalution.SelectedItem.Text == "Tested List")
+                {
+
+                    sad = new SqlDataAdapter("select id, JobNo, CustomerName,Subcustomer, EntryDate, ProductName,EngiName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where isCompleted = '1'", con);
+                    //sad = new SqlDataAdapter("select id,JobNo,CustomerName,ProductName,ModelNo,SerialNo,EngiName,TestingDate,Status,Remark,EntryDate,isCompleted,CreatedDate,CreatedBy,Quotation_no,inwardEntrystatus,ReportedTO, DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where JobNo= '" + jobno + "'", con);
+                    sad.Fill(dt);
+
+                    SortGvEvaluations.EmptyDataText = "Not Records Found";
+                    SortGvEvaluations.DataSource = dt;
+                    SortGvEvaluations.DataBind();
+
+
+                }
+                else if (ddlEvalution.SelectedItem.Text == "Pending List")
+                {
+
+                    //sad = new SqlDataAdapter("select id, JobNo, CustomerName, EntryDate, ProductName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where isCompleted = '1'", con);
+                    sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where isCompleted is Null", con);
+
+                    sad.Fill(dt);
+                    SortGvEvaluations.EmptyDataText = "Not Records Found";
+                    SortGvEvaluations.DataSource = dt;
+                    SortGvEvaluations.DataBind();
+
+
+                }
+
                 sad.Fill(dt);
                 SortGvEvaluations.EmptyDataText = "Not Records Found";
                 SortGvEvaluations.DataSource = dt;
                 SortGvEvaluations.DataBind();
-
-                
             }
-            else if (ddlEvalution.SelectedItem.Text == "Pending List")
-            {
-
-                //sad = new SqlDataAdapter("select id, JobNo, CustomerName, EntryDate, ProductName, ModelNo, SerialNo, Status, Remark, isCompleted, CreatedBy, DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where isCompleted = '1'", con);
-                sad = new SqlDataAdapter("select  id,JobNo,CustomerName,Subcustomer,EntryDate,ProductName,EngiName,ModelNo,SerialNo,Status,Remark,isCompleted,CreatedBy,DATEDIFF(DAY, CreatedDate, getdate()) AS days from tblTestingProduct where isCompleted is Null", con);
-
-                sad.Fill(dt);
-                SortGvEvaluations.EmptyDataText = "Not Records Found";
-                SortGvEvaluations.DataSource = dt;
-                SortGvEvaluations.DataBind();
-
-               
-            }
-
-            sad.Fill(dt);
-            SortGvEvaluations.EmptyDataText = "Not Records Found";
-            SortGvEvaluations.DataSource = dt;
-            SortGvEvaluations.DataBind();
-
 
             ViewState["Record"] = "List";
         }

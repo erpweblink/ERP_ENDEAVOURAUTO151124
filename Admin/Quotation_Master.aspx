@@ -202,12 +202,12 @@
 
                                 <div class="col-md-6">
                                     <asp:Label ID="lbl_address" runat="server" class="control-label col-sm-6">Address :<span class="spncls"></span></asp:Label>
-                                    <asp:TextBox runat="server" class="form-control" ID="txt_Address" TextMode="Multiline" ReadOnly="true"></asp:TextBox>
+                                    <asp:TextBox runat="server" class="form-control" ID="txt_Address" TextMode="Multiline" ></asp:TextBox>
                                     <br />
                                 </div>
                                 <div class="col-md-6">
                                     <asp:Label ID="lbl_mobile" runat="server" class="control-label col-sm-6">Mobile No. :<span class="spncls">*</span></asp:Label>
-                                    <asp:TextBox runat="server" class="form-control" onkeypress="return isNumberKey(event)" MaxLength="11" ID="txt_Mobile" ReadOnly="true"></asp:TextBox>
+                                    <asp:TextBox runat="server" class="form-control" onkeypress="return isNumberKey(event)" MaxLength="11" ID="txt_Mobile" ></asp:TextBox>
                                     <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator_Mobile" runat="server" ErrorMessage="Please Enter Mobile No." ControlToValidate="txt_Mobile" ForeColor="Red"></asp:RequiredFieldValidator>--%>
                                     <br />
                                 </div>
@@ -218,7 +218,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <asp:Label ID="lbl_GST" runat="server" class="control-label col-sm-6">GST No. :<span class="spncls"></span></asp:Label>
-                                    <asp:TextBox runat="server" class="form-control" ID="txt_GST" ReadOnly="true"></asp:TextBox>
+                                    <asp:TextBox runat="server" class="form-control" ID="txt_GST" ></asp:TextBox>
                                     <br />
                                 </div>
                                 <div class="col-md-6">

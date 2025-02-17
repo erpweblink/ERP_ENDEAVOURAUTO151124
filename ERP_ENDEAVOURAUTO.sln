@@ -1,27 +1,27 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.35325.158
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "ERP_ENDEAVOURAUTO", ".", "{38F16C83-5549-414C-9862-BADE3D7C90BD}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "ERP_ENDEAVOURAUTO151124", ".", "{38F16C83-5549-414C-9862-BADE3D7C90BD}"
 	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.6"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8.1"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_64410"
-		Debug.AspNetCompiler.PhysicalPath = "..\ERP_ENDEAVOURAUTO\"
+		Debug.AspNetCompiler.PhysicalPath = "..\ERP_ENDEAVOURAUTO151124\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_64410\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.VirtualPath = "/localhost_64410"
-		Release.AspNetCompiler.PhysicalPath = "..\ERP_ENDEAVOURAUTO\"
+		Release.AspNetCompiler.PhysicalPath = "..\ERP_ENDEAVOURAUTO151124\"
 		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_64410\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "64410"
-		SlnRelativePath = "..\ERP_ENDEAVOURAUTO\"
+		SlnRelativePath = "..\ERP_ENDEAVOURAUTO151124\"
 	EndProjectSection
 EndProject
 Global

@@ -225,7 +225,7 @@
                         </div>
                         <div class="col-md-2" style="margin-top:47px">
                             <asp:Label ID="lblQuantityComp" runat="server" class="control-label col-sm-6 lblcomp">Quantity :</asp:Label>
-                            <asp:TextBox runat="server" class="form-control" ID="txtQuantityComp" />
+                            <asp:TextBox runat="server" class="form-control" ID="txtQuantityComp"  Text="0"/>
                             <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" ErrorMessage="Please fill Quantity" ControlToValidate="txtQuantityComp" ForeColor="Red"></asp:RequiredFieldValidator>--%>
                         </div>
                         <div class="col-md-1" style="margin-top:47px">

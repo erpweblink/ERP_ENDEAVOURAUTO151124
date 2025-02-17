@@ -1172,6 +1172,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
             MailMessage message = new MailMessage();
 
             string BCC = "sales.endeavourautomations@gmail.com";
+            string BCC1 = "sales@endeavours.in";
             PDF(txt_Quo_No.Text.Trim(), "");
             foreach (GridViewRow g1 in Grd_MAIL.Rows)
             {
@@ -1184,6 +1185,7 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
             }
 
             message.CC.Add(BCC);
+            message.CC.Add(BCC1);
             file.Seek(0, SeekOrigin.Begin);
             Attachment data = new Attachment(file, pdfname, "application/pdf");
             ContentDisposition disposition = data.ContentDisposition;
@@ -1229,9 +1231,9 @@ public partial class Admin_Quotation_Sales : System.Web.UI.Page
                   <br>
                   <strong>Thanks & Regards.</strong><br>
                   <img src='https://www.endeavours.in/images/logo.png' alt='Company Logo' width='100' height='100'><br>
-                  <strong>Divya Sutar</strong><br>
-                  Tellecaller <br>
-                  Contact No: 8767236105<br>
+                  <strong>Jaya Gondegave</strong><br>
+                  Sales Manager - BD & Sales <br>
+                  Contact No: 9272169265<br>
                   <a href='mailto:sales.endeavourautomations@gmail.com'>sales.endeavourautomations@gmail.com</a><br>
                   <a href='https://www.endeavours.in/'>www.endeavours.in</a><br><br>
                   <strong>Office Address:</strong><br>

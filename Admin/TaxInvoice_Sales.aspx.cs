@@ -556,7 +556,7 @@ public partial class Admin_TaxInvoice : System.Web.UI.Page
                 else
                 {
                     // If no records found, start with 0001
-                    txt_InvoiceNo.Text = "0231";
+                    txt_InvoiceNo.Text = "0384";
                 }
             }
             else

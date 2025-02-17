@@ -1864,7 +1864,9 @@ public partial class Admin_QuotationList : System.Web.UI.Page
     protected void ddlservicetype_TextChanged(object sender, EventArgs e)
     {
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr where ServiceType ='" + ddlservicetype.Text + "' AND isdeleted = '0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select *, " +
+            " CASE WHEN NOT EXISTS (SELECT 1 FROM tbl_Quotation_two_Dtls D WHERE D.Quotation_no = Q.Quotation_no AND D.JobStatus != 'Completed') THEN (SELECT MAX(D.JobDaysCount) FROM tbl_Quotation_two_Dtls D WHERE D.Quotation_no = Q.Quotation_no) ELSE DATEDIFF(DAY, Q.Quotation_Date, GETDATE()) END AS CountDays " +
+            " ,ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_two_Hdr as Q where ServiceType ='" + ddlservicetype.Text + "' AND isdeleted = '0'", con);
         //  SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM [tbl_Quotation_two_Hdr] WHERE ServiceType ='" + ddlservicetype.Text + "' AND isdeleted = '0'", con);
         sad.Fill(dtt);
         gv_Quot_List.EmptyDataText = "Records Not Found";
