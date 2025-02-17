@@ -1,18 +1,12 @@
 ﻿using System;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Configuration;
-using System.Security.Cryptography;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
-using iTextSharp.tool.xml.html.table;
-using System.Activities.Expressions;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 
 public partial class Reception_Customer : System.Web.UI.Page
 {
@@ -487,7 +481,7 @@ public partial class Reception_Customer : System.Web.UI.Page
             string secondaryId = idParts.Length > 1 ? idParts[1].Trim() : string.Empty;
 
 
-            SqlDataAdapter sad = new SqlDataAdapter("SELECT [Custid],[CustomerName],[GSTNo],[StateCode],[PanNo],[AddresLine1],[AddresLine2],[AddresLine3],[Area],[Email],[City],[Country],[MobNo],[PostalCode],[ContactPerName1],[ContactPerNo1],[ContactPerName2],[ContactPerNo2],[IsStatus],[CreatedBy],[Createddate],[UpdatedBy],[UpdatedDate] FROM [tblCustomer] where Custid='" + primaryId + "'", con);
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT [NikhilM],[Custid],[CustomerName],[GSTNo],[StateCode],[PanNo],[AddresLine1],[AddresLine2],[AddresLine3],[Area],[Email],[City],[Country],[MobNo],[PostalCode],[ContactPerName1],[ContactPerNo1],[ContactPerName2],[ContactPerNo2],[IsStatus],[CreatedBy],[Createddate],[UpdatedBy],[UpdatedDate] FROM [tblCustomer] where Custid='" + primaryId + "'", con);
             DataTable dt = new DataTable();
             sad.Fill(dt);
             if (dt.Rows.Count > 0)

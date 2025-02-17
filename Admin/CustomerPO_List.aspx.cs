@@ -1505,7 +1505,7 @@ public partial class Admin_CustomerPO_List : System.Web.UI.Page
     {
         GvCustomerpoList.Visible = false;
         DataTable dtt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select  Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr_Both where  ServiceType ='" + ddlservicetype.Text + "' AND Is_Deleted = '0'", con);
+        SqlDataAdapter sad = new SqlDataAdapter("select  *,CASE WHEN NOT EXISTS (SELECT 1 FROM CustomerPO_Dtls_Both D WHERE D.PurchaseId = C.Id AND D.JobStatus != 'Completed') THEN (SELECT MAX(D.JobDaysCount) FROM CustomerPO_Dtls_Both D WHERE D.PurchaseId = C.Id) ELSE DATEDIFF(DAY, C.CreatedOn, GETDATE()) END AS CountDays ,Id,CustomerName,SubCustomer,JobNo,Pono,PoDate,RefNo,Mobileno,Quotationno,CreatedBy,CreatedOn,DATEDIFF(DAY, PoDate, getdate()) AS days from CustomerPO_Hdr_Both C where  ServiceType ='" + ddlservicetype.Text + "' AND Is_Deleted = '0'", con);
 
         // SqlDataAdapter sad = new SqlDataAdapter("select ID,Quotation_no,Quotation_Date,ExpiryDate,JobNo,Customer_Name,SubCustomer,Address,Mobile_No,Phone_No,GST_No,State_Code,kind_Att,CGST,SGST,AllTotal_price,Total_in_word,IsDeleted,CreatedBy,CreatedOn, DATEDIFF(DAY, Quotation_Date, getdate()) AS days from tbl_Quotation_Hdr where ServiceType ='" + ddlservicetype.Text + "' AND isdeleted = '0'", con);
         sad.Fill(dtt);
